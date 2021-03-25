@@ -1,5 +1,10 @@
 {
   "strict": {
-    "text-font-family": "Inter-Regular"
+    "text-font-family": "Poppins-Regular",
+    "text-heading-1-font-family": "Poppins-Bold",
+    "text-subtitle-1-font-family": "Poppins-SemiBold",
+    "text-paragraph-1-font-family": "Poppins-Regular",
+    "text-caption-1-font-family": "Poppins-SemiBold",
+    "text-label-font-family": "Poppins-Bold"
   }
 }

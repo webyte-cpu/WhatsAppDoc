@@ -30,7 +30,8 @@
   },
   "devDependencies": {
     "@babel/core": "~7.9.0",
-    "@expo/webpack-config": "^0.12.63"
+    "@expo/webpack-config": "^0.12.63",
+    "@ui-kitten/metro-config": "^5.0.0"
   },
   "private": true
 }
