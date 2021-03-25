@@ -10,6 +10,7 @@ import AppLoading from 'expo-app-loading'
 import { EvaIconsPack } from '@ui-kitten/eva-icons';
 import LoginScreen from './src/components/loginScreen';
 import { AppNavigator } from './src/components/navigation';
+import SignupScreen from './src/components/signup';
 
 const App = () => {
   return (
@@ -19,7 +20,9 @@ const App = () => {
       theme={{ ...eva.light, ...theme }}
       >
         <AppNavigator/>
+        {/* <SignupScreen/> */}
       </ApplicationProvider>
+      
     </>
   )
 };
