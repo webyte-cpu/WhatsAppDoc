@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, StyleSheet, TouchableWithoutFeedback, Image } from 'react-native';
+import { View, StyleSheet, TouchableWithoutFeedback, ImageBackground } from 'react-native';
 import { Button, Layout, Text, Input, Icon, Radio, RadioGroup, Datepicker } from '@ui-kitten/components';
 import {SignUpDoctor,SignUpPatient} from './signUpRoles'
 
@@ -24,11 +24,13 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   button: {
-    width: 150,
-    height: 150,
+    width: 160,
+    height: 160,
     borderWidth: 3,
     backgroundColor: 'transparent',
     margin: 5,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   form: {
     flex: 1,
@@ -40,9 +42,9 @@ const styles = StyleSheet.create({
     borderTopLeftRadius: 70
   },
   image: {
-    width: 100,
-    height: 100,
-    resizeMode: 'contain'
+    width: 110,
+    height: 110,
+
   },
 });
 
@@ -66,19 +68,16 @@ const SignupScreen = () => {
     <Layout style={styles.container}>
       <Text category="h2" style={styles.title}> {'\n \n WhatsAppDoc'}</Text>
       <Text style={styles.title}>Choose Account Type</Text>
+      
       <View style={styles.buttonContainer}>
-
         <Button style={styles.button} disabled={selectedRole === 'Patient'} onPress={() => setSelectedRole('Patient')}>
-          <Image style={styles.image} source={require('../../assets/role-patient.png')} />
-          <Text style={{ color: 'white' }}>Patient</Text>
+          <ImageBackground source={require('../../assets/role-patient.png')} style={styles.image} />
         </Button>
-
         <Button style={styles.button} disabled={selectedRole === 'Doctor'} onPress={() => setSelectedRole('Doctor')}>
-          <Image style={styles.image} source={require('../../assets/role-doctor.png')} />
-          <Text style={{ color: 'white' }}>Doctor</Text>
+        <ImageBackground source={require('../../assets/role-doctor.png')} style={styles.image} />
         </Button>
-
       </View>
+      
       <View style={styles.form}>
         <Input
           label='Email'
