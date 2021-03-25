@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, StyleSheet, TouchableWithoutFeedback, Image } from 'react-native';
+import { View, StyleSheet, TouchableWithoutFeedback, Image, ScrollView} from 'react-native';
 import { Button, Layout, Text, Input, Icon, Radio, RadioGroup, Datepicker } from '@ui-kitten/components';
 import {SignUpDoctor,SignUpPatient} from './signUpRoles'
 
@@ -37,12 +37,13 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: 'black',
     backgroundColor: 'white',
-    borderTopLeftRadius: 70
+    borderTopLeftRadius: 70,
   },
   image: {
     width: 100,
     height: 100,
-    resizeMode: 'contain'
+    resizeMode:'contain',
+    
   },
 });
 
@@ -74,12 +75,14 @@ const SignupScreen = () => {
         </Button>
 
         <Button style={styles.button} disabled={selectedRole === 'Doctor'} onPress={() => setSelectedRole('Doctor')}>
-          <Image style={styles.image} source={require('../../assets/role-doctor.png')} />
-          <Text style={{ color: 'white' }}>Doctor</Text>
+          <Image style={styles.image} source={require('../../assets/role-doctor.png')} />  
+          <Text style={{ color: 'white'}}>{'\n\n\n\nDoctor'}</Text>
         </Button>
 
       </View>
+
       <View style={styles.form}>
+        <ScrollView>
         <Input
           label='Email'
           placeholder='Enter email'
@@ -115,9 +118,11 @@ const SignupScreen = () => {
           onSelect={nextDate => setDate(nextDate)}
         />
         {selectedRole === 'Patient' ? <SignUpPatient /> : <SignUpDoctor />}
-        <Button>Signup</Button>
 
+        <Button>Signup</Button>
+        </ScrollView>
       </View>
+      
     </Layout>
   )
 };
