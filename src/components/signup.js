@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import { View, StyleSheet, TouchableWithoutFeedback, ImageBackground } from 'react-native';
+import { View, StyleSheet, TouchableWithoutFeedback, ImageBackground, ScrollView, Platform } from 'react-native';
 import { Button, Layout, Text, Input, Icon, Radio, RadioGroup, Datepicker } from '@ui-kitten/components';
-import {SignUpDoctor,SignUpPatient} from './signUpRoles'
+import SignUpDoctor from './signUpDoctor'
 
 const styles = StyleSheet.create({
   container: {
@@ -26,11 +26,15 @@ const styles = StyleSheet.create({
   button: {
     width: 160,
     height: 160,
+    margin: 5,
     borderWidth: 3,
     backgroundColor: 'transparent',
-    margin: 5,
-    alignItems: 'center',
-    justifyContent: 'center',
+    ...Platform.select({
+      web: {
+        width:200,
+        height:200
+      }
+    })
   },
   form: {
     flex: 1,
@@ -39,12 +43,17 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: 'black',
     backgroundColor: 'white',
-    borderTopLeftRadius: 70
+    borderTopLeftRadius: 70,
   },
   image: {
     width: 110,
     height: 110,
-
+    ...Platform.select({
+      web: {
+        width:170,
+        height:170
+      }
+    })
   },
 });
 
@@ -65,59 +74,81 @@ const SignupScreen = () => {
   const [selectedRole, setSelectedRole] = useState('Patient');
 
   return (
-    <Layout style={styles.container}>
-      <Text category="h2" style={styles.title}> {'\n \n WhatsAppDoc'}</Text>
-      <Text style={styles.title}>Choose Account Type</Text>
-      
-      <View style={styles.buttonContainer}>
-        <Button style={styles.button} disabled={selectedRole === 'Patient'} onPress={() => setSelectedRole('Patient')}>
-          <ImageBackground source={require('../../assets/role-patient.png')} style={styles.image} />
-        </Button>
-        <Button style={styles.button} disabled={selectedRole === 'Doctor'} onPress={() => setSelectedRole('Doctor')}>
-        <ImageBackground source={require('../../assets/role-doctor.png')} style={styles.image} />
-        </Button>
-      </View>
-      
-      <View style={styles.form}>
-        <Input
-          label='Email'
-          placeholder='Enter email'
-        />
-        <Input
-          label='Password'
-          placeholder='Enter Password'
-          accessoryRight={showPasswordIcon}
-          secureTextEntry={secureTextEntry}
-        />
-        <Text category="h6" style={{marginBottom:20,marginTop:20}}>Personal Information</Text>
+    <ScrollView>
+      <Layout style={styles.container}>
+        <Text category="h2" style={styles.title}> {'\n \n WhatsAppDoc'}</Text>
+        <Text style={styles.title}>Choose Account Type</Text>
 
-        <Input
-          label='First Name'
-          placeholder="Enter First Name"
-        />
-        <Input
-          label='Last Name'
-          placeholder="Enter Last Name"
-        />
-        <Text>Sex:</Text>
+        <View style={styles.buttonContainer}>
+          <Button style={styles.button} disabled={selectedRole === 'Patient'} onPress={() => setSelectedRole('Patient')}>
+            <ImageBackground source={require('../../assets/role-patient.png')} style={styles.image} />
+          </Button>
+          <Button style={styles.button} disabled={selectedRole === 'Doctor'} onPress={() => setSelectedRole('Doctor')}>
+            <ImageBackground source={require('../../assets/role-doctor.png')} style={styles.image} />
+          </Button>
+        </View>
 
-        <RadioGroup
-          selectedIndex={selectedIndex}
-          onChange={index => setSelectedIndex(index)}>
-          <Radio style={styles.radio}>Male</Radio>
-          <Radio style={styles.radio}>Female</Radio>
-        </RadioGroup>
+        <View style={styles.form}>
 
-        <Datepicker
-          label='Birthdate'
-          date={date}
-          onSelect={nextDate => setDate(nextDate)}
-        />
-        {selectedRole === 'Patient' ? <SignUpPatient /> : <SignUpDoctor />}
-        <Button>Signup</Button>
+          <Input
+            label='Email'
+            placeholder='Enter email'
+          />
+          <Input
+            label='Password'
+            placeholder='Enter Password'
+            accessoryRight={showPasswordIcon}
+            secureTextEntry={secureTextEntry}
+          />
+          <Text category="h6" style={{ marginBottom: 20, marginTop: 20 }}>Personal Information</Text>
 
-      </View>
-    </Layout>
+          <Input
+            label='First Name'
+            placeholder="Enter First Name"
+          />
+          <Input
+            label='Last Name'
+            placeholder="Enter Last Name"
+          />
+          <Text>Sex:</Text>
+
+          <RadioGroup
+            selectedIndex={selectedIndex}
+            onChange={index => setSelectedIndex(index)}>
+            <Radio style={styles.radio}>Male</Radio>
+            <Radio style={styles.radio}>Female</Radio>
+          </RadioGroup>
+
+          <Datepicker
+            label='Birthdate'
+            date={date}
+            onSelect={nextDate => setDate(nextDate)}
+          />
+
+          <Text category="h6" style={{ marginBottom: 20, marginTop: 20 }}>Address Information</Text>
+          <Input
+            label='City'
+            placeholder="Enter City"
+          />
+          <Input
+            label='Province'
+            placeholder="Enter Province"
+          />
+          <Input
+            label='Zip Code'
+            placeholder="Enter Zip Code"
+          />
+          <Input
+            label='Country'
+            placeholder="Enter Country"
+          />
+          
+          {selectedRole === 'Doctor' ? (<SignUpDoctor />) : (<></>)}
+
+          <Button>Signup</Button>
+        </View>
+      </Layout>
+    </ScrollView>
   )
 };
 

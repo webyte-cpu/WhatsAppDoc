@@ -19,8 +19,8 @@ const App = () => {
       <ApplicationProvider {...eva} 
       theme={{ ...eva.light, ...theme }}
       >
-        <AppNavigator/>
-        {/* <SignupScreen/> */}
+        {/* <AppNavigator/> */}
+        <SignupScreen/>
       </ApplicationProvider>
       
     </>
