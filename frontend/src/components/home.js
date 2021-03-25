@@ -14,6 +14,7 @@ export const HomeScreen = ({ navigation }) => {
       <Divider/>
       <Layout style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
         <Button onPress={navigateDetails}>OPEN DETAILS</Button>
+        <Button onPress={() => {navigation.navigate('LoginMain')}}>Login</Button>
       </Layout>
     </SafeAreaView>
   );

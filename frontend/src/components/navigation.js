@@ -10,10 +10,10 @@ const { Navigator, Screen } = createStackNavigator();
 
 const HomeNavigator = () => (
   <Navigator headerMode="none">
-    {/* <Screen name='Home' component={HomeScreen}/>
-    <Screen name='Details' component={DetailsScreen}/> */}
+    <Screen name='Home' component={HomeScreen}/>
+    <Screen name='Details' component={DetailsScreen}/>
     <Screen name='LoginMain' component={LoginScreen}/>
-    {/* <Screen name="Login" component={Login}/> */}
+    <Screen name="Login" component={Login}/>
   </Navigator>
 );
 
