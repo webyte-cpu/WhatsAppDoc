@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { View, StyleSheet, TouchableWithoutFeedback } from "react-native";
+import React, { useState } from 'react';
+import { View, StyleSheet, TouchableWithoutFeedback } from 'react-native';
 import {
   Button,
   Text,
@@ -8,9 +8,10 @@ import {
   TopNavigation,
   TopNavigationAction,
   Divider,
-} from "@ui-kitten/components";
-import { AppRoute } from "../../navigation/app-routes";
-import Template from "../template";
+} from '@ui-kitten/components';
+import { AppRoute } from '../../navigation/app-routes';
+import Template from '../template';
+import { TopHeaderView } from '../../components/common';
 
 const styles = StyleSheet.create({
   container: {
@@ -20,30 +21,26 @@ const styles = StyleSheet.create({
 
 const ForgotPassword = ({ navigation }) => {
   const [secureTextEntry, setSecureTextEntry] = useState(true);
-  const [inputEmail, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [inputEmail, setEmail] = useState('');
+  const [password, setPassword] = useState('');
 
   const toggleSecureEntry = () => setSecureTextEntry(!secureTextEntry);
 
   const showPasswordIcon = (props) => (
     <TouchableWithoutFeedback onPress={toggleSecureEntry}>
-      <Icon {...props} name={!secureTextEntry ? "eye" : "eye-off"} />
+      <Icon {...props} name={!secureTextEntry ? 'eye' : 'eye-off'} />
     </TouchableWithoutFeedback>
-  );
-
-  const backBtn = (props) => <Icon {...props} name="arrow-back" />;
-
-  const backAction = () => (
-    <TopNavigationAction icon={backBtn} onPress={() => navigation.goBack()} />
   );
 
   const sendLink = () => navigation.navigate(AppRoute.LOGIN.name);
 
   const forgotPassPage = (
     <>
-      <TopNavigation accessoryLeft={backAction} title="Forgot Password" />
-      <Divider />
-      <View style={{ padding: 30 }}>
+      <TopHeaderView
+        title="Forgot Password"
+        backTo={() => navigation.goBack()}
+      ></TopHeaderView>
+      <View style={{ paddingHorizontal: 30, paddingTop: 20 }}>
         <Input
           testID="email"
           label="Email"
