@@ -1,24 +1,20 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef } from 'react';
 import {
   View,
   StyleSheet,
   TouchableWithoutFeedback,
   Platform,
   Image,
-} from "react-native";
-import { Button, Text, Input, Icon } from "@ui-kitten/components";
-import { AppRoute } from "../../navigation/app-routes";
-import { SafeAreaView } from "react-native-safe-area-context";
-import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
-import loginImg from "../../../assets/img/login-welcome.jpg";
-import Template from "../template";
+} from 'react-native';
+import { Button, Text, Input, Icon } from '@ui-kitten/components';
+import { AppRoute } from '../../navigation/app-routes';
+import loginImg from '../../../assets/img/login-welcome.jpg';
+import Template from '../template';
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    padding: 30,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   img: {
     height: 200,
@@ -31,7 +27,7 @@ const styles = StyleSheet.create({
     }),
   },
   imgContainer: {
-    alignItems: "center",
+    alignItems: 'center',
     paddingTop: 10,
   },
   loginContainer: {
@@ -42,14 +38,14 @@ const styles = StyleSheet.create({
 const LoginScreen = ({ navigation }) => {
   const nextFieldFocus = useRef(null);
   const [secureTextEntry, setSecureTextEntry] = useState(true);
-  const [inputEmail, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [inputEmail, setEmail] = useState('');
+  const [password, setPassword] = useState('');
 
   const toggleSecureEntry = () => setSecureTextEntry(!secureTextEntry);
 
   const showPasswordIcon = (props) => (
     <TouchableWithoutFeedback onPress={toggleSecureEntry}>
-      <Icon {...props} name={!secureTextEntry ? "eye" : "eye-off"} />
+      <Icon {...props} name={!secureTextEntry ? 'eye' : 'eye-off'} />
     </TouchableWithoutFeedback>
   );
 
@@ -59,7 +55,7 @@ const LoginScreen = ({ navigation }) => {
   const login = () => {
     return navigation.navigate(AppRoute.HOME.name);
   };
-  const goToSignUp = () => {};
+  const goToSignUp = () => navigation.navigate(AppRoute.SIGNUP.name);
   const forgotPassword = () => navigation.navigate(AppRoute.FORGOT_PASS.name);
 
   const inputFields = (
@@ -91,21 +87,22 @@ const LoginScreen = ({ navigation }) => {
 
   const signupBtn = (
     <Text
+      testID="signupBtn"
       accessibilityRole="button"
       onPress={goToSignUp}
-      style={{ textAlign: "center", paddingTop: 10 }}
+      style={{ textAlign: 'center', paddingTop: 10 }}
     >
       Don't have an account yet?
       <Text status="primary" category="s1">
-        {" "}
+        {' '}
         Sign Up
       </Text>
     </Text>
   );
 
   const loginPage = (
-    <>
-      <Text category="h1" style={{ textAlign: "center" }}>
+    <View>
+      <Text category="h1" style={{ textAlign: 'center' }}>
         WhatsAppDoc
       </Text>
       <View style={styles.imgContainer}>
@@ -118,22 +115,18 @@ const LoginScreen = ({ navigation }) => {
           status="primary"
           accessibilityRole="button"
           onPress={forgotPassword}
-          style={{ textAlign: "right", paddingBottom: 10 }}
+          style={{ textAlign: 'right', paddingBottom: 10 }}
         >
           Forgot Password?
         </Text>
         <Button onPress={login}>Login</Button>
         {signupBtn}
       </View>
-    </>
+    </View>
   );
 
   return (
-    <Template
-      backgroundColor="white"
-      contentContainerStyle={styles.container}
-      children={loginPage}
-    />
+    <Template children={loginPage} contentContainerStyle={styles.container} />
   );
 };
 
