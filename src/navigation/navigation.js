@@ -16,6 +16,7 @@ const linking = {
   config: {
     Home: "home",
     Login: "",
+    Signup: "signup",
     ForgotPass: "forgotpass",
   }
 }
