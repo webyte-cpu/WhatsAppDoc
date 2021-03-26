@@ -2,6 +2,11 @@
   "strict": {
     "text-font-family": "Poppins-Regular",
     "text-heading-1-font-family": "Poppins-Bold",
+    "text-heading-2-font-family": "Poppins-Bold",
+    "text-heading-3-font-family": "Poppins-Bold",
+    "text-heading-4-font-family": "Poppins-Bold",
+    "text-heading-5-font-family": "Poppins-Bold",
+    "text-heading-6-font-family": "Poppins-Bold",
     "text-subtitle-1-font-family": "Poppins-SemiBold",
     "text-paragraph-1-font-family": "Poppins-Regular",
     "text-caption-1-font-family": "Poppins-SemiBold",
