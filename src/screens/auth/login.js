@@ -1,15 +1,24 @@
-import React, { useState } from 'react';
-import { View, StyleSheet, TouchableWithoutFeedback, Platform, Image, SafeAreaView } from 'react-native';
-import { Button, Layout, Text, Input, Icon, Card } from '@ui-kitten/components';
-import loginImg from '../../../assets/img/login-welcome.jpg';
-import { AppRoute } from '../../navigation/app-routes';
+import React, { useState, useRef } from "react";
+import {
+  View,
+  StyleSheet,
+  TouchableWithoutFeedback,
+  Platform,
+  Image,
+} from "react-native";
+import { Button, Text, Input, Icon } from "@ui-kitten/components";
+import { AppRoute } from "../../navigation/app-routes";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+import loginImg from "../../../assets/img/login-welcome.jpg";
+import Template from "../template";
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    padding: 30
+    justifyContent: "center",
+    alignItems: "center",
+    padding: 30,
   },
   img: {
     height: 200,
@@ -18,20 +27,23 @@ const styles = StyleSheet.create({
       web: {
         height: 280,
         width: 350,
-      }
-    })
+      },
+    }),
   },
   imgContainer: {
-    alignItems: 'center',
+    alignItems: "center",
     paddingTop: 10,
   },
   loginContainer: {
     paddingVertical: 15,
-  }
+  },
 });
 
-const LoginScreen = ({ navigation }) => { // navigation props for navigating
+const LoginScreen = ({ navigation }) => {
+  const nextFieldFocus = useRef(null);
   const [secureTextEntry, setSecureTextEntry] = useState(true);
+  const [inputEmail, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
   const toggleSecureEntry = () => setSecureTextEntry(!secureTextEntry);
 
@@ -39,65 +51,90 @@ const LoginScreen = ({ navigation }) => { // navigation props for navigating
     <TouchableWithoutFeedback onPress={toggleSecureEntry}>
       <Icon {...props} name={!secureTextEntry ? "eye" : "eye-off"} />
     </TouchableWithoutFeedback>
-  )
+  );
+
+  // Navigations
+  const toNextField = () => nextFieldFocus.current.focus();
+
+  const login = () => {
+    return navigation.navigate(AppRoute.HOME.name);
+  };
+  const goToSignUp = () => {};
+  const forgotPassword = () => navigation.navigate(AppRoute.FORGOT_PASS.name);
+
+  const inputFields = (
+    <View>
+      <Input
+        testID="email"
+        label="Email"
+        selectTextOnFocus
+        placeholder="Enter email"
+        value={inputEmail}
+        onChangeText={setEmail}
+        returnKeyType="next"
+        onSubmitEditing={toNextField}
+      />
+      <Input
+        testID="password"
+        label="Password"
+        placeholder="Enter Password"
+        accessoryRight={showPasswordIcon}
+        secureTextEntry={secureTextEntry}
+        value={password}
+        onChangeText={setPassword}
+        returnKeyType="go"
+        ref={nextFieldFocus}
+        onSubmitEditing={login}
+      />
+    </View>
+  );
 
   const signupBtn = (
     <Text
       accessibilityRole="button"
       onPress={goToSignUp}
-      style={{ textAlign: 'center', paddingTop: 10 }}
+      style={{ textAlign: "center", paddingTop: 10 }}
     >
-      Don't have an account yet? 
-      <Text status="primary" category="s1"> Sign Up</Text>
+      Don't have an account yet?
+      <Text status="primary" category="s1">
+        {" "}
+        Sign Up
+      </Text>
     </Text>
-  )
+  );
 
-  const inputFields = (
+  const loginPage = (
     <>
-      <Input
-        label='Email'
-        placeholder='Enter email'
-      />
-      <Input
-        label='Password'
-        placeholder='Enter Password'
-        accessoryRight={showPasswordIcon}
-        secureTextEntry={secureTextEntry}
-      />
+      <Text category="h1" style={{ textAlign: "center" }}>
+        WhatsAppDoc
+      </Text>
+      <View style={styles.imgContainer}>
+        <Image source={loginImg} style={styles.img} />
+      </View>
+      <View style={styles.loginContainer}>
+        {inputFields}
+        <Text
+          category="c1"
+          status="primary"
+          accessibilityRole="button"
+          onPress={forgotPassword}
+          style={{ textAlign: "right", paddingBottom: 10 }}
+        >
+          Forgot Password?
+        </Text>
+        <Button onPress={login}>Login</Button>
+        {signupBtn}
+      </View>
     </>
-  )
-
-  // Navigations
-  const login = () => {
-    return navigation.navigate(AppRoute.HOME.name)
-  }
-  const goToSignUp = () => {}
-  const forgotPassword = () => navigation.navigate(AppRoute.FORGOT_PASS.name)
+  );
 
   return (
-    <SafeAreaView style={{ flex: 1}}>
-      <Layout style={styles.container}>
-        <Text category="h1" style={{ textAlign: 'center' }}>WhatsAppDoc</Text>
-        <View style={styles.imgContainer}>
-          <Image source={loginImg} style={styles.img}/>
-        </View>
-        <View style={styles.loginContainer}>
-          {inputFields}
-          <Text
-            category="c1"
-            status="primary"
-            accessibilityRole="button"
-            onPress={forgotPassword}
-            style={{ textAlign: 'right', paddingBottom: 10 }}
-          >
-            Forgot Password?
-          </Text>
-          <Button onPress={login}>Login</Button>
-          {signupBtn}
-        </View>
-      </Layout>
-    </SafeAreaView>
-  )
+    <Template
+      backgroundColor="white"
+      contentContainerStyle={styles.container}
+      children={loginPage}
+    />
+  );
 };
 
 export default LoginScreen;
