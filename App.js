@@ -21,7 +21,7 @@ const App = () => {
       <IconRegistry icons={ EvaIconsPack } />
       <ApplicationProvider {...eva} theme={{ ...eva.light, ...theme }}>
         <AppNavigator initialRouteName={AppRoute.LOGIN.name}/>
-      </ApplicationProvider>
+      </ApplicationProvider>  
     </>
   )
 };
