@@ -4,13 +4,13 @@ import AppLoading from 'expo-app-loading'
 import * as eva from "@eva-design/eva";
 import { EvaIconsPack } from '@ui-kitten/eva-icons';
 import { ApplicationProvider, IconRegistry } from '@ui-kitten/components';
-// import AsyncStorage from 'react-native';
 import { default as theme } from './themes/custom-theme.json';
 import AppNavigator from './src/navigation/navigation';
 import { AppRoute } from './src/navigation/app-routes';
 import customFonts from './themes/custom-fonts';
 import { AuthContext } from './src/screens/auth/context';
 import HomeScreen from './src/screens/home/home';
+import AsyncStorage from '@react-native-community/async-storage';
 
 const App = () => {
 
@@ -18,7 +18,7 @@ const App = () => {
 
   const initialLoginState = {
     isLoading: true,
-    userName: null,
+    userEmail: null,
     userToken: null,
   };
 
@@ -33,21 +33,21 @@ const App = () => {
       case 'LOGIN':
         return {
           ...prevState,
-          userName: action.id,
+          userEmail: action.id,
           userToken: action.token,
           isLoading: false,
         };
       case 'LOGOUT':
         return {
           ...prevState,
-          userName: null,
+          userEmail: null,
           userToken: null,
           isLoading: false,
         };
       case 'REGISTER':
         return {
           ...prevState,
-          userName: action.id,
+          userEmail: action.id,
           userToken: action.token,
           isLoading: false,
         };
@@ -58,32 +58,30 @@ const App = () => {
 
   const authContext = React.useMemo(() => ({
     signIn: async (foundUser) => {
-      // setUserToken('fgkj');
-      // setIsLoading(false);
+
       const userToken = String(foundUser[0].userToken);
-      const userName = foundUser[0].username;
+      const userEmail = foundUser[0].userEmail;
 
       try {
         await AsyncStorage.setItem('userToken', userToken);
       } catch (e) {
         console.log(e);
       }
-      console.log('user token: ', userToken);
-      dispatch({ type: 'LOGIN', id: userName, token: userToken });
+      // console.log('user token: ', userToken);
+      alert(`user token: ${userToken}`);
+      dispatch({ type: 'LOGIN', id: userEmail, token: userToken });
     },
     signOut: async () => {
-      // setUserToken(null);
-      // setIsLoading(false);
+
       try {
         await AsyncStorage.removeItem('userToken');
-      } catch (e) {
-        console.log(e);
+      } catch (err) {
+        console.error(err);
       }
       dispatch({ type: 'LOGOUT' });
     },
     signUp: () => {
-      // setUserToken('fgkj');
-      // setIsLoading(false);
+
     },
 
   }), []);
@@ -100,7 +98,8 @@ const App = () => {
       } catch (e) {
         // Restoring token failed
       }
-      console.log('user token: ', userToken);
+      // console.log('user token: ', userToken);
+      alert(`user token: ${userToken}`);
       dispatch({ type: 'RETRIEVE_TOKEN', token: userToken });
 
     };
@@ -118,8 +117,8 @@ const App = () => {
       <AuthContext.Provider value={authContext}>
         <IconRegistry icons={EvaIconsPack} />
         <ApplicationProvider {...eva} theme={{ ...eva.light, ...theme }}>
-          { state.userToken !== null ? (
-            <HomeScreen/>
+          {state.userToken !== null ? (
+            <HomeScreen />
           )
             :
             <AppNavigator initialRouteName={AppRoute.LOGIN.name} />

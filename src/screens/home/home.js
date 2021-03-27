@@ -2,10 +2,13 @@ import React from 'react';
 import { SafeAreaView } from 'react-native';
 import { TopNavigation, Button, Divider, Layout, Text } from '@ui-kitten/components';
 import { AppRoute } from '../../navigation/app-routes';
+import { AuthContext } from '../auth/context';
+
+
 
 const HomeScreen = ({ navigation }) => {
-  
-  const logout = () => navigation.navigate(AppRoute.LOGIN.name)
+
+  const { signOut } = React.useContext(AuthContext);
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
@@ -13,7 +16,7 @@ const HomeScreen = ({ navigation }) => {
       <Divider/>
       <Layout style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
         <Text>Home</Text>
-        <Button onPress={logout}>Logout</Button>
+        <Button onPress={signOut}>Logout</Button>
       </Layout> 
     </SafeAreaView>
   );
