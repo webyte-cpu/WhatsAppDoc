@@ -10,6 +10,8 @@ import { Button, Text, Input, Icon } from '@ui-kitten/components';
 import { AppRoute } from '../../navigation/app-routes';
 import loginImg from '../../../assets/img/login-welcome.jpg';
 import Template from '../template';
+import  { AuthContext } from './context';
+
 
 const styles = StyleSheet.create({
   container: {
@@ -41,6 +43,8 @@ const LoginScreen = ({ navigation }) => {
   const [inputEmail, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
+  const { signIn } = React.useContext(AuthContext);
+  
   const toggleSecureEntry = () => setSecureTextEntry(!secureTextEntry);
 
   const showPasswordIcon = (props) => (
@@ -52,9 +56,14 @@ const LoginScreen = ({ navigation }) => {
   // Navigations
   const toNextField = () => nextFieldFocus.current.focus();
 
-  const login = () => {
-    return navigation.navigate(AppRoute.HOME.name);
-  };
+  const handle = () => {
+    const login = () => {
+      return navigation.navigate(AppRoute.HOME.name);
+    };
+    signIn(login)
+  }
+
+
   const goToSignUp = () => navigation.navigate(AppRoute.SIGNUP.name);
   const forgotPassword = () => navigation.navigate(AppRoute.FORGOT_PASS.name);
 
@@ -80,7 +89,7 @@ const LoginScreen = ({ navigation }) => {
         onChangeText={setPassword}
         returnKeyType="go"
         ref={nextFieldFocus}
-        onSubmitEditing={login}
+        onSubmitEditing={handle.login}
       />
     </View>
   );
@@ -119,7 +128,7 @@ const LoginScreen = ({ navigation }) => {
         >
           Forgot Password?
         </Text>
-        <Button onPress={login}>Login</Button>
+        <Button onPress={handle}>Login</Button>
         {signupBtn}
       </View>
     </View>
