@@ -1,8 +1,13 @@
+import admin from "../models/admin.js";
+import doctor from "../models/doctor.js";
+import patient from "../models/patient.js";
+import user from "../models/user.js";
+
 const query = {
-  admin: () => "here lies the admins datas",
-  user: () => "here lies the users datas",
-  doctor: () => "here lies the docotrs datas",
-  patient: () => "here lies the patient datas",
+  admin: () => admin.get(),
+  user: () => user.get(),
+  doctor: () => doctor.get(),
+  // patient: () => patient.get(),
 };
 
 export default query;
