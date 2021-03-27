@@ -1,5 +1,5 @@
 const up = function (knex) {
-  knex.schema
+  return knex.schema
 
     .createTable("admins", (table) => {
       table.uuid("admin_uid").notNullable().primary();
@@ -7,7 +7,7 @@ const up = function (knex) {
       table.string("admin_last_name");
       table.string("admin_email");
       table.string("admin_password");
-      table.timestamp();
+      table.timestamp("created_at");
     })
 
     .createTable("addresses", (table) => {
@@ -35,7 +35,7 @@ const up = function (knex) {
       table.string("user_civil_status");
       table.string("user_nationality");
       table.boolean("user_is_doctor").defaultTo(false).notNullable();
-      table.timestamp();
+      table.timestamp("created_at");
     })
 
     .createTable("doctors", (table) => {
@@ -90,7 +90,7 @@ const up = function (knex) {
       table.string("medical_record_type");
       table.string("medical_record_title");
       table.string("medical_record_description");
-      table.timestamp();
+      table.timestamp("created_at");
     })
 
     .createTable("medical_record_attached_file", (table) => {
@@ -100,7 +100,7 @@ const up = function (knex) {
         .references("medical_records.medical_record_uid");
       table.string("attached_file_remarks");
       table.string("attached_file_dir");
-      table.timestamp();
+      table.timestamp("created_at");
     })
 
     .createTable("doctor_reviews", (table) => {
@@ -109,7 +109,7 @@ const up = function (knex) {
       table.uuid("patient_uid").references("patients.patient_uid");
       table.string("review_description");
       table.integer("rating");
-      table.timestamp();
+      table.timestamp("created_at");
     })
 
     .createTable("bookmarks", (table) => {
@@ -140,7 +140,7 @@ const up = function (knex) {
 };
 
 const down = function (knex) {
-  knex.schema
+  return knex.schema
     .dropTable("doctors_clinic")
     .dropTable("clinics_address")
     .dropTable("clinics")
@@ -159,4 +159,11 @@ const down = function (knex) {
     .dropTable("admins");
 };
 
+/* 
+
+not included table is:
+- appointment
+- schedule
+
+*/
 export { up, down };
