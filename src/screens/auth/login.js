@@ -9,7 +9,7 @@ import {
 import { Button, Text, Input, Icon } from '@ui-kitten/components';
 import { AppRoute } from '../../navigation/app-routes';
 import loginImg from '../../../assets/img/login-welcome.jpg';
-import Template from '../template';
+import Template from '../../components/template';
 
 const styles = StyleSheet.create({
   container: {

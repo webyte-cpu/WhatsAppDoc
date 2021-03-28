@@ -10,7 +10,7 @@ import {
   Divider,
 } from '@ui-kitten/components';
 import { AppRoute } from '../../navigation/app-routes';
-import Template from '../template';
+import Template from '../../components/template';
 import { TopHeaderView } from '../../components/common';
 
 const styles = StyleSheet.create({

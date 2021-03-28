@@ -17,7 +17,8 @@ import {
 } from '@ui-kitten/components';
 import SignUpDoctor from '../../components/signUpDoctor';
 import { TopHeaderView } from '../../components/common';
-import Template from '../template';
+import Template from '../../components/template';
+import { AppRoute } from '../../navigation/app-routes'
 
 const styles = StyleSheet.create({
   subtitle: {
@@ -102,8 +103,9 @@ const SignupScreen = ({ navigation }) => {
 
   const signUp = () => {
     const verificationDetails = isDoctor ? doctorDetails : {}
-    console.log({ ...signUpForm, selectedIndex, birthdate, ...verificationDetails})
-  
+    const body = { ...signUpForm, selectedIndex, birthdate, ...verificationDetails}
+
+    return navigation.navigate(AppRoute.HOME.name)
   };
 
   const roleButton = (
@@ -186,13 +188,12 @@ const SignupScreen = ({ navigation }) => {
         <Text>Sex:</Text>
 
         <RadioGroup
-          testID="sex"
           nativeID="sex"
           selectedIndex={selectedIndex}
           onChange={(e) => setSelectedIndex(e)}
         >
-          <Radio style={styles.radio}>Male</Radio>
-          <Radio style={styles.radio}>Female</Radio>
+          <Radio testID="sex-male" style={styles.radio}>Male</Radio>
+          <Radio testID="sex-female" style={styles.radio}>Female</Radio>
         </RadioGroup>
 
         <Datepicker
