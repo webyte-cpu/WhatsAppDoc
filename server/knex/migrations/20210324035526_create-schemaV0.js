@@ -44,7 +44,7 @@ const up = function (knex) {
       table.string("doctor_licence_no").notNullable();
       table.string("doctor_experience");
       table.string("doctor_rating");
-      table.boolean("doctor_is_verified").defaultTo(false);
+      table.integer("doctor_verification_status").defaultTo(0);
       table.string("doctor_about");
       table.string("doctor_bio");
     })

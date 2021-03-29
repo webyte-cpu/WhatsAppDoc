@@ -2,7 +2,7 @@ import { gql } from "apollo-server-express";
 
 const user = gql`
 
-  type User{
+  interface User{
       uid:UUID!
       addressUid: UUID
       firstName: String
@@ -19,6 +19,20 @@ const user = gql`
       isDoctor: Boolean
   }
 
+ # This "patient" type defines the queryable fields for every patient in our data source.
+ type Patient {
+    uid: UUID!
+    userUid: UUID!
+    licence_no: String!
+    experience: Int!
+    rating: Int
+    is_verified: Boolean
+    about: String
+    bio: String
+  }
+
+
+  union UserType
 
   extend type Query {
     user: [User!]
