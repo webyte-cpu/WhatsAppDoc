@@ -1,16 +1,20 @@
 import React from 'react';
-import { ScrollView, View } from 'react-native';
+import { ScrollView, View, StatusBar, Platform, NativeModules, Text } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+const { StatusBarManager } = NativeModules;
 
 const withoutScrollView = (children, contentContainerStyle, bgColor) => {
-  const mergedStyles = {...contentContainerStyle, backgroundColor: bgColor, flex: 1 }
+ 
+  const mergedStyles = {...contentContainerStyle, flex: 1, backgroundColor: bgColor }
   
   return (
   <KeyboardAwareScrollView
     contentContainerStyle={mergedStyles}
   >
-    <View>{children}</View>
+    <View>
+      {children}
+    </View>
   </KeyboardAwareScrollView>
 )};
 
@@ -27,11 +31,13 @@ const Template = ({
   children,
 }) => {
   return (
-    <SafeAreaView style={{ flex: 1 }}>
+    <View style={{ flex: 1, backgroundColor: 'white' }}>
+      <SafeAreaView style={{ flex: 1 }}>
       {isScrollable
         ? withScrollView(children, contentContainerStyle, bgColor)
         : withoutScrollView(children, contentContainerStyle, bgColor)}
-    </SafeAreaView>
+      </SafeAreaView>
+    </View>
   );
 };
 

@@ -1,21 +1,24 @@
 import React from 'react';
-import { SafeAreaView } from 'react-native';
-import { TopNavigation, Button, Divider, Layout, Text } from '@ui-kitten/components';
-import { AppRoute } from '../../navigation/app-routes';
+import { View } from 'react-native';
+import Template from '../../components/template';
+import { TopHeaderView } from '../../components/common';
+import { customStyle } from '../../../themes/styles';
+import { Search } from '../search/search';
 
 const HomeScreen = ({ navigation }) => {
-  
-  const logout = () => navigation.navigate(AppRoute.LOGIN.name)
+  const userFname = 'Edelynn'
+ 
+  const homePage = (
+    <>
+      <TopHeaderView hasDrawer={true} title={`Hello ${userFname}!`} />
+      <View style={{...customStyle.content, marginTop: 10 }}>
+        <Search />
+      </View>
+    </>
+  )
 
   return (
-    <SafeAreaView style={{ flex: 1 }}>
-      <TopNavigation />
-      <Divider/>
-      <Layout style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-        <Text>Home</Text>
-        <Button onPress={logout}>Logout</Button>
-      </Layout> 
-    </SafeAreaView>
+    <Template children={homePage} />
   );
 };
 
