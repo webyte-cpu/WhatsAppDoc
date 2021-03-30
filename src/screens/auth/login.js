@@ -10,6 +10,8 @@ import { Button, Text, Input, Icon } from '@ui-kitten/components';
 import { AppRoute } from '../../navigation/app-routes';
 import loginImg from '../../../assets/img/login-welcome.jpg';
 import Template from '../../components/template';
+import { AuthContext } from './context';
+import Users from './dummyDataUsers'
 
 const styles = StyleSheet.create({
   container: {
@@ -35,6 +37,7 @@ const styles = StyleSheet.create({
   },
 });
 
+
 const LoginScreen = ({ navigation }) => {
   const nextFieldFocus = useRef(null);
   const [secureTextEntry, setSecureTextEntry] = useState(true);
@@ -52,11 +55,33 @@ const LoginScreen = ({ navigation }) => {
   // Navigations
   const toNextField = () => nextFieldFocus.current.focus();
 
-  const login = () => {
-    return navigation.navigate(AppRoute.HOME.name);
-  };
-  const goToSignUp = () => navigation.navigate(AppRoute.SIGNUP.name);
-  const forgotPassword = () => navigation.navigate(AppRoute.FORGOT_PASS.name);
+  // const login = () => {
+  //   return navigation.navigate(AppRoute.HOME.name);
+  // };
+
+  const { signIn } = React.useContext(AuthContext);
+
+  const loginHandle = () => {
+
+    const foundUser = Users.filter(item => {
+      return inputEmail == item.email && password == item.password;
+    });
+
+    if (inputEmail.length == 0 || password.length == 0) {
+      alert('Username or password field cannot be empty.')
+      return;
+    }
+
+    if (foundUser.length == 0) {
+      alert('Username or password is incorrect.')
+      return;
+    }
+    signIn(foundUser);
+    // login();
+  }
+
+  const goToSignUp = () => navigation.navigate(AppRoute.SIGNUP);
+  const forgotPassword = () => navigation.navigate(AppRoute.FORGOT_PASS);
 
   const inputFields = (
     <View>
@@ -80,7 +105,7 @@ const LoginScreen = ({ navigation }) => {
         onChangeText={setPassword}
         returnKeyType="go"
         ref={nextFieldFocus}
-        onSubmitEditing={login}
+        onSubmitEditing={loginHandle}
       />
     </View>
   );
@@ -119,7 +144,7 @@ const LoginScreen = ({ navigation }) => {
         >
           Forgot Password?
         </Text>
-        <Button onPress={login}>Login</Button>
+        <Button onPress={loginHandle}>Login</Button>
         {signupBtn}
       </View>
     </View>
