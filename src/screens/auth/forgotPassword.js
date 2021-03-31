@@ -32,7 +32,7 @@ const ForgotPassword = ({ navigation }) => {
     </TouchableWithoutFeedback>
   );
 
-  const sendLink = () => navigation.navigate(AppRoute.LOGIN.name);
+  const sendLink = () => navigation.navigate(AppRoute.LOGIN);
 
   const forgotPassPage = (
     <>
