@@ -1,7 +1,7 @@
 import React from 'react';
 import { Icon, TopNavigationAction } from '@ui-kitten/components';
 
-export const BackBtn = ({ navigation, btnColor, backTo }) => {
+export const BackBtn = ({ btnColor, backTo }) => {
   const backBtn = (btnColor, props) => <Icon {...props} name='arrow-back' fill={btnColor}/>;
 
   return (
