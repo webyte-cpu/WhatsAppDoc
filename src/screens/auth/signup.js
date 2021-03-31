@@ -18,8 +18,7 @@ import {
 import SignUpDoctor from './signUpDoctor';
 import { TopHeaderView } from '../../components/common';
 import Template from '../../components/template';
-import { AppRoute } from '../../navigation/app-routes';
-import { customStyle } from '../../../themes/styles';
+import customStyle from '../../../themes/styles';
 import { useAuth } from './utils/authProvider';
 
 const styles = StyleSheet.create({
@@ -86,18 +85,14 @@ const SignupScreen = ({ navigation }) => {
   const [doctorDetails, setDoctorDetails] = useState({
     specialization: '',
     licenseNum: '',
+    licenseImg: '',
   });
 
-  const editForm = (key, value) => {
+  const editForm = (key, value) =>
     setSignUpForm({ ...signUpForm, [key]: value });
-  };
-  const editDoctorDetails = (key, value) => {
+  const editDoctorDetails = (key, value) =>
     setDoctorDetails({ ...doctorDetails, [key]: value });
-  };
-
-  const toggleSecureEntry = () => {
-    setSecureTextEntry(!secureTextEntry);
-  };
+  const toggleSecureEntry = () => setSecureTextEntry(!secureTextEntry);
 
   const showPasswordIcon = (props) => (
     <TouchableWithoutFeedback onPress={toggleSecureEntry}>
@@ -117,7 +112,9 @@ const SignupScreen = ({ navigation }) => {
     return auth.signup(body);
   };
 
-  const roleButton = (
+  // Components
+
+  const roleButtons = (
     <View style={styles.buttonContainer}>
       <Button
         testID="patientRole"
@@ -155,7 +152,7 @@ const SignupScreen = ({ navigation }) => {
 
       <View style={customStyle.content}>
         <Text style={styles.subtitle}>Choose Account Type</Text>
-        {roleButton}
+        {roleButtons}
       </View>
 
       <View style={styles.form}>
