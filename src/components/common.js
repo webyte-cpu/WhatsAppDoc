@@ -2,7 +2,7 @@ import React from 'react';
 import { View } from 'react-native';
 import { TopNavigation, Text, useTheme } from '@ui-kitten/components';
 import { BackBtn } from './backBtn';
-import { customStyle } from '../../themes/styles';
+import customStyle from '../../themes/styles';
 import Drawer from './drawer';
 
 const TopHeaderView = ({

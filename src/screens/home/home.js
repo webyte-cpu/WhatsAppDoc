@@ -1,7 +1,7 @@
 import React from 'react';
 import { View } from 'react-native';
 import { TopHeaderView } from '../../components/common';
-import { customStyle } from '../../../themes/styles';
+import customStyle from '../../../themes/styles';
 import { Search } from '../search/search';
 import { useAuth } from '../auth/utils/authProvider';
 import { Button } from '@ui-kitten/components';
