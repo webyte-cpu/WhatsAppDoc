@@ -6,12 +6,11 @@ import {
   Platform,
   Image,
 } from 'react-native';
-import { Button, Text, Input, Icon } from '@ui-kitten/components';
+import { Button, Text, Input, Icon, Spinner } from '@ui-kitten/components';
 import { AppRoute } from '../../navigation/app-routes';
+import { useAuth } from './utils/authProvider';
 import loginImg from '../../../assets/img/login-welcome.jpg';
 import Template from '../../components/template';
-import { AuthContext } from './context';
-import Users from './dummyDataUsers'
 
 const styles = StyleSheet.create({
   container: {
@@ -37,12 +36,12 @@ const styles = StyleSheet.create({
   },
 });
 
-
 const LoginScreen = ({ navigation }) => {
   const nextFieldFocus = useRef(null);
   const [secureTextEntry, setSecureTextEntry] = useState(true);
-  const [inputEmail, setEmail] = useState('');
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const auth = useAuth()
 
   const toggleSecureEntry = () => setSecureTextEntry(!secureTextEntry);
 
@@ -52,32 +51,15 @@ const LoginScreen = ({ navigation }) => {
     </TouchableWithoutFeedback>
   );
 
-  // Navigations
   const toNextField = () => nextFieldFocus.current.focus();
 
-  // const login = () => {
-  //   return navigation.navigate(AppRoute.HOME.name);
-  // };
-
-  const { signIn } = React.useContext(AuthContext);
-
-  const loginHandle = () => {
-
-    const foundUser = Users.filter(item => {
-      return inputEmail == item.email && password == item.password;
-    });
-
-    if (inputEmail.length == 0 || password.length == 0) {
-      alert('Username or password field cannot be empty.')
+  const login = async () => {
+    if (email.length == 0 || password.length == 0) {
+      alert('Username or password field cannot be empty.') // TODO: change to snackbar
       return;
     }
 
-    if (foundUser.length == 0) {
-      alert('Username or password is incorrect.')
-      return;
-    }
-    signIn(foundUser);
-    // login();
+    return auth.login(email, password, (err) => alert(err))
   }
 
   const goToSignUp = () => navigation.navigate(AppRoute.SIGNUP);
@@ -90,7 +72,7 @@ const LoginScreen = ({ navigation }) => {
         label="Email"
         selectTextOnFocus
         placeholder="Enter email"
-        value={inputEmail}
+        value={email}
         onChangeText={setEmail}
         returnKeyType="next"
         onSubmitEditing={toNextField}
@@ -105,7 +87,7 @@ const LoginScreen = ({ navigation }) => {
         onChangeText={setPassword}
         returnKeyType="go"
         ref={nextFieldFocus}
-        onSubmitEditing={loginHandle}
+        onSubmitEditing={login}
       />
     </View>
   );
@@ -144,11 +126,15 @@ const LoginScreen = ({ navigation }) => {
         >
           Forgot Password?
         </Text>
-        <Button onPress={loginHandle}>Login</Button>
+        <Button onPress={login}>Login</Button>
         {signupBtn}
       </View>
     </View>
   );
+
+  if(auth.state.isLoading) {
+    return <Spinner status='primary' size='giant' />
+  }
 
   return (
     <Template children={loginPage} contentContainerStyle={styles.container} />

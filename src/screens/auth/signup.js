@@ -15,14 +15,15 @@ import {
   RadioGroup,
   Datepicker,
 } from '@ui-kitten/components';
-import SignUpDoctor from '../../components/signUpDoctor';
+import SignUpDoctor from './signUpDoctor';
 import { TopHeaderView } from '../../components/common';
 import Template from '../../components/template';
-import { AppRoute } from '../../navigation/app-routes'
+import { AppRoute } from '../../navigation/app-routes';
+import { customStyle } from '../../../themes/styles';
+import { useAuth } from './utils/authProvider';
 
 const styles = StyleSheet.create({
   subtitle: {
-    paddingLeft: 30,
     paddingBottom: 5,
     color: 'white',
   },
@@ -50,9 +51,9 @@ const styles = StyleSheet.create({
   form: {
     flex: 1,
     width: '100%',
-    padding: 50,
+    padding: 30,
     backgroundColor: 'white',
-    borderTopLeftRadius: 70,
+    borderTopLeftRadius: 50,
   },
   image: {
     width: 110,
@@ -67,6 +68,7 @@ const styles = StyleSheet.create({
 });
 
 const SignupScreen = ({ navigation }) => {
+  const auth = useAuth();
   const [secureTextEntry, setSecureTextEntry] = useState(true);
   const [selectedIndex, setSelectedIndex] = React.useState(0);
   const [birthdate, setBirthdate] = React.useState(new Date());
@@ -86,10 +88,12 @@ const SignupScreen = ({ navigation }) => {
     licenseNum: '',
   });
 
-  const editForm = (e) =>
-    setSignUpForm({ ...signUpForm, [e.target.id]: e.target.value });
-  const editDoctorDetails = (e) =>
-    setDoctorDetails({ ...doctorDetails, [e.target.id]: e.target.value });
+  const editForm = (key, value) => {
+    setSignUpForm({ ...signUpForm, [key]: value });
+  };
+  const editDoctorDetails = (key, value) => {
+    setDoctorDetails({ ...doctorDetails, [key]: value });
+  };
 
   const toggleSecureEntry = () => {
     setSecureTextEntry(!secureTextEntry);
@@ -101,11 +105,16 @@ const SignupScreen = ({ navigation }) => {
     </TouchableWithoutFeedback>
   );
 
-  const signUp = () => {
-    const verificationDetails = isDoctor ? doctorDetails : {}
-    const body = { ...signUpForm, selectedIndex, birthdate, ...verificationDetails}
+  const signup = () => {
+    const verificationDetails = isDoctor ? doctorDetails : {};
+    const body = {
+      ...signUpForm,
+      selectedIndex,
+      birthdate,
+      ...verificationDetails,
+    };
 
-    return navigation.navigate(AppRoute.HOME.name)
+    return auth.signup(body);
   };
 
   const roleButton = (
@@ -141,30 +150,30 @@ const SignupScreen = ({ navigation }) => {
         title="Sign Up"
         titleColor="white"
         btnColor="white"
-        component={signUpContent}
         backTo={() => navigation.goBack()}
       />
 
-      <Text style={styles.subtitle}>Choose Account Type</Text>
-      {roleButton}
+      <View style={customStyle.content}>
+        <Text style={styles.subtitle}>Choose Account Type</Text>
+        {roleButton}
+      </View>
 
       <View style={styles.form}>
         <Input
           testID="email"
-          nativeID="email"
           label="Email"
           placeholder="Enter email"
           value={signUpForm.email}
-          onChange={(e) => editForm(e)}
+          onChangeText={(value) => editForm('email', value)}
         />
         <Input
           testID="password"
-          nativeID="password"
           label="Password"
           placeholder="Enter Password"
           accessoryRight={showPasswordIcon}
           secureTextEntry={secureTextEntry}
-          onChange={(e) => editForm(e)}
+          value={signUpForm.password}
+          onChangeText={(value) => editForm('password', value)}
         />
 
         <Text category="h6" style={{ marginBottom: 20, marginTop: 20 }}>
@@ -173,33 +182,33 @@ const SignupScreen = ({ navigation }) => {
 
         <Input
           testID="fname"
-          nativeID="fname"
           label="First Name"
           placeholder="Enter First Name"
-          onChange={(e) => editForm(e)}
+          onChangeText={(value) => editForm('fname', value)}
         />
         <Input
           testID="lname"
-          nativeID="lname"
           label="Last Name"
           placeholder="Enter Last Name"
-          onChange={(e) => editForm(e)}
+          onChangeText={(value) => editForm('lname', value)}
         />
         <Text>Sex:</Text>
 
         <RadioGroup
-          nativeID="sex"
           selectedIndex={selectedIndex}
-          onChange={(e) => setSelectedIndex(e)}
+          onChange={(index) => setSelectedIndex(index)}
         >
-          <Radio testID="sex-male" style={styles.radio}>Male</Radio>
-          <Radio testID="sex-female" style={styles.radio}>Female</Radio>
+          <Radio testID="sex-male" style={styles.radio}>
+            Male
+          </Radio>
+          <Radio testID="sex-female" style={styles.radio}>
+            Female
+          </Radio>
         </RadioGroup>
 
         <Datepicker
           testID="birthdate"
           min={new Date('1700-01-01')}
-          nativeID="birthdate"
           label="Birthdate"
           date={birthdate}
           onSelect={setBirthdate}
@@ -211,31 +220,27 @@ const SignupScreen = ({ navigation }) => {
 
         <Input
           testID="city"
-          nativeID="city"
           label="City"
           placeholder="Enter City"
-          onChange={(e) => editForm(e)}
+          onChangeText={(value) => editForm('city', value)}
         />
         <Input
           testID="province"
-          nativeID="province"
           label="Province"
           placeholder="Enter Province"
-          onChange={(e) => editForm(e)}
+          onChangeText={(value) => editForm('province', value)}
         />
         <Input
           testID="zipCode"
-          nativeID="zipCode"
           label="Zip Code"
           placeholder="Enter Zip Code"
-          onChange={(e) => editForm(e)}
+          onChangeText={(value) => editForm('zipCode', value)}
         />
         <Input
           testID="country"
-          nativeID="country"
           label="Country"
           placeholder="Enter Country"
-          onChange={(e) => editForm(e)}
+          onChangeText={(value) => editForm('country', value)}
         />
 
         {isDoctor ? (
@@ -248,7 +253,11 @@ const SignupScreen = ({ navigation }) => {
           <></>
         )}
 
-        <Button testID='finishSignup' style={{ marginTop: 15 }} onPress={signUp}>
+        <Button
+          testID="finishSignup"
+          style={{ marginTop: 15 }}
+          onPress={signup}
+        >
           Signup
         </Button>
       </View>
