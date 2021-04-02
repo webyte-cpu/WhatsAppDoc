@@ -1,7 +1,8 @@
-import doctor from "./doctor.js";
+import address from "./address.js";
+
 const resolverMap = {
   Query: {
-    getDoctor: (obj, arg) => {
+    getAddress: (obj, arg) => {
       //get specific admin from the database
       console.log(arg);
 
@@ -11,24 +12,24 @@ const resolverMap = {
       */
 
       //replace with database data
-      return doctor.get(arg);
+      return address.get(arg.uid);
     },
   },
   Mutation: {
-    createDoctor: (obj, arg) => {
+    createAddress: (obj, arg) => {
       console.log(arg);
       //link to doctor in the database
-      return doctor.create(arg);
+      return address.create(arg);
     },
-    updateDoctor: (obj, arg) => {
+    updateAddress: (obj, arg) => {
       console.log(arg);
       //link to doctor in the database
-      return doctor.update(arg);
+      return address.update(arg);
     },
-    deleteDoctor: (obj, arg) => {
+    updateDelete: (obj, arg) => {
       console.log(arg);
       //link to doctor in the database
-      return doctor.remove(arg.uid);
+      return address.remove(arg.uid);
     },
   },
   // Subscription: {},

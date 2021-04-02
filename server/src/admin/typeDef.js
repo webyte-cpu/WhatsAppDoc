@@ -16,7 +16,7 @@ const admin = gql`
   # case, the "admin" query returns an array of zero or more admin (defined above).
 
   extend type Query {
-    admin: [Admin]
+    getAdmin(uid: UUID): [Admin]
   }
 
   extend type Mutation {
@@ -24,9 +24,19 @@ const admin = gql`
       uid: UUID!
       firstName: String!
       lastName: String!
-      email: String!
+      email: EmailAddress!
       password: String!
     ): Admin
+
+    updateAdmin(
+      uid: UUID!
+      firstName: String!
+      lastName: String!
+      email: EmailAddress!
+      password: String!
+    ): Admin
+
+    deleteAdmin(uid: UUID!): Admin
   }
 
   # type Subcription {

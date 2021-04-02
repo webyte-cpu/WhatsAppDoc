@@ -3,15 +3,23 @@ const patient = gql`
   # Comments in GraphQL strings (such as this one) start with the hash (#) symbol.
 
   # This "patient" type defines the queryable fields for every patient in our data source.
-  type Patient {
+  type Patient implements User {
     uid: UUID!
-    userUid: UUID!
-    licence_no: String!
-    experience: Int!
-    rating: Int
-    is_verified: Boolean
-    about: String
-    bio: String
+    address: Address
+    firstName: String
+    lastName: String
+    email: EmailAddress!
+    password: String!
+    sex: Sex
+    birthdate: Date
+    phoneNumber: String
+    weight: PositiveFloat
+    height: PositiveFloat
+    civilStatus: String
+    nationality: String
+    isDoctor: Boolean
+
+    patientStatus: String
   }
 
   # The "Query" type is special: it lists all of the available queries that
@@ -19,19 +27,48 @@ const patient = gql`
   # case, the "patient" query returns an array of zero or more patient (defined above).
 
   extend type Query {
-    patient: [Patient]
+    getPatient: [Patient]
   }
 
   extend type Mutation {
     createPatient(
-        userUid: UUID!
-        licence_no: String!
-        experience: Int!
-        rating: Int
-        is_verified: Boolean
-        about: String
-        bio: String
+      address: AddressInput
+      firstName: String!
+      lastName: String!
+      email: EmailAddress!
+      password: String!
+      sex: Sex
+      birthdate: Date
+      phoneNumber: String
+      weight: PositiveFloat
+      height: PositiveFloat
+      civilStatus: String
+      nationality: String
+      isDoctor: Boolean
+
+      patientStatus: String
     ): Patient
+
+    updatePatient(
+      uid: UUID!
+      address: AddressInput
+      firstName: String!
+      lastName: String!
+      email: EmailAddress!
+      password: String!
+      sex: Sex
+      birthdate: Date
+      phoneNumber: String
+      weight: PositiveFloat
+      height: PositiveFloat
+      civilStatus: String
+      nationality: String
+      isDoctor: Boolean
+
+      patientStatus: String
+    ): Patient
+
+    deletePatient(uid: UUID): Patient
   }
 
   # type Subcription {

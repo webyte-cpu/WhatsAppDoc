@@ -1,65 +1,32 @@
 import { gql } from "apollo-server-express";
 
 const user = gql`
-
-  interface User{
-      uid:UUID!
-      addressUid: UUID
-      firstName: String
-      lastName: String
-      email: String!
-      password: String!
-      sex: String
-      birthdate: String
-      phoneNumber: String
-      weight: String
-      height: String
-      civilStatus: String
-      nationality: String
-      isDoctor: Boolean
+  enum Sex {
+    MALE
+    FEMALE
   }
 
- # This "patient" type defines the queryable fields for every patient in our data source.
- type Patient {
+  interface User {
     uid: UUID!
-    userUid: UUID!
-    licence_no: String!
-    experience: Int!
-    rating: Int
-    is_verified: Boolean
-    about: String
-    bio: String
+    address: Address
+    firstName: String
+    lastName: String
+    email: EmailAddress!
+    password: String!
+    sex: Sex
+    birthdate: Date
+    phoneNumber: String
+    weight: PositiveFloat
+    height: PositiveFloat
+    civilStatus: String
+    nationality: String
+    isDoctor: Boolean
   }
-
-
-  union UserType
 
   extend type Query {
-    user: [User!]
+    getUser(uid: UUID!): [User]
+    getAllUser: [User]
   }
-
-  extend type Mutation {
-     createUser(
-       addressUid: UUID
-       firstName: String
-       lastName: String
-       email: String!
-       password: String!
-       sex: String
-       birthdate: String
-       phoneNumber: String
-       weight: String
-       height: String
-       civilStatus: String
-       nationality: String
-       isDoctor: Boolean): Admin
-  }
-
-  # type Subcription {
-
-  # }
-
-
 `;
 
 export default user;

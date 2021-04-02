@@ -1,9 +1,10 @@
 import { gql } from "apollo-server-express";
 import { typeDefs as scalarTypeDefs } from "graphql-scalars";
-import admin from "./admin.js.js.js";
-import doctor from "./doctor.js.js.js";
-import user from "./users.js.js.js";
+import address from "../address/typeDef.js";
+import admin from "../admin/typeDef.js";
+import doctor from "../doctor/typeDef.js";
 import patient from "../patient/typeDef.js";
+import user from "../user/typeDef.js";
 
 const rootTypeDefs = gql`
   type Query {
@@ -20,10 +21,11 @@ const rootTypeDefs = gql`
 const typeDefs = [
   rootTypeDefs,
   ...scalarTypeDefs,
-  user,
+  address,
   admin,
-  doctor,
+  user,
   patient,
+  doctor,
 ];
 
 export default typeDefs;

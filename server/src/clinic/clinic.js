@@ -11,10 +11,6 @@ const create = async ({
   about,
   bio,
 }) => {
-  //add insert query for user
-
-  //add insert query for patient
-
   return await pg
     .insert({
       doctor_uid: uuidV4(),
@@ -56,9 +52,7 @@ const update = async ({
 };
 
 const get = async (userUid) => {
-  return userUid
-    ? await pg.select("*").from("doctors").where({ user_uid: userUid })
-    : pg.select("*").from("doctors");
+  return await pg.select("*").from("doctors").where({ user_uid: userUid });
 };
 const remove = async (userUid) => {
   return await pg("docotrs").where({ user_uid: userUid }).del();

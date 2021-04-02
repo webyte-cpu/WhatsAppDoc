@@ -3,6 +3,9 @@ import objectFilter from "../helpers/objectFilter.js";
 import { v4 as uuidV4 } from "uuid";
 
 const create = async ({ userUid, status }) => {
+
+   //add insert query for user
+
   return await pg
     .insert({
       patient_uid: uuidV4,

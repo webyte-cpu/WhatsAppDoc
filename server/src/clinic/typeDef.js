@@ -1,5 +1,5 @@
 import { gql } from "apollo-server-core";
-const doctor = gql`
+const clinic = gql`
   # Comments in GraphQL strings (such as this one) start with the hash (#) symbol.
 
   enum VerificationStatus {
@@ -8,41 +8,31 @@ const doctor = gql`
     DECLINED
   }
 
-  # This "doctor" type defines the queryable fields for every doctor in our data source.
-  type Doctor implements User {
+  # This "clinic" type defines the queryable fields for every clinic in our data source.
+  type Clinic {
     uid: UUID!
-    address: Address
-    firstName: String
-    lastName: String
-    email: EmailAddress!
-    password: String!
-    sex: Sex
-    birthdate: Date
-    phoneNumber: String
-    weight: PositiveFloat
-    height: PositiveFloat
-    civilStatus: String
-    nationality: String
-    isDoctor: Boolean
+    name: String!
+    roomNumber: String
+    address: [address]
 
     licence_no: String!
     experience: Int!
     rating: Int
-    doctor_verification_status: VerificationStatus
+    clinic_verification_status: VerificationStatus
     about: String
     bio: String
   }
 
   # The "Query" type is special: it lists all of the available queries that
   # clients can execute, along with the return type for each. In this
-  # case, the "doctor" query returns an array of zero or more doctor (defined above).
+  # case, the "clinic" query returns an array of zero or more clinic (defined above).
 
   extend type Query {
-    getDoctor(uid: UUID): [Doctor]
+    getClinic(uid: UUID): [Clinic]
   }
 
   extend type Mutation {
-    createDoctor(
+    createClinic(
       address: AddressInput
       firstName: String!
       lastName: String!
@@ -55,16 +45,16 @@ const doctor = gql`
       height: PositiveFloat
       civilStatus: String
       nationality: String
-      isDoctor: Boolean
+      isClinic: Boolean
       licenceNo: String!
       experience: Int!
       rating: Int
       verificationStatus: VerificationStatus
       about: String
       bio: String
-    ): Doctor
+    ): Clinic
 
-    updateDoctor(
+    updateClinic(
       address: AddressInput
       firstName: String!
       lastName: String!
@@ -77,16 +67,16 @@ const doctor = gql`
       height: PositiveFloat
       civilStatus: String
       nationality: String
-      isDoctor: Boolean
+      isClinic: Boolean
       licenceNo: String!
       experience: Int!
       rating: Int
       verificationStatus: VerificationStatus
       about: String
       bio: String
-    ): Doctor
+    ): Clinic
 
-    deleteDoctor(uid: UUID!): Doctor
+    deleteClinic(uid: UUID!): Clinic
   }
 
   # type Subcription {
@@ -94,4 +84,4 @@ const doctor = gql`
   # }
 `;
 
-export default doctor;
+export default clinic;
