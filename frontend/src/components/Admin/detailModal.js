@@ -1,26 +1,77 @@
 import React from 'react';
-import { StyleSheet, View } from 'react-native';
-import { Button, Card, Modal, Text } from '@ui-kitten/components';
+import {
+    StyleSheet,
+    View,
+    Image,
+    Platform,
+}
+    from 'react-native';
+import {
+    Button,
+    Card,
+    Modal,
+    Text,
+}
+    from '@ui-kitten/components';
 
 const styles = StyleSheet.create({
     container: {
-        width: 300
+        width: 300,
+        ...Platform.select({
+            web: {
+                width: 600,
+            },
+        }),
+
     },
     backdrop: {
         backgroundColor: 'rgba(0, 0, 0, 0.5)',
     },
     button: {
-        width: 120,
-        margin:2
+        marginHorizontal: 2,
     },
     buttons: {
-        marginTop:0,
+        marginTop: 0,
         flexDirection: 'row',
-        flexWrap: 'wrap',
-    }
+        justifyContent: 'flex-end',
+        padding: 10
+    },
+    image: {
+        width: '100%',
+        height: 200,
+        resizeMode: 'contain',
+        ...Platform.select({
+            web: {
+                width: '100%',
+                height: 300
+            },
+        }),
+    },
 });
 
 const DoctorDetails = ({ doctor, isShown, onHide }) => {
+
+    const Header = (props) => (
+        <View {...props}>
+            <Text category='h6'>{doctor.name}</Text>
+            <Text category='s2'>{doctor.specialization}</Text>
+        </View>
+    )
+
+    const Footer = (props) => (
+        doctor.verification == 'Verified' 
+        ? 
+            <></> 
+        :
+            <View {...props} style={styles.buttons}>
+                <Button style={styles.button} onPress={onHide}>
+                    Deny
+            </Button>
+                <Button style={styles.button} onPress={onHide}>
+                    Verify
+            </Button>
+            </View>
+    )
 
     return (
         <Modal
@@ -28,23 +79,17 @@ const DoctorDetails = ({ doctor, isShown, onHide }) => {
             visible={isShown}
             backdropStyle={styles.backdrop}
             onBackdropPress={onHide}>
-            <Card disabled={true} >
-                <Text>Name: {doctor.name}</Text>
-                <Text>Specialization: {doctor.specialization}</Text>
-                <Text>Address: N/A</Text>
-                <Text>Birthdate: N/A</Text>
-                <Text>License Number: N/A</Text>
-                <View style={styles.buttons}>
-                    <Button style={styles.button} onPress={onHide}>
-                        Deny
-                    </Button>
-                    <Button style={styles.button} onPress={onHide}>
-                        Verify
-                    </Button>
-                </View>
+            <Card disabled={true} header={Header} footer={Footer}>
+                <Text category='s1'>License Card Information</Text>
+                <Image style={styles.image} source={{ uri: 'http://newstogov.com/wp-content/uploads/2019/10/prc1.jpg' }} />
+                <Text category='s1'>Birthdate: 
+                    <Text> {doctor.birthdate}</Text>
+                </Text>
             </Card>
         </Modal>
     );
 };
+
+// https://online1.prc.gov.ph/Verification
 
 export default DoctorDetails

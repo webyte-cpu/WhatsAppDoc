@@ -1,17 +1,32 @@
 import React, { useState } from 'react';
-import { View, StyleSheet, TouchableWithoutFeedback, Touchable } from 'react-native';
-import { Tab, TabView, Button, Icon, List, ListItem, Divider } from '@ui-kitten/components';
+import { 
+    View, 
+    StyleSheet, 
+    ScrollView } 
+    from 'react-native';
+import { 
+    Tab, 
+    TabView, 
+    Button, 
+    Icon, List, 
+    ListItem, 
+    Divider } 
+    from '@ui-kitten/components';
 import DoctorDetails from './detailModal'
-import {dummyDataPending,dummyDataVerified} from './dummyData'
+import { dummyData } from './dummyData'
 
 const styles = StyleSheet.create({
     container: {
         marginTop: 30
     },
-    list:{
-        height:'100%',
-    }
 });
+
+const profile = (props) => <Icon {...props} name='person' />;
+const verifiedIcon = (props) => <Icon {...props} name='checkmark-circle-outline'/>;
+const pendingIcon = (props) => <Icon {...props} name='clock-outline'/>;
+
+const pendingList = dummyData.filter(doctor => doctor.verification == 'Pending')
+const verifiedList = dummyData.filter(doctor => doctor.verification == 'Verified')
 
 const Admin = () => {
     const [selectedIndex, setSelectedIndex] = useState(0);
@@ -20,57 +35,44 @@ const Admin = () => {
 
     const handleClose = () => setVisible(false);
 
-    const handeShow = (doctor) => {
+    const handleShow = (doctor) => {
         setVisible(true)
         setViewDoctor(doctor)
     }
-
-    const verifiedIcon = (props) => (
-        <Icon {...props} name='checkmark-circle-outline'/>
-      );
-      
-      const pendingIcon = (props) => (
-        <Icon {...props} name='clock-outline'/>
-      );
 
     const detailBtn = (doctor) => (
         <Button 
         size='tiny' 
         appearance='ghost' 
-        onPress={() => handeShow(doctor) }>Details</Button>
+        onPress={ () => handleShow(doctor) }>Details</Button>
     );
 
-    const profile = (props) => (
-        <Icon {...props} name='person' />
-    );
-
-    const renderItem = ({ item, index }) => (
+    const renderItem = ({ item }) => (
         <ListItem
-            onPress={() => handeShow(item)}
             title={`${item.name}`}
             description={`${item.specialization}`}
             accessoryLeft={profile}
-            accessoryRight={() => detailBtn(item)}
+            accessoryRight={() => item.verification == 'Verified' ? <></> : detailBtn(item)}
+            onPress={ () => handleShow(item) }
         />
     );
 
     return (
+        <ScrollView>
         <View style={styles.container}>
             <TabView
                 selectedIndex={selectedIndex}
                 onSelect={index => setSelectedIndex(index)} >
                 <Tab title='PENDING' icon={pendingIcon}>
                     <List
-                        style={styles.list}
-                        data={dummyDataPending}
+                        data={pendingList}
                         ItemSeparatorComponent={Divider}
                         renderItem={renderItem}
                     />
                 </Tab>
                 <Tab title='VERIFIED' icon={verifiedIcon} >
                     <List
-                        style={styles.list}
-                        data={dummyDataVerified}
+                        data={verifiedList}
                         ItemSeparatorComponent={Divider}
                         renderItem={renderItem}
                     />
@@ -78,6 +80,7 @@ const Admin = () => {
             </TabView>
             <DoctorDetails doctor={viewDoctor} isShown={visible} onHide={handleClose} />
         </View>
+        </ScrollView>
     );
 };
 
