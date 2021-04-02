@@ -5,21 +5,15 @@ import {
     ScrollView } 
     from 'react-native';
 import { 
+    Text,
     Tab, 
     TabView, 
-    Button, 
     Icon, List, 
     ListItem, 
-    Divider } 
+    Divider} 
     from '@ui-kitten/components';
 import DoctorDetails from './detailModal'
 import { dummyData } from './dummyData'
-
-const styles = StyleSheet.create({
-    container: {
-        marginTop: 30
-    },
-});
 
 const profile = (props) => <Icon {...props} name='person' />;
 const verifiedIcon = (props) => <Icon {...props} name='checkmark-circle-outline'/>;
@@ -40,19 +34,14 @@ const Admin = () => {
         setViewDoctor(doctor)
     }
 
-    const detailBtn = (doctor) => (
-        <Button 
-        size='tiny' 
-        appearance='ghost' 
-        onPress={ () => handleShow(doctor) }>Details</Button>
-    );
+    const detail = ( <Text category='s2' style={styles.detail}> Details </Text> );
 
     const renderItem = ({ item }) => (
         <ListItem
             title={`${item.name}`}
             description={`${item.specialization}`}
             accessoryLeft={profile}
-            accessoryRight={() => item.verification == 'Verified' ? <></> : detailBtn(item)}
+            accessoryRight={() => item.verification == 'Verified' ? <></> : detail}
             onPress={ () => handleShow(item) }
         />
     );
@@ -83,5 +72,15 @@ const Admin = () => {
         </ScrollView>
     );
 };
+
+const styles = StyleSheet.create({
+    container: {
+        marginTop: 30
+    },
+    detail:{
+        color:'#362EB7',
+        marginRight:10
+    }
+});
 
 export default Admin
