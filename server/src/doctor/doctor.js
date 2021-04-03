@@ -2,55 +2,37 @@ import pg from "../../db/index.js";
 import objectFilter from "../helpers/objectFilter.js";
 import { v4 as uuidV4 } from "uuid";
 
-const create = async ({
-  userUid,
-  licenceNo,
-  experience,
-  rating,
-  isVerified,
-  about,
-  bio,
-}) => {
-  //add insert query for user
-
-  //add insert query for patient
-
+const create = async (arg) => {
   return await pg
-    .insert({
-      doctor_uid: uuidV4(),
-      user_uid: userUid,
-      doctor_licence_no: licenceNo,
-      doctor_experience: experience,
-      doctor_rating: rating,
-      doctor_is_verified: isVerified,
-      doctor_about: about,
-      doctor_bio: bio,
-    })
-    .into("doctors");
+    .insert(
+      objectFilter({
+        doctor_uid: uuidV4(),
+        user_uid: userUid,
+        doctor_licence_no: arg.licenceNo,
+        doctor_experience: arg.experience,
+        doctor_rating: arg.rating,
+        doctor_is_verified: arg.isVerified,
+        doctor_about: arg.about,
+        doctor_bio: arg.bio,
+      })
+    )
+    .into("doctors")
+    .returning("*");
 };
 
-const update = async ({
-  uid,
-  userUid,
-  licenceNo,
-  experience,
-  rating,
-  isVerified,
-  about,
-  bio,
-}) => {
+const update = async (arg) => {
   return await pg("doctors")
-    .where({ user_uid: userUid })
+    .where({ user_uid: arg.userUid })
     .update(
       objectFilter({
-        doctor_uid: uid,
-        user_uid: userUid,
-        doctor_licence_no: licenceNo,
-        doctor_experience: experience,
-        doctor_rating: rating,
-        doctor_is_verified: isVerified,
-        doctor_about: about,
-        doctor_bio: bio,
+        doctor_uid: arg.uid,
+        user_uid: arg.userUid,
+        doctor_licence_no: arg.licenceNo,
+        doctor_experience: arg.experience,
+        doctor_rating: arg.rating,
+        doctor_is_verified: arg.isVerified,
+        doctor_about: arg.about,
+        doctor_bio: arg.bio,
       })
     );
 };

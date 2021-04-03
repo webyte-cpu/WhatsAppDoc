@@ -25,7 +25,7 @@ const doctor = gql`
     nationality: String
     isDoctor: Boolean
 
-    licence_no: String!
+    licenceNo: String!
     experience: Int!
     rating: Int
     doctor_verification_status: VerificationStatus
