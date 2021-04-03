@@ -8,7 +8,7 @@ const create = async ({ userUid, status }) => {
 
   return await pg
     .insert({
-      patient_uid: uuidV4,
+      patient_uid: uuidV4(),
       user_uid: userUid,
       patient_status: status,
     })
