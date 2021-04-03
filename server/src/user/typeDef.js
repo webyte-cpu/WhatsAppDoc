@@ -27,6 +27,21 @@ const user = gql`
     getUser(uid: UUID!): [User]
     getAllUser: [User]
   }
+
+  extend type Mutation {
+    signUp(
+      firstName: String!
+      lastName: String!
+      sex: Sex!
+      birthdate: Date!
+      address: AddressInput
+      email: EmailAddress!
+      password: String!
+      isDoctor: Boolean!
+      specialization: String
+      licenceNo: String
+    ): User
+  }
 `;
 
 export default user;

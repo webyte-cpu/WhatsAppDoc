@@ -1,13 +1,14 @@
 import data from "../../db/sampleData.js";
+import user from "./user.js";
 
 const resolverMap = {
   User: {
     __resolveType(obj, context, info) {
-      if (obj.licence_no) {
+      if (obj.licenceNo && obj.isDoctor) {
         return "Doctor";
       }
 
-      if (obj.patientStatus) {
+      if (obj.patientStatus || !obj.isDoctor) {
         return "Patient";
       }
 
@@ -24,7 +25,13 @@ const resolverMap = {
     },
   },
 
-
+  Mutation: {
+    signUp: async (obj, arg) => {
+      const signUpResponse = user.signUp(arg);
+      console.log(await signUpResponse);
+      return signUpResponse;
+    },
+  },
 };
 
 export default resolverMap;
