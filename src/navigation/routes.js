@@ -11,7 +11,9 @@ import LoginScreen from '../screens/auth/login';
 import SignupScreen from '../screens/auth/signup';
 import ForgotPassword from '../screens/auth/forgotPassword';
 import HomeScreen from '../screens/home/home';
-import Profile from '../screens/profile/profile';
+import ProfileScreen from '../screens/profile/profile';
+import Bookmarks from '../screens/bookmarks/bookmarks';
+import MedRec from '../screens/medical_record/medRec'
 
 const { Navigator, Screen } = createStackNavigator();
 
@@ -22,6 +24,8 @@ const linking = {
     Signup: 'signup',
     ForgotPass: 'forgotpass',
     Profile: 'profile',
+    Bookmarks: 'bookmarks',
+    MedRec: 'medrec'
   },
 };
 
@@ -36,7 +40,9 @@ const authScreens = (
 const homeScreen = (
   <>
     <Screen name={AppRoute.HOME} component={HomeScreen} />
-    <Screen name={AppRoute.PROFILE} component={Profile} />
+    <Screen name={AppRoute.PROFILE} component={ProfileScreen} />
+    <Screen name={AppRoute.BOOKMARKS} component={Bookmarks} />
+    <Screen name={AppRoute.MEDICAL_REC} component={MedRec} />
   </>
 );
 

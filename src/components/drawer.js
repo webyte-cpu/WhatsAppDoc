@@ -5,14 +5,15 @@ import {
   createDrawerNavigator,
   DrawerContentScrollView,
   DrawerItemList,
-  DrawerItem,} 
+  DrawerItem,
+}
   from '@react-navigation/drawer';
 
-const DrawerMenu = ({ btnColor,navigation }) => {
-  const drawerBtn = (btnColor, props) => <Icon {...props} name='menu' fill={btnColor}/>;
+const DrawerMenu = ({ btnColor, navigation }) => {
+  const drawerBtn = (btnColor, props) => <Icon {...props} name='menu' fill={btnColor} />;
 
   return (
-    <TopNavigationAction icon={(props) => drawerBtn(btnColor, props)} onPress={() => navigation.toggleDrawer()}/>
+    <TopNavigationAction icon={(props) => drawerBtn(btnColor, props)} onPress={() => navigation.toggleDrawer()} />
   )
 }
 
@@ -25,28 +26,32 @@ const DrawerContent = (props) => {
         onPress={() => props.navigation.navigate(AppRoute.PROFILE)}
       />
       <DrawerItem
-        label="Close drawer"
-        onPress={() => props.navigation.toggleDrawer()}
+        label="Bookmarks"
+        onPress={() => props.navigation.navigate(AppRoute.BOOKMARKS)}
+      />
+      <DrawerItem
+        label="Medical Records"
+        onPress={() => props.navigation.navigate(AppRoute.MEDICAL_REC)}
       />
     </DrawerContentScrollView>
   );
 }
 
-const Drawer = createDrawerNavigator();
+const CreateDrawer = createDrawerNavigator();
 
-const DrawerNavigator = ({children}) => {
+const DrawerNavigator = ({ children }) => {
   return (
-    <Drawer.Navigator drawerContent={props => <DrawerContent {...props} />}>
-      <Drawer.Screen name={AppRoute.HOME} component={children} />
-    </Drawer.Navigator>
+    <CreateDrawer.Navigator drawerContent={props => <DrawerContent {...props} />}>
+      <CreateDrawer.Screen name={AppRoute.HOME} component={children} />
+    </CreateDrawer.Navigator>
   );
 }
 
-const MyDrawer = ({children}) => {
-  return(
+const Drawer = ({ children }) => {
+  return (
     <DrawerNavigator children={children} />
   )
 }
 
 
-export {DrawerMenu,MyDrawer};
+export { DrawerMenu, Drawer };

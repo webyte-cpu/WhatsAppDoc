@@ -1,13 +1,13 @@
 import React from 'react';
-import { View,Text } from 'react-native';
+import { View, Text } from 'react-native';
 import { TopHeaderView } from '../../components/common';
 import customStyle from '../../../themes/styles';
 import { Search } from '../search/search';
 import { useAuth } from '../auth/utils/authProvider';
 import Template from '../../components/template';
-import {MyDrawer} from '../../components/drawer';
-import {Button} from '@ui-kitten/components'
-  
+import { Drawer } from '../../components/drawer';
+import { Button } from '@ui-kitten/components'
+
 const HomePage = ({ navigation }) => {
   const auth = useAuth();
   const fname = auth.state.token == null ? '' : auth.state.token.fname;
@@ -30,9 +30,9 @@ const HomePage = ({ navigation }) => {
   return <Template children={homePage} />;
 };
 
-const HomeScreen = () =>{
-  return(
-    <MyDrawer children={HomePage} />
+const HomeScreen = () => {
+  return (
+    <Drawer children={HomePage} />
   )
 }
 
