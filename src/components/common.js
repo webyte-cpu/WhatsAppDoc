@@ -3,9 +3,10 @@ import { View } from 'react-native';
 import { TopNavigation, Text, useTheme } from '@ui-kitten/components';
 import { BackBtn } from './backBtn';
 import customStyle from '../../themes/styles';
-import Drawer from './drawer';
+import {DrawerIcon} from './drawer';
 
 const TopHeaderView = ({
+  navigation,
   title,
   titleColor = null,
   btnColor = null,
@@ -17,7 +18,7 @@ const TopHeaderView = ({
 
   const leftIcon = (hasDrawer, btnColor, backTo) => {
     return hasDrawer ? (
-      <Drawer btnColor={btnColor ?? theme['color-primary-dark']} />
+      <DrawerIcon navigation={navigation} btnColor={btnColor ?? theme['color-primary-dark']} />
     ) : (
       <BackBtn
         backTo={backTo}
