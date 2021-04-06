@@ -15,7 +15,7 @@ const up = function (knex) {
       table.uuid("user_uid").notNullable().primary();
       table.string("user_first_name").notNullable();
       table.string("user_last_name").notNullable();
-      table.string("user_email").notNullable();
+      table.string("user_email").notNullable().unique();
       table.string("user_password").notNullable();
       table.string("user_role").notNullable();
       table.string("user_img");
@@ -163,7 +163,6 @@ const up = function (knex) {
         .notNullable();
 
       table.time("start_time").notNullable();
-      table.time("end_time").notNullable();
       table.time("end_time").notNullable();
       table.date("unavailable_date");
     })
