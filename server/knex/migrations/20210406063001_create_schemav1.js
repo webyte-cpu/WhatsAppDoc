@@ -1,9 +1,11 @@
+import pg from "../../db";
+
 const up = function (knex) {
   return knex.schema
 
     .createTable("addresses", (table) => {
       table.uuid("address_uid").notNullable().primary();
-      table.string("address_street").notNullable();
+      table.string("address");
       table.string("address_city").notNullable();
       table.string("address_province").notNullable();
       table.string("address_zip_code").notNullable();
@@ -14,10 +16,11 @@ const up = function (knex) {
     .createTable("users", (table) => {
       table.uuid("user_uid").notNullable().primary();
       table.string("user_first_name").notNullable();
+      table.string("user_middle_name");
       table.string("user_last_name").notNullable();
       table.string("user_email").notNullable().unique();
       table.string("user_password").notNullable();
-      table.string("user_role").notNullable();
+      table.enu("user_role", ["ADMIN", "DOCTOR", "PATIENT"]).notNullable();
       table.string("user_img");
       table.timestamps();
     })
@@ -31,7 +34,13 @@ const up = function (knex) {
 
       table.string("doctor_licence_num").notNullable();
       table.string("doctor_licence_img");
-      table.string("doctor_verification_status").defaultTo("PENDING");
+      table
+        .enu("doctor_verification_status", [
+          "PENDING",
+          "VERIFIED",
+          "UNVERIFIED",
+        ])
+        .defaultTo("PENDING");
       table.integer("doctor_experience").defaultTo(0);
       table.string("doctor_about");
       table.string("doctor_educational");
@@ -60,13 +69,18 @@ const up = function (knex) {
         .uuid("patient_address_uid")
         .references("addresses.address_uid")
         .notNullable();
-      table.string("patient_sex").notNullable();
       table.date("patient_birthdate").notNullable();
       table.string("patient_contact_number").notNullable();
       table.integer("patient_weight");
       table.integer("patient_height");
-      table.string("patient_civil_status").notNullable();
       table.string("patient_nationality").notNullable();
+      table.enu("patient_sex", ["MALE", "FEMALE"]);
+      table.enu("patient_civil_status", [
+        "SINGLE",
+        "MARRIED",
+        "DIVORCED",
+        "WIDOWED",
+      ]);
     })
 
     .createTable("medical_infos", (table) => {
@@ -87,7 +101,14 @@ const up = function (knex) {
         .references("patients.patient_uid")
         .notNullable();
       table.uuid("doctor_uid").references("doctors.doctor_uid").notNullable();
-      table.string("medical_record_type");
+      table.enu("medical_record_type", [
+        "ALLERGIES",
+        "SURGICAL",
+        "IMMUNIZATION",
+        "LABRATORY",
+        "GENERAL",
+        "OTHER",
+      ]);
       table.string("medical_record_title").notNullable();
       table.string("medical_record_description");
       table.timestamps();
@@ -179,7 +200,15 @@ const up = function (knex) {
         .references("doctor_clinics.doctor_clinic_uid")
         .notNullable();
 
-      table.string("appointment_status").notNullable();
+      table
+        .enu("appointment_status", [
+          "PENDING",
+          "IN_QUEUE",
+          "ON_GOING",
+          "DONE",
+          "CANCELLED",
+        ])
+        .notNullable();
       table.timestamp("appointment_timestamp").notNullable();
       table.string("appointment_doctor_remarks");
     });
