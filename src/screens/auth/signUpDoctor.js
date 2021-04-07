@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Input, Text, Button, useTheme } from '@ui-kitten/components';
 import { View, Image } from 'react-native';
-import { openImagePickerAsync } from './utils/filePicker';
+import { openImagePickerAsync } from '../../components/filePicker';
 import customStyle from '../../../themes/styles';
 
 const SignUpDoctor = ({ specialization, licenseNum, editDoctorDetails }) => {
@@ -41,7 +41,7 @@ const SignUpDoctor = ({ specialization, licenseNum, editDoctorDetails }) => {
   return (
     <>
       <View testID="doctorVerification">
-        <Text category="h6" style={{ marginBottom: 20, marginTop: 20 }}>
+        <Text category="h6" style={customStyle.formTitle}>
           Practitioner Information
         </Text>
         <Input
@@ -50,6 +50,7 @@ const SignUpDoctor = ({ specialization, licenseNum, editDoctorDetails }) => {
           placeholder="Enter Specialization"
           value={specialization}
           onChangeText={(value) => editDoctorDetails('specialization', value)}
+          returnKeyType="next"
         />
         <Input
           testID="licenseNum"
@@ -57,6 +58,7 @@ const SignUpDoctor = ({ specialization, licenseNum, editDoctorDetails }) => {
           placeholder="Enter License Number"
           value={licenseNum}
           onChangeText={(value) => editDoctorDetails('licenseNum', value)}
+          keyboardType='number-pad'
         />
         <Text category="label" style={{ color: theme['text-hint-color'] }}>
           License Image

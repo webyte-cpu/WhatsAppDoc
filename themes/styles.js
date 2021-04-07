@@ -14,6 +14,10 @@ const customStyle = StyleSheet.create({
     width: 100,
     borderRadius: 5
   },
+  formTitle: {
+    marginBottom: 20,
+    marginTop: 50
+  },
   dateCard: {
     width: 30,
     borderRadius: 70

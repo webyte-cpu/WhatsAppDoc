@@ -13,13 +13,17 @@ import {
   Icon,
   Radio,
   RadioGroup,
-  Datepicker,
+  IndexPath,
+  useTheme
 } from '@ui-kitten/components';
 import SignUpDoctor from './signUpDoctor';
 import { TopHeaderView } from '../../components/common';
 import Template from '../../components/template';
 import customStyle from '../../../themes/styles';
 import { useAuth } from './utils/authProvider';
+import { CIVIL_STATUS, ROLE, SEX } from '../../utils/constants';
+import { AddressFields, PatientFields, PersonalFields } from './utils/fields';
+import { AutocompleteHandleKeyboardShowcase } from './utils/testField';
 
 const styles = StyleSheet.create({
   subtitle: {
@@ -63,35 +67,48 @@ const styles = StyleSheet.create({
         height: 170,
       },
     }),
-  },
+  }
 });
 
 const SignupScreen = ({ navigation }) => {
+  const theme = useTheme();
   const auth = useAuth();
   const [secureTextEntry, setSecureTextEntry] = useState(true);
-  const [selectedIndex, setSelectedIndex] = React.useState(0);
-  const [birthdate, setBirthdate] = React.useState(new Date());
-  const [isDoctor, setIsDoctor] = useState(false);
-  const [signUpForm, setSignUpForm] = useState({
+  const [userDetails, setUserDetails] = useState({
     email: '',
     password: '',
     fname: '',
     lname: '',
+    midName: '',
+    role: ROLE.PATIENT,
+  });
+  const [addressDetails, setAddressDetails] = useState({
+    address: '',
     city: '',
     province: '',
     zipCode: '',
-    country: '',
-  });
+    country: new IndexPath(174),
+  })
+  const [patientDetails, setPatientDetails] = useState({
+    sex: 0,
+    birthdate: new Date(),
+    contactNum: '',
+    civilStatus: new IndexPath(0),
+    nationality: new IndexPath(174),
+  })
   const [doctorDetails, setDoctorDetails] = useState({
     specialization: '',
     licenseNum: '',
     licenseImg: '',
+    verificationStatus: ''
   });
 
-  const editForm = (key, value) =>
-    setSignUpForm({ ...signUpForm, [key]: value });
-  const editDoctorDetails = (key, value) =>
-    setDoctorDetails({ ...doctorDetails, [key]: value });
+  const editForm = (formType, formSetter, key, value) => formSetter({ ...formType, [key]: value });
+  const editUserDetails = (key, value) => editForm(userDetails, setUserDetails, key, value)
+  const editPatientDetails = (key, value) => editForm(patientDetails, setPatientDetails, key, value)
+  const editAddressDetails = (key, value) => editForm(addressDetails, setAddressDetails, key, value)
+  const editDoctorDetails = (key, value) => editForm(doctorDetails, setDoctorDetails, key, value)
+
   const toggleSecureEntry = () => setSecureTextEntry(!secureTextEntry);
 
   const showPasswordIcon = (props) => (
@@ -101,26 +118,27 @@ const SignupScreen = ({ navigation }) => {
   );
 
   const signup = () => {
-    const verificationDetails = isDoctor ? doctorDetails : {};
+    const additionalDetails = userDetails.role === ROLE.DOCTOR ? doctorDetails : {};
+    const user = { ...userDetails, sex: SEX[userDetails.sex] }
+    const patient = { ...patientDetails, civilStatus: CIVIL_STATUS[patientDetails.civilStatus.row] }
     const body = {
-      ...signUpForm,
-      selectedIndex,
-      birthdate,
-      ...verificationDetails,
+      ...user,
+      ...addressDetails,
+      ...patient,
+      ...additionalDetails,
     };
-
-    return auth.signup(body);
+    console.log(body)
+    // return auth.signup(body);
   };
 
   // Components
-
   const roleButtons = (
     <View style={styles.buttonContainer}>
       <Button
         testID="patientRole"
         style={styles.button}
-        disabled={!isDoctor}
-        onPress={() => setIsDoctor(false)}
+        disabled={userDetails.role === ROLE.PATIENT}
+        onPress={() => editUserDetails('role', ROLE.PATIENT)}
       >
         <ImageBackground
           source={require('../../../assets/role-patient.png')}
@@ -130,8 +148,8 @@ const SignupScreen = ({ navigation }) => {
       <Button
         testID="doctorRole"
         style={styles.button}
-        disabled={isDoctor}
-        onPress={() => setIsDoctor(true)}
+        disabled={userDetails.role === ROLE.DOCTOR}
+        onPress={() => editUserDetails('role', ROLE.DOCTOR)}
       >
         <ImageBackground
           source={require('../../../assets/role-doctor.png')}
@@ -140,6 +158,24 @@ const SignupScreen = ({ navigation }) => {
       </Button>
     </View>
   );
+
+  const sexField = (
+    <>
+      <Text category='label' style={{ color: theme['text-hint-color'] }}>Sex:</Text>
+      <RadioGroup
+        selectedIndex={patientDetails.sex}
+        onChange={(index) => editPatientDetails('sex', index)}
+        style={{ flexDirection: 'row' }}
+      >
+        <Radio testID="sex-male" style={styles.radio}>
+          Male
+      </Radio>
+        <Radio testID="sex-female" style={styles.radio}>
+          Female
+      </Radio>
+      </RadioGroup>
+    </>
+  )
 
   const signUpContent = (
     <>
@@ -159,88 +195,39 @@ const SignupScreen = ({ navigation }) => {
         <Input
           testID="email"
           label="Email"
-          placeholder="Enter email"
-          value={signUpForm.email}
-          onChangeText={(value) => editForm('email', value)}
+          value={userDetails.email}
+          onChangeText={(value) => editUserDetails('email', value)}
+          placeholder="Enter Email Address"
+          textContentType="emailAddress"
+          keyboardType='email-address'
+          returnKeyType="next"
         />
         <Input
           testID="password"
           label="Password"
-          placeholder="Enter Password"
           accessoryRight={showPasswordIcon}
           secureTextEntry={secureTextEntry}
-          value={signUpForm.password}
-          onChangeText={(value) => editForm('password', value)}
+          value={userDetails.password}
+          onChangeText={(value) => editUserDetails('password', value)}
+          placeholder="Enter Password"
+          textContentType="password"
+          returnKeyType="next"
         />
 
-        <Text category="h6" style={{ marginBottom: 20, marginTop: 20 }}>
+        <Text category="h6" style={customStyle.formTitle}>
           Personal Information
         </Text>
+        <PersonalFields userDetails={userDetails} editUserDetails={editUserDetails} />
+        {sexField}
 
-        <Input
-          testID="fname"
-          label="First Name"
-          placeholder="Enter First Name"
-          onChangeText={(value) => editForm('fname', value)}
-        />
-        <Input
-          testID="lname"
-          label="Last Name"
-          placeholder="Enter Last Name"
-          onChangeText={(value) => editForm('lname', value)}
-        />
-        <Text>Sex:</Text>
+        <PatientFields patientDetails={patientDetails} editPatientDetails={editPatientDetails} />
 
-        <RadioGroup
-          selectedIndex={selectedIndex}
-          onChange={(index) => setSelectedIndex(index)}
-        >
-          <Radio testID="sex-male" style={styles.radio}>
-            Male
-          </Radio>
-          <Radio testID="sex-female" style={styles.radio}>
-            Female
-          </Radio>
-        </RadioGroup>
-
-        <Datepicker
-          testID="birthdate"
-          min={new Date('1700-01-01')}
-          label="Birthdate"
-          date={birthdate}
-          onSelect={setBirthdate}
-        />
-
-        <Text category="h6" style={{ marginBottom: 20, marginTop: 20 }}>
+        <Text category="h6" style={customStyle.formTitle}>
           Address Information
         </Text>
+        <AddressFields addressDetails={addressDetails} editAddressDetails={editAddressDetails} />
 
-        <Input
-          testID="city"
-          label="City"
-          placeholder="Enter City"
-          onChangeText={(value) => editForm('city', value)}
-        />
-        <Input
-          testID="province"
-          label="Province"
-          placeholder="Enter Province"
-          onChangeText={(value) => editForm('province', value)}
-        />
-        <Input
-          testID="zipCode"
-          label="Zip Code"
-          placeholder="Enter Zip Code"
-          onChangeText={(value) => editForm('zipCode', value)}
-        />
-        <Input
-          testID="country"
-          label="Country"
-          placeholder="Enter Country"
-          onChangeText={(value) => editForm('country', value)}
-        />
-
-        {isDoctor ? (
+        {userDetails.role === ROLE.DOCTOR ? (
           <SignUpDoctor
             specialization={doctorDetails.specialization}
             licenseNum={doctorDetails.licenseNum}
@@ -251,7 +238,7 @@ const SignupScreen = ({ navigation }) => {
         )}
 
         <Button
-          testID="finishSignup"
+          testID="signUpBtn"
           style={{ marginTop: 15 }}
           onPress={signup}
         >
