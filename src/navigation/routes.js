@@ -14,6 +14,8 @@ import HomeScreen from '../screens/home/home';
 import ProfileScreen from '../screens/profile/profile';
 import Bookmarks from '../screens/bookmarks/bookmarks';
 import MedRec from '../screens/medical_record/medRec'
+import SchedulePage from '../screens/home/schedulePage'
+import NotificationPage from '../screens/home/notificationPage';
 
 const { Navigator, Screen } = createStackNavigator();
 
@@ -43,6 +45,8 @@ const homeScreen = (
     <Screen name={AppRoute.PROFILE} component={ProfileScreen} />
     <Screen name={AppRoute.BOOKMARKS} component={Bookmarks} />
     <Screen name={AppRoute.MEDICAL_REC} component={MedRec} />
+    <Screen name={AppRoute.SCHEDULE} component={SchedulePage} />
+    <Screen name={AppRoute.NOTIFICATION} component={NotificationPage} />
   </>
 );
 
