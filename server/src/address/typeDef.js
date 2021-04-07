@@ -3,7 +3,7 @@ import { gql } from "apollo-server-express";
 const address = gql`
   type Address {
     uid: UUID!
-    street: String!
+    address: String!
     city: String!
     province: String!
     zipCode: String!
@@ -12,7 +12,7 @@ const address = gql`
   }
 
   input AddressInput {
-    street: String!
+    address: String!
     city: String!
     province: String!
     zipCode: String!
@@ -26,7 +26,7 @@ const address = gql`
 
   extend type Mutation {
     createAddress(
-      street: String!
+      address: String!
       city: String!
       province: String!
       zipCode: String!
@@ -35,7 +35,7 @@ const address = gql`
     ): Address
     updateAddress(
       uid: UUID!
-      street: String!
+      address: String!
       city: String!
       province: String!
       zipCode: String!
