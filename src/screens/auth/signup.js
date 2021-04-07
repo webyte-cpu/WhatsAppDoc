@@ -23,7 +23,6 @@ import customStyle from '../../../themes/styles';
 import { useAuth } from './utils/authProvider';
 import { CIVIL_STATUS, ROLE, SEX } from '../../utils/constants';
 import { AddressFields, PatientFields, PersonalFields } from './utils/fields';
-import { AutocompleteHandleKeyboardShowcase } from './utils/testField';
 
 const styles = StyleSheet.create({
   subtitle: {
