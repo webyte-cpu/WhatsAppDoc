@@ -5,21 +5,23 @@ const patient = gql`
   # This "patient" type defines the queryable fields for every patient in our data source.
   type Patient implements User {
     uid: UUID!
-    address: Address
-    firstName: String
-    lastName: String
+    firstName: String!
+    MiddleName: String
+    lastName: String!
     email: EmailAddress!
     password: String!
+    role: Role!
+    createdAt: DateTime
+    updatedAt: DateTime
+
+    address: Address
     sex: Sex
     birthdate: Date
-    phoneNumber: String
+    contactNumber: PhoneNumber
     weight: PositiveFloat
     height: PositiveFloat
-    civilStatus: String
+    civilStatus: CivilStatus
     nationality: String
-    isDoctor: Boolean
-
-    patientStatus: String
   }
 
   # The "Query" type is special: it lists all of the available queries that
@@ -32,40 +34,44 @@ const patient = gql`
 
   extend type Mutation {
     createPatient(
-      address: AddressInput
       firstName: String!
+      MiddleName: String
       lastName: String!
       email: EmailAddress!
       password: String!
+      role: Role!
+      createdAt: DateTime
+      updatedAt: DateTime
+
+      address: Address
       sex: Sex
       birthdate: Date
-      phoneNumber: String
+      contactNumber: PhoneNumber
       weight: PositiveFloat
       height: PositiveFloat
-      civilStatus: String
+      civilStatus: CivilStatus
       nationality: String
-      isDoctor: Boolean
-
-      patientStatus: String
     ): Patient
 
     updatePatient(
       uid: UUID!
-      address: AddressInput
       firstName: String!
+      MiddleName: String
       lastName: String!
       email: EmailAddress!
       password: String!
+      role: Role!
+      createdAt: DateTime
+      updatedAt: DateTime
+
+      address: Address
       sex: Sex
       birthdate: Date
-      phoneNumber: String
+      contactNumber: PhoneNumber
       weight: PositiveFloat
       height: PositiveFloat
-      civilStatus: String
+      civilStatus: CivilStatus
       nationality: String
-      isDoctor: Boolean
-
-      patientStatus: String
     ): Patient
 
     deletePatient(uid: UUID): Patient
