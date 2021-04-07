@@ -2,35 +2,25 @@ import { gql } from "apollo-server-core";
 const doctor = gql`
   # Comments in GraphQL strings (such as this one) start with the hash (#) symbol.
 
-  enum VerificationStatus {
-    PENDING
-    VERIFIED
-    DECLINED
-  }
-
   # This "doctor" type defines the queryable fields for every doctor in our data source.
   type Doctor implements User {
     uid: UUID!
-    address: Address
-    firstName: String
-    lastName: String
+    firstName: String!
+    MiddleName: String
+    lastName: String!
     email: EmailAddress!
     password: String!
-    sex: Sex
-    birthdate: Date
-    phoneNumber: String
-    weight: PositiveFloat
-    height: PositiveFloat
-    civilStatus: String
-    nationality: String
-    isDoctor: Boolean
+    role: Role!
+    createdAt: DateTime
+    updatedAt: DateTime
 
-    licenceNo: String!
-    experience: Int!
-    rating: Int
-    doctor_verification_status: VerificationStatus
+    licenceNum: String!
+    licenceImg: Int!
+    verificationStatus: VerificationStatus
+    experience: Int
     about: String
-    bio: String
+    educational: String
+    rating: Int
   }
 
   # The "Query" type is special: it lists all of the available queries that
@@ -43,47 +33,41 @@ const doctor = gql`
 
   extend type Mutation {
     createDoctor(
-      address: AddressInput
       firstName: String!
+      MiddleName: String
       lastName: String!
       email: EmailAddress!
       password: String!
-      sex: Sex
-      birthdate: Date
-      phoneNumber: String
-      weight: PositiveFloat
-      height: PositiveFloat
-      civilStatus: String
-      nationality: String
-      isDoctor: Boolean
-      licenceNo: String!
-      experience: Int!
-      rating: Int
+      role: Role!
+      createdAt: DateTime
+      updatedAt: DateTime
+
+      licenceNum: String!
+      licenceImg: Int!
       verificationStatus: VerificationStatus
+      experience: Int
       about: String
-      bio: String
+      educational: String
+      rating: Int
     ): Doctor
 
     updateDoctor(
-      address: AddressInput
       firstName: String!
+      MiddleName: String
       lastName: String!
       email: EmailAddress!
       password: String!
-      sex: Sex
-      birthdate: Date
-      phoneNumber: String
-      weight: PositiveFloat
-      height: PositiveFloat
-      civilStatus: String
-      nationality: String
-      isDoctor: Boolean
-      licenceNo: String!
-      experience: Int!
-      rating: Int
+      role: Role!
+      createdAt: DateTime
+      updatedAt: DateTime
+
+      licenceNum: String!
+      licenceImg: Int!
       verificationStatus: VerificationStatus
+      experience: Int
       about: String
-      bio: String
+      educational: String
+      rating: Int
     ): Doctor
 
     deleteDoctor(uid: UUID!): Doctor
