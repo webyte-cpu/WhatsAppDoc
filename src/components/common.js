@@ -11,7 +11,7 @@ const TopHeaderView = ({
   titleColor = null,
   btnColor = null,
   topbarColor = 'transparent',
-  backTo = null,
+  backTo,
   hasDrawer = false,
 }) => {
   const theme = useTheme();
