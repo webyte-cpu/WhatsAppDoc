@@ -1,26 +1,16 @@
 import { gql } from "apollo-server-express";
 
 const user = gql`
-  enum Sex {
-    MALE
-    FEMALE
-  }
-
   interface User {
     uid: UUID!
-    address: Address
-    firstName: String
-    lastName: String
+    firstName: String!
+    MiddleName: String
+    lastName: String!
     email: EmailAddress!
     password: String!
-    sex: Sex
-    birthdate: Date
-    phoneNumber: String
-    weight: PositiveFloat
-    height: PositiveFloat
-    civilStatus: String
-    nationality: String
-    isDoctor: Boolean
+    role: Role!
+    createdAt: DateTime
+    updatedAt: DateTime
   }
 
   extend type Query {
@@ -31,15 +21,13 @@ const user = gql`
   extend type Mutation {
     signUp(
       firstName: String!
+      MiddleName: String
       lastName: String!
-      sex: Sex!
-      birthdate: Date!
-      address: AddressInput
       email: EmailAddress!
       password: String!
-      isDoctor: Boolean!
-      specialization: String
-      licenceNo: String
+      role: Role!
+      createdAt: DateTime
+      updatedAt: DateTime
     ): User
   }
 `;
