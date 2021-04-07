@@ -28,3 +28,5 @@ const enums = {
     UNVERIFIED: "UNVERIFIED",
   },
 };
+
+export default enums;
