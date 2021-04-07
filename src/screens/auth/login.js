@@ -15,7 +15,7 @@ import Template from '../../components/template';
 const styles = StyleSheet.create({
   container: {
     justifyContent: 'center',
-    alignItems: 'center',
+    alignItems: 'center'
   },
   img: {
     height: 200,
@@ -41,7 +41,7 @@ const LoginScreen = ({ navigation }) => {
   const [secureTextEntry, setSecureTextEntry] = useState(true);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const auth = useAuth()
+  const auth = useAuth();
 
   const toggleSecureEntry = () => setSecureTextEntry(!secureTextEntry);
 
@@ -55,12 +55,12 @@ const LoginScreen = ({ navigation }) => {
 
   const login = async () => {
     if (email.length == 0 || password.length == 0) {
-      alert('Username or password field cannot be empty.') // TODO: change to snackbar
+      alert('Username or password field cannot be empty.'); // TODO: change to snackbar
       return;
     }
 
-    return auth.login(email, password, (err) => alert(err))
-  }
+    return auth.login(email, password, (err) => auth.onError(err));
+  };
 
   const goToSignUp = () => navigation.navigate(AppRoute.SIGNUP);
   const forgotPassword = () => navigation.navigate(AppRoute.FORGOT_PASS);
@@ -107,6 +107,8 @@ const LoginScreen = ({ navigation }) => {
     </Text>
   );
 
+  const showErrMsg = (errMsg) => <Text status="danger" category="s1" style={{textAlign: "center"}}>{errMsg}</Text>;
+
   const loginPage = (
     <View>
       <Text category="h1" style={{ textAlign: 'center' }}>
@@ -126,14 +128,15 @@ const LoginScreen = ({ navigation }) => {
         >
           Forgot Password?
         </Text>
-        <Button onPress={login}>Login</Button>
+        {auth.state.errMsg !== null ? showErrMsg(auth.state.errMsg) : <></>}
+        <Button onPress={login} style={{marginTop: 10 }}>Login</Button>
         {signupBtn}
       </View>
     </View>
   );
 
-  if(auth.state.isLoading) {
-    return <Spinner status='primary' size='giant' />
+  if (auth.state.isLoading) {
+    return <Spinner status="primary" size="giant" />;
   }
 
   return (
