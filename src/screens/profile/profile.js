@@ -15,7 +15,7 @@ const Profile = ({ navigation }) => {
 
   const profile = (
     <>
-      <TopHeaderView navigation={navigation} hasDrawer={false}>
+      <TopHeaderView navigation={navigation} hasDrawer={false} backTo={navigation}>
         <View style={{ ...customStyle.content, marginTop: 10 }}>
           <Text>Profile</Text>
           <Text>{userEmail}</Text>
