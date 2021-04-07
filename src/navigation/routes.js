@@ -12,6 +12,7 @@ import SignupScreen from '../screens/auth/signup';
 import ForgotPassword from '../screens/auth/forgotPassword';
 import HomeScreen from '../screens/home/home';
 import Profile from '../screens/profile/profile';
+import SearchPage from '../screens/search/searchPage';
 
 const { Navigator, Screen } = createStackNavigator();
 
@@ -22,6 +23,7 @@ const linking = {
     Signup: 'signup',
     ForgotPass: 'forgotpass',
     Profile: 'profile',
+    Search: 'search'
   },
 };
 
@@ -37,6 +39,7 @@ const homeScreen = (
   <>
     <Screen name={AppRoute.HOME} component={HomeScreen} />
     <Screen name={AppRoute.PROFILE} component={Profile} />
+    <Screen name={AppRoute.SEARCH} component={SearchPage} />
   </>
 );
 
