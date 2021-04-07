@@ -3,27 +3,28 @@ import { View } from 'react-native';
 import { TopNavigation, Text, useTheme } from '@ui-kitten/components';
 import { BackBtn } from './backBtn';
 import customStyle from '../../themes/styles';
-import Drawer from './drawer';
+import { DrawerMenu } from './drawer';
 
 const TopHeaderView = ({
+  navigation,
   title,
   titleColor = null,
   btnColor = null,
   topbarColor = 'transparent',
-  backTo = null,
+  backTo,
   hasDrawer = false,
 }) => {
   const theme = useTheme();
 
   const leftIcon = (hasDrawer, btnColor, backTo) => {
     return hasDrawer ? (
-      <Drawer btnColor={btnColor ?? theme['color-primary-dark']} />
+      <DrawerMenu navigation={navigation} btnColor={btnColor ?? theme['color-primary-dark']} />
     ) : (
-      <BackBtn
-        backTo={backTo}
-        btnColor={btnColor ?? theme['color-primary-dark']}
-      />
-    );
+        <BackBtn
+          backTo={backTo}
+          btnColor={btnColor ?? theme['color-primary-dark']}
+        />
+      );
   };
 
   return (

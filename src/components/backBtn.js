@@ -5,6 +5,6 @@ export const BackBtn = ({ btnColor, backTo }) => {
   const backBtn = (btnColor, props) => <Icon {...props} name='arrow-back' fill={btnColor}/>;
 
   return (
-    <TopNavigationAction icon={(props) => backBtn(btnColor, props)} onPress={() => backTo()} />
+    <TopNavigationAction icon={(props) => backBtn(btnColor, props)} onPress={() => backTo.goBack()} />
   )
 }
