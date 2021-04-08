@@ -36,7 +36,7 @@ const enums = gql`
     OTHER
   }
 
-  enum verificationStatus {
+  enum VerificationStatus {
     PENDING
     VERIFIED
     UNVERIFIED
