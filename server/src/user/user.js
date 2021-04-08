@@ -1,77 +1,98 @@
 import pg from "../../db/index.js";
 import objectFilter from "../helpers/objectFilter.js";
+import { UserInputError } from "apollo-server-errors";
+import enums from "../enum/enum.js";
 import { v4 as uuidV4 } from "uuid";
 
 const user = {
   signUp: async (arg) => {
     return pg.transaction(async (knex) => {
       const userUid = uuidV4();
-      const addressUid = arg.address && uuidV4();
+      const responseList = [];
 
-      //address arg exist
-      const addressResponse =
-        arg.address &&
-        knex
-          .insert(
-            objectFilter({
-              address_uid: addressUid,
-              address_street: arg.address.street,
-              address_city: arg.address.city,
-              address_province: arg.address.province,
-              address_zip_code: arg.address.zipCode,
-              address_country: arg.address.country,
-              address_coordinates: arg.address.coordinates,
-            })
-          )
-          .into("addresses")
-          .returning("*");
+      console.log(arg.role);
 
       const userResponse = knex
         .insert(
           objectFilter({
             user_uid: userUid,
-            address_uid: addressUid,
             user_first_name: arg.firstName,
             user_last_name: arg.lastName,
             user_email: arg.email,
             user_password: arg.password,
-            user_sex: arg.sex,
-            user_birthdate: arg.birthdate,
-            user_is_doctor: arg.isDoctor,
+            user_role: arg.role,
+            user_img: arg.img,
+            created_at: new Date(Date.now()),
           })
         )
         .into("users")
         .returning("*");
 
-      const doctorResponse =
-        arg.isDoctor &&
-        knex
-          .insert(
-            objectFilter({
-              doctor_uid: uuidV4(),
-              user_uid: userUid,
-              doctor_licence_no: arg.licenceNo,
-            })
-          )
-          .into("doctors")
-          .returning("*");
+      responseList.push(userResponse);
 
-      const patientResponse = knex
-        .insert({
-          patient_uid: uuidV4(),
-          user_uid: userUid,
-        })
-        .into("patients")
-        .returning("*");
+      switch (arg.role) {
+        case enums.role.DOCTOR:
+          if (!arg.licenceNum && !arg.licenceImg) {
+            throw new UserInputError(
+              "Docotor licence number and licence image path are required!"
+            );
+          }
 
-      const responseList = [
-        addressResponse,
-        userResponse,
-        doctorResponse,
-        patientResponse,
-      ];
+          const doctorResponse = knex
+            .insert(
+              objectFilter({
+                doctor_uid: userUid,
+                doctor_licence_num: arg.licenceNum,
+                doctor_licence_img: arg.licenceImg,
+              })
+            )
+            .into("doctors")
+            .returning("*");
 
-      const responses = await Promise.all(responseList.filter((x) => x));
+          responseList.push(doctorResponse);
+
+        case enums.role.PATIENT:
+          if (!arg.address && arg.role !== enums.role.DOCTOR) {
+            throw new UserInputError("Patient address is required!");
+          }
+          let addressUid;
+
+          if (arg.address) {
+            addressUid = uuidV4();
+
+            const addressResponse = knex
+              .insert(
+                objectFilter({
+                  address_uid: addressUid,
+                  address: arg.address.address,
+                  address_city: arg.address.city,
+                  address_province: arg.address.province,
+                  address_zip_code: arg.address.zipCode,
+                  address_country: arg.address.country,
+                  address_coordinates: arg.address.coordinates,
+                })
+              )
+              .into("addresses")
+              .returning("*");
+
+            responseList.push(addressResponse);
+          }
+          const patientResponse = knex
+            .insert(
+              objectFilter({
+                patient_uid: userUid,
+                address_uid: addressUid,
+                patient_birthdate: arg.birthdate,
+                patient_sex: arg.sex,
+              })
+            )
+            .into("patients")
+            .returning("*");
+
+          responseList.push(patientResponse);
+      }
+
+      const responses = await Promise.all(responseList);
 
       const dataCompiled = responses.reduce((obj, response) => {
         if (response[0]?.address_city) {
@@ -87,14 +108,14 @@ const user = {
         sex: dataCompiled.user_sex,
         birthdate: dataCompiled.user_birthdate,
         email: dataCompiled.user_email,
-        licenceNo: dataCompiled.doctor_licence_no,
-        isDoctor: dataCompiled.user_is_doctor,
+        licenceNum: dataCompiled.doctor_licence_no,
+        role: dataCompiled.user_role,
         address: {
-          street: dataCompiled.address.address_street,
-          city: dataCompiled.address.address_city,
-          province: dataCompiled.address.address_province,
-          zipCode: dataCompiled.address.address_zip_code,
-          country: dataCompiled.address.address_country,
+          address: dataCompiled?.address.address,
+          city: dataCompiled?.address.address_city,
+          province: dataCompiled?.address.address_province,
+          zipCode: dataCompiled?.address.address_zip_code,
+          country: dataCompiled?.address.address_country,
         },
       };
     });
