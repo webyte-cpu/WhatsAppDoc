@@ -12,7 +12,8 @@ const AppRoute = {
   MEDICAL_REC: 'MedRec',
   BOOKMARKS: 'Bookmarks',
   NOTIFICATION: 'Notification',
-  SCHEDULE: 'Schedule'
+  SCHEDULE: 'Schedule',
+  CATEGORY: 'Category'
 }
 
 export { AppRoute };

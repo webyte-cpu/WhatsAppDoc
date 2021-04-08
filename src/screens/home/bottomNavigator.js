@@ -1,17 +1,16 @@
 import React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { createDrawerNavigator } from '@react-navigation/drawer';
 import { BottomNavigation, BottomNavigationTab, Icon } from '@ui-kitten/components';
-import SchedulePage from './schedulePage';
-import NotificationPage from './notificationPage';
+import HomeStackScreen from './homePage';
+import ScheduleStackScreen from './schedulePage';
+import NotificationStackScreen from './notificationPage';
+import ProfileStackScreen from '../profile/profile';
 import { AppRoute } from '../../navigation/app-routes';
-import HomePage from './homePage';
-import { createStackNavigator } from '@react-navigation/stack';
-import DrawerMenuBtn from '../../components/drawer';
-import HomeNavigator from './homeNavigator';
+// import HomeNavigator from './homeNavigator';
 
+const Drawer = createDrawerNavigator();
 const BottomTab = createBottomTabNavigator();
-const BottomTabStack = createStackNavigator();
-
 
 const HomeIcon = (props) => <Icon {...props} name='home' />;
 const CalendarIcon = (props) => <Icon {...props} name='calendar' />;
@@ -29,22 +28,19 @@ const BottomTabBar = ({ navigation, state }) => (
   </BottomNavigation>
 );
 
-const BottomNavigator = () => (
+const TabScreen = () => (
   <BottomTab.Navigator tabBar={props => <BottomTabBar {...props} />}>
-    <BottomTab.Screen name={AppRoute.HOME} component={HomePage} />
-    <BottomTab.Screen name={AppRoute.SCHEDULE} component={SchedulePage} />
-    <BottomTab.Screen name={AppRoute.NOTIFICATION} component={NotificationPage} />
+    <BottomTab.Screen name={AppRoute.HOME} component={HomeStackScreen} />
+    <BottomTab.Screen name={AppRoute.SCHEDULE} component={ScheduleStackScreen} />
+    <BottomTab.Screen name={AppRoute.NOTIFICATION} component={NotificationStackScreen} />
   </BottomTab.Navigator>
+);
+
+const DrawerScreen = () => (
+  <Drawer.Navigator>
+    <Drawer.Screen name="Home" component={TabScreen}  />
+    <Drawer.Screen name="Profile" component={ProfileStackScreen} />
+  </Drawer.Navigator>
 )
 
-const BottomTabs = () => (
-  <BottomTabStack.Navigator>
-    <BottomTabStack.Screen name='BottomTabs' component={BottomNavigator} options={{
-      title: '', 
-      headerLeft: () => <DrawerMenuBtn />,
-      headerLeftContainerStyle: { paddingHorizontal: 10 }
-    }} />
-  </BottomTabStack.Navigator>
-)
-
-export default BottomTabs;
+export default DrawerScreen;
