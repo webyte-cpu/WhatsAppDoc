@@ -43,7 +43,7 @@ const patient = gql`
       createdAt: DateTime
       updatedAt: DateTime
 
-      address: Address
+      address: AddressInput
       sex: Sex
       birthdate: Date
       contactNumber: PhoneNumber
@@ -64,7 +64,7 @@ const patient = gql`
       createdAt: DateTime
       updatedAt: DateTime
 
-      address: Address
+      address: AddressInput
       sex: Sex
       birthdate: Date
       contactNumber: PhoneNumber
