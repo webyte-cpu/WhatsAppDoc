@@ -33,7 +33,7 @@ const up = function (knex) {
         .primary();
 
       table.string("doctor_licence_num").notNullable();
-      table.string("doctor_licence_img");
+      table.string("doctor_licence_img").notNullable();
       table
         .enu("doctor_verification_status", [
           "PENDING",
@@ -65,16 +65,14 @@ const up = function (knex) {
         .notNullable()
         .primary();
 
-      table
-        .uuid("patient_address_uid")
-        .references("addresses.address_uid")
-        .notNullable();
+      table.uuid("address_uid").references("addresses.address_uid");
+
       table.date("patient_birthdate").notNullable();
-      table.string("patient_contact_number").notNullable();
+      table.string("patient_contact_number");
       table.integer("patient_weight");
       table.integer("patient_height");
-      table.string("patient_nationality").notNullable();
-      table.enu("patient_sex", ["MALE", "FEMALE"]);
+      table.string("patient_nationality");
+      table.enu("patient_sex", ["MALE", "FEMALE"]).notNullable();
       table.enu("patient_civil_status", [
         "SINGLE",
         "MARRIED",
