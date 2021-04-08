@@ -7,7 +7,8 @@ const customStyle = StyleSheet.create({
     alignItems: 'center'
   },
   content: {
-    paddingHorizontal: 18
+    paddingTop: 20,
+    paddingHorizontal: 20
   },
   uploadImgContainer: {
     height: 100,
