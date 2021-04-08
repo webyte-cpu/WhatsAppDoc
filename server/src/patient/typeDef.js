@@ -43,9 +43,9 @@ const patient = gql`
       createdAt: DateTime
       updatedAt: DateTime
 
-      address: AddressInput
-      sex: Sex
-      birthdate: Date
+      address: AddressInput!
+      sex: Sex!
+      birthdate: Date!
       contactNumber: PhoneNumber
       weight: PositiveFloat
       height: PositiveFloat
