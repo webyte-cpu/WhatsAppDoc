@@ -13,6 +13,18 @@ const user = gql`
     updatedAt: DateTime
   }
 
+  type Admin implements User {
+    uid: UUID!
+    firstName: String!
+    MiddleName: String
+    lastName: String!
+    email: EmailAddress!
+    password: String!
+    role: Role!
+    createdAt: DateTime
+    updatedAt: DateTime
+  }
+
   extend type Query {
     getUser(uid: UUID!): [User]
     getAllUser: [User]
@@ -26,8 +38,11 @@ const user = gql`
       email: EmailAddress!
       password: String!
       role: Role!
-      createdAt: DateTime
-      updatedAt: DateTime
+      address: AddressInput
+      sex: Sex!
+      birthdate: Date!
+      licenceNum: String
+      licenceImg: String
     ): User
   }
 `;
