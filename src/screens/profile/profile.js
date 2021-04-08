@@ -6,7 +6,6 @@ import customStyle from '../../../themes/styles';
 import Template from '../../components/template';
 import { AppRoute } from '../../navigation/app-routes';
 import { useAuth } from '../auth/utils/authProvider';
-import { Drawer } from '../../components/drawer';
 
 
 const Profile = ({ navigation }) => {
@@ -15,23 +14,24 @@ const Profile = ({ navigation }) => {
 
   const profile = (
     <>
-      <TopHeaderView navigation={navigation} hasDrawer={false} backTo={navigation}>
+      {/* <TopHeaderView navigation={navigation} hasDrawer={false} backTo={navigation}> */}
         <View style={{ ...customStyle.content, marginTop: 10 }}>
           <Text>Profile</Text>
           <Text>{userEmail}</Text>
           <Button onPress={() => navigation.navigate(AppRoute.HOME)}>Home</Button>
         </View>
-      </TopHeaderView>
+      {/* </TopHeaderView> */}
     </>
   )
   return (
-    <Template children={profile} />
+    // <Template children={profile} />
+    {profile}
   )
 }
-const ProfileScreen = () => {
-  return (
-    <Drawer children={Profile} />
-  )
-}
+// const ProfileScreen = () => {
+//   return (
+//     <Drawer children={Profile} />
+//   )
+// }
 
-export default ProfileScreen;
+export default Profile;

@@ -1,16 +1,15 @@
 import React from 'react';
-import { View, Text } from 'react-native';
-import { TopHeaderView } from '../../components/common';
+import { View } from 'react-native';
+import { Text } from '@ui-kitten/components';
+
 import customStyle from '../../../themes/styles';
 
-const NotificationPage = ({navigation,fname}) => {
-    return(
-      <>
-      <TopHeaderView navigation={navigation} hasDrawer={true} />
-        <View style={{ ...customStyle.content, marginTop: 10 }}>
-        <Text>NOTIFICATION</Text>
-        </View>
-      </>
-    )}
+const NotificationPage = ({ navigation }) => {
+  return (
+    <View style={customStyle.content}>
+      <Text>NOTIFICATION</Text>
+    </View>
+  )
+}
 
-    export default NotificationPage
+export default NotificationPage

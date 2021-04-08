@@ -8,14 +8,11 @@ const AppRoute = {
   FORGOT_PASS: 'ForgotPass',
   HOME: 'Home',
   PROFILE: 'Profile',
-<<<<<<< HEAD
-  SEARCH: 'Search'
-=======
+  SEARCH: 'Search',
   MEDICAL_REC: 'MedRec',
   BOOKMARKS: 'Bookmarks',
   NOTIFICATION: 'Notification',
   SCHEDULE: 'Schedule'
->>>>>>> 8cb92d0bbc4de02da2f32bb39432a5faa8ba7dd1
 }
 
 export { AppRoute };

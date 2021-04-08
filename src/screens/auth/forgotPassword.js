@@ -12,6 +12,7 @@ import {
 import { AppRoute } from '../../navigation/app-routes';
 import Template from '../../components/template';
 import { TopHeaderView } from '../../components/common';
+import customStyle from '../../../themes/styles';
 
 const styles = StyleSheet.create({
   container: {
@@ -34,14 +35,9 @@ const ForgotPassword = ({ navigation }) => {
 
   const sendLink = () => navigation.navigate(AppRoute.LOGIN);
 
-  const forgotPassPage = (
-    <>
-      <TopHeaderView
-        title="Forgot Password"
-        backTo={() => navigation.goBack()}
-      ></TopHeaderView>
-      <View style={{ paddingHorizontal: 30, paddingTop: 20 }}>
-        <Input
+  return (
+    <View style={{...customStyle.content, backgroundColor: 'white'}}>
+      <Input
           testID="email"
           label="Email"
           selectTextOnFocus
@@ -51,17 +47,7 @@ const ForgotPassword = ({ navigation }) => {
           style={{ paddingBottom: 10 }}
         />
         <Button onPress={sendLink}>Send Link</Button>
-      </View>
-    </>
-  );
-  return (
-    <>
-      <Template
-        backgroundColor="white"
-        contentContainerStyle={styles.container}
-        children={forgotPassPage}
-      />
-    </>
+    </View>
   );
 };
 

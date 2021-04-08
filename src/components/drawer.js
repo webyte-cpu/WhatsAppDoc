@@ -1,57 +1,22 @@
 import React from 'react'
-import { Icon, TopNavigationAction } from '@ui-kitten/components';
-import { AppRoute } from '../navigation/app-routes';
-import {
-  createDrawerNavigator,
-  DrawerContentScrollView,
-  DrawerItemList,
-  DrawerItem,
-}
-  from '@react-navigation/drawer';
+import { Icon, useTheme } from '@ui-kitten/components';
+import { TouchableWithoutFeedback, View } from 'react-native';
 
-const DrawerMenu = ({ btnColor, navigation }) => {
-  const drawerBtn = (btnColor, props) => <Icon {...props} name='menu' fill={btnColor} />;
+// drawer button with toggle function
+const DrawerMenuBtn = (props)=> {
+  const theme = useTheme();
+  
+  const toggleDrawer = () => {
+    props.navigationProps.openDrawer();
+  };
 
   return (
-    <TopNavigationAction icon={(props) => drawerBtn(btnColor, props)} onPress={() => navigation.toggleDrawer()} />
-  )
-}
-
-const DrawerContent = (props) => {
-  return (
-    <DrawerContentScrollView {...props}>
-      <DrawerItemList {...props} />
-      <DrawerItem
-        label="Profile"
-        onPress={() => props.navigation.navigate(AppRoute.PROFILE)}
-      />
-      <DrawerItem
-        label="Bookmarks"
-        onPress={() => props.navigation.navigate(AppRoute.BOOKMARKS)}
-      />
-      <DrawerItem
-        label="Medical Records"
-        onPress={() => props.navigation.navigate(AppRoute.MEDICAL_REC)}
-      />
-    </DrawerContentScrollView>
+    <View style={{ flexDirection: 'row' }}>
+      <TouchableWithoutFeedback onPress={()=> alert('open drawer')}>
+        <Icon name='menu' fill={theme['color-primary-dark']} style={{width: 25, height: 25 }}/>
+      </TouchableWithoutFeedback>
+    </View>
   );
 }
 
-const CreateDrawer = createDrawerNavigator();
-
-const DrawerNavigator = ({ children }) => {
-  return (
-    <CreateDrawer.Navigator drawerContent={props => <DrawerContent {...props} />}>
-      <CreateDrawer.Screen name={AppRoute.HOME} component={children} />
-    </CreateDrawer.Navigator>
-  );
-}
-
-const Drawer = ({ children }) => {
-  return (
-    <DrawerNavigator children={children} />
-  )
-}
-
-
-export { DrawerMenu, Drawer };
+export default DrawerMenuBtn;

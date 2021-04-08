@@ -7,34 +7,12 @@ import {
   Image,
 } from 'react-native';
 import { Button, Text, Input, Icon, Spinner } from '@ui-kitten/components';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { AppRoute } from '../../navigation/app-routes';
 import { useAuth } from './utils/authProvider';
 import loginImg from '../../../assets/img/login-welcome.jpg';
-import Template from '../../components/template';
-
-const styles = StyleSheet.create({
-  container: {
-    justifyContent: 'center',
-    alignItems: 'center'
-  },
-  img: {
-    height: 200,
-    width: 300,
-    ...Platform.select({
-      web: {
-        height: 280,
-        width: 350,
-      },
-    }),
-  },
-  imgContainer: {
-    alignItems: 'center',
-    paddingTop: 10,
-  },
-  loginContainer: {
-    paddingVertical: 15,
-  },
-});
+import customStyle from '../../../themes/styles';
 
 const LoginScreen = ({ navigation }) => {
   const nextFieldFocus = useRef(null);
@@ -74,6 +52,8 @@ const LoginScreen = ({ navigation }) => {
         placeholder="Enter email"
         value={email}
         onChangeText={setEmail}
+        keyboardType='email-address'
+        textContentType='emailAddress'
         returnKeyType="next"
         onSubmitEditing={toNextField}
       />
@@ -85,6 +65,7 @@ const LoginScreen = ({ navigation }) => {
         secureTextEntry={secureTextEntry}
         value={password}
         onChangeText={setPassword}
+        textContentType='password'
         returnKeyType="go"
         ref={nextFieldFocus}
         onSubmitEditing={login}
@@ -107,10 +88,10 @@ const LoginScreen = ({ navigation }) => {
     </Text>
   );
 
-  const showErrMsg = (errMsg) => <Text status="danger" category="s1" style={{textAlign: "center"}}>{errMsg}</Text>;
+  const showErrMsg = (errMsg) => <Text status="danger" category="s1" style={{ textAlign: "center" }}>{errMsg}</Text>;
 
   const loginPage = (
-    <View>
+    <View style={customStyle.content}>
       <Text category="h1" style={{ textAlign: 'center' }}>
         WhatsAppDoc
       </Text>
@@ -129,7 +110,7 @@ const LoginScreen = ({ navigation }) => {
           Forgot Password?
         </Text>
         {auth.state.errMsg !== null ? showErrMsg(auth.state.errMsg) : <></>}
-        <Button onPress={login} style={{marginTop: 10 }}>Login</Button>
+        <Button onPress={login} style={{ marginTop: 10 }}>Login</Button>
         {signupBtn}
       </View>
     </View>
@@ -140,8 +121,36 @@ const LoginScreen = ({ navigation }) => {
   }
 
   return (
-    <Template children={loginPage} contentContainerStyle={styles.container} />
+    <KeyboardAwareScrollView 
+      contentContainerStyle={{ flex: 1, backgroundColor: 'white', ...customStyle.container}}
+    >
+      {loginPage}
+    </KeyboardAwareScrollView>
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+  img: {
+    height: 200,
+    width: 300,
+    ...Platform.select({
+      web: {
+        height: 280,
+        width: 350,
+      },
+    }),
+  },
+  imgContainer: {
+    alignItems: 'center',
+    paddingTop: 10,
+  },
+  loginContainer: {
+    paddingVertical: 15,
+  },
+});
 
 export default LoginScreen;

@@ -1,4 +1,5 @@
 import React from 'react';
+import { Icon, useTheme } from '@ui-kitten/components';
 import { createStackNavigator } from '@react-navigation/stack';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { NavigationContainer } from '@react-navigation/native';
@@ -7,57 +8,14 @@ import { useFonts } from 'expo-font';
 import { useAuth } from '../screens/auth/utils/authProvider';
 import customFonts from '../../themes/custom-fonts';
 import AppLoading from 'expo-app-loading';
-import LoginScreen from '../screens/auth/login';
-import SignupScreen from '../screens/auth/signup';
-import ForgotPassword from '../screens/auth/forgotPassword';
-import HomeScreen from '../screens/home/home';
-import Profile from '../screens/profile/profile';
-import SearchPage from '../screens/search/searchPage';
-import ProfileScreen from '../screens/profile/profile';
-import Bookmarks from '../screens/bookmarks/bookmarks';
-import MedRec from '../screens/medical_record/medRec'
-import SchedulePage from '../screens/home/schedulePage'
-import NotificationPage from '../screens/home/notificationPage';
-
-const { Navigator, Screen } = createStackNavigator();
-
-const linking = {
-  config: {
-    Home: 'home',
-    Login: '',
-    Signup: 'signup',
-    ForgotPass: 'forgotpass',
-    Profile: 'profile',
-    Search: 'search',
-    Bookmarks: 'bookmarks',
-    MedRec: 'medrec'
-  },
-};
-
-const authScreens = (
-  <>
-    <Screen name={AppRoute.LOGIN} component={LoginScreen} />
-    <Screen name={AppRoute.SIGNUP} component={SignupScreen} />
-    <Screen name={AppRoute.FORGOT_PASS} component={ForgotPassword} />
-  </>
-);
-
-const homeScreen = (
-  <>
-    <Screen name={AppRoute.HOME} component={HomeScreen} />
-    <Screen name={AppRoute.PROFILE} component={Profile} />
-    <Screen name={AppRoute.SEARCH} component={SearchPage} />
-    <Screen name={AppRoute.PROFILE} component={ProfileScreen} />
-    <Screen name={AppRoute.BOOKMARKS} component={Bookmarks} />
-    <Screen name={AppRoute.MEDICAL_REC} component={MedRec} />
-    <Screen name={AppRoute.SCHEDULE} component={SchedulePage} />
-    <Screen name={AppRoute.NOTIFICATION} component={NotificationPage} />
-  </>
-);
+import AuthNavigator from '../screens/auth/authNavigator';
+import BottomTabs from '../screens/home/bottomNavigator';
 
 const AppNavigator = () => {
+  const theme = useTheme();
   const auth = useAuth();
   const [fontsLoaded] = useFonts(customFonts);
+
 
   if (fontsLoaded && auth.state.isLoading) {
     return <AppLoading />;
@@ -65,10 +23,8 @@ const AppNavigator = () => {
 
   return (
     <SafeAreaProvider>
-      <NavigationContainer linking={linking}>
-        <Navigator headerMode="none">
-          {auth.state.token == null ? authScreens : homeScreen}
-        </Navigator>
+      <NavigationContainer>
+        {auth.state.token == null ? <AuthNavigator /> : <BottomTabs />}
       </NavigationContainer>
     </SafeAreaProvider>
   );

@@ -5,6 +5,7 @@ import {
   TouchableWithoutFeedback,
   ImageBackground,
   Platform,
+  ScrollView
 } from 'react-native';
 import {
   Button,
@@ -23,51 +24,7 @@ import customStyle from '../../../themes/styles';
 import { useAuth } from './utils/authProvider';
 import { CIVIL_STATUS, ROLE, SEX } from '../../utils/constants';
 import { AddressFields, PatientFields, PersonalFields } from './utils/fields';
-
-const styles = StyleSheet.create({
-  subtitle: {
-    paddingBottom: 5,
-    color: 'white',
-  },
-  radio: {
-    margin: 2,
-  },
-  buttonContainer: {
-    paddingVertical: 15,
-    flexWrap: 'wrap',
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  button: {
-    width: 150,
-    height: 150,
-    margin: 5,
-    ...Platform.select({
-      web: {
-        width: 200,
-        height: 200,
-      },
-    }),
-  },
-  form: {
-    flex: 1,
-    width: '100%',
-    padding: 30,
-    backgroundColor: 'white',
-    borderTopLeftRadius: 50,
-  },
-  image: {
-    width: 110,
-    height: 110,
-    ...Platform.select({
-      web: {
-        width: 170,
-        height: 170,
-      },
-    }),
-  }
-});
+import { StatusBar } from 'expo-status-bar';
 
 const SignupScreen = ({ navigation }) => {
   const theme = useTheme();
@@ -178,15 +135,9 @@ const SignupScreen = ({ navigation }) => {
 
   const signUpContent = (
     <>
-      <TopHeaderView
-        title="Sign Up"
-        titleColor="white"
-        btnColor="white"
-        backTo={() => navigation.goBack()}
-      />
-
+      
       <View style={customStyle.content}>
-        <Text style={styles.subtitle}>Choose Account Type</Text>
+        <Text style={styles.subtitle} category='h4'>Choose Account Type</Text>
         {roleButtons}
       </View>
 
@@ -241,15 +192,67 @@ const SignupScreen = ({ navigation }) => {
           style={{ marginTop: 15 }}
           onPress={signup}
         >
-          Signup
+          Sign up
         </Button>
       </View>
     </>
   );
 
   return (
-    <Template isScrollable={true} children={signUpContent} bgColor="#4A40D5" />
+    <>
+     <StatusBar style='light' />
+
+    <ScrollView style={{backgroundColor: theme['color-primary-500']}}>
+      {signUpContent}
+    </ScrollView>
+    </>
   );
 };
+
+const styles = StyleSheet.create({
+  subtitle: {
+    textAlign: 'center',
+    paddingBottom: 5,
+    color: 'white',
+  },
+  radio: {
+    margin: 2,
+  },
+  buttonContainer: {
+    paddingVertical: 15,
+    flexWrap: 'wrap',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  button: {
+    width: 150,
+    height: 150,
+    margin: 5,
+    ...Platform.select({
+      web: {
+        width: 200,
+        height: 200,
+      },
+    }),
+  },
+  form: {
+    flex: 1,
+    width: '100%',
+    padding: 30,
+    backgroundColor: 'white',
+    borderTopLeftRadius: 50,
+  },
+  image: {
+    width: 110,
+    height: 110,
+    ...Platform.select({
+      web: {
+        width: 170,
+        height: 170,
+      },
+    }),
+  }
+});
 
 export default SignupScreen;
