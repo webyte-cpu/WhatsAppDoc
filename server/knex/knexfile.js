@@ -15,9 +15,9 @@ export default {
   staging: {
     client: "postgresql",
     connection: {
-      database: "my_db",
-      user: "username",
-      password: "password",
+      database: "whatsappdoc",
+      user: "postgres",
+      password: "postgres",
     },
     pool: {
       min: 2,

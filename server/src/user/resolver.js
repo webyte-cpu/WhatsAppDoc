@@ -1,4 +1,3 @@
-import data from "../../db/sampleData.js";
 import user from "./user.js";
 import enums from "../helpers/enums/enums.js";
 
@@ -25,7 +24,7 @@ const resolverMap = {
       return user.get(uid, email);
     },
     getAllUser: async (obj, arg) => {
-      return user.get();
+      return user.get({});
     },
   },
 

@@ -12,7 +12,7 @@ const resolverMap = {
 
       //replace with database data
       return doctor.get(arg);
-    },
+    }
   },
   Mutation: {
     createDoctor: (obj, arg) => {
