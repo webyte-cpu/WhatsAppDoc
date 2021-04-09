@@ -9,7 +9,7 @@ import { useAuth } from '../screens/auth/utils/authProvider';
 import customFonts from '../../themes/custom-fonts';
 import AppLoading from 'expo-app-loading';
 import AuthNavigator from '../screens/auth/authNavigator';
-import BottomTabs from '../screens/home/bottomNavigator';
+import BottomTabs from '../screens/home/homeTab';
 
 const AppNavigator = () => {
   const theme = useTheme();
