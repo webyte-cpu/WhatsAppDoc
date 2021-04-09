@@ -2,12 +2,14 @@
   "type": "module",
   "dependencies": {
     "apollo-server-express": "^2.21.2",
+    "bcrypt": "^5.0.1",
     "dataloader": "^2.0.0",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
     "express-jwt": "^6.0.0",
     "graphql": "^15.5.0",
     "graphql-scalars": "^1.9.0",
+    "jsonwebtoken": "^8.5.1",
     "knex": "^0.95.2",
     "pg": "^8.5.1",
     "uuid": "^8.3.2"
