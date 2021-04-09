@@ -1,38 +1,22 @@
-import React from 'react';
-import { Text, View } from 'react-native';
-import { Button } from '@ui-kitten/components';
+import React, { useState } from 'react';
+import { View } from 'react-native';
+import { Button, IndexPath, Text, useTheme } from '@ui-kitten/components';
 import { useAuth } from '../auth/utils/authProvider';
 import { AppRoute } from '../../navigation/app-routes';
-import { createStackNavigator } from '@react-navigation/stack';
-import DrawerMenuBtn from '../../components/drawer';
-
-const HomeStack = createStackNavigator();
+import Searchbar from '../search/search';
+import customStyle from '../../../themes/styles';
 
 const HomePage = ({ navigation }) => {
   const auth = useAuth();
+  const {fname} = auth.state.token;
+  const [filter, setFilter] = useState(new IndexPath(0));
+  
   return (
-    <View>
-      <Text>
-        Homepage
-        <Button onPress={() => auth.logout()}>Logout</Button>
-        <Button onPress={() => navigation.navigate(AppRoute.SEARCH)}>Search</Button>
-      </Text>
+    <View style={customStyle.contentFill}>
+      <Text category='h1' style={{marginBottom: 10}}>Welcome, {fname}</Text>
+      <Searchbar filter={filter} setFilter={setFilter} />
     </View>
-  )
-}
+  );
+};
 
-const HomeStackScreen = (props) => (
-  <HomeStack.Navigator>
-    <HomeStack.Screen
-      name="Home"
-      component={HomePage}
-      options={{
-        headerLeft: () => (
-          <DrawerMenuBtn props={props} />
-        )
-      }}
-    />
-  </HomeStack.Navigator>
-)
-
-export default HomeStackScreen;
+export default HomePage;

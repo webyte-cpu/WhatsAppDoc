@@ -18,8 +18,6 @@ import {
   useTheme
 } from '@ui-kitten/components';
 import SignUpDoctor from './signUpDoctor';
-import { TopHeaderView } from '../../components/common';
-import Template from '../../components/template';
 import customStyle from '../../../themes/styles';
 import { useAuth } from './utils/authProvider';
 import { CIVIL_STATUS, ROLE, SEX } from '../../utils/constants';
@@ -200,8 +198,6 @@ const SignupScreen = ({ navigation }) => {
 
   return (
     <>
-     <StatusBar style='light' />
-
     <ScrollView style={{backgroundColor: theme['color-primary-500']}}>
       {signUpContent}
     </ScrollView>
@@ -251,7 +247,7 @@ const styles = StyleSheet.create({
         width: 170,
         height: 170,
       },
-    }),
+    })
   }
 });
 

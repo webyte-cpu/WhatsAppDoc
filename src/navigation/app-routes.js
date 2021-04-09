@@ -9,7 +9,7 @@ const AppRoute = {
   HOME: 'Home',
   PROFILE: 'Profile',
   SEARCH: 'Search',
-  MEDICAL_REC: 'MedRec',
+  MEDICAL_REC: 'MedicalRecord',
   BOOKMARKS: 'Bookmarks',
   NOTIFICATION: 'Notification',
   SCHEDULE: 'Schedule',

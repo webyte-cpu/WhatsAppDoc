@@ -91,7 +91,7 @@ const LoginScreen = ({ navigation }) => {
   const showErrMsg = (errMsg) => <Text status="danger" category="s1" style={{ textAlign: "center" }}>{errMsg}</Text>;
 
   const loginPage = (
-    <View style={customStyle.content}>
+    <View style={customStyle.content, customStyle.container}>
       <Text category="h1" style={{ textAlign: 'center' }}>
         WhatsAppDoc
       </Text>
@@ -122,7 +122,7 @@ const LoginScreen = ({ navigation }) => {
 
   return (
     <KeyboardAwareScrollView 
-      contentContainerStyle={{ flex: 1, backgroundColor: 'white', ...customStyle.container}}
+      contentContainerStyle={customStyle.contentFill}
     >
       {loginPage}
     </KeyboardAwareScrollView>
@@ -130,10 +130,6 @@ const LoginScreen = ({ navigation }) => {
 };
 
 const styles = StyleSheet.create({
-  container: {
-    justifyContent: 'center',
-    alignItems: 'center'
-  },
   img: {
     height: 200,
     width: 300,

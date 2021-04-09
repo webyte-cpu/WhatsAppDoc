@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, StyleSheet, TouchableWithoutFeedback } from 'react-native';
+import { View, TouchableWithoutFeedback } from 'react-native';
 import {
   Button,
   Text,
@@ -10,15 +10,7 @@ import {
   Divider,
 } from '@ui-kitten/components';
 import { AppRoute } from '../../navigation/app-routes';
-import Template from '../../components/template';
-import { TopHeaderView } from '../../components/common';
 import customStyle from '../../../themes/styles';
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-});
 
 const ForgotPassword = ({ navigation }) => {
   const [secureTextEntry, setSecureTextEntry] = useState(true);
