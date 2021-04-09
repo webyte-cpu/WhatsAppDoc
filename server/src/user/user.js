@@ -153,8 +153,24 @@ const user = {
       );
   },
 
-  get: async (uid) => {
-    return await pg.select("*").from("users").where({ user_uid: uid });
+  get: async ({uid, email}) => {
+    const dataResponse =
+      uid || email
+        ? await pg
+            .select("*")
+            .from("users")
+            .where(objectFilter({ user_uid: uid, user_email: email }))
+        : await pg.select("*").from("users");
+    return dataResponse.map((data) => {
+      let obj = {};
+
+      for (const key in data) {
+        if (Object.hasOwnProperty.call(data, key)) {
+          obj[key.replace("user_", "")] = data[key];
+        }
+      }
+      return obj;
+    });
   },
 
   delete: (uid) => {
