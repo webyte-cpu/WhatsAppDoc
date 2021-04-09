@@ -1,7 +1,8 @@
 import { gql } from "apollo-server-express";
 import { typeDefs as scalarTypeDefs } from "graphql-scalars";
+import { typeDef as customTypeDefs } from "../customScalar/index.js";
 import address from "../address/typeDef.js";
-import enums from "../enum/typeDef.js";
+import enums from "../helpers/enums/typeDef.js";
 import doctor from "../doctor/typeDef.js";
 import patient from "../patient/typeDef.js";
 import user from "../user/typeDef.js";
@@ -21,6 +22,7 @@ const rootTypeDefs = gql`
 const typeDefs = [
   rootTypeDefs,
   ...scalarTypeDefs,
+  customTypeDefs,
   enums,
   address,
   user,
