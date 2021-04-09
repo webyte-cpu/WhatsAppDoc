@@ -37,9 +37,9 @@ const update = async (arg) => {
 };
 
 const get = async (uid) => {
-  return userUid
+  return uid
     ? await pg.select("*").from("doctors").where({ doctor_uid: uid })
-    : pg.select("*").from("doctors");
+    : await pg.select("*").from("doctors");
 };
 const remove = async (uid) => {
   return await pg("doctors").where({ doctor_uid: uid }).del();
