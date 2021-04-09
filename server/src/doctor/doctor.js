@@ -1,19 +1,18 @@
 import pg from "../../db/index.js";
 import objectFilter from "../helpers/objectFilter.js";
-import { v4 as uuidV4 } from "uuid";
 
 const create = async (arg) => {
   return await pg
     .insert(
       objectFilter({
-        doctor_uid: uuidV4(),
-        user_uid: userUid,
-        doctor_licence_no: arg.licenceNo,
+        doctor_uid: uid,
+        doctor_licence_num: arg.licenceNum,
+        doctor_licence_img: arg.licenceImg,
+        doctor_verification_status: arg.verificationStatus,
         doctor_experience: arg.experience,
-        doctor_rating: arg.rating,
-        doctor_is_verified: arg.isVerified,
         doctor_about: arg.about,
-        doctor_bio: arg.bio,
+        doctor_educational: arg.educational,
+        doctor_rating: arg.rating,
       })
     )
     .into("doctors")
@@ -22,28 +21,28 @@ const create = async (arg) => {
 
 const update = async (arg) => {
   return await pg("doctors")
-    .where({ user_uid: arg.userUid })
+    .where({ doctor_uid: arg.uid })
     .update(
       objectFilter({
-        doctor_uid: arg.uid,
-        user_uid: arg.userUid,
-        doctor_licence_no: arg.licenceNo,
+        doctor_uid: uid,
+        doctor_licence_num: arg.licenceNum,
+        doctor_licence_img: arg.licenceImg,
+        doctor_verification_status: arg.verificationStatus,
         doctor_experience: arg.experience,
-        doctor_rating: arg.rating,
-        doctor_is_verified: arg.isVerified,
         doctor_about: arg.about,
-        doctor_bio: arg.bio,
+        doctor_educational: arg.educational,
+        doctor_rating: arg.rating,
       })
     );
 };
 
-const get = async (userUid) => {
+const get = async (uid) => {
   return userUid
-    ? await pg.select("*").from("doctors").where({ user_uid: userUid })
+    ? await pg.select("*").from("doctors").where({ doctor_uid: uid })
     : pg.select("*").from("doctors");
 };
-const remove = async (userUid) => {
-  return await pg("docotrs").where({ user_uid: userUid }).del();
+const remove = async (uid) => {
+  return await pg("doctors").where({ doctor_uid: uid }).del();
 };
 
 export default { create, update, get, remove };
