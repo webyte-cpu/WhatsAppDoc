@@ -9,7 +9,7 @@ const doctor = gql`
     MiddleName: String
     lastName: String!
     email: EmailAddress!
-    password: String!
+    password: Password!
     role: Role!
     createdAt: DateTime
     updatedAt: DateTime
@@ -37,7 +37,7 @@ const doctor = gql`
       MiddleName: String
       lastName: String!
       email: EmailAddress!
-      password: String!
+      password: Password!
       role: Role!
       createdAt: DateTime
       updatedAt: DateTime
@@ -56,7 +56,7 @@ const doctor = gql`
       MiddleName: String
       lastName: String!
       email: EmailAddress!
-      password: String!
+      password: Password!
       role: Role!
       createdAt: DateTime
       updatedAt: DateTime

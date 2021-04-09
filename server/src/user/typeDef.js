@@ -7,7 +7,7 @@ const user = gql`
     MiddleName: String
     lastName: String!
     email: EmailAddress!
-    password: String!
+    password: Password!
     role: Role!
     createdAt: DateTime
     updatedAt: DateTime
@@ -19,7 +19,7 @@ const user = gql`
     MiddleName: String
     lastName: String!
     email: EmailAddress!
-    password: String!
+    password: Password!
     role: Role!
     createdAt: DateTime
     updatedAt: DateTime
@@ -36,14 +36,16 @@ const user = gql`
       MiddleName: String
       lastName: String!
       email: EmailAddress!
-      password: String!
+      password: Password!
       role: Role!
       address: AddressInput
-      sex: Sex!
-      birthdate: Date!
+      sex: Sex
+      birthdate: Date
       licenceNum: String
       licenceImg: String
     ): User
+
+    login(email: EmailAddress!, password: Password!): User
   }
 `;
 
