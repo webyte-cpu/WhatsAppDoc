@@ -1,6 +1,7 @@
 import data from "../../db/sampleData.js";
 import user from "./user.js";
 import enums from "../helpers/enums/enums.js";
+
 const resolverMap = {
   User: {
     __resolveType(obj, context, info) {
@@ -20,13 +21,11 @@ const resolverMap = {
 
   Query: {
     getUser: (obj, arg) => {
-      const { uid, sortBy, role } = obj;
-
-      return data.user.filter((user) => user.uid === arg.uid);
+      const { uid, email } = obj;
+      return user.get(uid, email);
     },
-    getAllUser: (obj, arg) => {
-      /// return is user is admin
-      return data.user;
+    getAllUser: async (obj, arg) => {
+      return user.get();
     },
   },
 
