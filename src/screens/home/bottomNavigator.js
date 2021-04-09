@@ -1,6 +1,11 @@
 import React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { createDrawerNavigator } from '@react-navigation/drawer';
+import { 
+  createDrawerNavigator,
+  DrawerContentScrollView,
+  DrawerItemList,
+  } from '@react-navigation/drawer';
+import { View } from 'react-native'
 import { BottomNavigation, BottomNavigationTab, Icon } from '@ui-kitten/components';
 import HomeStackScreen from './homePage';
 import ScheduleStackScreen from './schedulePage';
@@ -36,11 +41,34 @@ const TabScreen = () => (
   </BottomTab.Navigator>
 );
 
-const DrawerScreen = () => (
-  <Drawer.Navigator>
-    <Drawer.Screen name="Home" component={TabScreen}  />
-    <Drawer.Screen name="Profile" component={ProfileStackScreen} />
-  </Drawer.Navigator>
+const DrawerContent = (props) => {
+  return (
+    <DrawerContentScrollView {...props}>
+      <DrawerItemList {...props} />
+    </DrawerContentScrollView>
+  );
+}
+
+const ProfileIcon = (props) => (
+  <View>
+    <Icon style={{width:300,height:300}} {...props} name='person' />
+  </View>
 )
+
+const DrawerScreen = () => {
+  return(
+    <Drawer.Navigator drawerContent={props => {
+      return(
+        <>
+        {ProfileIcon()}
+        <DrawerContent {...props} />
+        </>
+      )
+    }}>
+      <Drawer.Screen name="Home" component={TabScreen}  />
+      <Drawer.Screen name="Profile" component={ProfileStackScreen}  />
+    </Drawer.Navigator>
+  )
+}
 
 export default DrawerScreen;
