@@ -1,6 +1,6 @@
 import data from "../../db/sampleData.js";
 import user from "./user.js";
-import enums from "../enum/enum.js";
+import enums from "../helpers/enums/enums.js";
 const resolverMap = {
   User: {
     __resolveType(obj, context, info) {
