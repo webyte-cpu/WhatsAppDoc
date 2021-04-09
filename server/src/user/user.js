@@ -1,7 +1,7 @@
 import pg from "../../db/index.js";
 import objectFilter from "../helpers/objectFilter.js";
 import { UserInputError } from "apollo-server-errors";
-import enums from "../enum/enum.js";
+import enums from "../helpers/enums/enums.js";
 import { v4 as uuidV4 } from "uuid";
 
 const user = {
@@ -55,6 +55,11 @@ const user = {
           if (!arg.address && arg.role !== enums.role.DOCTOR) {
             throw new UserInputError("Patient address is required!");
           }
+
+          if (!arg.sex && !arg.birthdate) {
+            throw new UserInputError("Patient sex and birthdate are required!");
+          }
+
           let addressUid;
 
           if (arg.address) {
@@ -111,11 +116,11 @@ const user = {
         licenceNum: dataCompiled.doctor_licence_no,
         role: dataCompiled.user_role,
         address: {
-          address: dataCompiled?.address.address,
-          city: dataCompiled?.address.address_city,
-          province: dataCompiled?.address.address_province,
-          zipCode: dataCompiled?.address.address_zip_code,
-          country: dataCompiled?.address.address_country,
+          address: dataCompiled?.address?.address,
+          city: dataCompiled?.address?.address_city,
+          province: dataCompiled?.address?.address_province,
+          zipCode: dataCompiled?.address?.address_zip_code,
+          country: dataCompiled?.address?.address_country,
         },
       };
     });
@@ -124,19 +129,11 @@ const user = {
     return await pg
       .insert({
         user_uid: uuidV4(),
-        address_uid: arg.addressUid,
         user_first_name: arg.firstName,
         user_last_name: arg.lastName,
         user_email: arg.email,
         user_password: arg.password,
-        user_sex: arg.sex,
-        user_birthdate: arg.birthdate,
-        user_phone_number: arg.phoneNumber,
-        user_weight: arg.weight,
-        user_height: arg.height,
-        user_civil_status: arg.civilStatus,
-        user_nationality: arg.nationality,
-        user_is_doctor: arg.isDoctor,
+        user_role: arg.role,
       })
       .into("users")
       .returning("*");
@@ -147,20 +144,11 @@ const user = {
       .where({ user_uid: arg.uid })
       .update(
         objectFilter({
-          user_uid: uuidV4(),
-          address_uid: arg.addressUid,
-          user_first_name: arg.firtName,
+          user_first_name: arg.firstName,
           user_last_name: arg.lastName,
           user_email: arg.email,
           user_password: arg.password,
-          user_sex: arg.sex,
-          user_birthdate: arg.birthdate,
-          user_phone_number: arg.phoneNumber,
-          user_weight: arg.weight,
-          user_height: arg.height,
-          user_civil_status: arg.civilStatus,
-          user_nationality: arg.nationality,
-          user_is_doctor: arg.isDoctor,
+          user_role: arg.role,
         })
       );
   },
