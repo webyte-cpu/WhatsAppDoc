@@ -2,16 +2,11 @@ import doctor from "./doctor.js";
 const resolverMap = {
   Query: {
     getDoctor: (obj, arg) => {
-      //get specific admin from the database
-      console.log(arg);
+      return doctor.get(arg.uid);
+    },
 
-      /* 
-      if uuid doesnt exist get all data
-      and check for auth
-      */
-
-      //replace with database data
-      return doctor.get(arg);
+    getAllDoctor: async (obj, arg) => {
+      return doctor.get({})
     }
   },
   Mutation: {

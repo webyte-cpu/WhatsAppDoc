@@ -14,9 +14,9 @@ const doctor = gql`
     createdAt: DateTime
     updatedAt: DateTime
 
-    licenceNum: String!
-    licenceImg: Int!
-    verificationStatus: VerificationStatus
+    licence_num: String!
+    licence_img: Int!
+    verification_status: VerificationStatus
     experience: Int
     about: String
     educational: String
@@ -28,8 +28,9 @@ const doctor = gql`
   # case, the "doctor" query returns an array of zero or more doctor (defined above).
 
   extend type Query {
-    getDoctor(uid: UUID): [Doctor]
-  }
+    getDoctor(uid: UUID): [Doctor],
+    getAllDoctor: [Doctor]
+ }
 
   extend type Mutation {
     createDoctor(
@@ -52,17 +53,18 @@ const doctor = gql`
     ): Doctor
 
     updateDoctor(
-      firstName: String!
+      uid: UUID!
+      firstName: String
       MiddleName: String
-      lastName: String!
-      email: EmailAddress!
-      password: Password!
-      role: Role!
+      lastName: String
+      email: EmailAddress
+      password: Password
+      role: Role
       createdAt: DateTime
       updatedAt: DateTime
 
-      licenceNum: String!
-      licenceImg: Int!
+      licenceNum: String
+      licenceImg: Int
       verificationStatus: VerificationStatus
       experience: Int
       about: String
