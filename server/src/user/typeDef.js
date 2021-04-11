@@ -26,8 +26,9 @@ const user = gql`
   }
 
   extend type Query {
-    getUser(uid: UUID!): [User]
+    getUser(uid: UUID, email:EmailAddress): User
     getAllUser: [User]
+    viewer:User
   }
 
   extend type Mutation {
@@ -45,7 +46,7 @@ const user = gql`
       licenceImg: String
     ): User
 
-    login(email: EmailAddress!, password: Password!): User
+    login(email: EmailAddress!, password: Password!): JWT!
   }
 `;
 
