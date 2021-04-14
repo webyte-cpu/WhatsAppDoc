@@ -44,19 +44,9 @@
   "cypress-cucumber-preprocessor": {
     "nonGlobalStepDefinitions": true
   },
-  "private": true,
-  "name": "WhatsAppDoc",
-  "description": "",
+  "name": "frontend",
   "version": "1.0.0",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/webyte-cpu/WhatsAppDoc.git"
-  },
-  "keywords": [],
+  "description": "",
   "author": "",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/webyte-cpu/WhatsAppDoc/issues"
-  },
-  "homepage": "https://github.com/webyte-cpu/WhatsAppDoc#readme"
+  "license": "ISC"
 }
