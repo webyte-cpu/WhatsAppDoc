@@ -1,4 +1,4 @@
-import address from "./address.js";
+const address = require("./address.js");
 
 const resolverMap = {
   Query: {
@@ -35,4 +35,4 @@ const resolverMap = {
   // Subscription: {},
 };
 
-export default resolverMap;
+module.exports = resolverMap;

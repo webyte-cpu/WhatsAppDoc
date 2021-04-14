@@ -1,4 +1,4 @@
-import { gql } from "apollo-server-express";
+const { gql } = require ("apollo-server-express");
 
 const address = gql`
   type Address {
@@ -46,4 +46,4 @@ const address = gql`
   }
 `;
 
-export default address;
+module.exports = { address };

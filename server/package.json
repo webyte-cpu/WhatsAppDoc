@@ -1,7 +1,9 @@
 {
   "type": "module",
   "dependencies": {
+    "apollo-server": "^2.22.2",
     "apollo-server-express": "^2.21.2",
+    "apollo-server-testing": "^2.22.2",
     "bcrypt": "^5.0.1",
     "dataloader": "^2.0.0",
     "dotenv": "^8.2.0",
@@ -21,7 +23,7 @@
     "nodemon": "^2.0.7"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "npx jest --watchAll",
     "server": "nodemon src/app.js "
   },
   "author": "",

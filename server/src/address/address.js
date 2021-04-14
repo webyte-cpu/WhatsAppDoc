@@ -1,6 +1,7 @@
-import pg from "../../db/index.js";
-import objectFilter from "../helpers/objectFilter.js";
-import { v4 as uuidV4 } from "uuid";
+const pg = require("../../db/index.js");
+const objectFilter = require("../helpers/objectFilter.js");
+const { v4 } ="uuid";
+const uuidV4 = v4;
 
 const create = async ({
   street,
@@ -55,4 +56,4 @@ const remove = async (uid) => {
   return await pg("addresses").where({ address_uid: uid }).del();
 };
 
-export default { create, update, get, remove };
+module.exports = { create, update, get, remove };
