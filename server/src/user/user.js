@@ -1,8 +1,10 @@
-import pg from "../../db/index.js";
+import objectKeysToCamelCase from "../helpers/objectKeyCase.js";
 import objectFilter from "../helpers/objectFilter.js";
 import { UserInputError } from "apollo-server-errors";
 import enums from "../helpers/enums/enums.js";
 import { v4 as uuidV4 } from "uuid";
+import pg from "../../db/index.js";
+import bcrypt from "bcrypt";
 
 const user = {
   signUp: async (arg) => {
@@ -10,7 +12,8 @@ const user = {
       const userUid = uuidV4();
       const responseList = [];
 
-      console.log(arg.role);
+      const saltRounds = 10;
+      const hashedPassword = bcrypt.hashSync(arg.password, saltRounds);
 
       const userResponse = knex
         .insert(
@@ -19,7 +22,7 @@ const user = {
             user_first_name: arg.firstName,
             user_last_name: arg.lastName,
             user_email: arg.email,
-            user_password: arg.password,
+            user_password: hashedPassword,
             user_role: arg.role,
             user_img: arg.img,
             created_at: new Date(Date.now()),
@@ -115,6 +118,7 @@ const user = {
         email: dataCompiled.user_email,
         licenceNum: dataCompiled.doctor_licence_no,
         role: dataCompiled.user_role,
+        // password: dataCompiled.user_password,
         address: {
           address: dataCompiled?.address?.address,
           city: dataCompiled?.address?.address_city,
@@ -126,7 +130,7 @@ const user = {
     });
   },
   create: async (arg) => {
-    return await pg
+    const dbResponse = await pg
       .insert({
         user_uid: uuidV4(),
         user_first_name: arg.firstName,
@@ -137,10 +141,12 @@ const user = {
       })
       .into("users")
       .returning("*");
+
+    return dbResponse.map((data) => objectKeysToCamelCase(data, "user_"))[0];
   },
 
   update: async (arg) => {
-    return await pg("users")
+    const dbResponse = await pg("users")
       .where({ user_uid: arg.uid })
       .update(
         objectFilter({
@@ -149,32 +155,36 @@ const user = {
           user_email: arg.email,
           user_password: arg.password,
           user_role: arg.role,
+          updated_at: new Date(Date.now()),
         })
       );
+
+    return dbResponse.map((data) => objectKeysToCamelCase(data, "user_"))[0];
   },
 
-  get: async ({uid, email}) => {
-    const dataResponse =
+  get: async ({ uid, email }) => {
+    const dbResponse =
       uid || email
         ? await pg
             .select("*")
             .from("users")
-            .where(objectFilter({ user_uid: uid, user_email: email }))
+            .where(
+              objectFilter({
+                user_uid: uid,
+                user_email: email,
+              })
+            )
         : await pg.select("*").from("users");
-    return dataResponse.map((data) => {
-      let obj = {};
 
-      for (const key in data) {
-        if (Object.hasOwnProperty.call(data, key)) {
-          obj[key.replace("user_", "")] = data[key];
-        }
-      }
-      return obj;
-    });
+    return dbResponse.map((data) => objectKeysToCamelCase(data, "user_"));
   },
 
   delete: (uid) => {
-    return pg("users").where({ user_uid: uid }).del();
+    const dbResponse = pg("users")
+      .where({ user_uid: uid })
+      .del()
+      .returning("*");
+    return dbResponse.map((data) => objectKeysToCamelCase(data, "user_"))[0];
   },
 };
 

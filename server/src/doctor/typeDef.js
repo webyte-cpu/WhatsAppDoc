@@ -52,17 +52,18 @@ const doctor = gql`
     ): Doctor
 
     updateDoctor(
-      firstName: String!
+      uid:UUID!
+      firstName: String
       MiddleName: String
-      lastName: String!
-      email: EmailAddress!
-      password: Password!
-      role: Role!
+      lastName: String
+      email: EmailAddress
+      password: Password
+      role: Role
       createdAt: DateTime
       updatedAt: DateTime
 
-      licenceNum: String!
-      licenceImg: Int!
+      licenceNum: String
+      licenceImg: Int
       verificationStatus: VerificationStatus
       experience: Int
       about: String
