@@ -9,7 +9,7 @@ const schemaCode = fs.readFileSync(
 
 const tester = new EasyGraphQLTester(schemaCode);
 
-describe("Test Schema, Queries and Mutation", () => {
+describe("Test Address Queries", () => {
   let tester;
 
   beforeAll(() => {

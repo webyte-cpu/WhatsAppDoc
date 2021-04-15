@@ -26,7 +26,7 @@ const resolverMap = {
       //link to doctor in the database
       return address.update(arg);
     },
-    updateDelete: (obj, arg) => {
+    deleteAddress: (obj, arg) => {
       console.log(arg);
       //link to doctor in the database
       return address.remove(arg.uid);
