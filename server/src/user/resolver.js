@@ -1,4 +1,3 @@
-import user from "./user.js";
 import { AuthenticationError } from "apollo-server-errors";
 import enums from "../helpers/enums/enums.js";
 import jwt from "jsonwebtoken";
