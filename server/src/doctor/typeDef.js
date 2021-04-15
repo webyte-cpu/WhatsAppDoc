@@ -53,7 +53,7 @@ const doctor = gql`
     ): Doctor
 
     updateDoctor(
-      uid: UUID!
+      uid:UUID!
       firstName: String
       MiddleName: String
       lastName: String

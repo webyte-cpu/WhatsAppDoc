@@ -1,6 +1,5 @@
 import { UserInputError } from "apollo-server-errors";
 import { GraphQLScalarType, Kind } from "graphql";
-import bcrypt from "bcrypt";
 
 const passwordScalar = new GraphQLScalarType({
   name: "Password",
@@ -13,7 +12,6 @@ const passwordScalar = new GraphQLScalarType({
   },
   parseLiteral(ast) {
     const password = ast.value;
-    const saltRounds = 10;
 
     //check password format
     const isValid = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{6,}$/g.test(
@@ -22,7 +20,7 @@ const passwordScalar = new GraphQLScalarType({
 
     if (ast.kind === Kind.STRING && isValid) {
       //return hashed password
-      return bcrypt.hashSync(password, saltRounds);
+      return password;
     }
 
     throw new UserInputError(

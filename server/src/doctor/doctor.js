@@ -1,8 +1,9 @@
 import pg from "../../db/index.js";
 import objectFilter from "../helpers/objectFilter.js";
+import objectKeysToCamelCase from "../helpers/objectKeyCase.js";
 
 const create = async (arg) => {
-  return await pg
+  const dbReponse = await pg
     .insert(
       objectFilter({
         doctor_uid: uid,
@@ -16,15 +17,17 @@ const create = async (arg) => {
       })
     )
     .into("doctors")
-    .returning("*");
+    .returning("*")
+    .first();
+
+  return objectKeysToCamelCase(dbReponse, "doctor_");
 };
 
 const update = async (arg) => {
-  return await pg("doctors")
+  const dbReponse = await pg("doctors")
     .where({ doctor_uid: arg.uid })
     .update(
       objectFilter({
-        doctor_uid: arg.uid,
         doctor_licence_num: arg.licenceNum,
         doctor_licence_img: arg.licenceImg,
         doctor_verification_status: arg.verificationStatus,
@@ -35,37 +38,20 @@ const update = async (arg) => {
       })
     )
     .returning("*");
+  return dbReponse.map((data) => objectKeysToCamelCase(data, "doctor_"))[0];
 };
 
-const get = async ({uid}) => {
-  const dataResponse =
-  uid ? await pg
-        .select("*")
-        .from("doctors")
-        .where(objectFilter({ doctor_uid: uid}))
-      : await pg.select("*").from("doctors");
-  
-      return dataResponse.map((data) => {
-        let obj = {};
+const get = async (uid) => {
+  const dbReponse = uid
+    ? await pg.select("*").from("doctors").where({ doctor_uid: uid })
+    : await pg.select("*").from("doctors");
 
-        for(const key in data){
-          if(Object.hasOwnProperty.call(data, key)) {
-            obj[key.replace("doctor_", "")] = data[key];
-          }
-        }
-
-        return obj; 
-
-
-
-      })
-  // return uid
-  //   ? await pg.select("*").from("doctors").where({ doctor_uid: uid })
-  //   : await pg.select("*").from("doctors");
+  return dbReponse.map((data) => objectKeysToCamelCase(data, "doctor_"));
 };
 
 const remove = async (uid) => {
-  return await pg("doctors").where({ doctor_uid: uid }).del();
+  const dbReponse = await pg("doctors").where({ doctor_uid: uid }).del();
+  return dbReponse.map((data) => objectKeysToCamelCase(data, "doctor_"))[0];
 };
 
 export default { create, update, get, remove };
