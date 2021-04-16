@@ -44,7 +44,7 @@ const LoginScreen = ({ navigation }) => {
   );
 
   const ErrorText = ({ errMsg }) => (
-    <Text status="danger" category="s1" style={{ textAlign: 'center' }}>
+    <Text testID="errText" status="danger" category="s1" style={{ textAlign: 'center' }}>
       {loginErr}
     </Text>
   );
@@ -61,6 +61,7 @@ const LoginScreen = ({ navigation }) => {
             <EmailField />
             <PasswordField />
             <Text
+              testID="forgotPassBtn"
               category="c2"
               status="primary"
               accessibilityRole="button"
@@ -70,7 +71,7 @@ const LoginScreen = ({ navigation }) => {
               Forgot Password?
             </Text>
             <ErrorText errMsg={loginErr} />
-            <Button onPress={props.handleSubmit} style={{ marginTop: 10 }}>
+            <Button testID="loginBtn" onPress={props.handleSubmit} style={{ marginTop: 10 }}>
               Login
             </Button>
             {signupBtn}
@@ -95,7 +96,7 @@ const LoginScreen = ({ navigation }) => {
   );
 
   if (auth.state.isLoading) {
-    return <Spinner status="primary" size="giant" />;
+    return <Spinner testID="spinner" status="primary" size="giant" />;
   }
 
   return (

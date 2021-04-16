@@ -119,8 +119,8 @@ const SignupScreen = ({ navigation }) => {
           <>
             <RoleButtons {...props} />
             <View style={styles.form}>
-              <EmailField />
-              <PasswordField />
+              <EmailField testID="signup-email"/>
+              <PasswordField testID="signup-pass"/>
 
               <Text category="h6" style={customStyle.formTitle}>
                 Personal Information

@@ -38,6 +38,7 @@ const EmailField = (props) => {
   return (
     <Field
       {...props}
+      testID="email"
       component={CustomInput}
       label="Email"
       name="email"
@@ -61,6 +62,7 @@ const PasswordField = (props) => {
   return (
     <Field
       {...props}
+      testID="password"
       component={CustomInput}
       label="Password"
       name="password"
@@ -71,10 +73,11 @@ const PasswordField = (props) => {
     />
   );
 };
-const NameFields = () => {
+const NameFields = (props) => {
   return (
     <>
       <Field
+        testID="firstName"
         component={CustomInput}
         testID="fname"
         label="First Name"
@@ -83,6 +86,7 @@ const NameFields = () => {
         textContentType="givenName"
       />
       <Field
+        testID="midName"
         component={CustomInput}
         testID="midName"
         label={(props) => <InputLabelOptional label="Middle Name" {...props} />}
@@ -91,6 +95,7 @@ const NameFields = () => {
         textContentType="middleName"
       />
       <Field
+        testID="lname"
         component={CustomInput}
         testID="lname"
         label="Last Name"

@@ -45,12 +45,14 @@ const SignUpDoctor = ({ setValues, values }) => {
           Practitioner Information
         </Text>
         <Field
+          testID="specialization"
           component={CustomInput}
           name="specialization"
           label="Specialization"
           placeholder="Enter Specialization"
         />
         <Field
+          testID="licenseNum"
           component={CustomInput}
           name="licenseNum"
           label="License Number"
@@ -63,6 +65,7 @@ const SignUpDoctor = ({ setValues, values }) => {
         </Text>
 
         <Field
+          testID="licenseImg"
           component={CustomImgField}
           name="licenseImg"
           accessoryLeft={uploadImgContent}
