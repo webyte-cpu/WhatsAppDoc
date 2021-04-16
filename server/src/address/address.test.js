@@ -1,19 +1,11 @@
-const fs = require("fs");
-const path = require("path");
-const EasyGraphQLTester = require("easygraphql-tester");
-const resolvers = require("./resolver");
-const { expect } = require("chai");
+const EasyGraphQLTester = require('easygraphql-tester')
+const fs = require('fs')
+const path = require('path')
 
-const schema = fs.readFileSync(
+const schemaCode = fs.readFileSync(
   path.join(__dirname, ".", "address-schema.gql"),
   "utf8"
 );
-
-let tester;
-
-beforeAll(() => {
-  tester = new EasyGraphQLTester(schema, resolvers);
-});
 
 const createAddress = `
   mutation createAddress(
@@ -76,7 +68,42 @@ const deleteAddress = `
   }
 `
 
-describe("Address Query Testing", () => {
+describe("Test Queries and Mutations", () => {
+  let tester;
+
+  beforeAll(() => {
+    tester = new EasyGraphQLTester(schemaCode);
+  });
+
+  it("Should pass with a valid query", () => {
+      
+    const query = `
+    {
+      getAddress(uid: 3) {
+        address
+        city
+        province
+      }
+    }      
+    `;
+    tester.test(true, query);
+  });
+
+  it('Should fail if the query is invalid', () => {
+    const invalidQuery = `
+        {
+          getAddress(uid: 3) {
+            address
+            city
+            province
+            user
+          }
+        }
+      `
+
+    tester.test(false, invalidQuery)
+  })
+
   it('Should pass if create query is correct', () => {
     tester.test(true, createAddress, {
       address: "Ungka II",
@@ -86,7 +113,7 @@ describe("Address Query Testing", () => {
       country: "Philippines",
       coordinates: "11234"
     })
-  })
+  });
 
   it('Should pass if update query is correct', () => {
     tester.test(true, updateAddress, {   
@@ -98,12 +125,11 @@ describe("Address Query Testing", () => {
       country: "Philippines",
       coordinates: "11234"
     })
-  })
+  });
 
   it('Should pass if delete query is correct', () => {
     tester.test(true, deleteAddress, {
       uid: 2
     })
-  })
-
+  });
 })
