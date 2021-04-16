@@ -26,9 +26,9 @@ const user = gql`
   }
 
   extend type Query {
-    getUser(uid: UUID, email:EmailAddress): User
-    getAllUser: [User]
-    viewer:User
+    getUser(uid: UUID!): User!
+    getAllUser: [User!]
+    viewer: User
   }
 
   extend type Mutation {
@@ -39,14 +39,25 @@ const user = gql`
       email: EmailAddress!
       password: Password!
       role: Role!
-      address: AddressInput
-      sex: Sex
-      birthdate: Date
-      licenceNum: String
-      licenceImg: String
-    ): User
+    ): UUID!
 
-    login(email: EmailAddress!, password: Password!): JWT!
+    updateUser(
+      firstName: String!
+      MiddleName: String
+      lastName: String!
+      password: Password!
+      role: Role!
+    ): User!
+
+    deleteUser(
+      firstName: String!
+      MiddleName: String
+      lastName: String!
+      password: Password!
+      role: Role!
+    ): User!
+
+    signIn(email: EmailAddress!, password: Password!): JWT!
   }
 `;
 

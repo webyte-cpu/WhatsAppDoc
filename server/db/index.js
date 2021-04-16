@@ -1,4 +1,3 @@
-const knex = require("knex");
-const knexFile = require("../knex/knexfile.js");
-const pg = knex(knexFile.development);
-module.exports = pg;
+import knex from "knex";
+import knexFile from "../knex/knexfile.js";
+export default knex(knexFile.development);

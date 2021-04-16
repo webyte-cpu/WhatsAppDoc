@@ -1,5 +1,3 @@
-import pg from "../../db";
-
 const up = function (knex) {
   return knex.schema
 

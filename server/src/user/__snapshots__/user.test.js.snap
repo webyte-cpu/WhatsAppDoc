@@ -1,0 +1,37 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Quieries fetches single user 1`] = `
+Object {
+  "data": Object {
+    "getUser": Object {
+      "firstName": "hello",
+      "lastName": "world",
+      "role": "ADMIN",
+      "uid": "8bb11d0d-21eb-41f6-b476-aa28f9ee6db9",
+      "updatedAt": 2021-04-15T00:00:00.000Z,
+    },
+  },
+  "errors": undefined,
+  "extensions": undefined,
+  "http": Object {
+    "headers": Headers {
+      Symbol(map): Object {},
+    },
+  },
+}
+`;
+
+exports[`Quieries fetches single user 2`] = `
+Object {
+  "data": undefined,
+  "errors": Array [
+    [ValidationError: Field "getUser" argument "uid" of type "UUID!" is required, but it was not provided.],
+  ],
+  "extensions": undefined,
+  "http": Object {
+    "headers": Headers {
+      Symbol(map): Object {},
+    },
+  },
+}
+`;
