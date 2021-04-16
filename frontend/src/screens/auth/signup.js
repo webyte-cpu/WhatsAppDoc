@@ -2,23 +2,20 @@ import React, { useState } from 'react';
 import {
   View,
   StyleSheet,
-  TouchableWithoutFeedback,
   ImageBackground,
   Platform,
   ScrollView,
 } from 'react-native';
-import { Button, Text, Input, Icon, useTheme } from '@ui-kitten/components';
+import { Button, Text, useTheme } from '@ui-kitten/components';
 import SignUpDoctor from './signUpDoctor';
 import customStyle from '../../../themes/styles';
 import { useAuth } from './utils/authProvider';
-import { StatusBar } from 'expo-status-bar';
-import enums from '../../../../shared/helpers/enums';
-import { Formik, Field } from 'formik';
+import enums from '../../../helpers/enums';
+import { Formik } from 'formik';
 import {
   userSignUpSchema,
   doctorSignUpSchema,
 } from '../../../helpers/validationType';
-import { CustomInput } from '../../components/customInput';
 import {
   EmailField,
   PasswordField,
@@ -57,7 +54,7 @@ const SignupScreen = ({ navigation }) => {
 
   const signup = (values) => {
     console.log(values);
-    // return auth.signup(values);
+    return auth.signup(values);
   };
 
   const changeRole = (role) => {
@@ -128,7 +125,7 @@ const SignupScreen = ({ navigation }) => {
               <Text category="h6" style={customStyle.formTitle}>
                 Personal Information
               </Text>
-              
+
               <NameFields />
               <SexField {...props} />
               <BirthdateField {...props} />

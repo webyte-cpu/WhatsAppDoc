@@ -1,7 +1,5 @@
 import * as yup from 'yup';
-
-const strongPswdPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})/;
-const validRoles = /^(PATIENT|DOCTOR)$/;
+import { VALID_PATTERNS, ERR_MSG } from './validators';
 
 // const addressSchema = yup.object({
 //   address: yup.string(),
@@ -16,10 +14,15 @@ const validRoles = /^(PATIENT|DOCTOR)$/;
 // });
 
 const doctorSignUpSchema = yup.object({
-  specialization: yup.string().required('Specialization is required'),
-  licenseNum: yup.string().required('License number is required'),
-  licenseImg: yup.string().required('License image is required'),
-  verificationStatus: yup.string().required(''),
+  specialization: yup.string().label('Specialization').required(),
+  licenseNum: yup.string().label('License Number').required(),
+  licenseImg: yup.string().label('License Image').required(),
+  verificationStatus: yup.string().label('Verification Status').required(),
+});
+
+const loginSchema = yup.object({
+  email: yup.string().label('Email').email('Invalid email format').required(),
+  password: yup.string().label('Password').required(),
 });
 
 const userSignUpSchema = yup.object({
@@ -27,10 +30,7 @@ const userSignUpSchema = yup.object({
   password: yup
     .string()
     .label('Password')
-    .matches(
-      strongPswdPattern,
-      'Must contain at least a number, an uppercase and lowercase letter, and at least 8 or more characters'
-    )
+    .matches(VALID_PATTERNS.PASSWORD, ERR_MSG.PASSWORD)
     .required(),
   fname: yup.string().label('First name').required(),
   lname: yup.string().label('Last name').required(),
@@ -40,16 +40,8 @@ const userSignUpSchema = yup.object({
   role: yup
     .string()
     .label('Role')
-    .matches(validRoles, 'Invalid role')
+    .matches(VALID_PATTERNS.ROLE, 'Invalid role')
     .required(),
-});
-
-const loginSchema = yup.object({
-  email: yup
-    .string()
-    .email('Please enter a valid email')
-    .required('Email Address is required'),
-  password: yup.string().required('Password is required'),
 });
 
 export { loginSchema, userSignUpSchema, doctorSignUpSchema };

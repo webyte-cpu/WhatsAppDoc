@@ -1,77 +1,32 @@
-import React, { useState, useRef } from 'react';
-import {
-  View,
-  StyleSheet,
-  TouchableWithoutFeedback,
-  Platform,
-  Image,
-} from 'react-native';
-import { Button, Text, Input, Icon, Spinner } from '@ui-kitten/components';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import React, { useState } from 'react';
+import { View, StyleSheet, Platform, Image } from 'react-native';
+import { Button, Text, Spinner } from '@ui-kitten/components';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { AppRoute } from '../../navigation/app-routes';
 import { useAuth } from './utils/authProvider';
 import loginImg from '../../../assets/img/login-welcome.jpg';
 import customStyle from '../../../themes/styles';
+import { EmailField, PasswordField } from '../../components/fields';
+import { Formik } from 'formik';
+import { loginSchema } from '../../../helpers/validationType';
 
 const LoginScreen = ({ navigation }) => {
-  const nextFieldFocus = useRef(null);
-  const [secureTextEntry, setSecureTextEntry] = useState(true);
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const loginDetails = {
+    email: '',
+    password: '',
+  };
+  const [loginErr, setLoginErr] = useState('');
   const auth = useAuth();
 
-  const toggleSecureEntry = () => setSecureTextEntry(!secureTextEntry);
-
-  const showPasswordIcon = (props) => (
-    <TouchableWithoutFeedback onPress={toggleSecureEntry}>
-      <Icon {...props} name={!secureTextEntry ? 'eye' : 'eye-off'} />
-    </TouchableWithoutFeedback>
-  );
-
-  const toNextField = () => nextFieldFocus.current.focus();
-
-  const login = async () => {
-    if (email.length == 0 || password.length == 0) {
-      alert('Username or password field cannot be empty.'); // TODO: change to snackbar
-      return;
+  const login = async ({ email, password }) => {
+    const result = await auth.login(email, password);
+    if (!result.success) {
+      return setLoginErr(result.error);
     }
-
-    return auth.login(email, password, (err) => auth.onError(err));
   };
 
   const goToSignUp = () => navigation.navigate(AppRoute.SIGNUP);
   const forgotPassword = () => navigation.navigate(AppRoute.FORGOT_PASS);
-
-  const inputFields = (
-    <View>
-      <Input
-        testID="email"
-        label="Email"
-        selectTextOnFocus
-        placeholder="Enter email"
-        value={email}
-        onChangeText={setEmail}
-        keyboardType='email-address'
-        textContentType='emailAddress'
-        returnKeyType="next"
-        onSubmitEditing={toNextField}
-      />
-      <Input
-        testID="password"
-        label="Password"
-        placeholder="Enter Password"
-        accessoryRight={showPasswordIcon}
-        secureTextEntry={secureTextEntry}
-        value={password}
-        onChangeText={setPassword}
-        textContentType='password'
-        returnKeyType="go"
-        ref={nextFieldFocus}
-        onSubmitEditing={login}
-      />
-    </View>
-  );
 
   const signupBtn = (
     <Text
@@ -88,10 +43,45 @@ const LoginScreen = ({ navigation }) => {
     </Text>
   );
 
-  const showErrMsg = (errMsg) => <Text status="danger" category="s1" style={{ textAlign: "center" }}>{errMsg}</Text>;
+  const ErrorText = ({ errMsg }) => (
+    <Text status="danger" category="s1" style={{ textAlign: 'center' }}>
+      {loginErr}
+    </Text>
+  );
+
+  const LoginForm = () => (
+    <View>
+      <Formik
+        initialValues={loginDetails}
+        validationSchema={loginSchema}
+        onSubmit={(values) => login(values)}
+      >
+        {(props) => (
+          <>
+            <EmailField />
+            <PasswordField />
+            <Text
+              category="c2"
+              status="primary"
+              accessibilityRole="button"
+              onPress={forgotPassword}
+              style={{ textAlign: 'right', paddingBottom: 10 }}
+            >
+              Forgot Password?
+            </Text>
+            <ErrorText errMsg={loginErr} />
+            <Button onPress={props.handleSubmit} style={{ marginTop: 10 }}>
+              Login
+            </Button>
+            {signupBtn}
+          </>
+        )}
+      </Formik>
+    </View>
+  );
 
   const loginPage = (
-    <View style={customStyle.content, customStyle.container}>
+    <View style={(customStyle.content, customStyle.container)}>
       <Text category="h1" style={{ textAlign: 'center' }}>
         WhatsAppDoc
       </Text>
@@ -99,19 +89,7 @@ const LoginScreen = ({ navigation }) => {
         <Image source={loginImg} style={styles.img} />
       </View>
       <View style={styles.loginContainer}>
-        {inputFields}
-        <Text
-          category="c1"
-          status="primary"
-          accessibilityRole="button"
-          onPress={forgotPassword}
-          style={{ textAlign: 'right', paddingBottom: 10 }}
-        >
-          Forgot Password?
-        </Text>
-        {auth.state.errMsg !== null ? showErrMsg(auth.state.errMsg) : <></>}
-        <Button onPress={login} style={{ marginTop: 10 }}>Login</Button>
-        {signupBtn}
+        <LoginForm />
       </View>
     </View>
   );
@@ -121,9 +99,7 @@ const LoginScreen = ({ navigation }) => {
   }
 
   return (
-    <KeyboardAwareScrollView 
-      contentContainerStyle={customStyle.contentFill}
-    >
+    <KeyboardAwareScrollView contentContainerStyle={customStyle.contentFill}>
       {loginPage}
     </KeyboardAwareScrollView>
   );

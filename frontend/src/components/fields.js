@@ -13,7 +13,7 @@ import {
 } from '@ui-kitten/components';
 import { Field } from 'formik';
 import { CustomInput } from './customInput';
-import enums from '../../../shared/helpers/enums';
+import enums from '../../helpers/enums';
 import countryList from '../utils/countries.json';
 
 // const editForm = (formType, formSetter, key, value) => formSetter({ ...formType, [key]: value });
@@ -21,9 +21,23 @@ import countryList from '../utils/countries.json';
 const CIVIL_STATUS = Object.keys(enums.civilStatus);
 const SEX = Object.keys(enums.sex);
 
-const EmailField = () => {
+const InputLabelOptional = (props) => {
+  const theme = useTheme();
+
+  return (
+    <Text {...props}>
+      {props.label}
+      <Text style={{ color: theme['text-hint-color'], fontSize: 11 }}>
+        {' (optional)'}
+      </Text>
+    </Text>
+  );
+};
+
+const EmailField = (props) => {
   return (
     <Field
+      {...props}
       component={CustomInput}
       label="Email"
       name="email"
@@ -34,7 +48,7 @@ const EmailField = () => {
   );
 };
 
-const PasswordField = () => {
+const PasswordField = (props) => {
   const [secureTextEntry, setSecureTextEntry] = useState(true);
   const toggleSecureEntry = () => setSecureTextEntry(!secureTextEntry);
 
@@ -46,6 +60,7 @@ const PasswordField = () => {
 
   return (
     <Field
+      {...props}
       component={CustomInput}
       label="Password"
       name="password"
@@ -67,16 +82,14 @@ const NameFields = () => {
         placeholder="Enter First Name"
         textContentType="givenName"
       />
-
       <Field
         component={CustomInput}
         testID="midName"
-        label="Middle Name"
+        label={(props) => <InputLabelOptional label="Middle Name" {...props} />}
         name="midName"
         placeholder="Enter Middle Name"
         textContentType="middleName"
       />
-
       <Field
         component={CustomInput}
         testID="lname"
@@ -148,6 +161,7 @@ const BirthdateField = (props) => {
           setValues({ ...values, birthdate: date });
         }}
         caption={hasError ? errors['birthdate'] : ''}
+        placement="bottom"
       />
     </>
   );

@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Input, Text, Button, useTheme } from '@ui-kitten/components';
+import React from 'react';
+import { Text, Button, useTheme } from '@ui-kitten/components';
 import { View, Image } from 'react-native';
 import { openImagePickerAsync } from '../../components/filePicker';
 import customStyle from '../../../themes/styles';
