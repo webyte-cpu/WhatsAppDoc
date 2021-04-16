@@ -22,7 +22,7 @@ const server = new ApolloServer({
   context: ({ req }) => {
     
     // try to retrieve a user with the token
-    const user = req.user
+    const user = req.user || {}
 
     // optionally block the user
     // we could also check user roles/permissions here
