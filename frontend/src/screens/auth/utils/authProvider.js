@@ -12,7 +12,6 @@ import ACTIONS from './actions';
 const initialState = {
   isLoading: true,
   token: null,
-  errMsg: ''
 };
 
 const reducer = (initialState, action) => {
@@ -21,25 +20,17 @@ const reducer = (initialState, action) => {
       return {
         ...initialState,
         token: action.payload.token,
-        errMsg: null
       };
     case ACTIONS.LOGOUT:
       return {
         ...initialState,
         token: null,
-        errMsg: null
       };
     case ACTIONS.RETRIEVE:
       return {
         ...initialState,
         token: action.payload.token,
         isLoading: false,
-        errMsg: null
-      };
-    case ACTIONS.ERR_MSG:
-      return {
-        ...initialState,
-        errMsg: action.payload.errMsg
       };
     default:
       throw new Error(`Invalid action type: ${action.type}`);
@@ -62,18 +53,16 @@ const useProvideAuth = () => {
     // dispatch({ type: ACTIONS.LOGOUT })
   }, []);
 
-  const { login, logout, signup, onError} = useMemo(
+  const { login, logout, signup } = useMemo(
     () => ({
-      login: async (email, password, errCallback) =>
-        loginUser(dispatch, email, password, errCallback),
+      login: async (email, password) => loginUser(dispatch, email, password),
       logout: async () => logoutUser(dispatch),
       signup: async (userData) => signupUser(dispatch, userData),
-      onError: (errMsg) => dispatch({ type: ACTIONS.ERR_MSG, payload: { errMsg }})
     }),
     []
   );
 
-  return { state, login, logout, signup, onError};
+  return { state, login, logout, signup };
 };
 
 const AuthProvider = ({ children }) => {

@@ -3,8 +3,7 @@
 const ACTIONS = {
   LOGIN: 'login',
   LOGOUT: 'logout',
-  RETRIEVE: 'retrieve',
-  ERR_MSG: 'errMsg'
+  RETRIEVE: 'retrieve'
 };
 
 export default ACTIONS;

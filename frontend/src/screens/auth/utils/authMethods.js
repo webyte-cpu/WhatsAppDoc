@@ -5,15 +5,16 @@ import { removeData, storeData } from './handleData';
 const getUser = (users, email, password) =>
   users.find((user) => email === user.email && password === user.password);
 
-const loginUser = async (dispatch, email, password, errCallback) => {
+const loginUser = async (dispatch, email, password) => {
   // AWAIT verify userData: send to server => hash password => find match in db => generate token (remove password) => return token
   const token = getUser(Users, email, password); // JWT token
-  if (token == null) {
-    return errCallback('Email or password is incorrect.');
-  } else {
+  if (token) {
     await storeData('token', token);
     dispatch({ type: ACTIONS.LOGIN, payload: { token } });
+    return {success: true}
   }
+
+  return { success: false, error: 'Email or password is incorrect.' };
 };
 
 const logoutUser = async (dispatch) => {
