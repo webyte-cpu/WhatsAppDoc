@@ -6,10 +6,10 @@ enum VerificationStatus {
 
   # This "clinic" type defines the queryable fields for every clinic in our data source.
 type Clinic {
-  uid: UUID!
+  uid: ID!
   name: String!
   roomNumber: String
-  address: [address]
+  address: String!
 
   licence_no: String!
   experience: Int!
@@ -24,21 +24,21 @@ type Clinic {
   # case, the "clinic" query returns an array of zero or more clinic (defined above).
 
 type Query {
-  getClinic(uid: UUID): [Clinic]
+  getClinic(uid: ID): [Clinic]
 }
 
 type Mutation {
   createClinic(
-    address: AddressInput
-    firstName: String!
+    address: String!
+    firstName: String!  
     lastName: String!
-    email: EmailAddress!
+    email: String!
     password: String!
-    sex: Sex
-    birthdate: Date
+    sex: String!
+    # birthdate: Date
     phoneNumber: String
-    weight: PositiveFloat
-    height: PositiveFloat
+    weight: Float
+    height: Float
     civilStatus: String
     nationality: String
     isClinic: Boolean
@@ -51,16 +51,16 @@ type Mutation {
   ): Clinic
 
   updateClinic(
-    address: AddressInput
+    address: String!
     firstName: String!
     lastName: String!
-    email: EmailAddress!
+    email: String!
     password: String!
-    sex: Sex
-    birthdate: Date
+    sex: String
+    # birthdate: Date
     phoneNumber: String
-    weight: PositiveFloat
-    height: PositiveFloat
+    weight: Float
+    height: Float
     civilStatus: String
     nationality: String
     isClinic: Boolean
@@ -72,5 +72,5 @@ type Mutation {
     bio: String
   ): Clinic
 
-  deleteClinic(uid: UUID!): Clinic
+  deleteClinic(uid: ID!): Clinic
 }
