@@ -3,20 +3,20 @@ import { Input, Text, Button, useTheme } from '@ui-kitten/components';
 import { View, Image } from 'react-native';
 import { openImagePickerAsync } from '../../components/filePicker';
 import customStyle from '../../../themes/styles';
+import { Field } from 'formik';
+import { CustomInput, CustomImgField } from '../../components/customInput';
 
-const SignUpDoctor = ({ specialization, licenseNum, editDoctorDetails }) => {
+const SignUpDoctor = ({ setValues, values }) => {
   const theme = useTheme();
-  const [selectedImg, setSelectedImg] = useState(null);
 
   const pickImage = async () => {
     const result = await openImagePickerAsync();
-    setSelectedImg(result);
-    editDoctorDetails('licenseImg', result);
+    return setValues({ ...values, licenseImg: result });
   };
 
   const imgPreview = (
     <Image
-      source={{ uri: selectedImg }}
+      source={{ uri: values.licenseImg }}
       style={customStyle.uploadImgContainer}
     />
   );
@@ -33,7 +33,7 @@ const SignUpDoctor = ({ specialization, licenseNum, editDoctorDetails }) => {
         Upload
       </Button>
       <View style={{ marginLeft: 10 }}>
-        {selectedImg == null ? noImgMsg : imgPreview}
+        {values.licenseImg == '' ? noImgMsg : imgPreview}
       </View>
     </View>
   );
@@ -44,27 +44,27 @@ const SignUpDoctor = ({ specialization, licenseNum, editDoctorDetails }) => {
         <Text category="h6" style={customStyle.formTitle}>
           Practitioner Information
         </Text>
-        <Input
-          testID="specialization"
+        <Field
+          component={CustomInput}
+          name="specialization"
           label="Specialization"
           placeholder="Enter Specialization"
-          value={specialization}
-          onChangeText={(value) => editDoctorDetails('specialization', value)}
-          returnKeyType="next"
         />
-        <Input
-          testID="licenseNum"
+        <Field
+          component={CustomInput}
+          name="licenseNum"
           label="License Number"
           placeholder="Enter License Number"
-          value={licenseNum}
-          onChangeText={(value) => editDoctorDetails('licenseNum', value)}
-          keyboardType='number-pad'
+          keyboardType="number-pad"
         />
+
         <Text category="label" style={{ color: theme['text-hint-color'] }}>
           License Image
         </Text>
-        <Input
-          textStyle={{ color: theme['text-hint-color'], fontSize: 12 }}
+
+        <Field
+          component={CustomImgField}
+          name="licenseImg"
           accessoryLeft={uploadImgContent}
           disabled
         />

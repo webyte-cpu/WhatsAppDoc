@@ -10,7 +10,8 @@
     "text-subtitle-1-font-family": "Poppins-SemiBold",
     "text-paragraph-1-font-family": "Poppins-Regular",
     "text-paragraph-2-font-family": "Poppins-Medium",
-    "text-caption-1-font-family": "Poppins-SemiBold",
+    "text-caption-1-font-family": "Poppins-Regular",
+    "text-caption-2-font-family": "Poppins-SemiBold",
     "text-label-font-family": "Poppins-Bold"
   },
   "components": {
