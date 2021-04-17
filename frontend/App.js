@@ -1,10 +1,9 @@
-import { StatusBar } from 'expo-status-bar';
-import React from 'react';
-import { StyleSheet, View, SafeAreaView } from 'react-native';
-import * as eva from "@eva-design/eva";
+import * as React from 'react';
+import * as eva from '@eva-design/eva';
+import { EvaIconsPack } from '@ui-kitten/eva-icons';
 import { ApplicationProvider, IconRegistry } from '@ui-kitten/components';
-import {useFonts} from 'expo-font';
 import { default as theme } from './themes/custom-theme.json';
+<<<<<<< HEAD
 import { default as mapping } from './mapping.json';
 import AppLoading from 'expo-app-loading'
 import { EvaIconsPack } from '@ui-kitten/eva-icons';
@@ -39,9 +38,23 @@ const App = () => {
       </ApplicationProvider>
       </ApolloProvider>
 
+=======
+import AppNavigator from './src/navigation/routes';
+import { AuthProvider } from './src/screens/auth/utils/authProvider';
+import { StatusBar } from 'expo-status-bar';
+const App = () => {
+  return (
+    <>
+      <AuthProvider>
+        <IconRegistry icons={EvaIconsPack} />
+        <ApplicationProvider {...eva} theme={{ ...eva.light, ...theme }}>
+          <StatusBar translucent={true} />
+          <AppNavigator />
+        </ApplicationProvider>
+      </AuthProvider>
+>>>>>>> c264bc0fed32eb71472237bd7d1ac57a40a2d4c1
     </>
-  )
+  );
 };
 
-
-export default App
+export default App;

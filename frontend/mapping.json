@@ -1,5 +1,58 @@
 {
   "strict": {
-    "text-font-family": "Inter-Regular"
+    "text-font-family": "Poppins-Regular",
+    "text-heading-1-font-family": "Poppins-Bold",
+    "text-heading-2-font-family": "Poppins-Bold",
+    "text-heading-3-font-family": "Poppins-Bold",
+    "text-heading-4-font-family": "Poppins-Bold",
+    "text-heading-5-font-family": "Poppins-Bold",
+    "text-heading-6-font-family": "Poppins-Bold",
+    "text-subtitle-1-font-family": "Poppins-SemiBold",
+    "text-paragraph-1-font-family": "Poppins-Regular",
+    "text-paragraph-2-font-family": "Poppins-Medium",
+    "text-caption-1-font-family": "Poppins-Regular",
+    "text-caption-2-font-family": "Poppins-SemiBold",
+    "text-label-font-family": "Poppins-Bold"
+  },
+  "components": {
+    "Select": {
+      "meta": {
+        "parameters": {
+          "borderWidth": {
+            "type": "number"
+          }
+        }
+      },
+      "appearances": {
+        "default": {
+          "variantGroups": {
+            "status": {
+              "warning": {
+                "borderColor": "border-basic-color-4",
+                "iconTintColor": "text-basic-color",
+                "textColor": "text-basic-color",
+                "iconMarginHorizontal": 0,
+                "backgroundColor": "#f7f9fc",
+                "state": {
+                  "focused": {
+                    "backgroundColor": "#f7f9fc",
+                    "borderColor": "border-basic-color-4"
+                  },
+                  "hover": {
+                    "backgroundColor": "#f7f9fc",
+                    "borderColor": "border-basic-color-4"
+                  },
+                  "active": {
+                    "backgroundColor": "#f7f9fc",
+                    "iconTintColor": "text-basic-color",
+                    "borderColor": "border-basic-color-4"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
   }
 }

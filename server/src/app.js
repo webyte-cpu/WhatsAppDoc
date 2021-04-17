@@ -1,16 +1,39 @@
 import "dotenv/config.js";
 import express from "express";
+import expressJwt from "express-jwt";
 import { ApolloServer } from "apollo-server-express";
-import resolvers from "./resolvers/resolver.js";
-import typeDefs from "./typeDefs/typeDefs.js";
+import typeDefs from "./rootTypeDef/typeDefs.js";
+import resolvers from "./rootResolver/resolver.js";
 
-// The ApolloServer constructor requires two parameters:
-// your schema definition and your set of resolvers.
-
-const server = new ApolloServer({ typeDefs, resolvers });
+const port = 4000;
 const app = express();
+
+app.use(
+  expressJwt({
+    secret: "supersecret",
+    algorithms: ["HS256"],
+    credentialsRequired: false,
+  })
+);
+
+const server = new ApolloServer({
+  typeDefs,
+  resolvers,
+  context: ({ req }) => {
+    
+    // try to retrieve a user with the token
+    const user = req.user || {}
+
+    // optionally block the user
+    // we could also check user roles/permissions here
+    if (!user) throw new AuthenticationError("you must be logged in");
+
+    // add the user to the context
+    return { user };
+  },
+});
 server.applyMiddleware({ app });
 
-app.listen({ port: 4000 }, () =>
+app.listen({ port }, () =>
   console.log("Now browse to http://localhost:4000" + server.graphqlPath)
 );
