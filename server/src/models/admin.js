@@ -23,7 +23,7 @@ const admin = {
           admin_first_name,
           admin_last_name,
           admin_email,
-          admin_password,
+          admin_password,  
         })
       )
       .returning("*"),

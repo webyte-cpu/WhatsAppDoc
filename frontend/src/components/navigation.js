@@ -14,8 +14,8 @@ const HomeNavigator = () => (
     <Screen name='Admin' component={Admin} />
     {/* <Screen name='Home' component={HomeScreen}/>
     <Screen name='Details' component={DetailsScreen}/> */}
-    <Screen name='LoginMain' component={LoginScreen}/>
-    <Screen name="Login" component={Login}/>
+    {/* <Screen name='LoginMain' component={LoginScreen}/>
+    <Screen name="Login" component={Login}/> */}
   </Navigator>
 );
 

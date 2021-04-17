@@ -11,15 +11,34 @@ import { EvaIconsPack } from '@ui-kitten/eva-icons';
 import LoginScreen from './src/components/loginScreen';
 import { AppNavigator } from './src/components/navigation';
 
+import { AppRegistry } from 'react-native';
+import { ApolloClient, InMemoryCache, ApolloProvider } from '@apollo/client';
+
+// Initialize Apollo Client
+const client = new ApolloClient({
+  uri: 'http://localhost:4000/graphql',
+  cache: new InMemoryCache()
+});
+
+// const client = new ApolloClient({
+//   uri: "https://graphql-pokemon.now.sh/",
+//   cache
+// });
+
+
+
 const App = () => {
   return (
     <>
-      <IconRegistry icons={ EvaIconsPack } />
+      <ApolloProvider client={client}>
+          <IconRegistry icons={ EvaIconsPack } />
       <ApplicationProvider {...eva} 
       theme={{ ...eva.light, ...theme }}
       >
         <AppNavigator/>
       </ApplicationProvider>
+      </ApolloProvider>
+
     </>
   )
 };

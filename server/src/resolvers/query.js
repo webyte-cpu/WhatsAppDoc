@@ -6,7 +6,7 @@ import user from "../models/user.js";
 const query = {
   admin: () => admin.get(),
   user: () => user.get(),
-  doctor: () => doctor.get(),
+  doctor: () => doctor.getAll()
   // patient: () => patient.get(),
 };
 
