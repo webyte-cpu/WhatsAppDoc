@@ -1,0 +1,56 @@
+
+  interface User {
+    uid: ID!
+    firstName: String!
+    MiddleName: String
+    lastName: String!
+    email: String!
+    password: String!
+    # role: Role!
+    # createdAt: DateTime
+    # updatedAt: DateTime
+  }
+
+  type Admin implements User {
+    uid: ID!
+    firstName: String!
+    MiddleName: String
+    lastName: String!
+    email: EmailAddress!
+    password: String!
+    # role: Role!
+    # createdAt: DateTime
+    # updatedAt: DateTime
+  }
+
+  type Query {
+    getUser(uid: ID!): User!
+    getAllUser: [User!]
+    viewer: User
+  }
+
+  type Mutation {
+    signUp(
+      firstName: String!
+      middleName: String
+      lastName: String!
+      # email: EmailAddress!
+      password: String!
+      # role: Role!
+    ): JWT!
+
+    updateUser(
+      firstName: String!
+      MiddleName: String
+      lastName: String!
+      password: String!
+      # role: Role!
+    ): Int!
+
+    deleteUser(uid: ID!): Int!
+
+    signIn(email: String!, password: String!): JWT!
+  }
+
+
+

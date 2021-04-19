@@ -1,13 +1,11 @@
-import { AuthenticationError } from "apollo-server-errors";
+import __ from "lodash";
 import enums from "../helpers/enums/enums.js";
 import jwt from "jsonwebtoken";
 import user from "./user.js";
-import bcrypt from "bcrypt";
 
 const resolverMap = {
   User: {
-    __resolveType(obj, context, info) {
-      console.log(obj.role);
+    __resolveType(obj) {
       switch (obj.role) {
         case enums.role.ADMIN:
           return "Admin";
@@ -22,49 +20,33 @@ const resolverMap = {
   },
 
   Query: {
-    getUser: async (obj, arg) => {
-      const data = await user.get(arg);
-      return data[0];
-    },
-    getAllUser: (obj, arg) => {
-      return user.get({});
-    },
-    viewer: async (parent, arg, context) => {
+    getUser: (obj, arg) => user.get(arg.uid),
+    getAllUser: () => user.get(),
+    viewer: (parent, arg, context) => {
+      if (__.isEmpty(context.user)) {
+        return null;
+      }
       const { uid } = context.user;
-      const dataResponse = await user.get({ uid });
-      return dataResponse[0];
+      return user.get(uid);
     },
   },
 
   Mutation: {
-    signUp: async (obj, arg) => {
-      const signUpResponse = user.signUp(arg);
-      console.log(await signUpResponse);
-      return signUpResponse;
+    signUp: async (obj, arg, context) => {
+      const userResponse = await user.signUp(arg);
+      return userResponse.uid;
     },
-
-    login: async (obj, { email, password }) => {
-      const dataResponse = await user.get({ email });
-
-      if (!dataResponse[0]) {
-        throw new AuthenticationError("User does not exist");
-      }
-
-      console.log(email, password);
-      const { uid, role, password: passwordHash } = dataResponse[0];
-
-      const match = await bcrypt.compare(password, passwordHash);
-
-      if (!match) {
-        throw new AuthenticationError("password is incorrect!");
-      }
-
-      return jwt.sign({ uid, role }, "supersecret", {
+    signIn: async (obj, { email, password }) => {
+      const payload = await user.check({ email, password });
+      return jwt.sign(payload, process.env.JWT_SECRET_KEY, {
         algorithm: "HS256",
-        subject: uid,
+        subject: payload.uid,
         expiresIn: "1d",
       });
     },
+    updateUser:()=>{
+
+    }
   },
 };
 

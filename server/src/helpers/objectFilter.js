@@ -4,4 +4,4 @@ const objectFilter = (data) =>
     return object;
   }, {});
 
-module.exports = objectFilter;
+export default objectFilter;

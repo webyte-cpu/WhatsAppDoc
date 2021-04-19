@@ -1,4 +1,4 @@
-const { gql } = require ("apollo-server-express");
+import { gql } from "apollo-server-express";
 
 const address = gql`
   type Address {
@@ -42,8 +42,8 @@ const address = gql`
       country: String!
       coordinates: String
     ): Address
-    deleteAddress(uid:UUID!): Address
+    deleteAddress(uid: UUID!): Address
   }
 `;
 
-module.exports = { address };
+export default address;
