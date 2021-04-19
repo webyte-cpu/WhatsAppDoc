@@ -13,7 +13,6 @@ const GET_DOCTORS = gql`
         specialization
   }
   }  
-
 `;
 
 

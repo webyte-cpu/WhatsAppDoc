@@ -5,7 +5,7 @@ const doctor = gql`
   # This "doctor" type defines the queryable fields for every doctor in our data source.
   type Doctor implements User {
     uid: UUID!
-    firstName: String!
+    userFirstName: String!
     MiddleName: String
     lastName: String!
     email: EmailAddress!
@@ -14,9 +14,9 @@ const doctor = gql`
     createdAt: DateTime
     updatedAt: DateTime
 
-    licence_num: String!
-    licence_img: Int!
-    verification_status: VerificationStatus
+    licenceNum: String!
+    licenceImg: Int!
+    verificationStatus: VerificationStatus
     experience: Int
     about: String
     educational: String

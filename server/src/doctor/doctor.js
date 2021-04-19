@@ -41,12 +41,14 @@ const update = async (arg) => {
   return dbReponse.map((data) => objectKeysToCamelCase(data, "doctor_"))[0];
 };
 
-const get = async (uid) => {
+const get = async ({uid}) => {
   const dbReponse = uid
     ? await pg.select("*").from("doctors").where({ doctor_uid: uid })
-    : await pg.select("*").from("doctors");
+    : await pg.select("*").from("doctors").join("users as u", "doctors.doctor_uid" , "=", "u.user_uid");
 
-  return dbReponse.map((data) => objectKeysToCamelCase(data, "doctor_"));
+  const response = dbReponse.map((data) => objectKeysToCamelCase(data, "doctor_"));
+  console.log(response)
+  return response;
 };
 
 const remove = async (uid) => {
