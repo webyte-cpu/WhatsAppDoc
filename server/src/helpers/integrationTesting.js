@@ -4,30 +4,41 @@ import {
   ApolloServer,
   context as defaultContext,
 } from "../app.js";
-
+import faker from "faker";
+import pg from "../../db/index.js";
+import knexCleaner from "knex-cleaner";
 /**
  * Integration testing utils
  */
 
 const defaultMocks = {
-  UUID: () => "8bb11d0d-21eb-41f6-b476-aa28f9ee6db9",
-  DateTime: () => new Date("2021-04-15"),
-  Password: () => "helloWorld1234",
-  EmailAddress: () => "kyle@webyte.org",
+  UUID: () => faker.datatype.uuid(),
+  DateTime: () => faker.datatype.datetime(),
+  Password: () => faker.internet.password(12),
+  EmailAddress: () => faker.internet.email(),
 };
 
-const constructTestServer = ({ context, mocks }) => {
-  const combinedMock = { ...(mocks || {}), ...defaultMocks };
-
+const constructTestServer = ({ context = defaultContext, mocks = {} } = {}) => {
   const server = new ApolloServer({
     typeDefs,
     resolvers,
-    mocks: combinedMock,
+    mocks: { ...mocks, ...defaultMocks },
     mockEntireSchema: false,
-    context: context || defaultContext,
+    context: context,
   });
 
   return { server };
 };
 
-export default constructTestServer;
+const cleanDb = () => {
+  const options = {
+    mode: "truncate",
+    restartIdentity: true,
+  };
+  
+  knexCleaner.clean(pg, options).then(function () {
+    console.log("your database is now clean");
+  });
+};
+
+export { constructTestServer, cleanDb };

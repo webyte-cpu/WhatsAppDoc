@@ -34,12 +34,12 @@ const user = gql`
   extend type Mutation {
     signUp(
       firstName: String!
-      MiddleName: String
+      middleName: String
       lastName: String!
       email: EmailAddress!
       password: Password!
       role: Role!
-    ): UUID!
+    ): JWT!
 
     updateUser(
       firstName: String!
@@ -47,15 +47,9 @@ const user = gql`
       lastName: String!
       password: Password!
       role: Role!
-    ): User!
+    ): Int!
 
-    deleteUser(
-      firstName: String!
-      MiddleName: String
-      lastName: String!
-      password: Password!
-      role: Role!
-    ): User!
+    deleteUser(uid: UUID!): Int!
 
     signIn(email: EmailAddress!, password: Password!): JWT!
   }
