@@ -46,11 +46,11 @@ const Admin = () => {
     if (loading) return 'Loading...';
     if (error) return `Error! ${error.message}`;
 
-  
+
 
     const doctors = data.getAllDoctor
 
-    console.log(doctors)
+
     const pendingList = doctors.filter(doctor => doctor.verificationStatus == 'PENDING')
     const verifiedList = doctors.filter(doctor => doctor.verificationStatus == 'VERIFIED')
 
@@ -67,46 +67,60 @@ const Admin = () => {
 
     const detail = <Text category='s2' style={{ color: theme['color-primary-600'], marginRight: 10 }}> Details </Text>
 
-    const renderItem = ({ item }) => (
-        <ListItem
-            title={`${item.userFirstName}`}
-            description={`${item.about}`}
-            accessoryLeft={profileIcon}
-            accessoryRight={() => item.verificationStatus == 'VERIFIED' ? <></> : detail}
-            onPress={() => handleShow(item)}
-        />
-    );
+    // const renderItem = ({ item }) => (
+    //     <ListItem
+    //         title={`${item.userFirstName}`}
+    //         description={`${item.about}`}
+    //         accessoryLeft={profileIcon}
+    //         accessoryRight={() => item.verificationStatus == 'VERIFIED' ? <></> : detail}
+    //         onPress={() => handleShow(item)}
+    //     />
+    // );
 
     return (
         <ScrollView>
-            {/* <View style={{ marginTop: 30 }}>
-                <TabView
+            <View style={{ marginTop: 30 }}>
+                {/* <TabView
                     selectedIndex={selectedIndex}
                     onSelect={index => setSelectedIndex(index)} >
-                    <Tab title='PENDING' icon={pendingIcon}>
-                        <List
-                            data={pendingList}
-                            ItemSeparatorComponent={Divider}
-                            renderItem={renderItem}
-                        />
-                    </Tab>
                     <Tab title='VERIFIED' icon={verifiedIcon} >
-                        <List
-                            data={verifiedList}
-                            ItemSeparatorComponent={Divider}
-                            renderItem={renderItem}
-                        />
-                    </Tab>
-                </TabView>
-                <DoctorDetails doctor={viewDoctor} isShown={visible} onHide={handleClose} />
-            </View> */}
+                        {verifiedList.map(doctor => (
+                            
+                            <View key={doctor.uid}>
+                                <ListItem
+                                    title={`${doctor.userFirstName}`}
+                                    description={`${doctor.about}`}
+                                    accessoryLeft={profileIcon}
+                                    accessoryRight={() => doctor.verificationStatus == 'VERIFIED' ? <></> : detail}
+                                    // onPress={() => handleShow()}
+                                />
 
-            {verifiedList.map(doctor => (
-                <View key={doctor.uid}>
-                    <Text>name: {doctor.userFirstName} specilization: {doctor.about}</Text> 
-                </View>
-         
-            ))}
+                            </View>
+
+                        ))}
+
+                    </Tab>
+
+                </TabView>
+                <DoctorDetails doctor={viewDoctor} isShown={visible} onHide={handleClose} /> */}
+                {verifiedList.map(doctor => (
+
+                    <View key={doctor.uid}>
+                        <ListItem
+                            title={`${doctor.userFirstName}`}
+                            description={`${doctor.about}`}
+                            accessoryLeft={profileIcon}
+                            accessoryRight={() => doctor.verificationStatus == 'VERIFIED' ? <></> : detail}
+                        // onPress={() => handleShow()}
+                        />
+
+                    </View>
+
+                ))}
+
+            </View>
+
+
         </ScrollView>
     );
 };
