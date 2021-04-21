@@ -25,7 +25,7 @@ describe("Tests Queries and Mutations", () => {
       
     const getUsersQuery = `
     {
-      getUsers(uid: 3) {
+      getUser(uid: 3) {
         uid
         firstName
         MiddleName
