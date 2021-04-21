@@ -4,6 +4,9 @@ import { GET_USER, SIGN_UP } from "./queries.js";
 import EasyGraphQLTester from 'easygraphql-tester';
 import fs from 'fs';
 import path from 'path';
+import { fileURLToPath } from 'url';
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const schemaCode = fs.readFileSync(
   path.join(__dirname, ".", "user-schema.gql"),
@@ -56,7 +59,7 @@ describe("Tests Queries and Mutations", () => {
     tester.test(true, getUsersQuery);
     tester.test(true, getAllUserQuery);
     tester.test(true, viewerQuery);
-  });
+  }); 
 
   it("fetches single user", async () => {
     // create a test server to test against, using our production typeDefs,

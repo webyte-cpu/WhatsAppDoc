@@ -30,7 +30,7 @@
     "nodemon": "^2.0.7"
   },
   "scripts": {
-    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js",
+    "test": "nodemon --experimental-vm-modules node_modules/jest/bin/jest.js",
     "test:migrate:up": "knex --knexfile ./knex/knexfile.js migrate:latest --env test",
     "test:seed:run": "knex --knexfile ./knex/knexfile.js seed:run --env test",
     "server": "nodemon src/app.js ",
