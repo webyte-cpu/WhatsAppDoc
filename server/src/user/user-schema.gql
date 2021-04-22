@@ -45,9 +45,9 @@ type Mutation {
     lastName: String!
     password: String!
     # role: Role!
-  ): Int!
+  ): User!
 
-  deleteUser(uid: ID!): Int!
+  deleteUser(uid: ID!): User!
 
   signIn(email: String!, password: String!): User!
 }

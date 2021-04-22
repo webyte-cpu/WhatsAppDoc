@@ -87,8 +87,8 @@ describe("Tests Queries and Mutations", () => {
       mutation signUp(
         $firstName: String!,
         $middleName: String,
-        lastName: String!,
-        password: String!
+        $lastName: String!,
+        $password: String!
       ){
         signUp(
           firstName: $firstName,
@@ -98,7 +98,7 @@ describe("Tests Queries and Mutations", () => {
           ){
             uid
             firstName
-            middleName
+            MiddleName
           }
       }
     `
@@ -108,6 +108,47 @@ describe("Tests Queries and Mutations", () => {
       middleName: "J.",
       lastName: "Doe",
       password: "johndoe1"
+    })
+  })
+
+  it('Should pass if updateUser query is correct', () => {
+    const updateUser = `
+    mutation updateUser(
+      $firstName: String!,
+      $MiddleName: String,
+      $lastName: String!,
+      $password: String!
+    ){
+      updateUser(
+        firstName: $firstName,
+        MiddleName: $MiddleName,
+        lastName: $lastName,
+        password: $password
+      ){
+        uid
+      }
+    }
+    `
+
+    tester.test(true, updateUser, {
+      firstName: "John",
+      MiddleName: "D.",
+      lastName: "Doe",
+      password: "johnDoe"
+    })
+  })
+
+  it('Should pass if deleteUser query is correct', () => {
+    const deleteUser = `
+    mutation deleteUser($uid: ID!){
+      deleteUser(uid: $uid){
+        uid
+      }
+    }
+    `
+
+    tester.test(true, deleteUser, {
+      uid: 3
     })
   })
 
