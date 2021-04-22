@@ -22,7 +22,7 @@ describe("Tests Queries and Mutations", () => {
   });
 
   it("Should pass with a valid query", () => {
-      
+
     const getUsersQuery = `
     {
       getUser(uid: 3) {
@@ -59,7 +59,57 @@ describe("Tests Queries and Mutations", () => {
     tester.test(true, getUsersQuery);
     tester.test(true, getAllUserQuery);
     tester.test(true, viewerQuery);
-  }); 
+  });
+
+  it('Should pass if signIn query is correct', () => {
+    const signIn = `
+      mutation signIn(
+        $email: String!,
+        $password: String!
+      ){
+        signIn(email: $email, password: $password){
+          uid
+          firstName
+          MiddleName
+          lastName
+        }
+      }
+    `
+
+    tester.test(true, signIn, {
+      email: 'kent@gmail.com',
+      password: 'password'
+    })
+  });
+
+  it('Should pass if signUp query is correct', () => {
+    const signUp = `
+      mutation signUp(
+        $firstName: String!,
+        $middleName: String,
+        lastName: String!,
+        password: String!
+      ){
+        signUp(
+          firstName: $firstName,
+          middleName: $middleName,
+          lastName: $lastName,
+          password: $password
+          ){
+            uid
+            firstName
+            middleName
+          }
+      }
+    `
+
+    tester.test(true, signUp, {
+      firstName: "John",
+      middleName: "J.",
+      lastName: "Doe",
+      password: "johndoe1"
+    })
+  })
 
   it("fetches single user", async () => {
     // create a test server to test against, using our production typeDefs,
