@@ -8,7 +8,11 @@ const user = gql`
     lastName: String!
     email: EmailAddress!
     password: Password!
+    birthdate: Date!
+    sex: Sex
+    address: Address
     role: Role!
+    img: String
     createdAt: DateTime
     updatedAt: DateTime
   }
@@ -20,7 +24,11 @@ const user = gql`
     lastName: String!
     email: EmailAddress!
     password: Password!
+    birthdate: Date!
+    sex: Sex
+    address: Address
     role: Role!
+    img: String
     createdAt: DateTime
     updatedAt: DateTime
   }
@@ -39,15 +47,22 @@ const user = gql`
       email: EmailAddress!
       password: Password!
       role: Role!
+      img: String
+      sex: Sex!
+      birthdate: Date!
+      doctor: DoctorInput
     ): JWT!
 
     updateUser(
-      firstName: String!
+      firstName: String
       MiddleName: String
-      lastName: String!
-      password: Password!
-      role: Role!
-    ): Int!
+      lastName: String
+      password: Password
+      sex: Sex
+      birthdate: Date
+      address: AddressInput
+      img: String
+    ): UUID
 
     deleteUser(uid: UUID!): Int!
 
