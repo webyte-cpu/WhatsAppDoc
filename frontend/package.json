@@ -1,7 +1,7 @@
 {
   "main": "node_modules/expo/AppEntry.js",
   "scripts": {
-    "start": "expo start",
+    "client": "expo start",
     "android": "expo start --android",
     "ios": "expo start --ios",
     "web": "expo start --web",
@@ -9,6 +9,7 @@
     "cypress": "npx cypress open"
   },
   "dependencies": {
+    "@apollo/client": "^3.3.15",
     "@eva-design/eva": "^2.0.0",
     "@react-native-community/async-storage": "^1.12.1",
     "@react-native-community/masked-view": "0.1.10",
@@ -27,6 +28,7 @@
     "expo-image-picker": "~9.2.0",
     "expo-status-bar": "~1.0.3",
     "formik": "^2.2.6",
+    "graphql": "^15.5.0",
     "react": "16.13.1",
     "react-dom": "16.13.1",
     "react-native": "https://github.com/expo/react-native/archive/sdk-40.0.1.tar.gz",
@@ -41,7 +43,8 @@
   "devDependencies": {
     "@babel/core": "~7.9.0",
     "@expo/webpack-config": "^0.12.63",
-    "cypress-cucumber-preprocessor": "^4.0.3"
+    "cypress-cucumber-preprocessor": "^4.0.3",
+    "cypress-file-upload": "^5.0.6"
   },
   "cypress-cucumber-preprocessor": {
     "nonGlobalStepDefinitions": true
