@@ -61,6 +61,7 @@ const doctor = gql`
     ): Doctor
 
     updateDoctor(
+      uid: UUID!
       licenceNum: String
       licenceImg: String
       licenceExp: Date
