@@ -19,10 +19,11 @@ import {
 import {
   EmailField,
   PasswordField,
-  BirthdateField,
+  DateField,
   NameFields,
   SexField,
 } from '../../components/fields';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
 const ROLE = enums.role;
 
@@ -33,6 +34,7 @@ const SignupScreen = ({ navigation }) => {
     specialization: '',
     licenseNum: '',
     licenseImg: '',
+    expirationDate: '',
     verificationStatus: enums.verificationStatus.PENDING, //default
   };
   const userDetails = {
@@ -119,8 +121,8 @@ const SignupScreen = ({ navigation }) => {
           <>
             <RoleButtons {...props} />
             <View style={styles.form}>
-              <EmailField testID="signup-email"/>
-              <PasswordField testID="signup-pass"/>
+              <EmailField />
+              <PasswordField />
 
               <Text category="h6" style={customStyle.formTitle}>
                 Personal Information
@@ -128,7 +130,7 @@ const SignupScreen = ({ navigation }) => {
 
               <NameFields />
               <SexField {...props} />
-              <BirthdateField {...props} />
+              <DateField {...props} name="birthdate" label="Birthdate" testID="birthdate" max={new Date()} />
 
               {props.values.role === ROLE.DOCTOR ? (
                 <SignUpDoctor {...props} />
@@ -151,9 +153,9 @@ const SignupScreen = ({ navigation }) => {
 
   return (
     <>
-      <ScrollView style={{ backgroundColor: theme['color-primary-500'] }}>
+      <KeyboardAwareScrollView style={{ backgroundColor: theme['color-primary-500'] }}>
         <SignUpForm />
-      </ScrollView>
+      </KeyboardAwareScrollView>
     </>
   );
 };

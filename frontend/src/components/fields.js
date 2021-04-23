@@ -77,18 +77,16 @@ const NameFields = (props) => {
   return (
     <>
       <Field
-        testID="firstName"
-        component={CustomInput}
         testID="fname"
+        component={CustomInput}
         label="First Name"
         name="fname"
         placeholder="Enter First Name"
         textContentType="givenName"
       />
       <Field
-        testID="midName"
+        testID="midname"
         component={CustomInput}
-        testID="midName"
         label={(props) => <InputLabelOptional label="Middle Name" {...props} />}
         name="midName"
         placeholder="Enter Middle Name"
@@ -97,7 +95,6 @@ const NameFields = (props) => {
       <Field
         testID="lname"
         component={CustomInput}
-        testID="lname"
         label="Last Name"
         name="lname"
         placeholder="Enter Last Name"
@@ -148,25 +145,31 @@ const SexField = ({ setValues, values, touched, setFieldTouched, errors }) => {
   );
 };
 
-const BirthdateField = (props) => {
-  const { setValues, values, touched, setFieldTouched, errors } = props;
-  const hasError = errors['birthdate'] && touched['birthdate'];
+const DateField = (props) => {
+  const {
+    setValues,
+    values,
+    touched,
+    setFieldTouched,
+    errors,
+    name,
+    onChange,
+  } = props;
+  const hasError = errors[name] && touched[name];
 
   return (
     <>
       <Datepicker
+        {...props}
         status={hasError ? 'danger' : 'basic'}
-        testID="birthdate"
-        min={new Date('1700-01-01')}
-        max={new Date()}
-        label="Birthdate"
-        date={values.birthdate}
+        min={new Date('1905-01-01')}
+        date={values[name]}
         onSelect={(date) => {
-          setFieldTouched('birthdate');
-          setValues({ ...values, birthdate: date });
+          setFieldTouched(name);
+          setValues({ ...values, [name]: date });
         }}
-        caption={hasError ? errors['birthdate'] : ''}
-        placement="bottom"
+        caption={hasError ? errors[name] : ''}
+        placement="bottom start"
       />
     </>
   );
@@ -283,4 +286,10 @@ const AddressFields = ({ form, editForm }) => {
   );
 };
 
-export { EmailField, PasswordField, NameFields, SexField, BirthdateField };
+export {
+  EmailField,
+  PasswordField,
+  NameFields,
+  SexField,
+  DateField
+};
