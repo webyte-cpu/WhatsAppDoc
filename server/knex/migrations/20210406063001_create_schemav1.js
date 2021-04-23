@@ -13,11 +13,14 @@ const up = function (knex) {
 
     .createTable("users", (table) => {
       table.uuid("user_uid").notNullable().primary();
+      table.uuid("address_uid").references("addresses.address_uid");
       table.string("user_first_name").notNullable();
       table.string("user_middle_name");
       table.string("user_last_name").notNullable();
       table.string("user_email").notNullable().unique();
       table.string("user_password").notNullable();
+      table.date("user_birthdate").notNullable();
+      table.enu("user_sex", ["MALE", "FEMALE"]).notNullable();
       table.enu("user_role", ["ADMIN", "DOCTOR", "PATIENT"]).notNullable();
       table.string("user_img");
       table.timestamps();
@@ -32,6 +35,7 @@ const up = function (knex) {
 
       table.string("doctor_licence_num").notNullable();
       table.string("doctor_licence_img").notNullable();
+      table.date("doctor_licence_exp").notNullable();
       table
         .enu("doctor_verification_status", [
           "PENDING",
@@ -62,15 +66,10 @@ const up = function (knex) {
         .references("users.user_uid")
         .notNullable()
         .primary();
-
-      table.uuid("address_uid").references("addresses.address_uid");
-
-      table.date("patient_birthdate").notNullable();
       table.string("patient_contact_number");
       table.integer("patient_weight");
       table.integer("patient_height");
       table.string("patient_nationality");
-      table.enu("patient_sex", ["MALE", "FEMALE"]).notNullable();
       table.enu("patient_civil_status", [
         "SINGLE",
         "MARRIED",
