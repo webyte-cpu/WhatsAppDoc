@@ -1,6 +1,6 @@
 import objectFilter from "../helpers/objectFilter.js";
-import pg from "../../db/index.js";
 import { v4 as uuidV4 } from "uuid";
+import pg from "../../db/index.js";
 import __ from "lodash";
 
 const doctor = (knex = pg) => ({
@@ -27,7 +27,7 @@ const doctor = (knex = pg) => ({
     doctor_rating: doctorData.rating,
   }),
   create: async (doctorData) => {
-    doctorData.uid = doctorData.uid || uuid;
+    doctorData.uid = doctorData.uid || uuidV4();
     const dbResponse = await knex
       .insert(objectFilter(doctor().toDb(doctorData)))
       .into("doctors")
