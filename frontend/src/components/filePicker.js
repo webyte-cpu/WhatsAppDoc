@@ -1,4 +1,4 @@
-import * as ImagePicker from "expo-image-picker";
+import * as ImagePicker from 'expo-image-picker';
 import * as DocumentPicker from 'expo-document-picker';
 
 /**
@@ -9,19 +9,22 @@ const openImagePickerAsync = async () => {
     const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
 
     if (!permissionResult.granted) {
-      alert("Permission to access camera roll is required!");
+      alert('Permission to access camera roll is required!');
       return;
     }
 
-    const pickerResult = await ImagePicker.launchImageLibraryAsync();
-
+    const pickerResult = await ImagePicker.launchImageLibraryAsync({
+      allowsEditing: true,
+      quality: 0.5,
+    });
+    
     if (pickerResult.cancelled) {
       return;
     }
 
     return pickerResult.uri;
   } catch (e) {
-    throw new Error(e)
+    throw new Error(e);
   }
 };
 
@@ -29,18 +32,18 @@ const openImagePickerAsync = async () => {
  * @param {string} type - see expo documentPicker for info
  * @returns {object} { type: 'success' | 'cancel', uri, name, size }
  */
-const documentPicker = async (type = "*/*") => {
+const documentPicker = async (type = '*/*') => {
   try {
-    const imgFile = await DocumentPicker.getDocumentAsync({ type: type })
+    const imgFile = await DocumentPicker.getDocumentAsync({ type: type });
 
-    if(imgFile.type === 'cancel') {
-      return null
+    if (imgFile.type === 'cancel') {
+      return null;
     }
 
-    return imgFile
+    return imgFile;
   } catch (error) {
-    throw new Error(e)
+    throw new Error(e);
   }
-}
+};
 
-export { openImagePickerAsync, documentPicker }
+export { openImagePickerAsync, documentPicker };

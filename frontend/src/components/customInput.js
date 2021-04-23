@@ -1,5 +1,5 @@
 import { Input, useTheme, Text } from '@ui-kitten/components';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { StyleSheet } from 'react-native';
 
 const CustomInput = (props) => {
