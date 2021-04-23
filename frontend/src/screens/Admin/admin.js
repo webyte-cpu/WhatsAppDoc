@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import {
     View,
-    ScrollView
+    ScrollView,
+    Button
 }
     from 'react-native';
 import {
@@ -17,23 +18,45 @@ import {
 import { useTheme } from '@ui-kitten/components'
 import DoctorDetails from './verification'
 import { data } from './dummyDataAdmin'
-import { gql, useQuery } from '@apollo/client';
+import { gql, useQuery, useMutation } from '@apollo/client';
 
 const GET_DOCTORS = gql`
 query {
   getAllDoctor{
     uid
     userFirstName
-    verificationStatus
+    verificationStatus  
     about
   }
 }
     `;
 
+const UPDATE_DOCTOR = gql`
+    mutation updateDoctor($uid:UUID!, $verificationStatus: VerificationStatus ){
+        updateDoctor(uid: $uid , verificationStatus: $verificationStatus){
+            uid
+        }
+    }
+`
+
 
 const profileIcon = (props) => <Icon {...props} name='person' />;
 const verifiedIcon = (props) => <Icon {...props} name='checkmark-circle-outline' />;
 const pendingIcon = (props) => <Icon {...props} name='clock-outline' />;
+
+
+const updateDoctorStatus = (uidCode, verification) => {
+    updateDoctor({
+        variables: {
+            uid: uidCode,
+            verificationStatus: verification
+        }
+    });
+
+    if (errorMutate) {
+        console.log(errorMutate)
+    }
+}
 
 
 
@@ -43,8 +66,24 @@ const Admin = () => {
     const [visible, setVisible] = useState(false);
     const { loading, error, data } = useQuery(GET_DOCTORS);
 
+    const [updateDoctor, { errorMutate }] = useMutation(UPDATE_DOCTOR)
     if (loading) return 'Loading...';
     if (error) return `Error! ${error.message}`;
+
+
+    const updateDoctorStatus = (uidCode, verification) => {
+        updateDoctor({
+            variables: {
+                uid: uidCode,
+                verificationStatus: verification
+            }
+        });
+
+        if (errorMutate) {
+            console.log(errorMutate)
+        }
+    }
+
 
 
 
@@ -53,10 +92,8 @@ const Admin = () => {
 
     const pendingList = doctors.filter(doctor => doctor.verificationStatus == 'PENDING')
     const verifiedList = doctors.filter(doctor => doctor.verificationStatus == 'VERIFIED')
+    const unverifiedList = doctors.filter(doctor => doctor.verificationStatus == 'UNVERIFIED')
 
-    console.log(verifiedList)
-
-    const handleClose = () => setVisible(false);
 
     const handleShow = (doctor) => {
         setVisible(true)
@@ -103,6 +140,8 @@ const Admin = () => {
 
                 </TabView>
                 <DoctorDetails doctor={viewDoctor} isShown={visible} onHide={handleClose} /> */}
+
+                <Text>Verified</Text>
                 {verifiedList.map(doctor => (
 
                     <View key={doctor.uid}>
@@ -111,9 +150,55 @@ const Admin = () => {
                             description={`${doctor.about}`}
                             accessoryLeft={profileIcon}
                             accessoryRight={() => doctor.verificationStatus == 'VERIFIED' ? <></> : detail}
+
+                        // <Button
+                        // onPress={onPressLearnMore}
+                        // title="Learn More"
+                        // color="#841584"
+                        // accessibilityLabel="Learn more about this purple button"
+                        // />
+
+
+                        />
+
+
+
+                <Button onPress={() => updateDoctorStatus(doctor.uid, 'PENDING')} title="move to pending"/>
+                    </View>
+
+                ))}
+
+                <Text>Unverified</Text>
+
+                {unverifiedList.map(doctor => (
+
+                    <View key={doctor.uid}>
+                        <ListItem
+                            title={`${doctor.userFirstName}`}
+                            description={`${doctor.about}`}
+                            accessoryLeft={profileIcon}
+                            accessoryRight={() => doctor.verificationStatus == 'UNVERIFIED' ? <></> : detail}
+                        // onPress={() => handleShow()}
+                        />
+                        <Button onPress={() => updateDoctorStatus(doctor.uid, 'VERIFIED')} title="move to verified"/>
+                    </View>
+
+                ))}
+
+                <Text>Pending</Text>
+
+                {pendingList.map(doctor => (
+
+                    <View key={doctor.uid}>
+                        <ListItem
+                            title={`${doctor.userFirstName}`}
+                            description={`${doctor.about}`}
+                            accessoryLeft={profileIcon}
+                            accessoryRight={() => doctor.verificationStatus == 'PENDING' ? <></> : detail}
                         // onPress={() => handleShow()}
                         />
 
+                        <Button onPress={() => updateDoctorStatus(doctor.uid, 'UNVERIFIED')} title="REJECT"/>
                     </View>
 
                 ))}
