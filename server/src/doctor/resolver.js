@@ -6,20 +6,15 @@ const resolverMap = {
     },
   },
   Mutation: {
-    createDoctor: (obj, arg) => {
-      console.log(arg);
-      //link to doctor in the database
-      return doctor.create(arg);
+    createDoctor: async (obj, arg) => {
+      return await doctor().create(arg);
     },
-    updateDoctor: (obj, arg) => {
-      console.log(arg);
-      //link to doctor in the database
-      return doctor.update(arg);
+    updateDoctor: async (obj, arg) => {
+      return await doctor().update(arg);
     },
-    deleteDoctor: (obj, arg) => {
-      console.log(arg);
-      //link to doctor in the database
-      return doctor.remove(arg.uid);
+    deleteDoctor: async (obj, arg) => {
+      const dbResponse = await doctor().remove(arg.uid);
+      return dbResponse.uid;
     },
   },
   // Subscription: {},
