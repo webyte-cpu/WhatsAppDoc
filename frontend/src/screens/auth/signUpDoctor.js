@@ -5,35 +5,38 @@ import { openImagePickerAsync } from '../../components/filePicker';
 import customStyle from '../../../themes/styles';
 import { Field } from 'formik';
 import { CustomInput, CustomImgField } from '../../components/customInput';
+import { DateField } from '../../components/fields';
 
-const SignUpDoctor = ({ setValues, values }) => {
+const SignUpDoctor = (props) => {
   const theme = useTheme();
+  const fourYearsMS = 126100000000
+  const fourYearsLater = new Date(Date.now() + fourYearsMS)
 
   const pickImage = async () => {
     const result = await openImagePickerAsync();
-    return setValues({ ...values, licenseImg: result });
+    return props.setValues({ ...props.values, licenseImg: result });
   };
 
   const imgPreview = (
     <Image
-      source={{ uri: values.licenseImg }}
+      source={{ uri: props.values.licenseImg }}
       style={customStyle.uploadImgContainer}
     />
   );
 
   const noImgMsg = (
-    <Text category="c2" style={{ color: theme['text-hint-color'] }}>
+    <Text category="c2" style={{ color: theme['text-hint-color']}} testID="noImgSelected">
       No image selected
     </Text>
   );
 
   const uploadImgContent = () => (
     <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-      <Button status="primary" appearance="outline" onPress={pickImage}>
-        Upload
+      <Button testID="addImgBtn" status="primary" appearance="outline" onPress={pickImage}>
+        Choose File
       </Button>
-      <View style={{ marginLeft: 10 }}>
-        {values.licenseImg == '' ? noImgMsg : imgPreview}
+      <View style={{ marginLeft: 10 }} testID="imgPreview">
+        {props.values.licenseImg == '' ? noImgMsg : imgPreview}
       </View>
     </View>
   );
@@ -59,7 +62,9 @@ const SignUpDoctor = ({ setValues, values }) => {
           placeholder="Enter License Number"
           keyboardType="number-pad"
         />
-
+        
+        <DateField {...props} name="expirationDate" label="Expiration Date" testID="expirationDate" max={fourYearsLater}/>
+      
         <Text category="label" style={{ color: theme['text-hint-color'] }}>
           License Image
         </Text>
