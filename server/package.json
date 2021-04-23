@@ -34,7 +34,8 @@
     "test:migrate:up": "knex --knexfile ./knex/knexfile.js migrate:latest --env test",
     "test:seed:run": "knex --knexfile ./knex/knexfile.js seed:run --env test",
     "server": "nodemon src/app.js ",
-    "migration": "knex --knexfile ./knex/knexfile.ts migrate:latest"
+    "migration": "knex --knexfile ./knex/knexfile.ts migrate:latest",
+    "seed": "knex --knexfile ./knex/knexfile.ts seed:run"
   },
   "author": "",
   "license": "ISC",
