@@ -2,7 +2,7 @@ import { createTestClient } from "apollo-server-testing";
 import { cleanDb, constructTestServer } from "../helpers/__utils.js";
 import { GET_USER, SIGN_UP } from "./queries.js";
 
-describe("Quieries", () => {
+describe("Queries", () => {
   it("fetches single user", async () => {
     // create a test server to test against, using our production typeDefs,
     // resolvers, and dataSources.
@@ -19,7 +19,7 @@ describe("Quieries", () => {
     expect(res).toMatchSnapshot();
   });
 
-  it("it signs uo user", async () => {
+  it("it signs up user", async () => {
     afterAll(() => {
       return cleanDb(); // with that we are cleaning the database after all the tests have been executed
     });
