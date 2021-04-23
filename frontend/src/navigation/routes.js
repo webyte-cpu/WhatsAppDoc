@@ -8,6 +8,7 @@ import AppLoading from 'expo-app-loading';
 import AuthNavigator from './navigatorStacks/authNavigator';
 import AdminDrawerStack from './navigatorStacks/adminStack';
 import UserDrawerStack from './navigatorStacks/userDrawer';
+import enums from '../../helpers/enums';
 
 const linking = {
   config: { 
@@ -36,7 +37,7 @@ const AppNavigator = () => {
   return (
     <SafeAreaProvider>
       <NavigationContainer linking={linking}>
-        {auth.state.token == null ? <AuthNavigator /> : auth.state.token.role === 'admin' ? <AdminDrawerStack /> : <UserDrawerStack />}
+        {auth.state.token == null ? <AuthNavigator /> : auth.state.token.role === enums.role.ADMIN ? <AdminDrawerStack /> : <UserDrawerStack />}
       </NavigationContainer>
     </SafeAreaProvider>
   );

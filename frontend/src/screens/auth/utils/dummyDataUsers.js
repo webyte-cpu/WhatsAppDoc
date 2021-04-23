@@ -4,21 +4,21 @@ const Users = [
     email: 'user1@gmail.com',
     password: 'pass1',
     fname: 'USER1',
-    role: 'patient'
+    role: 'PATIENT'
   },
   {
     id: 2,
     email: 'user2@gmail.com',
     password: 'pass2',
     fname: 'USER2',
-    role: 'doctor'
+    role: 'DOCTOR'
   },
   {
     id: 3,
-    email: 'admin@gmail.com',
+    email: 'admin@admin.com',
     password: 'admin',
     fname: 'admin',
-    role: 'admin'
+    role: 'ADMIN'
   },
 ];
 
