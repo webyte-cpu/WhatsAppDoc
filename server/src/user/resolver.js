@@ -1,7 +1,8 @@
-import __ from "lodash";
+import { ForbiddenError } from "apollo-server-errors";
 import enums from "../helpers/enums/enums.js";
 import jwt from "jsonwebtoken";
 import user from "./user.js";
+import __ from "lodash";
 
 const resolverMap = {
   User: {
@@ -20,33 +21,44 @@ const resolverMap = {
   },
 
   Query: {
-    getUser: (obj, arg) => user.get(arg.uid),
-    getAllUser: () => user.get(),
+    getUser: (obj, arg) => user().get(arg.uid),
+    getAllUser: () => user().get(),
     viewer: (parent, arg, context) => {
+      //for checking if
+
+      console.log(context);
       if (__.isEmpty(context.user)) {
         return null;
       }
       const { uid } = context.user;
-      return user.get(uid);
+      return context.user
     },
   },
 
   Mutation: {
     signUp: async (obj, arg, context) => {
-      const userResponse = await user.signUp(arg);
-      return userResponse.uid;
-    },
-    signIn: async (obj, { email, password }) => {
-      const payload = await user.check({ email, password });
+      if (arg?.role === "ADMIN" && user?.role !== "ADMIN") {
+        throw new ForbiddenError("Not authorize to signUp an admin");
+      }
+
+      const payload = await user().signUp(arg);
       return jwt.sign(payload, process.env.JWT_SECRET_KEY, {
         algorithm: "HS256",
         subject: payload.uid,
         expiresIn: "1d",
       });
     },
-    updateUser:()=>{
+    signIn: async (obj, { email, password }) => {
+      const payload = await user().check({ email, password });
 
-    }
+      console.log(payload);
+      return jwt.sign(payload, process.env.JWT_SECRET_KEY, {
+        algorithm: "HS256",
+        subject: payload.uid,
+        expiresIn: "1d",
+      });
+    },
+    updateUser: () => {},
   },
 };
 
