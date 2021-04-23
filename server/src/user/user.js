@@ -1,104 +1,147 @@
-import objectKeysToCamelCase from "../helpers/objectKeyCase.js";
 import objectFilter from "../helpers/objectFilter.js";
-import __ from "lodash";
+import { ApolloError } from "apollo-server-errors";
+import enums from "../helpers/enums/enums.js";
+import patient from "../patient/patient.js";
+import doctor from "../doctor/doctor.js";
 import { v4 as uuidV4 } from "uuid";
 import pg from "../../db/index.js";
 import bcrypt from "bcrypt";
-import { ApolloError } from "apollo-server-errors";
+import __ from "lodash";
 
-const user = {
-  signUp: async (arg) => {
-    return pg.transaction(async (knex) => {
-      const saltRounds = 10;
-      const hashedPassword = bcrypt.hashSync(arg.password, saltRounds);
+const user = (knex = pg) => {
+  return {
+    fromDb: (userData) => ({
+      uid: userData.user_uid,
+      firstName: userData.user_first_name,
+      middleName: userData.user_middle_name,
+      lastName: userData.user_last_name,
+      email: userData.user_email,
+      password: userData.user_password,
+      birthdate: userData.birthdate,
+      sex: userData.sex,
+      address: userData.address,
+      role: userData.user_role,
+      img: userData.user_img,
+      createdAt: userData.created_at,
+      updatedAt: userData.updated_at,
+    }),
 
+    toDb: (userData) => ({
+      user_uid: userData.uid,
+      user_first_name: userData.firstName,
+      user_middle_name: userData.middleName,
+      user_last_name: userData.lastName,
+      user_email: userData.email,
+      user_password: userData.password,
+      user_birthdate: userData.birthdate,
+      user_sex: userData.sex,
+      address_uid: userData.address?.uid,
+      user_role: userData.role,
+      user_img: userData.img,
+      created_at: userData.createdAt,
+      updated_at: userData.updatedAt,
+    }),
+    signUp: async (userData) => {
+      return knex.transaction(async (trx) => {
+        const response = {};
+        const saltRounds = 10;
+        const hashedPassword = bcrypt.hashSync(userData.password, saltRounds);
+
+        userData.uid = uuidV4();
+        userData.createdAt = new Date(Date.now());
+        userData.password = hashedPassword;
+
+        response.user = await user(trx).create(userData);
+        response.patient = await patient(trx).create(userData);
+
+        if (userData.role === enums.role.DOCTOR) {
+          const doctorData = userData.doctor;
+          doctorData.uid = userData.uid;
+          response.doctor = await doctor(trx).create(doctorData);
+        }
+
+        delete response.user.password;
+        return response.user;
+      });
+    },
+    find: async (object) => {
       const dbResponse = await knex
-        .insert(
-          objectFilter({
-            user_uid: uuidV4(),
-            user_first_name: arg.firstName,
-            user_last_name: arg.lastName,
-            user_email: arg.email,
-            user_password: hashedPassword,
-            user_role: arg.role,
-            user_img: arg.img,
-            created_at: new Date(Date.now()),
-          })
-        )
+        .select("*")
+        .from("users")
+        .where(objectFilter(user().toDb(object)));
+
+      return dbResponse.map((data) => user().fromDb(data));
+    },
+
+    create: async (userData) => {
+      userData.uid = userData.uid || uuidV4();
+      const dbResponse = await knex
+        .insert(objectFilter(user().toDb(userData)))
         .into("users")
         .returning("*");
 
-      return objectKeysToCamelCase(__.first(dbResponse), "user_");
-    });
-  },
+      return user().fromDb(__.first(dbResponse));
+    },
 
-  update: async (arg) => {
-    const dbResponse = await pg("users")
-      .where({ user_uid: arg.uid })
-      .update(
-        objectFilter({
-          user_first_name: arg.firstName,
-          user_last_name: arg.lastName,
-          user_email: arg.email,
-          user_password: arg.password,
-          user_role: arg.role,
-          updated_at: new Date(Date.now()),
-        })
-      )
-      .returning("*");
-
-    return objectKeysToCamelCase(__.first(dbResponse), "user_");
-  },
-  check: async ({ email, password }) => {
-    const dbResponse = await pg
-      .select("*")
-      .from("users")
-      .where(
-        objectFilter({
-          user_email: email,
-        })
-      );
-
-    const { user_password: passwordHash } = __.first(dbResponse);
-
-    const match = await bcrypt.compare(password, passwordHash);
-
-    if (match) {
-      return objectKeysToCamelCase(__.first(dbResponse), "user_");
-    }
-
-    throw new ValidationError("Invalid password!");
-  },
-
-  get: async (uid) => {
-    if (!__.isUndefined(uid)) {
-      const dbResponse = await pg
-        .select("*")
-        .from("users")
-        .where(
+    update: async (userData) => {
+      const dbResponse = await knex("users")
+        .where({ user_uid: userData.uid })
+        .update(
           objectFilter({
-            user_uid: uid,
+            user_first_name: userData.firstName,
+            user_last_name: userData.lastName,
+            user_email: userData.email,
+            user_password: userData.password,
+            user_role: userData.role,
+            updated_at: new Date(Date.now()),
           })
         )
-        .first();
+        .returning("*");
 
-      if (__.isEmpty(dbResponse)) {
-        throw new ApolloError("User does not exist!", "NO_DATA");
+      return user().fromDb(__.first(dbResponse));
+    },
+    check: async ({ email, password }) => {
+      const dbResponse = await user().find({ email });
+      const userData = dbResponse[0];
+      const match = await bcrypt.compare(password, userData.password);
+      delete userData.password;
+      if (match) return userData;
+      throw new ValidationError("Invalid password!");
+    },
+
+    get: async (uid) => {
+      console.log("hello");
+      if (!__.isUndefined(uid)) {
+        const dbResponse = await knex
+          .select("*")
+          .from("users")
+          .where(
+            objectFilter({
+              user_uid: uid,
+            })
+          );
+
+        if (__.isEmpty(dbResponse)) {
+          throw new ApolloError("User does not exist!", "NO_DATA");
+        }
+        return user().fromDb(dbResponse);
       }
-      return objectKeysToCamelCase(dbResponse, "user_");
-    }
-    const dbResponse = await pg.select("*").from("users");
 
-    return dbResponse.map((data) => objectKeysToCamelCase(data, "user_"));
-  },
+      console.log("hello");
+      const dbResponse = await knex.select("*").from("users");
 
-  delete: (uid) => {
-    const dbResponse = pg("users")
-      .where({ user_uid: uid })
-      .del()
-      .returning("*");
-    return objectKeysToCamelCase(__.first(dbResponse), "user_");
-  },
+      return dbResponse.map(user().fromDb);
+    },
+
+    delete: async (uid) => {
+      const dbResponse = await knex("users")
+        .where({ user_uid: uid })
+        .del()
+        .returning("*")
+        .first();
+      return user().fromDb(dbResponse);
+    },
+  };
 };
 
 export default user;
