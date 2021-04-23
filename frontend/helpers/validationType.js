@@ -11,12 +11,14 @@ import { VALID_PATTERNS, ERR_MSG } from './validators';
 //   contactNum: yup.string(),
 //   civilStatus: yup.string(),
 //   nationality: yup.string(),
+// const {email ,password} = req.body
 // });
 
 const doctorSignUpSchema = yup.object({
   specialization: yup.string().label('Specialization').required(),
   licenseNum: yup.string().label('License Number').required(),
   licenseImg: yup.string().label('License Image').required(),
+  expirationDate: yup.date().label('Expiration date').required(),
   verificationStatus: yup.string().label('Verification Status').required(),
 });
 
@@ -26,7 +28,7 @@ const loginSchema = yup.object({
 });
 
 const userSignUpSchema = yup.object({
-  email: yup.string().label('Email').email('Invalid email format').required(),
+  email: yup.string().label('email').email('Invalid email format').required(),
   password: yup
     .string()
     .label('Password')
