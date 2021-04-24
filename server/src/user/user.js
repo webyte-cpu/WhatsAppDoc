@@ -126,7 +126,6 @@ const user = (knex = pg) => {
     },
 
     get: async (uid) => {
-      console.log("hello");
       if (!__.isUndefined(uid)) {
         const dbResponse = await knex
           .select("*")
@@ -143,7 +142,6 @@ const user = (knex = pg) => {
         return user().fromDb(__.first(dbResponse));
       }
 
-      console.log("hello");
       const dbResponse = await knex.select("*").from("users");
 
       return dbResponse.map(user().fromDb);
