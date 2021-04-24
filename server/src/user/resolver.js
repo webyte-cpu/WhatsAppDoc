@@ -50,15 +50,18 @@ const resolverMap = {
     },
     signIn: async (obj, { email, password }) => {
       const payload = await user().check({ email, password });
-
-      console.log(payload);
       return jwt.sign(payload, process.env.JWT_SECRET_KEY, {
         algorithm: "HS256",
         subject: payload.uid,
         expiresIn: "1d",
       });
     },
-    updateUser: () => {},
+    updateUser: (obj, arg) => {
+      return user().update(arg);
+    },
+    deleteUser: (obj, arg) => {
+      return user().delete(arg);
+    }
   },
 };
 

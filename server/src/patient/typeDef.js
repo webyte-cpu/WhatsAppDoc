@@ -3,7 +3,7 @@ const patient = gql`
   type Patient implements User {
     uid: UUID!
     firstName: String!
-    MiddleName: String
+    middleName: String
     lastName: String!
     email: EmailAddress!
     password: Password!
