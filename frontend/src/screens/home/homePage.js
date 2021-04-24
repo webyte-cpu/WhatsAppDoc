@@ -13,7 +13,7 @@ const HomePage = ({ navigation }) => {
   
   return (
     <View style={customStyle.contentFill}>
-      <Text category='h1' style={{marginBottom: 10}}>Welcome, {fname}</Text>
+      <Text testID='welcome-header' category='h1' style={{marginBottom: 10}}>Welcome, {fname}</Text>
       <Searchbar filter={filter} setFilter={setFilter} />
     </View>
   );

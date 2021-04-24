@@ -10,20 +10,49 @@ import { EmailField, PasswordField } from '../../components/fields';
 import { Formik } from 'formik';
 import { loginSchema } from '../../../helpers/validationType';
 
+import { gql, useMutation } from "@apollo/client"
+// import { LOGIN_MUTATION } from "../auth/utils/dummyDataUsers"
+
+const LOGIN_MUTATION = gql`
+  mutation LoginMutation(
+    $userEmail: EmailAddress!
+    $userPassword: Password!
+  ){
+    login(
+      email: $userEmail
+      password: $userPassword
+    )
+  }
+
+`
+
 const LoginScreen = ({ navigation }) => {
-  const loginDetails = {
+
+  const loginDetails = useState({
     email: '',
     password: '',
-  };
+  });
   const [loginErr, setLoginErr] = useState('');
   const auth = useAuth();
 
-  const login = async ({ email, password }) => {
-    const result = await auth.login(email, password);
-    if (!result.success) {
-      return setLoginErr(result.error);
+  const [logindata] = useMutation(LOGIN_MUTATION,{
+    variables:{
+      userEmail: loginDetails.email,
+      userPassword: loginDetails.password
     }
-  };
+  });
+
+  const login = ({ email, password}) => {
+    email = logindata.userEmail
+    password = logindata.userPassword 
+  }
+
+  // const login = async ({ email, password }) => {
+  //   const result = await auth.login(email, password);
+  //   if (!result.success) {
+  //     return setLoginErr(result.error);
+  //   }
+  // };  
 
   const goToSignUp = () => navigation.navigate(AppRoute.SIGNUP);
   const forgotPassword = () => navigation.navigate(AppRoute.FORGOT_PASS);

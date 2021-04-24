@@ -7,7 +7,10 @@ import AppNavigator from './src/navigation/routes';
 import { AuthProvider } from './src/screens/auth/utils/authProvider';
 import { StatusBar } from 'expo-status-bar';
 
+<<<<<<< HEAD
 import { AppRegistry } from 'react-native';
+=======
+>>>>>>> d10ef718480e892e7bdfa4d0f9a7459161525e42
 import { ApolloClient, InMemoryCache, ApolloProvider } from '@apollo/client';
 
 const client = new ApolloClient({
@@ -30,7 +33,10 @@ const App = () => {
           </ApplicationProvider>
         </AuthProvider>
       </ApolloProvider>
+<<<<<<< HEAD
 
+=======
+>>>>>>> d10ef718480e892e7bdfa4d0f9a7459161525e42
     </>
   );
 };
