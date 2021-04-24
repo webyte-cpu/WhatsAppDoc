@@ -1,6 +1,6 @@
 import { createTestClient } from "apollo-server-testing";
 import { cleanDb, constructTestServer } from "../helpers/__utils.js";
-import { GET_USER, SIGN_UP } from "./queries.js";
+import { GET_USER, SIGN_UP, SIGN_IN } from "./queries.js";
 import EasyGraphQLTester from 'easygraphql-tester';
 import fs from 'fs';
 import path from 'path';
@@ -192,4 +192,23 @@ describe("Tests Queries and Mutations", () => {
     });
     expect(res).toMatchSnapshot();
   });
+
+  it("Signs in up", async () => {
+    afterAll(() => {
+      return cleanDb();
+    });
+
+    const { server } = constructTestServer();
+
+    const { query } = createTestClient(server);
+
+    const res = await query({
+      query: SIGN_IN,
+      variables: {
+        email: "kyle2020@webyte.org",
+        password: "password"
+      }
+    });
+    expect(res).toMatchSnapshot();
+  })
 });

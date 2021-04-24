@@ -37,6 +37,21 @@ Object {
 }
 `;
 
+exports[`Tests Queries and Mutations Signs in up 1`] = `
+Object {
+  "data": null,
+  "errors": Array [
+    [GraphQLError: Unable to acquire a connection],
+  ],
+  "extensions": undefined,
+  "http": Object {
+    "headers": Headers {
+      Symbol(map): Object {},
+    },
+  },
+}
+`;
+
 exports[`Tests Queries and Mutations fetches single user 1`] = `
 Object {
   "data": null,
