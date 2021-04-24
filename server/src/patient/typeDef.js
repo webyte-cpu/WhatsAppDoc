@@ -2,8 +2,8 @@ import { gql } from "apollo-server-core";
 const patient = gql`
   type Patient implements User {
     uid: UUID!
-    userFirstName: String!
-    MiddleName: String
+    firstName: String!
+    middleName: String
     lastName: String!
     email: EmailAddress!
     password: Password!

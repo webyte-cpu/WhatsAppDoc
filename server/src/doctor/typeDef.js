@@ -5,8 +5,8 @@ const doctor = gql`
   # This "doctor" type defines the queryable fields for every doctor in our data source.
   type Doctor implements User {
     uid: UUID!
-    userFirstName: String!
-    MiddleName: String
+    firstName: String!
+    middleName: String
     lastName: String!
     email: EmailAddress!
     password: Password!
@@ -45,9 +45,9 @@ const doctor = gql`
   }
 
   extend type Query {
-    getDoctor(uid: UUID): [Doctor],
+    getDoctor(uid: UUID): [Doctor]
     getAllDoctor: [Doctor]
- }
+  }
 
   extend type Mutation {
     createDoctor(

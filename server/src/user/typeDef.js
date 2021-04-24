@@ -3,8 +3,8 @@ import { gql } from "apollo-server-express";
 const user = gql`
   interface User {
     uid: UUID!
-    userFirstName: String!
-    MiddleName: String
+    firstName: String!
+    middleName: String
     lastName: String!
     email: EmailAddress!
     password: Password!
@@ -19,8 +19,8 @@ const user = gql`
 
   type Admin implements User {
     uid: UUID!
-    userFirstName: String!
-    MiddleName: String
+    firstName: String!
+    middleName: String
     lastName: String!
     email: EmailAddress!
     password: Password!
