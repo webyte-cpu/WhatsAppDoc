@@ -1,5 +1,6 @@
+import { ApolloError, UserInputError } from "apollo-server-errors";
+import specialization from "../specialization/specialization.js";
 import objectFilter from "../helpers/objectFilter.js";
-import { ApolloError } from "apollo-server-errors";
 import enums from "../helpers/enums/enums.js";
 import patient from "../patient/patient.js";
 import doctor from "../doctor/doctor.js";
@@ -58,6 +59,21 @@ const user = (knex = pg) => {
           const doctorData = userData.doctor;
           doctorData.uid = userData.uid;
           response.doctor = await doctor(trx).create(doctorData);
+
+          if (__.isEmpty(doctorData.specialization)) {
+            throw new UserInputError(
+              "Doctor should have atleast one specialty."
+            );
+          }
+
+          const specList = doctorData.specialization.map((title) =>
+            specialization(trx).assign({
+              title,
+              userUid: doctorData.uid,
+            })
+          );
+
+          response.doctor.specialization = await Promise.all(specList);
         }
 
         delete response.user.password;
