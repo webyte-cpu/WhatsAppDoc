@@ -1,191 +1,163 @@
-import objectKeysToCamelCase from "../helpers/objectKeyCase.js";
+import { ApolloError, UserInputError } from "apollo-server-errors";
+import specialization from "../specialization/specialization.js";
 import objectFilter from "../helpers/objectFilter.js";
-import { UserInputError } from "apollo-server-errors";
 import enums from "../helpers/enums/enums.js";
+import patient from "../patient/patient.js";
+import doctor from "../doctor/doctor.js";
 import { v4 as uuidV4 } from "uuid";
 import pg from "../../db/index.js";
 import bcrypt from "bcrypt";
+import __ from "lodash";
 
-const user = {
-  signUp: async (arg) => {
-    return pg.transaction(async (knex) => {
-      const userUid = uuidV4();
-      const responseList = [];
+const user = (knex = pg) => {
+  return {
+    fromDb: (userData) => ({
+      uid: userData.user_uid,
+      firstName: userData.user_first_name,
+      middleName: userData.user_middle_name,
+      lastName: userData.user_last_name,
+      email: userData.user_email,
+      password: userData.user_password,
+      birthdate: userData.birthdate,
+      sex: userData.sex,
+      address: userData.address,
+      role: userData.user_role,
+      img: userData.user_img,
+      createdAt: userData.created_at,
+      updatedAt: userData.updated_at,
+    }),
 
-      const saltRounds = 10;
-      const hashedPassword = bcrypt.hashSync(arg.password, saltRounds);
+    toDb: (userData) => ({
+      user_uid: userData.uid,
+      user_first_name: userData.firstName,
+      user_middle_name: userData.middleName,
+      user_last_name: userData.lastName,
+      user_email: userData.email,
+      user_password: userData.password,
+      user_birthdate: userData.birthdate,
+      user_sex: userData.sex,
+      address_uid: userData.address?.uid,
+      user_role: userData.role,
+      user_img: userData.img,
+      created_at: userData.createdAt,
+      updated_at: userData.updatedAt,
+    }),
+    signUp: async (userData) => {
+      return knex.transaction(async (trx) => {
+        const response = {};
+        const saltRounds = 10;
+        const hashedPassword = bcrypt.hashSync(userData.password, saltRounds);
 
-      const userResponse = knex
-        .insert(
-          objectFilter({
-            user_uid: userUid,
-            user_first_name: arg.firstName,
-            user_last_name: arg.lastName,
-            user_email: arg.email,
-            user_password: hashedPassword,
-            user_role: arg.role,
-            user_img: arg.img,
-            created_at: new Date(Date.now()),
-          })
-        )
-        .into("users")
-        .returning("*");
+        userData.uid = uuidV4();
+        userData.createdAt = new Date(Date.now());
+        userData.password = hashedPassword;
 
-      responseList.push(userResponse);
+        response.user = await user(trx).create(userData);
+        response.patient = await patient(trx).create(userData);
 
-      switch (arg.role) {
-        case enums.role.DOCTOR:
-          if (!arg.licenceNum && !arg.licenceImg) {
+        if (userData.role === enums.role.DOCTOR) {
+          const doctorData = userData.doctor;
+          doctorData.uid = userData.uid;
+          response.doctor = await doctor(trx).create(doctorData);
+
+          if (__.isEmpty(doctorData.specialization)) {
             throw new UserInputError(
-              "Docotor licence number and licence image path are required!"
+              "Doctor should have atleast one specialty."
             );
           }
 
-          const doctorResponse = knex
-            .insert(
-              objectFilter({
-                doctor_uid: userUid,
-                doctor_licence_num: arg.licenceNum,
-                doctor_licence_img: arg.licenceImg,
-              })
-            )
-            .into("doctors")
-            .returning("*");
+          const specList = doctorData.specialization.map((title) =>
+            specialization(trx).assign({
+              title,
+              userUid: doctorData.uid,
+            })
+          );
 
-          responseList.push(doctorResponse);
+          response.doctor.specialization = await Promise.all(specList);
+        }
 
-        case enums.role.PATIENT:
-          if (!arg.address && arg.role !== enums.role.DOCTOR) {
-            throw new UserInputError("Patient address is required!");
-          }
+        delete response.user.password;
+        return response.user;
+      });
+    },
+    find: async (object) => {
+      const dbResponse = await knex
+        .select("*")
+        .from("users")
+        .where(objectFilter(user().toDb(object)));
 
-          if (!arg.sex && !arg.birthdate) {
-            throw new UserInputError("Patient sex and birthdate are required!");
-          }
+      return dbResponse.map((data) => user().fromDb(data));
+    },
 
-          let addressUid;
+    create: async (userData) => {
+      userData.uid = userData.uid || uuidV4();
+      const dbResponse = await knex
+        .insert(objectFilter(user().toDb(userData)))
+        .into("users")
+        .returning("*");
 
-          if (arg.address) {
-            addressUid = uuidV4();
+      return user().fromDb(__.first(dbResponse));
+    },
 
-            const addressResponse = knex
-              .insert(
-                objectFilter({
-                  address_uid: addressUid,
-                  address: arg.address.address,
-                  address_city: arg.address.city,
-                  address_province: arg.address.province,
-                  address_zip_code: arg.address.zipCode,
-                  address_country: arg.address.country,
-                  address_coordinates: arg.address.coordinates,
-                })
-              )
-              .into("addresses")
-              .returning("*");
+    update: async (userData) => {
+      const dbResponse = await knex("users")
+        .where({ user_uid: userData.uid })
+        .update(
+          objectFilter({
+            user_first_name: userData.firstName,
+            user_last_name: userData.lastName,
+            user_email: userData.email,
+            user_password: userData.password,
+            user_role: userData.role,
+            updated_at: new Date(Date.now()),
+          })
+        )
+        .returning("*");
 
-            responseList.push(addressResponse);
-          }
-          const patientResponse = knex
-            .insert(
-              objectFilter({
-                patient_uid: userUid,
-                address_uid: addressUid,
-                patient_birthdate: arg.birthdate,
-                patient_sex: arg.sex,
-              })
-            )
-            .into("patients")
-            .returning("*");
+      return user().fromDb(__.first(dbResponse));
+    },
+    check: async ({ email, password }) => {
+      const dbResponse = await user().find({ email });
+      const userData = dbResponse[0];
+      const match = await bcrypt.compare(password, userData.password);
+      delete userData.password;
+      if (match) return userData;
+      throw new ValidationError("Invalid password!");
+    },
 
-          responseList.push(patientResponse);
+    get: async (uid) => {
+      console.log("hello");
+      if (!__.isUndefined(uid)) {
+        const dbResponse = await knex
+          .select("*")
+          .from("users")
+          .where(
+            objectFilter({
+              user_uid: uid,
+            })
+          );
+
+        if (__.isEmpty(dbResponse)) {
+          throw new ApolloError("User does not exist!", "NO_DATA");
+        }
+        return user().fromDb(dbResponse);
       }
 
-      const responses = await Promise.all(responseList);
+      console.log("hello");
+      const dbResponse = await knex.select("*").from("users");
 
-      const dataCompiled = responses.reduce((obj, response) => {
-        if (response[0]?.address_city) {
-          return { ...obj, address: response[0] };
-        }
-        return { ...obj, ...response[0] };
-      }, {});
+      return dbResponse.map(user().fromDb);
+    },
 
-      return {
-        uid: dataCompiled.user_uid,
-        firstName: dataCompiled.user_first_name,
-        lastName: dataCompiled.user_last_name,
-        sex: dataCompiled.user_sex,
-        birthdate: dataCompiled.user_birthdate,
-        email: dataCompiled.user_email,
-        licenceNum: dataCompiled.doctor_licence_no,
-        role: dataCompiled.user_role,
-        // password: dataCompiled.user_password,
-        address: {
-          address: dataCompiled?.address?.address,
-          city: dataCompiled?.address?.address_city,
-          province: dataCompiled?.address?.address_province,
-          zipCode: dataCompiled?.address?.address_zip_code,
-          country: dataCompiled?.address?.address_country,
-        },
-      };
-    });
-  },
-  create: async (arg) => {
-    const dbResponse = await pg
-      .insert({
-        user_uid: uuidV4(),
-        user_first_name: arg.firstName,
-        user_last_name: arg.lastName,
-        user_email: arg.email,
-        user_password: arg.password,
-        user_role: arg.role,
-      })
-      .into("users")
-      .returning("*");
-
-    return dbResponse.map((data) => objectKeysToCamelCase(data, "user_"))[0];
-  },
-
-  update: async (arg) => {
-    const dbResponse = await pg("users")
-      .where({ user_uid: arg.uid })
-      .update(
-        objectFilter({
-          user_first_name: arg.firstName,
-          user_last_name: arg.lastName,
-          user_email: arg.email,
-          user_password: arg.password,
-          user_role: arg.role,
-          updated_at: new Date(Date.now()),
-        })
-      );
-
-    return dbResponse.map((data) => objectKeysToCamelCase(data, "user_"))[0];
-  },
-
-  get: async ({ uid, email }) => {
-    const dbResponse =
-      uid || email
-        ? await pg
-            .select("*")
-            .from("users")
-            .where(
-              objectFilter({
-                user_uid: uid,
-                user_email: email,
-              })
-            )
-        : await pg.select("*").from("users");
-
-    return dbResponse.map((data) => objectKeysToCamelCase(data, "user_"));
-  },
-
-  delete: (uid) => {
-    const dbResponse = pg("users")
-      .where({ user_uid: uid })
-      .del()
-      .returning("*");
-    return dbResponse.map((data) => objectKeysToCamelCase(data, "user_"))[0];
-  },
+    delete: async (uid) => {
+      const dbResponse = await knex("users")
+        .where({ user_uid: uid })
+        .del()
+        .returning("*")
+        .first();
+      return user().fromDb(dbResponse);
+    },
+  };
 };
 
 export default user;

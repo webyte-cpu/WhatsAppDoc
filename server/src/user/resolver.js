@@ -1,13 +1,12 @@
-import { AuthenticationError } from "apollo-server-errors";
+import { ForbiddenError } from "apollo-server-errors";
 import enums from "../helpers/enums/enums.js";
 import jwt from "jsonwebtoken";
 import user from "./user.js";
-import bcrypt from "bcrypt";
+import __ from "lodash";
 
 const resolverMap = {
   User: {
-    __resolveType(obj, context, info) {
-      console.log(obj.role);
+    __resolveType(obj) {
       switch (obj.role) {
         case enums.role.ADMIN:
           return "Admin";
@@ -22,49 +21,44 @@ const resolverMap = {
   },
 
   Query: {
-    getUser: async (obj, arg) => {
-      const data = await user.get(arg);
-      return data[0];
-    },
-    getAllUser: (obj, arg) => {
-      return user.get({});
-    },
-    viewer: async (parent, arg, context) => {
+    getUser: (obj, arg) => user().get(arg.uid),
+    getAllUser: () => user().get(),
+    viewer: (parent, arg, context) => {
+      //for checking if
+
+      console.log(context);
+      if (__.isEmpty(context.user)) {
+        return null;
+      }
       const { uid } = context.user;
-      const dataResponse = await user.get({ uid });
-      return dataResponse[0];
+      return context.user
     },
   },
 
   Mutation: {
-    signUp: async (obj, arg) => {
-      const signUpResponse = user.signUp(arg);
-      console.log(await signUpResponse);
-      return signUpResponse;
-    },
-
-    login: async (obj, { email, password }) => {
-      const dataResponse = await user.get({ email });
-
-      if (!dataResponse[0]) {
-        throw new AuthenticationError("User does not exist");
+    signUp: async (obj, arg, context) => {
+      if (arg?.role === "ADMIN" && user?.role !== "ADMIN") {
+        throw new ForbiddenError("Not authorize to signUp an admin");
       }
 
-      console.log(email, password);
-      const { uid, role, password: passwordHash } = dataResponse[0];
-
-      const match = await bcrypt.compare(password, passwordHash);
-
-      if (!match) {
-        throw new AuthenticationError("password is incorrect!");
-      }
-
-      return jwt.sign({ uid, role }, "supersecret", {
+      const payload = await user().signUp(arg);
+      return jwt.sign(payload, process.env.JWT_SECRET_KEY, {
         algorithm: "HS256",
-        subject: uid,
+        subject: payload.uid,
         expiresIn: "1d",
       });
     },
+    signIn: async (obj, { email, password }) => {
+      const payload = await user().check({ email, password });
+
+      console.log(payload);
+      return jwt.sign(payload, process.env.JWT_SECRET_KEY, {
+        algorithm: "HS256",
+        subject: payload.uid,
+        expiresIn: "1d",
+      });
+    },
+    updateUser: () => {},
   },
 };
 
