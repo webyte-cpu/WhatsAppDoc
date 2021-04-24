@@ -9,11 +9,7 @@
     "cypress": "npx cypress open"
   },
   "dependencies": {
-<<<<<<< HEAD
     "@apollo/client": "^3.3.13",
-=======
-    "@apollo/client": "^3.3.15",
->>>>>>> d10ef718480e892e7bdfa4d0f9a7459161525e42
     "@eva-design/eva": "^2.0.0",
     "@react-native-community/async-storage": "^1.12.1",
     "@react-native-community/masked-view": "0.1.10",
