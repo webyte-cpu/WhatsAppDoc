@@ -9,7 +9,6 @@ import customStyle from '../../../themes/styles';
 import { EmailField, PasswordField } from '../../components/fields';
 import { Formik } from 'formik';
 import { loginSchema } from '../../../helpers/validationType';
-
 import { gql, useMutation } from "@apollo/client"
 // import { LOGIN_MUTATION } from "../auth/utils/dummyDataUsers"
 
@@ -23,7 +22,6 @@ const LOGIN_MUTATION = gql`
       password: $userPassword
     )
   }
-
 `
 
 const LoginScreen = ({ navigation }) => {
@@ -47,12 +45,12 @@ const LoginScreen = ({ navigation }) => {
     password = logindata.userPassword 
   }
 
-  // const login = async ({ email, password }) => {
-  //   const result = await auth.login(email, password);
-  //   if (!result.success) {
-  //     return setLoginErr(result.error);
-  //   }
-  // };  
+  const login = async ({ email, password }) => {
+    const result = await auth.login(email, password);
+    if (!result.success) {
+      return setLoginErr(result.error);
+    }
+  };  
 
   const goToSignUp = () => navigation.navigate(AppRoute.SIGNUP);
   const forgotPassword = () => navigation.navigate(AppRoute.FORGOT_PASS);
