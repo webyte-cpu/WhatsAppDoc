@@ -140,7 +140,7 @@ const user = (knex = pg) => {
         if (__.isEmpty(dbResponse)) {
           throw new ApolloError("User does not exist!", "NO_DATA");
         }
-        return user().fromDb(dbResponse);
+        return user().fromDb(__.first(dbResponse));
       }
 
       console.log("hello");
