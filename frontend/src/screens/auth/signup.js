@@ -1,12 +1,13 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   View,
   StyleSheet,
   ImageBackground,
   Platform,
   ScrollView,
+  Image,
 } from 'react-native';
-import { Button, Text, useTheme } from '@ui-kitten/components';
+import { Button, Text, useTheme, Spinner } from '@ui-kitten/components';
 import SignUpDoctor from './signUpDoctor';
 import customStyle from '../../../themes/styles';
 import { useAuth } from './utils/authProvider';
@@ -24,8 +25,35 @@ import {
   SexField,
 } from '../../components/fields';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import { gql, useMutation } from '@apollo/client';
 
 const ROLE = enums.role;
+
+const SIGNUP_MUTATION = gql`
+  mutation SignUp(
+    $firstName: String!
+    $middleName: String
+    $lastName: String!
+    $email: EmailAddress!
+    $password: Password!
+    $role: Role!
+    $sex: Sex!
+    $birthdate: Date!
+    $doctor: DoctorInput
+  ) {
+    signUp(
+      firstName: $firstName
+      middleName: $middleName
+      lastName: $lastName
+      email: $email
+      password: $password
+      role: $role
+      sex: $sex
+      birthdate: $birthdate
+      doctor: $doctor
+    )
+  }
+`;
 
 const SignupScreen = ({ navigation }) => {
   const theme = useTheme();
@@ -47,16 +75,57 @@ const SignupScreen = ({ navigation }) => {
     sex: '',
     birthdate: '',
   };
-
   const [signUpDetails, setSignUpDetails] = useState(userDetails);
   const signUpSchema =
     signUpDetails.role === ROLE.PATIENT
       ? userSignUpSchema
       : userSignUpSchema.concat(doctorSignUpSchema);
 
+  console.log(signUpSchema);
+  console.log(signUpDetails);
+
+  const [signUpUser, { loading, error, data }] = useMutation(SIGNUP_MUTATION, {
+    // TODO: fix mutation for doctors
+    ignoreResults: false,
+    onCompleted({ signUp: token }) {
+      if (token) {
+        console.log(token);
+        auth.login(token);
+      }
+    },
+  });
+
+  const formatDate = (date) => new Date(date).toISOString().slice(0, 10);
   const signup = (values) => {
     console.log(values);
-    return auth.signup(values);
+    console.log(values.licenseImg);
+
+    const doctor =
+      values.role === ROLE.DOCTOR
+        ? {
+            doctor: {
+              licenceNum: values.licenseNum,
+              licenceImg: values.licenseImg,
+              licenceExp: formatDate(values.expirationDate),
+              specialization: values.specialization,
+              verificationStatus: values.verificationStatus,
+            },
+          }
+        : {};
+
+    // return signUpUser({
+    //   variables: {
+    //     firstName: values.fname,
+    //     middleName: values.midName,
+    //     lastName: values.lname,
+    //     email: values.email,
+    //     password: values.password,
+    //     role: values.role,
+    //     sex: values.sex,
+    //     birthdate: formatDate(values.birthdate),
+    //     ...doctor,
+    //   },
+    // });
   };
 
   const changeRole = (role) => {
@@ -114,7 +183,7 @@ const SignupScreen = ({ navigation }) => {
 
       <Formik
         initialValues={signUpDetails}
-        validationSchema={signUpSchema}
+        // validationSchema={signUpSchema}
         onSubmit={(values) => signup(values)}
       >
         {(props) => (
@@ -130,7 +199,13 @@ const SignupScreen = ({ navigation }) => {
 
               <NameFields />
               <SexField {...props} />
-              <DateField {...props} name="birthdate" label="Birthdate" testID="birthdate" max={new Date()} />
+              <DateField
+                {...props}
+                name="birthdate"
+                label="Birthdate"
+                testID="birthdate"
+                max={new Date()}
+              />
 
               {props.values.role === ROLE.DOCTOR ? (
                 <SignUpDoctor {...props} />
@@ -151,9 +226,20 @@ const SignupScreen = ({ navigation }) => {
     </>
   );
 
+  if (loading) {
+    return <Spinner testID="spinner" status="primary" size="giant" />;
+  }
+
+  if (error) {
+    console.log(error);
+    return <Text>Error!</Text>;
+  }
+
   return (
     <>
-      <KeyboardAwareScrollView style={{ backgroundColor: theme['color-primary-500'] }}>
+      <KeyboardAwareScrollView
+        style={{ backgroundColor: theme['color-primary-500'] }}
+      >
         <SignUpForm />
       </KeyboardAwareScrollView>
     </>
