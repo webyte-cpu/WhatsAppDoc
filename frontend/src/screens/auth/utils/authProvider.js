@@ -43,7 +43,7 @@ const useProvideAuth = () => {
   const [state, dispatch] = useReducer(reducer, initialState);
 
   // retrieve on first open of app
-  useEffect(() => {
+  useEffect(() => { // TODO : change user persist
     const bootstrapAsync = async () => {
       const token = await getData('token');
       dispatch({ type: ACTIONS.RETRIEVE, payload: { token } });
@@ -53,16 +53,16 @@ const useProvideAuth = () => {
     // dispatch({ type: ACTIONS.LOGOUT })
   }, []);
 
-  const { login, logout, signup } = useMemo(
+  const { login, logout } = useMemo(
     () => ({
-      login: async (email, password) => loginUser(dispatch, email, password),
+      login: async (token) => loginUser(dispatch, token),
       logout: async () => logoutUser(dispatch),
-      signup: async (userData) => signupUser(dispatch, userData),
+      // signup: async (userData) => signupUser(dispatch, userData),
     }),
     []
   );
 
-  return { state, login, logout, signup };
+  return { ...state, login, logout };
 };
 
 const AuthProvider = ({ children }) => {
