@@ -1,22 +1,20 @@
 import { gql } from "apollo-server-core";
 const patient = gql`
-  # Comments in GraphQL strings (such as this one) start with the hash (#) symbol.
-
-  # This "patient" type defines the queryable fields for every patient in our data source.
   type Patient implements User {
     uid: UUID!
-    userFirstName: String!
-    MiddleName: String
+    firstName: String!
+    middleName: String
     lastName: String!
     email: EmailAddress!
     password: Password!
+    birthdate: Date!
+    sex: Sex
+    address: Address
     role: Role!
+    img: String
     createdAt: DateTime
     updatedAt: DateTime
 
-    address: Address
-    sex: Sex
-    birthdate: Date
     contactNumber: PhoneNumber
     weight: PositiveFloat
     height: PositiveFloat
@@ -24,28 +22,12 @@ const patient = gql`
     nationality: String
   }
 
-  # The "Query" type is special: it lists all of the available queries that
-  # clients can execute, along with the return type for each. In this
-  # case, the "patient" query returns an array of zero or more patient (defined above).
-
   extend type Query {
     getPatient: [Patient]
   }
 
   extend type Mutation {
     createPatient(
-      firstName: String!
-      MiddleName: String
-      lastName: String!
-      email: EmailAddress!
-      password: Password!
-      role: Role!
-      createdAt: DateTime
-      updatedAt: DateTime
-
-      address: AddressInput!
-      sex: Sex!
-      birthdate: Date!
       contactNumber: PhoneNumber
       weight: PositiveFloat
       height: PositiveFloat
@@ -55,18 +37,6 @@ const patient = gql`
 
     updatePatient(
       uid: UUID!
-      firstName: String!
-      MiddleName: String
-      lastName: String!
-      email: EmailAddress!
-      password: Password!
-      role: Role!
-      createdAt: DateTime
-      updatedAt: DateTime
-
-      address: AddressInput
-      sex: Sex
-      birthdate: Date
       contactNumber: PhoneNumber
       weight: PositiveFloat
       height: PositiveFloat
@@ -74,7 +44,7 @@ const patient = gql`
       nationality: String
     ): Patient
 
-    deletePatient(uid: UUID): Patient
+    deletePatient(uid: UUID): UUID!
   }
 
   # type Subcription {

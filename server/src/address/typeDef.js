@@ -42,7 +42,7 @@ const address = gql`
       country: String!
       coordinates: String
     ): Address
-    deleteAddress(uid:UUID!): Address
+    deleteAddress(uid: UUID!): Address
   }
 `;
 

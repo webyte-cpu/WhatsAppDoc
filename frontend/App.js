@@ -6,17 +6,8 @@ import { default as theme } from './themes/custom-theme.json';
 import AppNavigator from './src/navigation/routes';
 import { AuthProvider } from './src/screens/auth/utils/authProvider';
 import { StatusBar } from 'expo-status-bar';
-
-import { AppRegistry } from 'react-native';
-import { ApolloClient, InMemoryCache, ApolloProvider } from '@apollo/client';
-
-const client = new ApolloClient({
-  uri: 'http://localhost:4000/graphql',
-  cache: new InMemoryCache(),
-  fetchOptions: {
-    mode: 'no-cors',
-  }
-});
+import { ApolloProvider } from '@apollo/client';
+import client from './apolloClient';
 
 const App = () => {
   return (

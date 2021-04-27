@@ -1,4 +1,4 @@
-import address from "./address.js";
+const address = require("./address.js");
 
 const resolverMap = {
   Query: {
@@ -26,7 +26,7 @@ const resolverMap = {
       //link to doctor in the database
       return address.update(arg);
     },
-    updateDelete: (obj, arg) => {
+    deleteAddress: (obj, arg) => {
       console.log(arg);
       //link to doctor in the database
       return address.remove(arg.uid);
@@ -35,4 +35,4 @@ const resolverMap = {
   // Subscription: {},
 };
 
-export default resolverMap;
+module.exports = resolverMap;

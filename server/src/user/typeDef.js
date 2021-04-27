@@ -3,50 +3,70 @@ import { gql } from "apollo-server-express";
 const user = gql`
   interface User {
     uid: UUID!
-    userFirstName: String!
-    MiddleName: String
+    firstName: String!
+    middleName: String
     lastName: String!
     email: EmailAddress!
     password: Password!
+    birthdate: Date!
+    sex: Sex
+    address: Address
     role: Role!
+    img: String
     createdAt: DateTime
     updatedAt: DateTime
   }
 
   type Admin implements User {
     uid: UUID!
-    userFirstName: String!
-    MiddleName: String
+    firstName: String!
+    middleName: String
     lastName: String!
     email: EmailAddress!
     password: Password!
+    birthdate: Date!
+    sex: Sex
+    address: Address
     role: Role!
+    img: String
     createdAt: DateTime
     updatedAt: DateTime
   }
 
   extend type Query {
-    getUser(uid: UUID, email:EmailAddress): User
-    getAllUser: [User]
-    viewer:User
+    getUser(uid: UUID!): User!
+    getAllUser: [User!]
+    viewer: User
   }
 
   extend type Mutation {
     signUp(
       firstName: String!
-      MiddleName: String
+      middleName: String
       lastName: String!
       email: EmailAddress!
       password: Password!
       role: Role!
-      address: AddressInput
+      img: String
+      sex: Sex!
+      birthdate: Date!
+      doctor: DoctorInput
+    ): JWT!
+
+    updateUser(
+      firstName: String
+      MiddleName: String
+      lastName: String
+      password: Password
       sex: Sex
       birthdate: Date
-      licenceNum: String
-      licenceImg: String
-    ): User
+      address: AddressInput
+      img: String
+    ): UUID
 
-    login(email: EmailAddress!, password: Password!): JWT!
+    deleteUser(uid: UUID!): Int!
+
+    signIn(email: EmailAddress!, password: Password!): JWT!
   }
 `;
 

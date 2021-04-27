@@ -5,17 +5,22 @@ const doctor = gql`
   # This "doctor" type defines the queryable fields for every doctor in our data source.
   type Doctor implements User {
     uid: UUID!
-    userFirstName: String!
-    MiddleName: String
+    firstName: String!
+    middleName: String
     lastName: String!
     email: EmailAddress!
     password: Password!
+    birthdate: Date!
+    sex: Sex
+    address: Address
     role: Role!
+    img: String
     createdAt: DateTime
     updatedAt: DateTime
 
     licenceNum: String!
-    licenceImg: Int!
+    licenceImg: String!
+    licenceExpiration: Date!
     verificationStatus: VerificationStatus
     experience: Int
     about: String
@@ -27,24 +32,28 @@ const doctor = gql`
   # clients can execute, along with the return type for each. In this
   # case, the "doctor" query returns an array of zero or more doctor (defined above).
 
+  input DoctorInput {
+    licenceNum: String!
+    licenceImg: String!
+    licenceExp: Date!
+    specialization: [String]
+    verificationStatus: VerificationStatus
+    experience: Int
+    about: String
+    educational: String
+    rating: Int
+  }
+
   extend type Query {
-    getDoctor(uid: UUID): [Doctor],
+    getDoctor(uid: UUID): [Doctor]
     getAllDoctor: [Doctor]
- }
+  }
 
   extend type Mutation {
     createDoctor(
-      firstName: String!
-      MiddleName: String
-      lastName: String!
-      email: EmailAddress!
-      password: Password!
-      role: Role!
-      createdAt: DateTime
-      updatedAt: DateTime
-
       licenceNum: String!
-      licenceImg: Int!
+      licenceImg: String!
+      licenceExp: Date!
       verificationStatus: VerificationStatus
       experience: Int
       about: String
@@ -53,18 +62,10 @@ const doctor = gql`
     ): Doctor
 
     updateDoctor(
-      uid:UUID!
-      firstName: String
-      MiddleName: String
-      lastName: String
-      email: EmailAddress
-      password: Password
-      role: Role
-      createdAt: DateTime
-      updatedAt: DateTime
-
+      uid: UUID!
       licenceNum: String
-      licenceImg: Int
+      licenceImg: String
+      licenceExp: Date
       verificationStatus: VerificationStatus
       experience: Int
       about: String
@@ -72,7 +73,7 @@ const doctor = gql`
       rating: Int
     ): Doctor
 
-    deleteDoctor(uid: UUID!): Doctor
+    deleteDoctor(uid: UUID!): UUID!
   }
 
   # type Subcription {

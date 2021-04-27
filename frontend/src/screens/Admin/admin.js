@@ -115,8 +115,18 @@ const Admin = () => {
     // );
 
     return (
-        <ScrollView>
-            <View style={{ marginTop: 30 }}>
+      <ScrollView
+      contentContainerStyle={{
+        backgroundColor: "white",
+        paddingTop: 10,
+        paddingHorizontal: 10,
+      }}
+    >
+        <Text testID="welcome-header" category="h1" style={{ marginBottom: 10 }}>
+          Welcome, {fname}
+        </Text>
+        <Divider/>
+            <View>
                 {/* <TabView
                     selectedIndex={selectedIndex}
                     onSelect={index => setSelectedIndex(index)} >

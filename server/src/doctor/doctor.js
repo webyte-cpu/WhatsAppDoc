@@ -1,62 +1,68 @@
-import pg from "../../db/index.js";
 import objectFilter from "../helpers/objectFilter.js";
-import objectKeysToCamelCase from "../helpers/objectKeyCase.js";
+import { v4 as uuidV4 } from "uuid";
+import pg from "../../db/index.js";
+import __ from "lodash";
 
-const create = async (arg) => {
-  const dbReponse = await pg
-    .insert(
-      objectFilter({
-        doctor_uid: uid,
-        doctor_licence_num: arg.licenceNum,
-        doctor_licence_img: arg.licenceImg,
-        doctor_verification_status: arg.verificationStatus,
-        doctor_experience: arg.experience,
-        doctor_about: arg.about,
-        doctor_educational: arg.educational,
-        doctor_rating: arg.rating,
-      })
-    )
-    .into("doctors")
-    .returning("*")
-    .first();
+const doctor = (knex = pg) => ({
+  fromDb: (doctorData) => ({
+    uid: doctorData.doctor_uid,
+    licenceNum: doctorData.doctor_licence_num,
+    licenceImg: doctorData.doctor_licence_img,
+    licenceExp: doctorData.doctor_licence_exp,
+    verificationStatus: doctorData.doctor_verification_status,
+    experience: doctorData.doctor_experience,
+    about: doctorData.doctor_about,
+    educational: doctorData.doctor_educational,
+    rating: doctorData.doctor_rating,
+  }),
+  toDb: (doctorData) => ({
+    doctor_uid: doctorData.uid,
+    doctor_licence_num: doctorData.licenceNum,
+    doctor_licence_img: doctorData.licenceImg,
+    doctor_licence_exp: doctorData.licenceExp,
+    doctor_verification_status: doctorData.verificationStatus,
+    doctor_experience: doctorData.experience,
+    doctor_about: doctorData.about,
+    doctor_educational: doctorData.educational,
+    doctor_rating: doctorData.rating,
+  }),
+  create: async (doctorData) => {
+    doctorData.uid = doctorData.uid || uuidV4();
+    const dbResponse = await knex
+      .insert(objectFilter(doctor().toDb(doctorData)))
+      .into("doctors")
+      .returning("*");
+    return doctor().fromDb(__.first(dbResponse));
+  },
+  update: async (doctorData) => {
+    const dbResponse = await knex("doctors")
+      .where({ doctor_uid: doctorData.uid })
+      .update(
+        objectFilter({
+          doctor_licence_num: doctorData.licenceNum,
+          doctor_licence_img: doctorData.licenceImg,
+          doctor_licence_exp: doctorData.licenceExp,
+          doctor_verification_status: doctorData.verificationStatus,
+          doctor_experience: doctorData.experience,
+          doctor_about: doctorData.about,
+          doctor_educational: doctorData.educational,
+          doctor_rating: doctorData.rating,
+        })
+      )
+      .returning("*");
+    return doctor().fromDb(__.first(dbResponse));
+  },
+  get: async ({uid}) => {
+    const dbResponse = uid
+      ? await knex.select("*").from("doctors").where({ doctor_uid: uid })
+      : await knex.select("*").from("doctors");
 
-  return objectKeysToCamelCase(dbReponse, "doctor_");
-};
+    return dbResponse.map((doctorData) => doctor().fromDb(doctorData));
+  },
+  remove: async (uid) => {
+    const dbResponse = await knex("doctors").where({ doctor_uid: uid }).del();
+    return doctor().fromDb(__.first(dbResponse));
+  },
+});
 
-const update = async (arg) => {
-  const dbReponse = await pg("doctors")
-    .where({ doctor_uid: arg.uid })
-    .update(
-      objectFilter({
-        doctor_licence_num: arg.licenceNum,
-        doctor_licence_img: arg.licenceImg,
-        doctor_verification_status: arg.verificationStatus,
-        doctor_experience: arg.experience,
-        doctor_about: arg.about,
-        doctor_educational: arg.educational,
-        doctor_rating: arg.rating,
-      })
-    )
-    .returning("*");
-  return dbReponse.map((data) => objectKeysToCamelCase(data, "doctor_"))[0];
-};
-
-const get = async (uid) => {
-  const dbReponse = await pg.select("*").from("doctors").join("users as u", "doctors.doctor_uid" , "=", "u.user_uid").where({ doctor_uid: uid })
-  const response = dbReponse.map((data) => objectKeysToCamelCase(data, "doctor_"));
-  console.log(response)
-  return response;
-};
-
-const getAll = async () => {
-  const dbReponse = await pg.select("*").from("doctors").join("users as u", "doctors.doctor_uid" , "=", "u.user_uid");
-  const response = dbReponse.map((data) => objectKeysToCamelCase(data, "doctor_"));
-  console.log(response)
-  return response;
-}
-const remove = async (uid) => {
-  const dbReponse = await pg("doctors").where({ doctor_uid: uid }).del();
-  return dbReponse.map((data) => objectKeysToCamelCase(data, "doctor_"))[0];
-};
-
-export default { create, update, get, getAll, remove };
+export default doctor;
