@@ -50,7 +50,12 @@ const resolverMap = {
         expiresIn: "1d",
       });
     },
-    updateUser: () => {},
+    updateUser: (obj, arg) => {
+      return user().update(arg);
+    },
+    deleteUser: (obj, arg) => {
+      return user().delete(arg);
+    }
   },
 };
 

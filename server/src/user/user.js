@@ -126,7 +126,6 @@ const user = (knex = pg) => {
     },
 
     get: async (uid) => {
-      console.log("hello");
       if (!__.isUndefined(uid)) {
         const dbResponse = await knex
           .select("*")
@@ -136,7 +135,6 @@ const user = (knex = pg) => {
               user_uid: uid,
             })
           );
-
         if (__.isEmpty(dbResponse)) {
           throw new ApolloError("User does not exist!", "NO_DATA");
         }
@@ -154,7 +152,6 @@ const user = (knex = pg) => {
         .where({ user_uid: uid })
         .del()
         .returning("*")
-        .first();
       return user().fromDb(dbResponse);
     },
   };

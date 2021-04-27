@@ -27,6 +27,8 @@ export const SIGN_UP = gql`
     $email: EmailAddress!
     $password: Password!
     $role: Role!
+    $sex: Sex!
+    $birthdate: Date!
   ) {
     signUp(
       firstName: $firstName
@@ -35,30 +37,50 @@ export const SIGN_UP = gql`
       email: $email
       password: $password
       role: $role
+      sex: $sex
+      birthdate: $birthdate
     )
   }
 `;
 
 export const UPDATE_USER = gql`
   mutation UpdateUser(
-    $firstName: String!
+    $uid: UUID!
+    $firstName: String
     $middleName: String
-    $lastName: String!
-    $password: Password!
-    $role: Role!
+    $lastName: String
+    $password: Password
+    $role: Role
+    $sex: Sex
+    $birthdate: Date
+    $img: String
   ) {
     updateUser(
+      uid: $uid
       firstName: $firstName
       middleName: $middleName
       lastName: $lastName
       password: $password
       role: $role
-    )
+      sex: $sex
+      birthdate: $birthdate
+      img: $img
+    ) {
+      uid
+      firstName
+      middleName
+      lastName
+    }
   }
 `;
 
 export const DELETE_USER = gql`
   mutation DeleteUser($uid: UUID!) {
-    deleteUser(uid: $uid)
+    deleteUser(uid: $uid) {
+      uid
+      firstName
+      middleName
+      lastName
+    }
   }
 `;
