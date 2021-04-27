@@ -4,7 +4,7 @@ exports[`Queries fetches single user 1`] = `
 Object {
   "data": null,
   "errors": Array [
-    [GraphQLError: Unable to acquire a connection],
+    [GraphQLError: User does not exist!],
   ],
   "extensions": undefined,
   "http": Object {
