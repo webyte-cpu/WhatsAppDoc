@@ -24,6 +24,8 @@ import {
   SexField,
 } from '../../components/fields';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import { SIGNUP_MUTATION , SIGNUP_DOCTOR } from "../auth/utils/queries"
+
 
 const ROLE = enums.role;
 
@@ -43,27 +45,44 @@ const SignupScreen = ({ navigation }) => {
     fname: '',
     lname: '',
     midName: '', //optional
-    role: ROLE.PATIENT,
+    role: '',
     sex: '',
     birthdate: '',
   };
 
   const [signUpDetails, setSignUpDetails] = useState(userDetails);
+  
+  const [signupData] = useMutation(SIGNUP_MUTATION,{
+    variables:{
+      email: signUpDetails.email,
+      password: signUpDetails.password,
+      firstName: signUpDetails.fname,
+      lastName: signUpDetails.lname,
+      middleName: signUpDetails.midName,
+      role: signUpDetails.role,
+      sex: signUpDetails.sex,
+      birthdate: signUpDetails.birthdate
+    }
+  });
+  
   const signUpSchema =
-    signUpDetails.role === ROLE.PATIENT
+    signUpData.role === "PATIENT"
+    // signUpDetails.role === ROLE.PATIENT 
       ? userSignUpSchema
       : userSignUpSchema.concat(doctorSignUpSchema);
 
+  
   const signup = (values) => {
     console.log(values);
-    return auth.signup(values);
+    // return auth.signup(values);
+    return signupData.signup(values)
   };
 
   const changeRole = (role) => {
     switch (role) {
-      case ROLE.PATIENT:
+      case "PATIENT":
         return setSignUpDetails({ ...userDetails, role });
-      case ROLE.DOCTOR:
+      case "DOCTOR":
         return setSignUpDetails({
           ...userDetails,
           ...doctorDetails,
