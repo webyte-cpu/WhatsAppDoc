@@ -7,13 +7,13 @@ import { useAuth } from "../auth/utils/authProvider";
 
 const ProfilePage = ({ navigation }) => {
   const auth = useAuth();
-  const userEmail = auth.state.token.email;
+  // const userEmail = auth.state.token.email;
 
   return (
     <>
       <View style={{ ...customStyle.content, marginTop: 10 }}>
         <Text>Profile</Text>
-        <Text>{userEmail}</Text>
+        {/* <Text>{userEmail}</Text> */}
         <Button onPress={() => navigation.navigate(AppRoute.MEDICAL_REC)}>
           Medical Record
         </Button>

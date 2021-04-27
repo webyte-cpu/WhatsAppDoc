@@ -9,15 +9,14 @@ import Admin from '../Admin/admin.js'
 
 const HomePage = ({ navigation }) => {
   const auth = useAuth();
-  const {fname} = auth.state.token;
+  console.log(auth)
+  // const {fname} = auth.state.token;
   const [filter, setFilter] = useState(new IndexPath(0));
   
   return (
     <View style={customStyle.contentFill}>
-      <Text testID='welcome-header' category='h1' style={{marginBottom: 10}}>Welcome, {fname}</Text>
+      <Text testID='welcome-header' category='h1' style={{marginBottom: 10}}>Welcome!</Text>
       <Searchbar filter={filter} setFilter={setFilter} />
-      <Admin />
-
     </View>
   );
 };
