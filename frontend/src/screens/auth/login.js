@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { View, StyleSheet, Platform, Image } from 'react-native';
-import { Button, Text, Spinner } from '@ui-kitten/components';
+import { Button, Text, Spinner } from '../profile/node_modules/@ui-kitten/components';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { AppRoute } from '../../navigation/app-routes';
 import { useAuth } from './utils/authProvider';
@@ -10,19 +10,19 @@ import { EmailField, PasswordField } from '../../components/fields';
 import { Formik } from 'formik';
 import { loginSchema } from '../../../helpers/validationType';
 import { gql, useMutation } from "@apollo/client"
-// import { LOGIN_MUTATION } from "../auth/utils/dummyDataUsers"
+import { LOGIN_MUTATION } from "../auth/utils/queries"
 
-const LOGIN_MUTATION = gql`
-  mutation LoginMutation(
-    $userEmail: EmailAddress!
-    $userPassword: Password!
-  ){
-    login(
-      email: $userEmail
-      password: $userPassword
-    )
-  }
-`
+// const LOGIN_MUTATION = gql`
+//   mutation LoginMutation(
+//     $userEmail: EmailAddress!
+//     $userPassword: Password!
+//   ){
+//     login(
+//       email: $userEmail
+//       password: $userPassword
+//     )
+//   }
+// `
 
 const LoginScreen = ({ navigation }) => {
 
@@ -45,12 +45,12 @@ const LoginScreen = ({ navigation }) => {
     password = logindata.userPassword 
   }
 
-  const login = async ({ email, password }) => {
-    const result = await auth.login(email, password);
-    if (!result.success) {
-      return setLoginErr(result.error);
-    }
-  };  
+  // const login = async ({ email, password }) => {
+  //   const result = await auth.login(email, password);
+  //   if (!result.success) {
+  //     return setLoginErr(result.error);
+  //   }
+  // };  
 
   const goToSignUp = () => navigation.navigate(AppRoute.SIGNUP);
   const forgotPassword = () => navigation.navigate(AppRoute.FORGOT_PASS);
