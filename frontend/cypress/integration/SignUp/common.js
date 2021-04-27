@@ -14,7 +14,7 @@ export const selectSexField = (sex) => {
 };
 
 export const selectDate = (selector, date, isBackBtn) => {
-  const [day, month, year] = date.split("-");
+  const [year, month, day] = date.split("-");
   const monthIndex = Number(month) - 1;
 
   cy.get(selector).click();

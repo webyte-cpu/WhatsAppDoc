@@ -1,4 +1,5 @@
 import * as yup from 'yup';
+import enums from './enums';
 import { VALID_PATTERNS, ERR_MSG } from './validators';
 
 // const addressSchema = yup.object({
@@ -28,7 +29,7 @@ const loginSchema = yup.object({
 });
 
 const userSignUpSchema = yup.object({
-  email: yup.string().label('email').email('Invalid email format').required(),
+  email: yup.string().label('Email').email('Invalid email format').required(),
   password: yup
     .string()
     .label('Password')
