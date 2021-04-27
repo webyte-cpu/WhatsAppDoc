@@ -41,19 +41,22 @@ const update = async (arg) => {
   return dbReponse.map((data) => objectKeysToCamelCase(data, "doctor_"))[0];
 };
 
-const get = async ({uid}) => {
-  const dbReponse = uid
-    ? await pg.select("*").from("doctors").where({ doctor_uid: uid })
-    : await pg.select("*").from("doctors").join("users as u", "doctors.doctor_uid" , "=", "u.user_uid");
-
+const get = async (uid) => {
+  const dbReponse = await pg.select("*").from("doctors").join("users as u", "doctors.doctor_uid" , "=", "u.user_uid").where({ doctor_uid: uid })
   const response = dbReponse.map((data) => objectKeysToCamelCase(data, "doctor_"));
   console.log(response)
   return response;
 };
 
+const getAll = async () => {
+  const dbReponse = await pg.select("*").from("doctors").join("users as u", "doctors.doctor_uid" , "=", "u.user_uid");
+  const response = dbReponse.map((data) => objectKeysToCamelCase(data, "doctor_"));
+  console.log(response)
+  return response;
+}
 const remove = async (uid) => {
   const dbReponse = await pg("doctors").where({ doctor_uid: uid }).del();
   return dbReponse.map((data) => objectKeysToCamelCase(data, "doctor_"))[0];
 };
 
-export default { create, update, get, remove };
+export default { create, update, get, getAll, remove };
