@@ -5,8 +5,7 @@
     "android": "expo start --android",
     "ios": "expo start --ios",
     "web": "expo start --web",
-    "eject": "expo eject",
-    "cypress": "npx cypress open"
+    "eject": "expo eject"
   },
   "dependencies": {
     "@apollo/client": "^3.3.13",
@@ -42,16 +41,12 @@
   },
   "devDependencies": {
     "@babel/core": "~7.9.0",
-    "@expo/webpack-config": "^0.12.63",
-    "cypress-cucumber-preprocessor": "^4.0.3",
-    "cypress-file-upload": "^5.0.6"
-  },
-  "cypress-cucumber-preprocessor": {
-    "nonGlobalStepDefinitions": true
+    "@expo/webpack-config": "^0.12.63"
   },
   "name": "frontend",
   "version": "1.0.0",
   "description": "",
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "keywords": []
 }
