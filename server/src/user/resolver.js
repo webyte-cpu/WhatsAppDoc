@@ -24,14 +24,8 @@ const resolverMap = {
     getUser: (obj, arg) => user().get(arg.uid),
     getAllUser: () => user().get(),
     viewer: (parent, arg, context) => {
-      //for checking if
-
-      console.log(context);
-      if (__.isEmpty(context.user)) {
-        return null;
-      }
-      const { uid } = context.user;
-      return context.user
+      if (__.isEmpty(context.user)) return null;
+      return context.user;
     },
   },
 
@@ -50,8 +44,6 @@ const resolverMap = {
     },
     signIn: async (obj, { email, password }) => {
       const payload = await user().check({ email, password });
-
-      console.log(payload);
       return jwt.sign(payload, process.env.JWT_SECRET_KEY, {
         algorithm: "HS256",
         subject: payload.uid,
