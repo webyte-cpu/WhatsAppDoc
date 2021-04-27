@@ -1,5 +1,16 @@
 import * as ImagePicker from 'expo-image-picker';
 import * as DocumentPicker from 'expo-document-picker';
+import * as ImageManipulator from 'expo-image-manipulator';
+
+const compressImg = async (uri) => {
+  const manipulatedResult = await ImageManipulator.manipulateAsync(
+    uri,
+    [{ rotate: 0 }],
+    { compress: 0.5, format: ImageManipulator.SaveFormat.JPEG }
+  );
+  console.log('compressed',manipulatedResult.uri)
+  return manipulatedResult.uri;
+};
 
 /**
  * @returns {string} localUri
@@ -15,14 +26,18 @@ const openImagePickerAsync = async () => {
 
     const pickerResult = await ImagePicker.launchImageLibraryAsync({
       allowsEditing: true,
-      quality: 0.5,
+      quality: 0.8,
+      base64: true
     });
     
     if (pickerResult.cancelled) {
       return;
     }
+    console.log('uri',pickerResult.uri)
+    console.log( 'base64',pickerResult.base64)
 
-    return pickerResult.uri;
+
+    return compressImg(pickerResult.uri)
   } catch (e) {
     throw new Error(e);
   }
