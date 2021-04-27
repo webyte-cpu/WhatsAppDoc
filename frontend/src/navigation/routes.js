@@ -9,11 +9,12 @@ import AuthNavigator from './navigatorStacks/authNavigator';
 import AdminDrawerStack from './navigatorStacks/adminStack';
 import UserDrawerStack from './navigatorStacks/userDrawer';
 import enums from '../../helpers/enums';
+import { Button, Text, Spinner } from '@ui-kitten/components';
 
 const linking = {
   config: { 
     screens: { 
-      Login: "/login", 
+      SignIn: "/signin", 
       Signup: "/signup",
       ForgotPass: "/forgotpassword",
       AdminHome: "/admin",
@@ -30,17 +31,18 @@ const AppNavigator = () => {
   const auth = useAuth();
   const [fontsLoaded] = useFonts(customFonts);
 
-  if (fontsLoaded && auth.state.isLoading) {
-    return <AppLoading />;
+  if (fontsLoaded && auth.isLoading) { // TODO : loading
+    return <Spinner testID="spinner" status="primary" size="giant" />;;
   }
 
   return (
     <SafeAreaProvider>
       <NavigationContainer linking={linking}>
-        {auth.state.token == null ? <AuthNavigator /> : auth.state.token.role === enums.role.ADMIN ? <AdminDrawerStack /> : <UserDrawerStack />}
+        {auth.token == null ? <AuthNavigator /> :  <UserDrawerStack />} 
       </NavigationContainer>
     </SafeAreaProvider>
   );
 };
 
 export default AppNavigator;
+//auth.token.role === enums.role.ADMIN ? <AdminDrawerStack /> :
