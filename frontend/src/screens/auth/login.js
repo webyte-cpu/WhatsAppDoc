@@ -9,48 +9,47 @@ import customStyle from '../../../themes/styles';
 import { EmailField, PasswordField } from '../../components/fields';
 import { Formik } from 'formik';
 import { loginSchema } from '../../../helpers/validationType';
-import { gql, useMutation } from "@apollo/client"
-import { LOGIN_MUTATION } from "../auth/utils/queries"
+import { gql, useMutation } from '@apollo/client';
+import LoadingScreen from '../../components/loadingScreen';
 
-// const LOGIN_MUTATION = gql`
-//   mutation LoginMutation(
-//     $userEmail: EmailAddress!
-//     $userPassword: Password!
-//   ){
-//     login(
-//       email: $userEmail
-//       password: $userPassword
-//     )
-//   }
-// `
+const SIGNIN_MUTATION = gql`
+  mutation SignIn($email: EmailAddress!, $password: Password!) {
+    signIn(email: $email, password: $password)
+  }
+`;
 
-const LoginScreen = ({ navigation }) => {
-
-  const loginDetails = useState({
+const SignInScreen = ({ navigation }) => {
+  const auth = useAuth(); 
+  const loginDetails = {
     email: '',
     password: '',
-  });
-  const [loginErr, setLoginErr] = useState('');
-  const auth = useAuth();
+  };
 
-  const [logindata] = useMutation(LOGIN_MUTATION,{
-    variables:{
-      userEmail: loginDetails.email,
-      userPassword: loginDetails.password
+  const [loginErr, setLoginErr] = useState('');
+  const [signInUser, { loading, error, data }] = useMutation(SIGNIN_MUTATION, {
+    ignoreResults: false,
+    onCompleted({ signIn: token }) {
+      if (token) {
+        console.log(token);
+        auth.login(token);
+      }
+    },
+    onError(error) { // TODO: fix error handling
+      if(error){
+      setLoginErr('User not found')
+      }
     }
   });
 
-  const login = ({ email, password}) => {
-    email = logindata.userEmail
-    password = logindata.userPassword 
-  }
-
-  // const login = async ({ email, password }) => {
-  //   const result = await auth.login(email, password);
-  //   if (!result.success) {
-  //     return setLoginErr(result.error);
-  //   }
-  // };  
+  const login = ({ email, password }) => {
+    console.log(email, password);
+    return signInUser({
+      variables: {
+        email: email,
+        password: password,
+      },
+    });
+  };
 
   const goToSignUp = () => navigation.navigate(AppRoute.SIGNUP);
   const forgotPassword = () => navigation.navigate(AppRoute.FORGOT_PASS);
@@ -72,7 +71,7 @@ const LoginScreen = ({ navigation }) => {
 
   const ErrorText = ({ errMsg }) => (
     <Text testID="errText" status="danger" category="s1" style={{ textAlign: 'center' }}>
-      {loginErr}
+      {errMsg}
     </Text>
   );
 
@@ -98,8 +97,12 @@ const LoginScreen = ({ navigation }) => {
               Forgot Password?
             </Text>
             <ErrorText errMsg={loginErr} />
-            <Button testID="loginBtn" onPress={props.handleSubmit} style={{ marginTop: 10 }}>
-              Login
+            <Button
+              testID="loginBtn"
+              onPress={props.handleSubmit}
+              style={{ marginTop: 10 }}
+            >
+              Sign In
             </Button>
             {signupBtn}
           </>
@@ -108,7 +111,7 @@ const LoginScreen = ({ navigation }) => {
     </View>
   );
 
-  const loginPage = (
+  const signInPage = (
     <View style={(customStyle.content, customStyle.container)}>
       <Text category="h1" style={{ textAlign: 'center' }}>
         WhatsAppDoc
@@ -122,13 +125,13 @@ const LoginScreen = ({ navigation }) => {
     </View>
   );
 
-  if (auth.state.isLoading) {
-    return <Spinner testID="spinner" status="primary" size="giant" />;
+  if (loading) { // TODO: create global loading component
+    return <LoadingScreen />
   }
 
   return (
     <KeyboardAwareScrollView contentContainerStyle={customStyle.contentFill}>
-      {loginPage}
+      {signInPage}
     </KeyboardAwareScrollView>
   );
 };
@@ -153,4 +156,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default LoginScreen;
+export default SignInScreen;
