@@ -49,6 +49,24 @@ const specialization = (knex = pg) => ({
       .ignore();
     return specialization().fromDb(__.first(dbResponse));
   },
+
+  assignedTo: async (uid) => {
+    const dbResponse = await knex
+      .select("*")
+      .from("doctor_specializations")
+      .where({
+        doctor_uid: uid,
+      })
+      .innerJoin(
+        "specializations",
+        "specializations.specialization_uid",
+        "doctor_specializations.specialization_uid"
+      );
+
+    return dbResponse.map(
+      (specialization) => specialization.specialization_title
+    );
+  },
 });
 
 export default specialization;
