@@ -1,68 +1,33 @@
-import { gql } from "@apollo/client"
+import { gql } from '@apollo/client';
 
-const LOGIN_MUTATION = gql`
-  mutation Login(
-    $userEmail: EmailAddress!
-    $userPassword: Password!
-  ){
-    sigIn(
-      email: $userEmail
-      password: $userPassword
-    )
+export const SIGNIN_MUTATION = gql`
+  mutation SignIn($email: EmailAddress!, $password: Password!) {
+    signIn(email: $email, password: $password)
   }
+`;
 
-`
-
-const SIGNUP_MUTATION = gql`
-  mutation Signup(
+export const SIGNUP_MUTATION = gql`
+  mutation SignUp(
+    $firstName: String!
+    $middleName: String
+    $lastName: String!
     $email: EmailAddress!
     $password: Password!
-    $firstName: String!
-    $lastName: String!
-    $middleName: String
     $role: Role!
     $sex: Sex!
     $birthdate: Date!
-  ){
-    signUp(      
+    $doctor: DoctorInput
+  ) {
+    signUp(
+      firstName: $firstName
+      middleName: $middleName
+      lastName: $lastName
       email: $email
       password: $password
-      firstName: $firstName
-      lastName: $lastName
-      middleName: $middleName
       role: $role
       sex: $sex
       birthdate: $birthdate
+      doctor: $doctor
     )
   }
-`
-const SIGNUP_DOCTOR = gql`
-  mutation SignupDoc(
-    $licenceNum: String!
-    $licenceImg: String!
-    $licenceExp: Date!
-    $verificationStatus: VerificationStatus
-    $experience: Int
-    $about: String
-    $educational: String
-    $rating: Int
-  ){
-    createDoctor(
-      licenceNum: $licenceNum
-      licenceImg: $licenceImg
-      licenceExp: $licenceExp
-      verificationStatus:$verificationStatus
-      experience: $experience
-      about: $about
-      educational: $educational
-      rating: $rating
-    ){
-      licenceNum
-    }
-}
-`
-
-
-
-
-export { LOGIN_MUTATION, SIGNUP_MUTATION, SIGNUP_DOCTOR }
+`;

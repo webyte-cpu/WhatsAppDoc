@@ -11,12 +11,7 @@ import { Formik } from 'formik';
 import { loginSchema } from '../../../helpers/validationType';
 import { gql, useMutation } from '@apollo/client';
 import LoadingScreen from '../../components/loadingScreen';
-
-const SIGNIN_MUTATION = gql`
-  mutation SignIn($email: EmailAddress!, $password: Password!) {
-    signIn(email: $email, password: $password)
-  }
-`;
+import { SIGNIN_MUTATION } from './utils/queries';
 
 const SignInScreen = ({ navigation }) => {
   const auth = useAuth(); 
