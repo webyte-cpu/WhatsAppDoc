@@ -126,33 +126,27 @@ const user = (knex = pg) => {
     },
 
     get: async (uid) => {
-      if (!__.isUndefined(uid)) {
-        const dbResponse = await knex
-          .select("*")
-          .from("users")
-          .where(
-            objectFilter({
-              user_uid: uid,
-            })
-          );
+      const dbResponse = await knex
+        .select("*")
+        .from("users")
+        .where(objectFilter({ user_uid: uid }))
+        .leftJoin("doctors", "doctor_uid", "user_uid")
+        .leftJoin("patients", "patient_uid", "user_uid");
 
-        if (__.isEmpty(dbResponse)) {
-          throw new ApolloError("User does not exist!", "NO_DATA");
-        }
-        return user().fromDb(__.first(dbResponse));
-      }
+      const data = dbResponse.map((data) => ({
+        ...user().fromDb(data),
+        ...doctor().fromDb(data),
+        ...patient().fromDb(data),
+      }));
 
-      const dbResponse = await knex.select("*").from("users");
-
-      return dbResponse.map(user().fromDb);
+      return data;
     },
 
     delete: async (uid) => {
       const dbResponse = await knex("users")
         .where({ user_uid: uid })
         .del()
-        .returning("*")
-        .first();
+        .returning("*");
       return user().fromDb(dbResponse);
     },
   };

@@ -1,38 +1,22 @@
-const address = require("./address.js");
+import address from "./address.js";
+import __ from "lodash";
 
 const resolverMap = {
   Query: {
-    getAddress: (obj, arg) => {
-      //get specific admin from the database
-      console.log(arg);
-
-      /* 
-      if uuid doesnt exist get all data
-      and check for auth
-      */
-
-      //replace with database data
-      return address.get(arg.uid);
-    },
+    getAddress: async (obj, arg) => __.first(await address().get(arg.uid)),
   },
   Mutation: {
     createAddress: (obj, arg) => {
-      console.log(arg);
-      //link to doctor in the database
-      return address.create(arg);
+      return address().create(arg);
     },
     updateAddress: (obj, arg) => {
-      console.log(arg);
-      //link to doctor in the database
-      return address.update(arg);
+      return address().update(arg);
     },
     deleteAddress: (obj, arg) => {
-      console.log(arg);
-      //link to doctor in the database
-      return address.remove(arg.uid);
+      return address().remove(arg.uid);
     },
   },
   // Subscription: {},
 };
 
-module.exports = resolverMap;
+export default resolverMap;

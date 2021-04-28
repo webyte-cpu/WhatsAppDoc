@@ -1,17 +1,9 @@
+import patient from "./patient.js";
+import __ from "lodash";
+
 const resolverMap = {
   Query: {
-    getPatient: (obj, arg) => {
-      //get specific admin from the database
-      console.log(arg);
-
-      /* 
-      if uuid doesnt exist get all data
-      and check for auth
-      */
-
-      //replace with database data
-      return; //sampleData;
-    },
+    getPatient: async (obj, arg) => __.first(await patient().get(arg.uid)),
   },
   Mutation: {
     createPatient: (obj, arg) => {
