@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { View, StyleSheet, Platform, Image } from 'react-native';
-import { Button, Text, Spinner } from '../profile/node_modules/@ui-kitten/components';
+import { Button, Text, Spinner } from '@ui-kitten/components';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { AppRoute } from '../../navigation/app-routes';
 import { useAuth } from './utils/authProvider';
