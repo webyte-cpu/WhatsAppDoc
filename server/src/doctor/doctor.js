@@ -1,5 +1,6 @@
 import objectFilter from "../helpers/objectFilter.js";
 import { v4 as uuidV4 } from "uuid";
+import user from "../user/user.js";
 import pg from "../../db/index.js";
 import __ from "lodash";
 
@@ -53,11 +54,20 @@ const doctor = (knex = pg) => ({
     return doctor().fromDb(__.first(dbResponse));
   },
   get: async (uid) => {
-    const dbResponse = uid
-      ? await knex.select("*").from("doctors").where({ doctor_uid: uid })
-      : await knex.select("*").from("doctors");
+    const doctorSelectQuery = uid
+      ? knex.select("*").from("doctors").where({ doctor_uid: uid })
+      : knex.select("*").from("doctors");
 
-    return dbResponse.map((doctorData) => doctor().fromDb(doctorData));
+    const dbResponse = await doctorSelectQuery.innerJoin(
+      "users",
+      "user_uid",
+      "doctor_uid"
+    );
+
+    return dbResponse.map((data) => ({
+      ...user().fromDb(data),
+      ...doctor().fromDb(data),
+    }));
   },
   remove: async (uid) => {
     const dbResponse = await knex("doctors").where({ doctor_uid: uid }).del();
