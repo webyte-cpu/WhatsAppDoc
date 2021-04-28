@@ -1,18 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import {
-  View,
-  StyleSheet,
-  ImageBackground,
-  Platform,
-  ScrollView,
-  Image,
-} from 'react-native';
-import { Button, Text, useTheme, Spinner } from '@ui-kitten/components';
-import SignUpDoctor from './signUpDoctor';
-import customStyle from '../../../themes/styles';
-import { useAuth } from './utils/authProvider';
-import enums from '../../../helpers/enums';
-import { Formik } from 'formik';
+import React, { useState } from 'react';
+import { View, StyleSheet, ImageBackground, Platform } from 'react-native';
 import {
   userSignUpSchema,
   doctorSignUpSchema,
@@ -24,36 +11,19 @@ import {
   NameFields,
   SexField,
 } from '../../components/fields';
+import { Button, Text, useTheme } from '@ui-kitten/components';
+import { useAuth } from './utils/authProvider';
+import { Formik } from 'formik';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
-import { gql, useMutation } from '@apollo/client';
+import { useMutation } from '@apollo/client';
+import { SIGNUP_MUTATION } from './utils/queries';
+import { formatDate } from './utils/formatters';
+import LoadingScreen from '../../components/loadingScreen';
+import SignUpDoctor from './signUpDoctor';
+import customStyle from '../../../themes/styles';
+import enums from '../../../helpers/enums';
 
 const ROLE = enums.role;
-
-const SIGNUP_MUTATION = gql`
-  mutation SignUp(
-    $firstName: String!
-    $middleName: String
-    $lastName: String!
-    $email: EmailAddress!
-    $password: Password!
-    $role: Role!
-    $sex: Sex!
-    $birthdate: Date!
-    $doctor: DoctorInput
-  ) {
-    signUp(
-      firstName: $firstName
-      middleName: $middleName
-      lastName: $lastName
-      email: $email
-      password: $password
-      role: $role
-      sex: $sex
-      birthdate: $birthdate
-      doctor: $doctor
-    )
-  }
-`;
 
 const SignupScreen = ({ navigation }) => {
   const theme = useTheme();
@@ -81,12 +51,7 @@ const SignupScreen = ({ navigation }) => {
       ? userSignUpSchema
       : userSignUpSchema.concat(doctorSignUpSchema);
 
-  console.log(signUpSchema);
-  console.log(signUpDetails);
-
-  const [signUpUser, { loading, error, data }] = useMutation(SIGNUP_MUTATION, {
-    // TODO: fix mutation for doctors
-    ignoreResults: false,
+  const [signUpUser, { loading, error }] = useMutation(SIGNUP_MUTATION, {
     onCompleted({ signUp: token }) {
       if (token) {
         console.log(token);
@@ -95,7 +60,6 @@ const SignupScreen = ({ navigation }) => {
     },
   });
 
-  const formatDate = (date) => new Date(date).toISOString().slice(0, 10);
   const signup = (values) => {
     console.log(values);
     console.log(values.licenseImg);
@@ -113,19 +77,19 @@ const SignupScreen = ({ navigation }) => {
           }
         : {};
 
-    // return signUpUser({
-    //   variables: {
-    //     firstName: values.fname,
-    //     middleName: values.midName,
-    //     lastName: values.lname,
-    //     email: values.email,
-    //     password: values.password,
-    //     role: values.role,
-    //     sex: values.sex,
-    //     birthdate: formatDate(values.birthdate),
-    //     ...doctor,
-    //   },
-    // });
+    return signUpUser({
+      variables: {
+        firstName: values.fname,
+        middleName: values.midName,
+        lastName: values.lname,
+        email: values.email,
+        password: values.password,
+        role: values.role,
+        sex: values.sex,
+        birthdate: formatDate(values.birthdate),
+        ...doctor,
+      },
+    });
   };
 
   const changeRole = (role) => {
@@ -174,7 +138,7 @@ const SignupScreen = ({ navigation }) => {
   };
 
   const SignUpForm = () => (
-    <>
+    <View>
       <View style={customStyle.content}>
         <Text style={styles.subtitle} category="h4">
           Choose Account Type
@@ -183,13 +147,14 @@ const SignupScreen = ({ navigation }) => {
 
       <Formik
         initialValues={signUpDetails}
-        // validationSchema={signUpSchema}
+        validationSchema={signUpSchema}
         onSubmit={(values) => signup(values)}
       >
         {(props) => (
           <>
             <RoleButtons {...props} />
             <View style={styles.form}>
+              <View style={{minWidth: 600}}>
               <EmailField />
               <PasswordField />
 
@@ -219,15 +184,16 @@ const SignupScreen = ({ navigation }) => {
               >
                 Sign up
               </Button>
+              </View>
             </View>
           </>
         )}
       </Formik>
-    </>
+    </View>
   );
 
   if (loading) {
-    return <Spinner testID="spinner" status="primary" size="giant" />;
+    return <LoadingScreen />;
   }
 
   if (error) {
@@ -236,13 +202,11 @@ const SignupScreen = ({ navigation }) => {
   }
 
   return (
-    <>
       <KeyboardAwareScrollView
         style={{ backgroundColor: theme['color-primary-500'] }}
       >
         <SignUpForm />
       </KeyboardAwareScrollView>
-    </>
   );
 };
 
@@ -271,8 +235,8 @@ const styles = StyleSheet.create({
     }),
   },
   form: {
+    alignItems: 'center',
     flex: 1,
-    width: '100%',
     padding: 30,
     backgroundColor: 'white',
     borderTopLeftRadius: 50,

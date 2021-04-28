@@ -48,8 +48,6 @@ const CustomImgField = (props) => {
 
   const captionText = hasError ? errors[name] : props.caption;
 
-  // TODO: refactor in caption in ui-kitten style
-  
   return (
     <>
       <Input
