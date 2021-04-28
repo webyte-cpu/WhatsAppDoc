@@ -51,7 +51,7 @@ const up = function (knex) {
 
     .createTable("specializations", (table) => {
       table.uuid("specialization_uid").notNullable().primary();
-      table.string("specialization_title").notNullable();
+      table.string("specialization_title").notNullable().unique();
     })
 
     .createTable("doctor_specializations", (table) => {

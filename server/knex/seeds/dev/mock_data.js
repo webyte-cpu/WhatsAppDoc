@@ -14,6 +14,8 @@ const seed = function (knex) {
           user_password:
             "$2b$10$H8UXq/O.PB.8/PZyUpoxkewA87VurQ4u4EG73HPtLYUwAdZIRY.Ey",
           user_role: "DOCTOR",
+          user_birthdate: "10-25-2000",
+          user_sex: "FEMALE",
           created_at: "2020-09-03T04:16:46.161Z",
         },
         {
@@ -25,6 +27,8 @@ const seed = function (knex) {
           user_password:
             "$2b$10$j7ZWPcFhQoB.p38.ejkw6.GPz7H5eC06Er68bZ48IP/ewrTaDkD2C",
           user_role: "DOCTOR",
+          user_birthdate: "10-25-2000",
+          user_sex: "FEMALE",
           created_at: "2020-10-17T06:17:36.863Z",
         },
         {
@@ -36,6 +40,8 @@ const seed = function (knex) {
           user_password:
             "$2b$10$.xCLU71Fso00eBW3Phfr7OAPR7JhQoCsehSfirVIisksa4GLN0MgO",
           user_role: "DOCTOR",
+          user_birthdate: "10-25-2000",
+          user_sex: "FEMALE",
           created_at: "2021-01-30T00:00:07.240Z",
         },
         {
@@ -47,6 +53,8 @@ const seed = function (knex) {
           user_password:
             "$2b$10$BWM5svaj0bdkQphDnrxHWufWyRx6b2IbFG/pvRl38HNFCSm9H/Ncu",
           user_role: "ADMIN",
+          user_birthdate: "10-25-2000",
+          user_sex: "FEMALE",
           created_at: "2020-07-29T05:10:55.899Z",
         },
         {
@@ -58,6 +66,8 @@ const seed = function (knex) {
           user_password:
             "$2b$10$gLWDpMzkX8rstJv2sY4Zsub94KmN40x8DuqbHvH3njG1fwMmVYNIC",
           user_role: "ADMIN",
+          user_birthdate: "10-25-2000",
+          user_sex: "FEMALE",
           created_at: "2020-12-23T09:50:01.921Z",
         },
         {
@@ -69,6 +79,8 @@ const seed = function (knex) {
           user_password:
             "$2b$10$PCsE6wfIDYPra7fD3szLYOkZIdS7BMderHo1mWHRTpAyV0kEiCSZi",
           user_role: "ADMIN",
+          user_birthdate: "10-25-2000",
+          user_sex: "FEMALE",
           created_at: "2020-09-14T13:33:28.764Z",
         },
         {
@@ -80,6 +92,8 @@ const seed = function (knex) {
           user_password:
             "$2b$10$P0jRsNlTpzo07i4rEBjCteGMJ7pBXvp1u7bTvnnW4Tzkg5KxU0S4K",
           user_role: "PATIENT",
+          user_birthdate: "10-25-2000",
+          user_sex: "FEMALE",
           created_at: "2020-10-03T12:37:08.203Z",
         },
         {
@@ -91,6 +105,8 @@ const seed = function (knex) {
           user_password:
             "$2b$10$oTc8Dy091hWYHPvpVR66RutZz7s9UGNSQ3l6h3nyqjZDZ7/kHKpUq",
           user_role: "PATIENT",
+          user_birthdate: "10-25-2000",
+          user_sex: "FEMALE",
           created_at: "2021-02-13T21:19:58.770Z",
         },
         {
@@ -102,6 +118,8 @@ const seed = function (knex) {
           user_password:
             "$2b$10$kyQ/ag.zoQ8n//ONGuDB9Os0WRGJ2XtgGA6Xk1cLnRQ1Gx6RAcqnu",
           user_role: "PATIENT",
+          user_birthdate: "10-25-2000",
+          user_sex: "FEMALE",
           created_at: "2020-05-20T10:01:25.413Z",
         },
         {
@@ -113,6 +131,8 @@ const seed = function (knex) {
           user_password:
             "$2b$10$WbvFUwzlBPMB4fuLJLgfi.0dF6P3B9OODJab.ZrVjMGTsBZCbLiaS",
           user_role: "PATIENT",
+          user_birthdate: "10-25-2000",
+          user_sex: "FEMALE",
           created_at: "2020-08-19T16:06:27.526Z",
         },
       ]);

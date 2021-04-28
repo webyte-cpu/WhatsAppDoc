@@ -7,7 +7,7 @@ const doctor = (knex = pg) => ({
   fromDb: (doctorData) => ({
     uid: doctorData.doctor_uid,
     licenceNum: doctorData.doctor_licence_num,
-    licenceImg: doctorData.doctor_licence_img,
+    licenceImg: doctorData.doctor_licence_img.toString(), // converts Binary image format to String
     licenceExp: doctorData.doctor_licence_exp,
     verificationStatus: doctorData.doctor_verification_status,
     experience: doctorData.doctor_experience,
