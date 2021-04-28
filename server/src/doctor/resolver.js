@@ -6,7 +6,7 @@ const resolverMap = {
     },
 
     getAllDoctor: async (obj, arg) => {
-      return doctor().get({})
+      return doctor().get(null)
     }
   },
   Mutation: {
