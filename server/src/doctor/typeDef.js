@@ -19,7 +19,7 @@ const doctor = gql`
     updatedAt: DateTime
 
     licenceNum: String!
-    licenceImg: String!
+    licenceImg: Byte!
     licenceExp: Date!
     specialization: [String]
     verificationStatus: VerificationStatus
@@ -35,7 +35,7 @@ const doctor = gql`
 
   input DoctorInput {
     licenceNum: String!
-    licenceImg: String!
+    licenceImg: Byte!
     licenceExp: Date!
     specialization: [String]
     verificationStatus: VerificationStatus
@@ -53,7 +53,7 @@ const doctor = gql`
   extend type Mutation {
     createDoctor(
       licenceNum: String!
-      licenceImg: String!
+      licenceImg: Byte!
       licenceExp: Date!
       verificationStatus: VerificationStatus
       experience: Int
@@ -65,7 +65,7 @@ const doctor = gql`
     updateDoctor(
       uid: UUID!
       licenceNum: String
-      licenceImg: String
+      licenceImg: Byte
       licenceExp: Date
       verificationStatus: VerificationStatus
       experience: Int
