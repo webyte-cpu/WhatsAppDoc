@@ -23,7 +23,7 @@ const patient = gql`
   }
 
   extend type Query {
-    getPatient(uid: UUID!): Patient
+    getPatient(uid: UUID): [Patient]
   }
 
   extend type Mutation {

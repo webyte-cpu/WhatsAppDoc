@@ -3,7 +3,7 @@ import __ from "lodash";
 
 const resolverMap = {
   Query: {
-    getPatient: async (obj, arg) => __.first(await patient().get(arg.uid)),
+    getPatient: async (obj, arg) => await patient().get(arg.uid),
   },
   Mutation: {
     createPatient: (obj, arg) => {
