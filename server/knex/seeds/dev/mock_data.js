@@ -1,139 +1,166 @@
 const seed = function (knex) {
   // Deletes ALL existing entries
-  return knex("users")
+
+   knex("users")
     .del()
     .then(function () {
       // Inserts seed entries
       return knex("users").insert([
         {
-          user_uid: "4a221edd-af73-4b86-b82e-2e49fad253d7",
-          user_first_name: "Jessika",
-          user_middle_name: "b",
-          user_last_name: "Legros",
-          user_email: "Llewellyn.Willms25@hotmail.com",
-          user_password:
-            "$2b$10$H8UXq/O.PB.8/PZyUpoxkewA87VurQ4u4EG73HPtLYUwAdZIRY.Ey",
-          user_role: "DOCTOR",
-          user_birthdate: "10-25-2000",
-          user_sex: "FEMALE",
-          created_at: "2020-09-03T04:16:46.161Z",
+          user_uid: 'bee4ef71-7547-411d-ba78-6077da1ff963',
+          user_first_name: 'Chadd',
+          user_middle_name: 'b',
+          user_last_name: 'Goyette',
+          user_email: 'Clara50@hotmail.com',
+          user_birthdate: "2001-06-11",
+          user_sex: 'FEMALE',
+          user_password: '$2b$10$b/m6TrnItLHO7f23wCXYsO7djrHzw6nrwpbsx9m0K2B2DV3s1RNDa',
+          user_role: 'ADMIN',
+          created_at: "2020-08-02T06:42:57.294Z"
         },
         {
-          user_uid: "ee729cc9-ad3f-4f14-b707-050bd4a96278",
-          user_first_name: "Derick",
-          user_middle_name: "b",
-          user_last_name: "Friesen",
-          user_email: "Alf.Schuster34@hotmail.com",
-          user_password:
-            "$2b$10$j7ZWPcFhQoB.p38.ejkw6.GPz7H5eC06Er68bZ48IP/ewrTaDkD2C",
-          user_role: "DOCTOR",
-          user_birthdate: "10-25-2000",
-          user_sex: "FEMALE",
-          created_at: "2020-10-17T06:17:36.863Z",
+          user_uid: 'bfd46b0b-ca74-4321-8145-07b875f88a02',
+          user_first_name: 'Guiseppe',
+          user_middle_name: 'b',
+          user_last_name: 'Gerhold',
+          user_email: 'Dewitt.Becker90@yahoo.com',
+          user_birthdate: "2000-02-25",
+          user_sex: 'FEMALE',
+          user_password: '$2b$10$nbzvRhVopaza3x9xf.wpeOMx6QlfeFTERMGIUnL.xj3pf.NCeTLDW',
+          user_role: 'ADMIN',
+          created_at: "2020-12-02T23:23:41.025Z"
         },
         {
-          user_uid: "436bd147-07e7-4888-ab2a-d7a7afcb53bd",
-          user_first_name: "Jamarcus",
-          user_middle_name: "c",
-          user_last_name: "Sauer",
-          user_email: "Thora_Stroman@hotmail.com",
-          user_password:
-            "$2b$10$.xCLU71Fso00eBW3Phfr7OAPR7JhQoCsehSfirVIisksa4GLN0MgO",
-          user_role: "DOCTOR",
-          user_birthdate: "10-25-2000",
-          user_sex: "FEMALE",
-          created_at: "2021-01-30T00:00:07.240Z",
+          user_uid: 'df5c43b9-37e5-4af5-bc9e-a7484607d8ff',
+          user_first_name: 'Francisco',
+          user_middle_name: 'a',
+          user_last_name: 'Wintheiser',
+          user_email: 'Lynn41@hotmail.com',
+          user_birthdate: "1979-01-11",
+          user_sex: 'MALE',
+          user_password: '$2b$10$pExUA4WOsKOS0/9aD4gPEOOkCIJDPVQA8Php1lJzZK2vYHghPwDSm',
+          user_role: 'DOCTOR',
+          created_at: "2020-12-14T23:08:30.878Z"
         },
         {
-          user_uid: "28d0d893-839d-4765-b174-9a522b2482b0",
-          user_first_name: "Arlie",
-          user_middle_name: "b",
-          user_last_name: "Collins",
-          user_email: "Enid12@hotmail.com",
-          user_password:
-            "$2b$10$BWM5svaj0bdkQphDnrxHWufWyRx6b2IbFG/pvRl38HNFCSm9H/Ncu",
-          user_role: "ADMIN",
-          user_birthdate: "10-25-2000",
-          user_sex: "FEMALE",
-          created_at: "2020-07-29T05:10:55.899Z",
+          user_uid: 'eb0a5b40-1fc0-442b-a452-ca5c24603d5c',
+          user_first_name: 'Brayan',
+          user_middle_name: 'b',
+          user_last_name: 'Kreiger',
+          user_email: 'Rashawn.Schoen69@hotmail.com',
+          user_birthdate: "2000-09-15",
+          user_sex: 'FEMALE',
+          user_password: '$2b$10$VO0zdDnCyK56qJrDaD0JmexyLrlhlGSQZnab17QKgVsPf4aY44yfy',
+          user_role: 'ADMIN',
+          created_at: "2020-06-24T04:17:57.191Z"
         },
         {
-          user_uid: "f0facb16-d790-4e2e-a50d-8a4aa91cf5ac",
-          user_first_name: "Melissa",
-          user_middle_name: "b",
-          user_last_name: "Lockman",
-          user_email: "Edwardo.Streich67@gmail.com",
-          user_password:
-            "$2b$10$gLWDpMzkX8rstJv2sY4Zsub94KmN40x8DuqbHvH3njG1fwMmVYNIC",
-          user_role: "ADMIN",
-          user_birthdate: "10-25-2000",
-          user_sex: "FEMALE",
-          created_at: "2020-12-23T09:50:01.921Z",
+          user_uid: '5f2192b0-0e3a-4c77-9593-33f3f27ec441',
+          user_first_name: 'Ferne',
+          user_middle_name: 'a',
+          user_last_name: 'Hilpert',
+          user_email: 'Elsie50@hotmail.com',
+          user_birthdate: "1985-12-10",
+          user_sex: 'MALE',
+          user_password: '$2b$10$bJyPXTMCvBbedmNluMfN/eQoBwGYmVM1Id77EK3C.HNf.DFEvMbNy',
+          user_role: 'DOCTOR',
+          created_at: "2020-10-10T01:20:22.001Z"
         },
         {
-          user_uid: "bb057097-b67a-4db8-ac85-c04b9a3a8145",
-          user_first_name: "Erin",
-          user_middle_name: "a",
-          user_last_name: "Thiel",
-          user_email: "Jayce46@yahoo.com",
-          user_password:
-            "$2b$10$PCsE6wfIDYPra7fD3szLYOkZIdS7BMderHo1mWHRTpAyV0kEiCSZi",
-          user_role: "ADMIN",
-          user_birthdate: "10-25-2000",
-          user_sex: "FEMALE",
-          created_at: "2020-09-14T13:33:28.764Z",
+          user_uid: '3204e990-4a4a-46c3-a693-8dbb3aeb238a',
+          user_first_name: 'Roxane',
+          user_middle_name: 'a',
+          user_last_name: 'Lakin',
+          user_email: 'Beaulah30@yahoo.com',
+          user_birthdate: "1997-11-18",
+          user_sex: 'FEMALE',
+          user_password: '$2b$10$NLcCfFssxjCVfooXsQ3lW.5LrrQ9K3ypF3B6JAGsDYU0Ukat3UzsO',
+          user_role: 'PATIENT',
+          created_at: "2020-10-08T19:14:51.080Z"
         },
         {
-          user_uid: "3a9487fb-fd18-4365-a06a-ba85def38edd",
-          user_first_name: "Jada",
-          user_middle_name: "c",
-          user_last_name: "Hegmann",
-          user_email: "Hillard_MacGyver@yahoo.com",
-          user_password:
-            "$2b$10$P0jRsNlTpzo07i4rEBjCteGMJ7pBXvp1u7bTvnnW4Tzkg5KxU0S4K",
-          user_role: "PATIENT",
-          user_birthdate: "10-25-2000",
-          user_sex: "FEMALE",
-          created_at: "2020-10-03T12:37:08.203Z",
+          user_uid: 'e2d2a4e0-7885-4583-baf9-b50e03a24a1a',
+          user_first_name: 'Efrain',
+          user_middle_name: 'a',
+          user_last_name: 'Zieme',
+          user_email: 'Russel10@hotmail.com',
+          user_birthdate: "1999-05-13",
+          user_sex: 'FEMALE',
+          user_password: '$2b$10$wyKu8nGoslEMmFQDF1t5QOYYz8vQnPyxsUV5ScoeH/ONwC7YydEMW',
+          user_role: 'ADMIN',
+          created_at: "2021-01-04T21:24:02.377Z"
         },
         {
-          user_uid: "b47a7cbb-9cd9-4a7f-a756-9c978d47f042",
-          user_first_name: "Marguerite",
-          user_middle_name: "a",
-          user_last_name: "Baumbach",
-          user_email: "Keanu_Glover@hotmail.com",
-          user_password:
-            "$2b$10$oTc8Dy091hWYHPvpVR66RutZz7s9UGNSQ3l6h3nyqjZDZ7/kHKpUq",
-          user_role: "PATIENT",
-          user_birthdate: "10-25-2000",
-          user_sex: "FEMALE",
-          created_at: "2021-02-13T21:19:58.770Z",
+          user_uid: '405e9a6c-ed50-448b-b8c8-a769edab51f4',
+          user_first_name: 'Nettie',
+          user_middle_name: 'b',
+          user_last_name: 'Gleichner',
+          user_email: 'Joany.Cremin51@yahoo.com',
+          user_birthdate: "1978-06-12",
+          user_sex: 'MALE',
+          user_password: '$2b$10$Xl7rr9lz0KKytSDyGFqjZO5ual6troKXUiRD8P2MYBW6090KFY7re',
+          user_role: 'DOCTOR',
+          created_at: "2020-10-28T21:33:16.272Z"
         },
         {
-          user_uid: "1f460205-d891-45cb-b9f3-43ccdee144a0",
-          user_first_name: "Annetta",
-          user_middle_name: "b",
-          user_last_name: "Marquardt",
-          user_email: "Sherwood.Hoeger@yahoo.com",
-          user_password:
-            "$2b$10$kyQ/ag.zoQ8n//ONGuDB9Os0WRGJ2XtgGA6Xk1cLnRQ1Gx6RAcqnu",
-          user_role: "PATIENT",
-          user_birthdate: "10-25-2000",
-          user_sex: "FEMALE",
-          created_at: "2020-05-20T10:01:25.413Z",
+          user_uid: '2634f0a2-09a9-4a27-b926-1bed44ce3566',
+          user_first_name: 'Otho',
+          user_middle_name: 'c',
+          user_last_name: 'Dickinson',
+          user_email: 'Mara_Anderson22@gmail.com',
+          user_birthdate: "1998-04-12",
+          user_sex: 'FEMALE',
+          user_password: '$2b$10$ezZFiFuz5wYT9OztzBvYF.5BhizbvGYdfZVtZnhKJX7GBvsU3SYoq',
+          user_role: 'ADMIN',
+          created_at: "2020-10-02T05:31:57.671Z"
         },
         {
-          user_uid: "e0ba00ca-e11a-41ce-8acf-3b29dd0f4f8f",
-          user_first_name: "Sadye",
-          user_middle_name: "b",
-          user_last_name: "Bergstrom",
-          user_email: "Jamir37@gmail.com",
-          user_password:
-            "$2b$10$WbvFUwzlBPMB4fuLJLgfi.0dF6P3B9OODJab.ZrVjMGTsBZCbLiaS",
-          user_role: "PATIENT",
-          user_birthdate: "10-25-2000",
-          user_sex: "FEMALE",
-          created_at: "2020-08-19T16:06:27.526Z",
+          user_uid: '67b769a5-25e7-4da4-b9b6-28435e4a06ea',
+          user_first_name: 'Kassandra',
+          user_middle_name: 'a',
+          user_last_name: 'Hickle',
+          user_email: 'Alden84@yahoo.com',
+          user_birthdate: "1988-02-10",
+          user_sex: 'MALE',
+          user_password: '$2b$10$OMbx/6PpOffgBMFC6OaBiOOuwnyI5xeRr3VouKPK1o/YbOexVk7Rq',
+          user_role: 'DOCTOR',
+          created_at: "2021-01-29T11:10:49.426Z"
+        }
+      ]);
+    });
+
+    return knex("doctors")
+    .del()
+    .then(function () {
+      // Inserts seed entries
+      return knex("doctors").insert([
+        {
+          doctor_uid: 'df5c43b9-37e5-4af5-bc9e-a7484607d8ff',
+          doctor_licence_num: "1234567",
+          doctor_verification_status: "PENDING",
+          doctor_licence_img: "http://newstogov.com/wp-content/uploads/2019/10/prc1.jpg",
+          doctor_licence_exp: "2022-10-28",
+        },
+        {
+          doctor_uid: '5f2192b0-0e3a-4c77-9593-33f3f27ec441',
+          doctor_licence_num: "0483958",
+          doctor_verification_status: "PENDING",
+          doctor_licence_img: "http://newstogov.com/wp-content/uploads/2019/10/prc1.jpg",
+          doctor_licence_exp: "2021-12-12",
+        },
+        {
+          doctor_uid: '405e9a6c-ed50-448b-b8c8-a769edab51f4',
+          doctor_licence_num: "5844731",
+          doctor_verification_status: "PENDING",
+          doctor_licence_img: "http://newstogov.com/wp-content/uploads/2019/10/prc1.jpg",
+          doctor_licence_exp: "2023-01-09",
+        },
+        {
+          doctor_uid: '67b769a5-25e7-4da4-b9b6-28435e4a06ea',
+          doctor_licence_num: "1206496",
+          doctor_verification_status: "PENDING",
+          doctor_licence_img: "http://newstogov.com/wp-content/uploads/2019/10/prc1.jpg",
+          doctor_licence_exp: "2022-05-09",
         },
       ]);
     });
@@ -141,15 +168,15 @@ const seed = function (knex) {
 
 export { seed };
 
-/* 
-Raw login: Email: Llewellyn.Willms25@hotmail.com    Pass: satatani
-Raw login: Email: Alf.Schuster34@hotmail.com        Pass: zeceqiya
-Raw login: Email: Thora_Stroman@hotmail.com         Pass: woburego
-Raw login: Email: Enid12@hotmail.com                Pass: mobemoku
-Raw login: Email: Edwardo.Streich67@gmail.com       Pass: sunibara
-Raw login: Email: Jayce46@yahoo.com                 Pass: maxexuda
-Raw login: Email: Hillard_MacGyver@yahoo.com        Pass: ruderuge
-Raw login: Email: Keanu_Glover@hotmail.com          Pass: rejucavu
-Raw login: Email: Sherwood.Hoeger@yahoo.com         Pass: rojuxuje
-Raw login: Email: Jamir37@gmail.com                 Pass: tosekena 
+/*
+Raw login: Email: Clara50@hotmail.com Pass: pigUb80WORZF2Ul
+Raw login: Email: Dewitt.Becker90@yahoo.com Pass: wm7vCIiODfraF3v
+Raw login: Email: Lynn41@hotmail.com Pass: HTjtwSku6wyzc1Z
+Raw login: Email: Rashawn.Schoen69@hotmail.com Pass: bPL6XnnNSAe3SQ8
+Raw login: Email: Elsie50@hotmail.com Pass: _N7MFuMpV_7hEQj
+Raw login: Email: Beaulah30@yahoo.com Pass: 6cKqysjBtUig3LB
+Raw login: Email: Russel10@hotmail.com Pass: aODnd_rJcCYSQbj
+Raw login: Email: Joany.Cremin51@yahoo.com Pass: oA9915RX57pRytp
+Raw login: Email: Mara_Anderson22@gmail.com Pass: 8BK2LyE9V1BPCBN
+Raw login: Email: Alden84@yahoo.com Pass: amguKFMTzTYt4mL
 */
