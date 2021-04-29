@@ -1,7 +1,6 @@
 import { ForbiddenError } from "apollo-server-errors";
 import enums from "../helpers/enums/enums.js";
 import jwt from "jsonwebtoken";
-import address from "../address/address.js";
 import user from "./user.js";
 import __ from "lodash";
 
@@ -32,7 +31,7 @@ const resolverMap = {
 
   Mutation: {
     signUp: async (obj, arg, context) => {
-      if (arg?.role === "ADMIN" && user?.role !== "ADMIN") {
+      if (arg?.role === enums.role.ADMIN && user?.role !== enums.role.ADMIN) {
         throw new ForbiddenError("Not authorize to signUp an admin");
       }
 
