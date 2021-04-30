@@ -20,7 +20,8 @@ const doctor = gql`
 
     licenceNum: String!
     licenceImg: String!
-    licenceExpiration: Date!
+    licenceExp: Date!
+    specialization: [String]
     verificationStatus: VerificationStatus
     experience: Int
     about: String

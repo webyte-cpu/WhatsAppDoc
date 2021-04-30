@@ -1,7 +1,7 @@
 
 const up = function(knex) {
   return knex.schema.table('doctors',(table) => {
-    table.binary("doctor_licence_img").notNullable().alter();
+    table.text("doctor_licence_img").notNullable().alter();
   })
   
 };

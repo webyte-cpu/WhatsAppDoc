@@ -21,23 +21,17 @@ const resolverMap = {
   },
 
   Query: {
-    getUser: (obj, arg) => user().get(arg.uid),
+    getUser: async (obj, arg) => __.first(await user().get(arg.uid)),
     getAllUser: () => user().get(),
     viewer: (parent, arg, context) => {
-      //for checking if
-
-      console.log(context);
-      if (__.isEmpty(context.user)) {
-        return null;
-      }
-      const { uid } = context.user;
-      return context.user
+      if (__.isEmpty(context.user)) return null;
+      return context.user;
     },
   },
 
   Mutation: {
     signUp: async (obj, arg, context) => {
-      if (arg?.role === "ADMIN" && user?.role !== "ADMIN") {
+      if (arg?.role === enums.role.ADMIN && user?.role !== enums.role.ADMIN) {
         throw new ForbiddenError("Not authorize to signUp an admin");
       }
 
@@ -50,15 +44,18 @@ const resolverMap = {
     },
     signIn: async (obj, { email, password }) => {
       const payload = await user().check({ email, password });
-
-      console.log(payload);
       return jwt.sign(payload, process.env.JWT_SECRET_KEY, {
         algorithm: "HS256",
         subject: payload.uid,
         expiresIn: "1d",
       });
     },
-    updateUser: () => {},
+    updateUser: (obj, arg) => {
+      return user().update(arg);
+    },
+    deleteUser: (obj, arg) => {
+      return user().delete(arg);
+    },
   },
 };
 

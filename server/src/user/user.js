@@ -52,32 +52,46 @@ const user = (knex = pg) => {
         userData.createdAt = new Date(Date.now());
         userData.password = hashedPassword;
 
-        response.user = await user(trx).create(userData);
-        response.patient = await patient(trx).create(userData);
+        try {
+          response.user = await user(trx).create(userData);
+          response.patient = await patient(trx).create(userData);
 
-        if (userData.role === enums.role.DOCTOR) {
-          const doctorData = userData.doctor;
-          doctorData.uid = userData.uid;
-          response.doctor = await doctor(trx).create(doctorData);
+          if (userData.role === enums.role.DOCTOR) {
+            const doctorData = userData.doctor;
+            doctorData.uid = userData.uid;
+            response.doctor = await doctor(trx).create(doctorData);
 
-          if (__.isEmpty(doctorData.specialization)) {
-            throw new UserInputError(
-              "Doctor should have atleast one specialty."
+            if (__.isEmpty(doctorData.specialization)) {
+              throw new UserInputError(
+                "Doctor should have atleast one specialty."
+              );
+            }
+
+            const specList = doctorData.specialization.map((title) =>
+              specialization(trx).assign({
+                title,
+                userUid: doctorData.uid,
+              })
             );
+
+            response.doctor.specialization = await Promise.all(specList);
           }
 
-          const specList = doctorData.specialization.map((title) =>
-            specialization(trx).assign({
-              title,
-              userUid: doctorData.uid,
-            })
-          );
+          delete response.user.password;
+          return response.user;
+        } catch (error) {
+          console.log(error);
 
-          response.doctor.specialization = await Promise.all(specList);
+          let errorCode = "";
+
+          switch (error.code) {
+            case "23505":
+              errorCode = "ALREADY_EXIST_EMAIL";
+              break;
+          }
+
+          throw new ApolloError(error.detail, errorCode);
         }
-
-        delete response.user.password;
-        return response.user;
       });
     },
     find: async (object) => {
@@ -126,33 +140,27 @@ const user = (knex = pg) => {
     },
 
     get: async (uid) => {
-      if (!__.isUndefined(uid)) {
-        const dbResponse = await knex
-          .select("*")
-          .from("users")
-          .where(
-            objectFilter({
-              user_uid: uid,
-            })
-          );
+      const dbResponse = await knex
+        .select("*")
+        .from("users")
+        .where(objectFilter({ user_uid: uid }))
+        .leftJoin("doctors", "doctor_uid", "user_uid")
+        .leftJoin("patients", "patient_uid", "user_uid");
 
-        if (__.isEmpty(dbResponse)) {
-          throw new ApolloError("User does not exist!", "NO_DATA");
-        }
-        return user().fromDb(__.first(dbResponse));
-      }
+      const data = dbResponse.map((data) => ({
+        ...user().fromDb(data),
+        ...doctor().fromDb(data),
+        ...patient().fromDb(data),
+      }));
 
-      const dbResponse = await knex.select("*").from("users");
-
-      return dbResponse.map(user().fromDb);
+      return data;
     },
 
     delete: async (uid) => {
       const dbResponse = await knex("users")
         .where({ user_uid: uid })
         .del()
-        .returning("*")
-        .first();
+        .returning("*");
       return user().fromDb(dbResponse);
     },
   };
