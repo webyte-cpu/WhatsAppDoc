@@ -7,7 +7,7 @@ const doctor = (knex = pg) => ({
   fromDb: (doctorData) => ({
     uid: doctorData.doctor_uid,
     licenceNum: doctorData.doctor_licence_num,
-    licenceImg: doctorData.doctor_licence_img.toString(), // converts Binary image format to String
+    licenceImg: doctorData.doctor_licence_img.toString(),
     licenceExp: doctorData.doctor_licence_exp,
     verificationStatus: doctorData.doctor_verification_status,
     experience: doctorData.doctor_experience,
@@ -53,7 +53,7 @@ const doctor = (knex = pg) => ({
     return doctor().fromDb(__.first(dbResponse));
   },
   get: async (uid) => {
-    const dbResponse = uid
+    const dbResponse = uid != null
       ? await knex.select("*").from("doctors").where({ doctor_uid: uid })
       : await knex.select("*").from("doctors");
 
