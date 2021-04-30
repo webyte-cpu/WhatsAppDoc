@@ -14,7 +14,8 @@ const AppRoute = {
   NOTIFICATION: 'Notification',
   SCHEDULE: 'Schedule',
   CATEGORY: 'Category',
-  ADMIN: 'Admin'
+  ADMIN: 'Admin',
+  DOCTOR_FORM: 'DoctorForm'
 }
 
 export { AppRoute };

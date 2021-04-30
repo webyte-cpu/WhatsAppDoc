@@ -22,7 +22,8 @@ const linking = {
       Search: "/search",
       Schedules: "/schedules",
       Notification: "/notif",
-      Profile: "/profile"
+      Profile: "/profile",
+      DoctorForm: "/resendform"
     },
   },
 };
