@@ -5,7 +5,6 @@ import { useAuth } from '../auth/utils/authProvider';
 import { AppRoute } from '../../navigation/app-routes';
 import Searchbar from '../search/search';
 import customStyle from '../../../themes/styles';
-import Admin from '../Admin/admin.js'
 
 const HomePage = ({ navigation }) => {
   const auth = useAuth();
