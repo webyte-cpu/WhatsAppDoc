@@ -5,7 +5,6 @@ const passwordScalar = new GraphQLScalarType({
   name: 'Password',
   description: 'Password custom scalar type',
   serialize(value) {
-    throw 'serial';
     return value;
   },
   parseValue(password) {
