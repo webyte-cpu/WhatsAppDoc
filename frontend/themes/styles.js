@@ -33,6 +33,10 @@ const customStyle = StyleSheet.create({
     width: 30,
     borderRadius: 70,
   },
+  warningCard: {
+    margin: 2,
+    width:500,
+  }
 });
 
 export default customStyle;
