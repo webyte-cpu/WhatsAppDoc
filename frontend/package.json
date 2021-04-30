@@ -20,6 +20,7 @@
     "@ui-kitten/components": "^5.0.0",
     "@ui-kitten/eva-icons": "^5.0.0",
     "@ui-kitten/metro-config": "^5.0.0",
+    "babel-plugin-inline-dotenv": "^1.6.0",
     "expo": "~40.0.0",
     "expo-app-loading": "^1.0.1",
     "expo-cli": "^4.3.2",
