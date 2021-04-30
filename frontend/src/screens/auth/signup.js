@@ -154,7 +154,6 @@ const SignupScreen = ({ navigation }) => {
           <>
             <RoleButtons {...props} />
             <View style={styles.form}>
-              <View style={{minWidth: 600}}>
               <EmailField />
               <PasswordField />
 
@@ -184,7 +183,6 @@ const SignupScreen = ({ navigation }) => {
               >
                 Sign up
               </Button>
-              </View>
             </View>
           </>
         )}
@@ -202,11 +200,11 @@ const SignupScreen = ({ navigation }) => {
   }
 
   return (
-      <KeyboardAwareScrollView
-        style={{ backgroundColor: theme['color-primary-500'] }}
-      >
-        <SignUpForm />
-      </KeyboardAwareScrollView>
+    <KeyboardAwareScrollView
+      style={{ backgroundColor: theme['color-primary-500'] }}
+    >
+      <SignUpForm />
+    </KeyboardAwareScrollView>
   );
 };
 
@@ -235,7 +233,6 @@ const styles = StyleSheet.create({
     }),
   },
   form: {
-    alignItems: 'center',
     flex: 1,
     padding: 30,
     backgroundColor: 'white',
