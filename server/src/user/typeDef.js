@@ -47,19 +47,6 @@ const user = gql`
       email: EmailAddress!
       password: Password!
       role: Role!
-<<<<<<< Updated upstream
-    ): JWT!
-
-    updateUser(
-      firstName: String!
-      MiddleName: String
-      lastName: String!
-      password: Password!
-      role: Role!
-    ): Int!
-
-    deleteUser(uid: UUID!): Int!
-=======
       img: String
       sex: Sex!
       birthdate: Date!
@@ -80,7 +67,6 @@ const user = gql`
     ): User!
 
     deleteUser(uid: UUID!): User!
->>>>>>> Stashed changes
 
     signIn(email: EmailAddress!, password: Password!): JWT!
   }

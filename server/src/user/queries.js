@@ -27,11 +27,8 @@ export const SIGN_UP = gql`
     $email: EmailAddress!
     $password: Password!
     $role: Role!
-<<<<<<< Updated upstream
-=======
     $sex: Sex!
     $birthdate: Date!
->>>>>>> Stashed changes
   ) {
     signUp(
       firstName: $firstName
@@ -40,26 +37,14 @@ export const SIGN_UP = gql`
       email: $email
       password: $password
       role: $role
-<<<<<<< Updated upstream
-=======
       sex: $sex
       birthdate: $birthdate
->>>>>>> Stashed changes
     )
   }
 `;
 
 export const UPDATE_USER = gql`
   mutation UpdateUser(
-<<<<<<< Updated upstream
-    $firstName: String!
-    $middleName: String
-    $lastName: String!
-    $password: Password!
-    $role: Role!
-  ) {
-    updateUser(
-=======
     $uid: UUID!
     $firstName: String
     $middleName: String
@@ -72,15 +57,11 @@ export const UPDATE_USER = gql`
   ) {
     updateUser(
       uid: $uid
->>>>>>> Stashed changes
       firstName: $firstName
       middleName: $middleName
       lastName: $lastName
       password: $password
       role: $role
-<<<<<<< Updated upstream
-    )
-=======
       sex: $sex
       birthdate: $birthdate
       img: $img
@@ -90,21 +71,16 @@ export const UPDATE_USER = gql`
       middleName
       lastName
     }
->>>>>>> Stashed changes
   }
 `;
 
 export const DELETE_USER = gql`
   mutation DeleteUser($uid: UUID!) {
-<<<<<<< Updated upstream
-    deleteUser(uid: $uid)
-=======
     deleteUser(uid: $uid) {
       uid
       firstName
       middleName
       lastName
     }
->>>>>>> Stashed changes
   }
 `;
