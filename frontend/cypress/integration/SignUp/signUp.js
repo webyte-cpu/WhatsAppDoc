@@ -1,11 +1,10 @@
 import {
-  After,
   And,
   Before,
   But,
   Given,
   Then,
-  When
+  When,
 } from 'cypress-cucumber-preprocessor/steps';
 import {
   fillFormFields,
@@ -60,9 +59,11 @@ And(
   }
 );
 
-And(`upload my photo`, () => {
-  uploadFile('[data-testid="addImgBtn"]', 'license-sample.png');
-  cy.get('[data-testid="noImgSelected"]').should("not.exist");
+And(`upload my photo: {string}`, (licenseImg) => {
+  if (licenseImg != '') {
+    uploadFile("[data-testid='addImgBtn']", licenseImg);
+    cy.get('[data-testid="noImgSelected"]').should("not.exist");
+  }
 });
 
 When(`I click sign up`, () => {
