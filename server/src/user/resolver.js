@@ -1,7 +1,15 @@
+<<<<<<< Updated upstream
 import __ from "lodash";
 import enums from "../helpers/enums/enums.js";
 import jwt from "jsonwebtoken";
 import user from "./user.js";
+=======
+import { ForbiddenError } from "apollo-server-errors";
+import enums from "../helpers/enums/enums.js";
+import jwt from "jsonwebtoken";
+import user from "./user.js";
+import __ from "lodash";
+>>>>>>> Stashed changes
 
 const resolverMap = {
   User: {
@@ -20,6 +28,7 @@ const resolverMap = {
   },
 
   Query: {
+<<<<<<< Updated upstream
     getUser: (obj, arg) => user.get(arg.uid),
     getAllUser: () => user.get(),
     viewer: (parent, arg, context) => {
@@ -28,25 +37,57 @@ const resolverMap = {
       }
       const { uid } = context.user;
       return user.get(uid);
+=======
+    getUser: async (obj, arg) => __.first(await user().get(arg.uid)),
+    getAllUser: () => user().get(),
+    viewer: (parent, arg, context) => {
+      if (__.isEmpty(context.user)) return null;
+      return context.user;
+>>>>>>> Stashed changes
     },
   },
 
   Mutation: {
     signUp: async (obj, arg, context) => {
+<<<<<<< Updated upstream
       const userResponse = await user.signUp(arg);
       return userResponse.uid;
     },
     signIn: async (obj, { email, password }) => {
       const payload = await user.check({ email, password });
+=======
+      if (arg?.role === enums.role.ADMIN && user?.role !== enums.role.ADMIN) {
+        throw new ForbiddenError("Not authorize to signUp an admin");
+      }
+
+      const payload = await user().signUp(arg);
+>>>>>>> Stashed changes
       return jwt.sign(payload, process.env.JWT_SECRET_KEY, {
         algorithm: "HS256",
         subject: payload.uid,
         expiresIn: "1d",
       });
     },
+<<<<<<< Updated upstream
     updateUser:()=>{
 
     }
+=======
+    signIn: async (obj, { email, password }) => {
+      const payload = await user().check({ email, password });
+      return jwt.sign(payload, process.env.JWT_SECRET_KEY, {
+        algorithm: "HS256",
+        subject: payload.uid,
+        expiresIn: "1d",
+      });
+    },
+    updateUser: (obj, arg) => {
+      return user().update(arg);
+    },
+    deleteUser: (obj, arg) => {
+      return user().delete(arg);
+    },
+>>>>>>> Stashed changes
   },
 };
 

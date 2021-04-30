@@ -1,9 +1,9 @@
-import "dotenv/config.js";
-import express from "express";
-import expressJwt from "express-jwt";
 import { ApolloServer } from "apollo-server-express";
-import typeDefs from "./rootTypeDef/typeDefs.js";
 import resolvers from "./rootResolver/resolver.js";
+import typeDefs from "./rootTypeDef/typeDefs.js";
+import expressJwt from "express-jwt";
+import express from "express";
+import "dotenv/config.js";
 
 const port = 4000;
 const app = express();

@@ -11,6 +11,11 @@ const seed = function (knex) {
           user_last_name: "Osunero",
           user_email: "kyle@webyte.org",
           user_password: "$3cR3tP4ss",
+<<<<<<< Updated upstream
+=======
+          user_birthdate: "1999-09-25",
+          user_sex: "MALE",
+>>>>>>> Stashed changes
           user_role: "ADMIN",
           created_at: new Date(Date.now()),
         },

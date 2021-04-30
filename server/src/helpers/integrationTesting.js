@@ -36,9 +36,13 @@ const cleanDb = () => {
     restartIdentity: true,
   };
   
+<<<<<<< Updated upstream
   knexCleaner.clean(pg, options).then(function () {
     console.log("your database is now clean");
   });
+=======
+  knexCleaner.clean(pg, options);
+>>>>>>> Stashed changes
 };
 
 export { constructTestServer, cleanDb };

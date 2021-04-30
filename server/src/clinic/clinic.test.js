@@ -1,3 +1,4 @@
+<<<<<<< Updated upstream
 import EasyGraphQLTester from 'easygraphql-tester'
 import fs from 'fs';
 import path from 'path';
@@ -195,8 +196,14 @@ describe("Test Queries and Mutations", () => {
   })
 
 })
+=======
+>>>>>>> Stashed changes
 describe('My work', () => {
     test('works', () => {
       expect(2).toEqual(2)
     })
+<<<<<<< Updated upstream
   })
+=======
+  })
+>>>>>>> Stashed changes
