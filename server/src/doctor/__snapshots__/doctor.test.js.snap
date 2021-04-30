@@ -1,0 +1,18 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Mutations verify doctors 1`] = `
+Object {
+  "data": Object {
+    "updateDoctor": null,
+  },
+  "errors": Array [
+    [GraphQLError: Unable to acquire a connection],
+  ],
+  "extensions": undefined,
+  "http": Object {
+    "headers": Headers {
+      Symbol(map): Object {},
+    },
+  },
+}
+`;
