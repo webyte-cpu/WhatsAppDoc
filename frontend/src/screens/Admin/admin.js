@@ -89,7 +89,7 @@ const Admin = () => {
 
     const doctors = data.getAllDoctor
 
-
+    console.log(data)
     const pendingList = doctors.filter(doctor => doctor.verificationStatus == 'PENDING')
     const verifiedList = doctors.filter(doctor => doctor.verificationStatus == 'VERIFIED')
     const unverifiedList = doctors.filter(doctor => doctor.verificationStatus == 'UNVERIFIED')

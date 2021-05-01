@@ -5,10 +5,14 @@ import { Platform } from 'react-native';
 
 // if (!process.env.EXPO_IP_ADDRESS) throw new Error('No expo ip provided');
 
+// const httpLink = createHttpLink({
+//   uri: `http://${
+//     Platform.OS === 'web' ? 'localhost' : process.env.EXPO_IP_ADDRESS
+//   }:4000/graphql`,
+// });
+
 const httpLink = createHttpLink({
-  uri: `http://${
-    Platform.OS === 'web' ? 'localhost' : process.env.EXPO_IP_ADDRESS
-  }:4000/graphql`,
+  uri: `http://localhost:4000/graphql`,
 });
 
 const authLink = setContext((_, { headers }) => {
