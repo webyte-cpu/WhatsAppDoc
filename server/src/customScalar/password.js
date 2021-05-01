@@ -26,7 +26,7 @@ const passwordScalar = new GraphQLScalarType({
   parseLiteral(ast) {
     const password = ast.value;
     //check password format
-    const isValid = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{6,}$/g.test(
+    const isValid = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})/g.test(
       password
     );
 

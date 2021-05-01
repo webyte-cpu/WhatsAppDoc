@@ -7,7 +7,7 @@ import "dotenv/config.js";
 
 const port = 4000;
 const app = express();
-app.use(
+app.use( // decode JWT Token, store in req.user
   expressJwt({
     secret: process.env.JWT_SECRET_KEY,
     algorithms: ["HS256"],

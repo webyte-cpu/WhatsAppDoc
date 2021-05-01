@@ -34,7 +34,7 @@ const user = gql`
   }
 
   extend type Query {
-    getUser(uid: UUID!): User!
+    getUser: User!
     getAllUser: [User!]
     viewer: User
   }
