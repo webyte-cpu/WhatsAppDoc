@@ -11,8 +11,8 @@ import {
   
   Before(() => {
     cy.visit('/login');
-    cy.get('[data-testid=email]').type('Clara50@hotmail.com')
-    cy.get('[data-testid=password]').type('pigUb80WORZF2Ul')
+    cy.get('[data-testid=email]').type('Rowland_Veum6@hotmail.com')
+    cy.get('[data-testid=password]').type('ZJw_BwW160ZUZI5!')
     cy.get('[data-testid=loginBtn]').click();
     cy.url().should('eq', Cypress.config().baseUrl + "/admin/admin");
   })

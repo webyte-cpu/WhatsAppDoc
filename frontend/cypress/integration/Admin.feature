@@ -20,8 +20,7 @@ Feature: Verify
     Then I will see "<name>" on "<changeStatus>" tabs
 
     Examples:
-      | name        | changeStatus |
-      | Francisco   | verify       |
-      | Ferne       | deny         |
-      | Kassandra   | verify       |
-      | Nettie      | verify       |
+      | name    | changeStatus |
+      | Laura   | verify       |
+      | Delia   | deny         |
+      | Naomi   | verify       |
