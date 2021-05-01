@@ -30,6 +30,15 @@ const DoctorForm = ({ navigation }) => {
   //     }
   //   },
   // });
+  const RESEND_REQUEST = gql`
+  mutation updateDoctor($uid:UUID!, $verificationStatus: VerificationStatus, licenceNum: String! ){
+      updateDoctor(uid: $uid , verificationStatus: $verificationStatus){
+        uid
+        verificationStatus
+        licenceNum
+      }
+  }
+`
 
   // const signup = (values) => {
   //   console.log(values);
