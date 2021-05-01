@@ -1,4 +1,4 @@
-import { ApolloError, UserInputError } from "apollo-server-errors";
+import { ApolloError, UserInputError, ValidationError } from "apollo-server-errors";
 import specialization from "../specialization/specialization.js";
 import objectFilter from "../helpers/objectFilter.js";
 import enums from "../helpers/enums/enums.js";
@@ -18,8 +18,8 @@ const user = (knex = pg) => {
       lastName: userData.user_last_name,
       email: userData.user_email,
       password: userData.user_password,
-      birthdate: userData.birthdate,
-      sex: userData.sex,
+      birthdate: userData.user_birthdate,
+      sex: userData.user_sex,
       address: userData.address,
       role: userData.user_role,
       img: userData.user_img,
@@ -99,6 +99,10 @@ const user = (knex = pg) => {
         .select("*")
         .from("users")
         .where(objectFilter(user().toDb(object)));
+
+      if(dbResponse.length === 0) {
+        throw new ValidationError('Email not found')
+      }
 
       return dbResponse.map((data) => user().fromDb(data));
     },
