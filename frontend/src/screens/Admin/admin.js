@@ -1,221 +1,97 @@
 import React, { useState } from 'react';
-import {
-    View,
-    ScrollView,
-    Button
-}
-    from 'react-native';
-import {
-    Text,
-    Tab,
-    TabView,
-    Icon,
-    List,
-    ListItem,
-    Divider
-}
-    from '@ui-kitten/components';
-import { useTheme } from '@ui-kitten/components'
+import { View, ScrollView } from 'react-native';
+import { Text, Tab, TabView, Icon, List, ListItem, Divider} from '@ui-kitten/components';
 import DoctorDetails from './verification'
-import { data } from './dummyDataAdmin'
-import { gql, useQuery, useMutation } from '@apollo/client';
-
-const GET_DOCTORS = gql`
-query {
-  getAllDoctor{
-    uid
-    userFirstName
-    verificationStatus  
-    about
-  }
-}
-    `;
-
-const UPDATE_DOCTOR = gql`
-    mutation updateDoctor($uid:UUID!, $verificationStatus: VerificationStatus ){
-        updateDoctor(uid: $uid , verificationStatus: $verificationStatus){
-            uid
-        }
-    }
-`
-
+import { useQuery } from '@apollo/client';
+import { GET_DOCTORS } from './queries'
 
 const profileIcon = (props) => <Icon {...props} name='person' />;
 const verifiedIcon = (props) => <Icon {...props} name='checkmark-circle-outline' />;
 const pendingIcon = (props) => <Icon {...props} name='clock-outline' />;
+const unverifiedIcon = (props) => <Icon {...props} name='close-outline' />;
 
-
-const updateDoctorStatus = (uidCode, verification) => {
-    updateDoctor({
-        variables: {
-            uid: uidCode,
-            verificationStatus: verification
-        }
-    });
-
-    if (errorMutate) {
-        console.log(errorMutate)
+const doctorStatus = (doctorVerificationStatus) => {
+    let bgColor;
+    switch (doctorVerificationStatus) {
+        case "PENDING" : 
+            bgColor = '#FFCD3F'
+            break;
+        case "VERIFIED" :
+            bgColor = '#B0D239'
+            break;
+        case "UNVERIFIED" :
+            bgColor = '#FF7661'
+            break;
+        default : break;
     }
+    return <Text category='s2' style={{ color: 'white', backgroundColor:bgColor, margin: 5 }}> {doctorVerificationStatus} </Text>;
 }
-
-
 
 const Admin = () => {
     const [selectedIndex, setSelectedIndex] = useState(0);
-    const [viewDoctor, setViewDoctor] = useState({})
+    const [doctorDetails, setDoctorDetails] = useState({})
     const [visible, setVisible] = useState(false);
-    const { loading, error, data } = useQuery(GET_DOCTORS);
+    const { loading, error, data } = useQuery( GET_DOCTORS, {pollInterval: 500} );
 
-    const [updateDoctor, { errorMutate }] = useMutation(UPDATE_DOCTOR)
     if (loading) return 'Loading...';
     if (error) return `Error! ${error.message}`;
 
+    const doctors = data.getDoctor
 
-    const updateDoctorStatus = (uidCode, verification) => {
-        updateDoctor({
-            variables: {
-                uid: uidCode,
-                verificationStatus: verification
-            }
-        });
-
-        if (errorMutate) {
-            console.log(errorMutate)
-        }
-    }
-
-
-
-
-    const doctors = data.getAllDoctor
-
-
-    const pendingList = doctors.filter(doctor => doctor.verificationStatus == 'PENDING')
-    const verifiedList = doctors.filter(doctor => doctor.verificationStatus == 'VERIFIED')
-    const unverifiedList = doctors.filter(doctor => doctor.verificationStatus == 'UNVERIFIED')
-
-
+    const filterByStatus = (verificationStatus) => doctors.filter(doctor => doctor.verificationStatus === verificationStatus)
+    
+    const handleClose = () => setVisible(false);
     const handleShow = (doctor) => {
         setVisible(true)
-        setViewDoctor(doctor)
+        setDoctorDetails(doctor)
     }
 
-    const theme = useTheme();
-
-    const detail = <Text category='s2' style={{ color: theme['color-primary-600'], marginRight: 10 }}> Details </Text>
-
-    // const renderItem = ({ item }) => (
-    //     <ListItem
-    //         title={`${item.userFirstName}`}
-    //         description={`${item.about}`}
-    //         accessoryLeft={profileIcon}
-    //         accessoryRight={() => item.verificationStatus == 'VERIFIED' ? <></> : detail}
-    //         onPress={() => handleShow(item)}
-    //     />
-    // );
+    const renderItem = ({ item }) => (
+        item === null ? <> </>
+            :
+            <ListItem
+                testID="doctorDetails"
+                title={`${item.firstName}`}
+                description={`${item.specialization[0]}`}
+                accessoryLeft={profileIcon}
+                accessoryRight={() => doctorStatus(item.verificationStatus)}
+                onPress={() => handleShow(item)}
+            />
+    );
 
     return (
-      <ScrollView
-      contentContainerStyle={{
-        backgroundColor: "white",
-        paddingTop: 10,
-        paddingHorizontal: 10,
-      }}
-    >
-        <Text testID="welcome-header" category="h1" style={{ marginBottom: 10 }}>
-          Welcome, {fname}
-        </Text>
-        <Divider/>
+        <ScrollView>
             <View>
-                {/* <TabView
-                    selectedIndex={selectedIndex}
-                    onSelect={index => setSelectedIndex(index)} >
-                    <Tab title='VERIFIED' icon={verifiedIcon} >
-                        {verifiedList.map(doctor => (
-                            
-                            <View key={doctor.uid}>
-                                <ListItem
-                                    title={`${doctor.userFirstName}`}
-                                    description={`${doctor.about}`}
-                                    accessoryLeft={profileIcon}
-                                    accessoryRight={() => doctor.verificationStatus == 'VERIFIED' ? <></> : detail}
-                                    // onPress={() => handleShow()}
-                                />
-
-                            </View>
-
-                        ))}
-
+                <TabView
+                selectedIndex={selectedIndex}
+                onSelect={index => setSelectedIndex(index)} >
+                    <Tab title='PENDING' icon={pendingIcon} testID="pendingTab">
+                        <List
+                            testID='pendingList'
+                            data={filterByStatus('PENDING')}
+                            ItemSeparatorComponent={Divider}
+                            renderItem={renderItem}
+                        />
                     </Tab>
-
+                    <Tab title='VERIFIED' icon={verifiedIcon} testID="verifiedTab">
+                        <List
+                            testID='verifiedList'
+                            data={filterByStatus('VERIFIED')}
+                            ItemSeparatorComponent={Divider}
+                            renderItem={renderItem}
+                        />
+                    </Tab>
+                    <Tab title='UNVERIFIED' icon={unverifiedIcon} testID="unverifiedTab">
+                        <List
+                            testID='unverifiedList'
+                            data={filterByStatus('UNVERIFIED')}
+                            ItemSeparatorComponent={Divider}
+                            renderItem={renderItem}
+                        />
+                    </Tab>
                 </TabView>
-                <DoctorDetails doctor={viewDoctor} isShown={visible} onHide={handleClose} /> */}
-
-                <Text>Verified</Text>
-                {verifiedList.map(doctor => (
-
-                    <View key={doctor.uid}>
-                        <ListItem
-                            title={`${doctor.userFirstName}`}
-                            description={`${doctor.about}`}
-                            accessoryLeft={profileIcon}
-                            accessoryRight={() => doctor.verificationStatus == 'VERIFIED' ? <></> : detail}
-
-                        // <Button
-                        // onPress={onPressLearnMore}
-                        // title="Learn More"
-                        // color="#841584"
-                        // accessibilityLabel="Learn more about this purple button"
-                        // />
-
-
-                        />
-
-
-
-                <Button onPress={() => updateDoctorStatus(doctor.uid, 'PENDING')} title="move to pending"/>
-                    </View>
-
-                ))}
-
-                <Text>Unverified</Text>
-
-                {unverifiedList.map(doctor => (
-
-                    <View key={doctor.uid}>
-                        <ListItem
-                            title={`${doctor.userFirstName}`}
-                            description={`${doctor.about}`}
-                            accessoryLeft={profileIcon}
-                            accessoryRight={() => doctor.verificationStatus == 'UNVERIFIED' ? <></> : detail}
-                        // onPress={() => handleShow()}
-                        />
-                        <Button onPress={() => updateDoctorStatus(doctor.uid, 'VERIFIED')} title="move to verified"/>
-                    </View>
-
-                ))}
-
-                <Text>Pending</Text>
-
-                {pendingList.map(doctor => (
-
-                    <View key={doctor.uid}>
-                        <ListItem
-                            title={`${doctor.userFirstName}`}
-                            description={`${doctor.about}`}
-                            accessoryLeft={profileIcon}
-                            accessoryRight={() => doctor.verificationStatus == 'PENDING' ? <></> : detail}
-                        // onPress={() => handleShow()}
-                        />
-
-                        <Button onPress={() => updateDoctorStatus(doctor.uid, 'UNVERIFIED')} title="REJECT"/>
-                    </View>
-
-                ))}
-
+                <DoctorDetails doctor={doctorDetails} isShown={visible} onHide={handleClose} />
             </View>
-
-
         </ScrollView>
     );
 };
