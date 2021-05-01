@@ -81,7 +81,7 @@ const user = (knex = pg) => {
           return response.user;
         } catch (error) {
           console.log(error);
-
+          
           let errorCode = "";
 
           switch (error.code) {
@@ -139,8 +139,10 @@ const user = (knex = pg) => {
       const userData = dbResponse[0];
       const match = await bcrypt.compare(password, userData.password);
       delete userData.password;
+
       if (match) return userData;
-      throw new ValidationError("Invalid password!");
+
+      throw new ApolloError("Invalid Email or Password.", "VALIDATION_ERROR");
     },
 
     get: async (uid) => {

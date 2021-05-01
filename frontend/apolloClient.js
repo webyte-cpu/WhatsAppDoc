@@ -22,11 +22,13 @@ const authLink = setContext((_, { headers }) => {
 });
 
 const client = new ApolloClient({
-  link: authLink.concat(httpLink),
+  uri: `http://${
+    Platform.OS === 'web' ? 'localhost' : process.env.EXPO_IP_ADDRESS
+  }:4000/graphql`,
   cache: new InMemoryCache(),
   fetchOptions: {
-    mode: 'no-cors'
-  }
+    mode: 'no-cors',
+  },
 });
 
 export default client;
