@@ -1,17 +1,5 @@
 import React, { useState } from 'react';
-import {
-  View,
-  StyleSheet,
-  ImageBackground,
-  Platform,
-  ScrollView,
-} from 'react-native';
-import { Button, Text, useTheme } from '@ui-kitten/components';
-import SignUpDoctor from './signUpDoctor';
-import customStyle from '../../../themes/styles';
-import { useAuth } from './utils/authProvider';
-import enums from '../../../helpers/enums';
-import { Formik } from 'formik';
+import { View, StyleSheet, ImageBackground, Platform } from 'react-native';
 import {
   userSignUpSchema,
   doctorSignUpSchema,
@@ -23,7 +11,17 @@ import {
   NameFields,
   SexField,
 } from '../../components/fields';
+import { Button, Text, useTheme } from '@ui-kitten/components';
+import { useAuth } from './utils/authProvider';
+import { Formik } from 'formik';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import { useMutation } from '@apollo/client';
+import { SIGNUP_MUTATION } from './utils/queries';
+import { formatDate } from './utils/formatters';
+import LoadingScreen from '../../components/loadingScreen';
+import SignUpDoctor from './signUpDoctor';
+import customStyle from '../../../themes/styles';
+import enums from '../../../helpers/enums';
 
 const ROLE = enums.role;
 
@@ -47,16 +45,51 @@ const SignupScreen = ({ navigation }) => {
     sex: '',
     birthdate: '',
   };
-
   const [signUpDetails, setSignUpDetails] = useState(userDetails);
   const signUpSchema =
     signUpDetails.role === ROLE.PATIENT
       ? userSignUpSchema
       : userSignUpSchema.concat(doctorSignUpSchema);
 
+  const [signUpUser, { loading, error }] = useMutation(SIGNUP_MUTATION, {
+    onCompleted({ signUp: token }) {
+      if (token) {
+        console.log(token);
+        auth.login(token);
+      }
+    },
+  });
+
   const signup = (values) => {
     console.log(values);
-    return auth.signup(values);
+    console.log(values.licenseImg);
+
+    const doctor =
+      values.role === ROLE.DOCTOR
+        ? {
+            doctor: {
+              licenceNum: values.licenseNum,
+              licenceImg: values.licenseImg,
+              licenceExp: formatDate(values.expirationDate),
+              specialization: values.specialization,
+              verificationStatus: values.verificationStatus,
+            },
+          }
+        : {};
+
+    return signUpUser({
+      variables: {
+        firstName: values.fname,
+        middleName: values.midName,
+        lastName: values.lname,
+        email: values.email,
+        password: values.password,
+        role: values.role,
+        sex: values.sex,
+        birthdate: formatDate(values.birthdate),
+        ...doctor,
+      },
+    });
   };
 
   const changeRole = (role) => {
@@ -105,7 +138,7 @@ const SignupScreen = ({ navigation }) => {
   };
 
   const SignUpForm = () => (
-    <>
+    <View>
       <View style={customStyle.content}>
         <Text style={styles.subtitle} category="h4">
           Choose Account Type
@@ -130,7 +163,13 @@ const SignupScreen = ({ navigation }) => {
 
               <NameFields />
               <SexField {...props} />
-              <DateField {...props} name="birthdate" label="Birthdate" testID="birthdate" max={new Date()} />
+              <DateField
+                {...props}
+                name="birthdate"
+                label="Birthdate"
+                testID="birthdate"
+                max={new Date()}
+              />
 
               {props.values.role === ROLE.DOCTOR ? (
                 <SignUpDoctor {...props} />
@@ -148,15 +187,24 @@ const SignupScreen = ({ navigation }) => {
           </>
         )}
       </Formik>
-    </>
+    </View>
   );
 
+  if (loading) {
+    return <LoadingScreen />;
+  }
+
+  if (error) {
+    console.log(error);
+    return <Text>Error!</Text>;
+  }
+
   return (
-    <>
-      <KeyboardAwareScrollView style={{ backgroundColor: theme['color-primary-500'] }}>
-        <SignUpForm />
-      </KeyboardAwareScrollView>
-    </>
+    <KeyboardAwareScrollView
+      style={{ backgroundColor: theme['color-primary-500'] }}
+    >
+      <SignUpForm />
+    </KeyboardAwareScrollView>
   );
 };
 
@@ -186,7 +234,6 @@ const styles = StyleSheet.create({
   },
   form: {
     flex: 1,
-    width: '100%',
     padding: 30,
     backgroundColor: 'white',
     borderTopLeftRadius: 50,

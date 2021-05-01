@@ -24,9 +24,9 @@ const GET_DOCTORS = gql`
 query {
   getAllDoctor{
     uid
-    userFirstName
-    verificationStatus  
-    about
+    firstName
+   	lastName
+    verificationStatus
   }
 }
     `;
@@ -115,17 +115,17 @@ const Admin = () => {
     // );
 
     return (
-      <ScrollView
-      contentContainerStyle={{
-        backgroundColor: "white",
-        paddingTop: 10,
-        paddingHorizontal: 10,
-      }}
-    >
-        <Text testID="welcome-header" category="h1" style={{ marginBottom: 10 }}>
-          Welcome, {fname}
-        </Text>
-        <Divider/>
+        <ScrollView
+            contentContainerStyle={{
+                backgroundColor: "white",
+                paddingTop: 10,
+                paddingHorizontal: 10,
+            }}
+        >
+            {/* <Text testID="welcome-header" category="h1" style={{ marginBottom: 10 }}>
+                Welcome, {fname}
+            </Text> */}
+            <Divider />
             <View>
                 {/* <TabView
                     selectedIndex={selectedIndex}
@@ -156,8 +156,8 @@ const Admin = () => {
 
                     <View key={doctor.uid}>
                         <ListItem
-                            title={`${doctor.userFirstName}`}
-                            description={`${doctor.about}`}
+                            title={`${doctor.firstName}`}
+                            description={`${doctor.verificationStatus}`}
                             accessoryLeft={profileIcon}
                             accessoryRight={() => doctor.verificationStatus == 'VERIFIED' ? <></> : detail}
 
@@ -173,7 +173,7 @@ const Admin = () => {
 
 
 
-                <Button onPress={() => updateDoctorStatus(doctor.uid, 'PENDING')} title="move to pending"/>
+                        <Button onPress={() => updateDoctorStatus(doctor.uid, 'PENDING')} title="move to pending" />
                     </View>
 
                 ))}
@@ -184,13 +184,13 @@ const Admin = () => {
 
                     <View key={doctor.uid}>
                         <ListItem
-                            title={`${doctor.userFirstName}`}
-                            description={`${doctor.about}`}
+                            title={`${doctor.firstName}`}
+                            description={`${doctor.verificationStatus}`}
                             accessoryLeft={profileIcon}
                             accessoryRight={() => doctor.verificationStatus == 'UNVERIFIED' ? <></> : detail}
                         // onPress={() => handleShow()}
                         />
-                        <Button onPress={() => updateDoctorStatus(doctor.uid, 'VERIFIED')} title="move to verified"/>
+                        <Button onPress={() => updateDoctorStatus(doctor.uid, 'VERIFIED')} title="move to verified" />
                     </View>
 
                 ))}
@@ -201,14 +201,14 @@ const Admin = () => {
 
                     <View key={doctor.uid}>
                         <ListItem
-                            title={`${doctor.userFirstName}`}
-                            description={`${doctor.about}`}
+                            title={`${doctor.firstName}`}
+                            description={`${doctor.verificationStatus}`}
                             accessoryLeft={profileIcon}
                             accessoryRight={() => doctor.verificationStatus == 'PENDING' ? <></> : detail}
                         // onPress={() => handleShow()}
                         />
 
-                        <Button onPress={() => updateDoctorStatus(doctor.uid, 'UNVERIFIED')} title="REJECT"/>
+                        <Button onPress={() => updateDoctorStatus(doctor.uid, 'UNVERIFIED')} title="REJECT" />
                     </View>
 
                 ))}

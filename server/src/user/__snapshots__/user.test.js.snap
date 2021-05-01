@@ -1,5 +1,20 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`Queries deletes the user 1`] = `
+Object {
+  "data": null,
+  "errors": Array [
+    [GraphQLError: delete from "users" where "user_uid" = $1 returning * - invalid input syntax for type uuid: "{"uid":"8b686839-4c94-48ac-ac51-86d36b7bf17c"}"],
+  ],
+  "extensions": undefined,
+  "http": Object {
+    "headers": Headers {
+      Symbol(map): Object {},
+    },
+  },
+}
+`;
+
 exports[`Queries fetches single user 1`] = `
 Object {
   "data": null,
@@ -17,10 +32,9 @@ Object {
 
 exports[`Queries it signs up user 1`] = `
 Object {
-  "data": undefined,
+  "data": null,
   "errors": Array [
-    [ValidationError: Field "signUp" argument "sex" of type "Sex!" is required, but it was not provided.],
-    [ValidationError: Field "signUp" argument "birthdate" of type "Date!" is required, but it was not provided.],
+    [GraphQLError: insert into "users" ("created_at", "user_birthdate", "user_email", "user_first_name", "user_last_name", "user_password", "user_role", "user_sex", "user_uid") values ($1, $2, $3, $4, $5, $6, $7, $8, $9) returning * - duplicate key value violates unique constraint "users_user_email_unique"],
   ],
   "extensions": undefined,
   "http": Object {
@@ -31,33 +45,11 @@ Object {
 }
 `;
 
-exports[`Quieries fetches single user 1`] = `
-Object {
-  "data": Object {
-    "getUser": Object {
-      "email": "kyle@webyte.org",
-      "firstName": "Kyle",
-      "lastName": "Osunero",
-      "role": "ADMIN",
-      "uid": "8b686839-4c94-48ac-ac51-86d36b7bf17c",
-      "updatedAt": null,
-    },
-  },
-  "errors": undefined,
-  "extensions": undefined,
-  "http": Object {
-    "headers": Headers {
-      Symbol(map): Object {},
-    },
-  },
-}
-`;
-
-exports[`Quieries it signs uo user 1`] = `
+exports[`Queries updates the user 1`] = `
 Object {
   "data": null,
   "errors": Array [
-    [GraphQLError: insert into "users" ("created_at", "user_email", "user_first_name", "user_last_name", "user_password", "user_role", "user_uid") values ($1, $2, $3, $4, $5, $6, $7) returning * - duplicate key value violates unique constraint "users_user_email_unique"],
+    [GraphQLError: Cannot read property 'user_uid' of undefined],
   ],
   "extensions": undefined,
   "http": Object {

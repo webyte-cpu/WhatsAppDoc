@@ -54,17 +54,19 @@ const user = gql`
     ): JWT!
 
     updateUser(
+      uid: UUID!
       firstName: String
-      MiddleName: String
+      middleName: String
       lastName: String
       password: Password
       sex: Sex
       birthdate: Date
       address: AddressInput
       img: String
-    ): UUID
+      role: Role
+    ): User!
 
-    deleteUser(uid: UUID!): Int!
+    deleteUser(uid: UUID!): User!
 
     signIn(email: EmailAddress!, password: Password!): JWT!
   }

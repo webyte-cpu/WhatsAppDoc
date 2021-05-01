@@ -3,7 +3,7 @@
  */
 
 const AppRoute = {
-  LOGIN: 'Login',
+  SIGNIN: 'SignIn',
   SIGNUP: 'Signup',
   FORGOT_PASS: 'ForgotPass',
   HOME: 'Home',
