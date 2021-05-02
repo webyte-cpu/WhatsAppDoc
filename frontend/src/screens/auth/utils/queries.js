@@ -31,17 +31,3 @@ export const SIGNUP_MUTATION = gql`
     )
   }
 `;
-
-export const GET_USER = gql`
-    query getUser {
-      getUser {
-        firstName
-        middleName
-        lastName
-        role
-        ... on Doctor {
-          verificationStatus
-        }
-      }
-    }
-  `;
