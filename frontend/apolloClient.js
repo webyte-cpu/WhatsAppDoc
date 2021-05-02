@@ -5,7 +5,7 @@ import { getData } from "./src/screens/auth/utils/handleData";
 
 if (!process.env.EXPO_IP_ADDRESS && Platform.OS !== 'web') throw new Error("No expo ip provided");
 
-const httpLink = createHttpLink({
+const client = new ApolloClient({
   uri: `http://${
     Platform.OS === "web" ? "localhost" : process.env.EXPO_IP_ADDRESS
   }:4000/graphql`,
