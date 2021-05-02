@@ -25,7 +25,6 @@ const SignInScreen = ({ navigation }) => {
     ignoreResults: false,
     onCompleted({ signIn: token }) {
       if (token) {
-        console.log(token);
         auth.login(token);
       }
     },
@@ -37,7 +36,6 @@ const SignInScreen = ({ navigation }) => {
   });
 
   const login = ({ email, password }) => {
-    console.log(email, password);
     return signInUser({
       variables: {
         email: email,
