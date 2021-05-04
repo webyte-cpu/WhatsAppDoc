@@ -1,4 +1,6 @@
 import React from "react";
+import { View } from 'react-native';
+import { Card, Text, Button } from '@ui-kitten/components';
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { NavigationContainer } from "@react-navigation/native";
 import { useFonts } from "expo-font";
@@ -10,6 +12,7 @@ import AdminDrawerStack from "./navigatorStacks/adminStack";
 import UserDrawerStack from "./navigatorStacks/userDrawer";
 import enums from "../../helpers/enums";
 import LoadingScreen from "../components/loadingScreen";
+import Banner from "../components/banner";
 
 const linking = {
   config: {
@@ -30,12 +33,16 @@ const linking = {
 const AppNavigator = () => {
   const { appState } = useAuth();
   const [fontsLoaded] = useFonts(customFonts);
+  const auth = useAuth()
 
   if (appState.isLoading) {
     return <AppLoading />;
   }
 
   return (
+    <>
+    { auth.gqlError.msg !==  '' ? <Banner status='danger' message={auth.gqlError.msg}/> : <></>}
+        
     <SafeAreaProvider>
       <NavigationContainer linking={linking}>
         {appState.user == null ? (
@@ -47,6 +54,7 @@ const AppNavigator = () => {
         )}
       </NavigationContainer>
     </SafeAreaProvider>
+    </>
   );
 };
 
