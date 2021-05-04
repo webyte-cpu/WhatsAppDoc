@@ -51,8 +51,13 @@ const resolverMap = {
       });
     },
     signIn: async (obj, { email, password }) => {
+      console.log(email, password);
       const result = await user().check({ email, password });
-      const payload = { uid: result.uid, role: result.role };
+      const payload = {
+        uid: result.uid,
+        role: result.role,
+        verificationStatus: result.verificationStatus,
+      };
       return jwt.sign(payload, process.env.JWT_SECRET_KEY, {
         algorithm: "HS256",
         expiresIn: "1d",

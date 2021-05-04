@@ -1,4 +1,8 @@
-import { ApolloError, UserInputError, ValidationError } from "apollo-server-errors";
+import {
+  ApolloError,
+  UserInputError,
+  ValidationError,
+} from "apollo-server-errors";
 import specialization from "../specialization/specialization.js";
 import objectFilter from "../helpers/objectFilter.js";
 import enums from "../helpers/enums/enums.js";
@@ -81,7 +85,7 @@ const user = (knex = pg) => {
           return response.user;
         } catch (error) {
           console.log(error);
-          
+
           let errorCode = "";
 
           switch (error.code) {
@@ -94,18 +98,23 @@ const user = (knex = pg) => {
         }
       });
     },
-    find: async (object) => {
-      const dbResponse = await knex
-        .select("*")
-        .from("users")
-        .where(objectFilter(user().toDb(object)));
+    find: async (object) =>
+      knex.transaction(async (trx) => {
+        const dbResponse = await trx
+          .select("*")
+          .from("users")
+          .where(objectFilter(user().toDb(object)))
+          .leftJoin("doctors", "doctor_uid", "user_uid")
+          .leftJoin("patients", "patient_uid", "user_uid");
 
-      if(dbResponse.length === 0) {
-        throw new ValidationError('Email not found')
-      }
+        const data = dbResponse.map((data) => ({
+          ...user().fromDb(data),
+          ...doctor().fromDb(data),
+          ...patient().fromDb(data),
+        }));
 
-      return dbResponse.map((data) => user().fromDb(data));
-    },
+        return data;
+      }),
 
     create: async (userData) => {
       userData.uid = userData.uid || uuidV4();
@@ -137,6 +146,11 @@ const user = (knex = pg) => {
     check: async ({ email, password }) => {
       const dbResponse = await user().find({ email });
       const userData = dbResponse[0];
+
+      if (__.isEmpty(userData)) {
+        throw new ValidationError("Email not found");
+      }
+      
       const match = await bcrypt.compare(password, userData.password);
       delete userData.password;
 

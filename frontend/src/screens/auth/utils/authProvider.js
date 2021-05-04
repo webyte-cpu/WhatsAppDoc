@@ -4,63 +4,81 @@ import React, {
   useMemo,
   useEffect,
   useContext,
-} from 'react';
-import { getData } from './handleData';
-import { loginUser, logoutUser, signupUser } from './authMethods';
-import ACTIONS from './actions';
+} from "react";
+import { getData, removeData, storeData } from "./handleData";
+//import { loginUser, logoutUser } from "./authMethods";
+import ACTIONS from "./actions";
+import { gql, useQuery } from "@apollo/client";
+import { GET_USER } from "./queries";
+import jwt_decode from "jwt-decode";
 
-const initialState = {
-  isLoading: true,
-  token: null,
+const initial = {
+  appState: {
+    isLoading: true,
+    user: null,
+  },
+  gqlError: { msg: "" }, // TODO: handle error
 };
 
-const reducer = (initialState, action) => {
+const AuthContext = createContext(initial);
+
+const reducer = (initial, action) => {
   switch (action.type) {
     case ACTIONS.LOGIN:
       return {
-        ...initialState,
-        token: action.payload.token,
+        ...initial,
+        appState: {
+          ...initial.appState,
+          user: action.payload.user,
+        },
       };
     case ACTIONS.LOGOUT:
       return {
-        ...initialState,
-        token: null,
+        ...initial,
+        appState: {
+          ...initial.appState,
+          user: null,
+        },
       };
     case ACTIONS.RETRIEVE:
       return {
-        ...initialState,
-        token: action.payload.token,
-        isLoading: false,
+        ...initial,
+        appState: {
+          isLoading: false,
+          user: action.payload.user,
+        },
       };
     default:
       throw new Error(`Invalid action type: ${action.type}`);
   }
 };
 
-const AuthContext = createContext();
-
 const useProvideAuth = () => {
-  const [state, dispatch] = useReducer(reducer, initialState);
+  const [state, dispatch] = useReducer(reducer, initial);
 
-  // retrieve on first open of app
-  useEffect(() => { // TODO : change user persist
-    const bootstrapAsync = async () => {
-      const token = await getData('token');
-      dispatch({ type: ACTIONS.RETRIEVE, payload: { token } });
+  useEffect(() => {
+    const retrieveToken = async () => {
+      let user = null;
+      const token = await getData("token");
+      if (token) {
+        user = jwt_decode(token);
+      }
+      dispatch({ type: ACTIONS.RETRIEVE, payload: { user } });
     };
 
-    bootstrapAsync();
-    // dispatch({ type: ACTIONS.LOGOUT })
+    retrieveToken();
   }, []);
 
-  const { login, logout } = useMemo(
-    () => ({
-      login: async (token) => loginUser(dispatch, token),
-      logout: async () => logoutUser(dispatch),
-      // signup: async (userData) => signupUser(dispatch, userData),
-    }),
-    []
-  );
+  const login = async (token) => {
+    await storeData("token", token);
+    const user = jwt_decode(token);
+    dispatch({ type: ACTIONS.LOGIN, payload: { user } });
+  };
+
+  const logout = async () => {
+    await removeData("token");
+    dispatch({ type: ACTIONS.LOGOUT });
+  };
 
   return { ...state, login, logout };
 };

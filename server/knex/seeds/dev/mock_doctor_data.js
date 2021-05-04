@@ -6,7 +6,7 @@ const seed = function (knex) {
       // Inserts seed entries
       return knex('doctors').insert([
         {
-          doctor_uid: 'df5c43b9-37e5-4af5-bc9e-a7484607d8ff',
+          doctor_uid: '0353121f-eeed-4687-8676-f788d3e9c8e6',
           doctor_licence_num: '1234567',
           doctor_verification_status: 'PENDING',
           doctor_licence_img:
@@ -14,7 +14,7 @@ const seed = function (knex) {
           doctor_licence_exp: '2022-10-28',
         },
         {
-          doctor_uid: '5f2192b0-0e3a-4c77-9593-33f3f27ec441',
+          doctor_uid: '3a238cae-f2af-4d4b-bb34-252215b5272e',
           doctor_licence_num: '0483958',
           doctor_verification_status: 'PENDING',
           doctor_licence_img:
@@ -22,17 +22,25 @@ const seed = function (knex) {
           doctor_licence_exp: '2021-12-12',
         },
         {
-          doctor_uid: '405e9a6c-ed50-448b-b8c8-a769edab51f4',
+          doctor_uid: '0a1bcc04-a748-4669-a4c2-fced1bccc0b2',
           doctor_licence_num: '5844731',
-          doctor_verification_status: 'PENDING',
+          doctor_verification_status: 'UNVERIFIED',
           doctor_licence_img:
             'http://newstogov.com/wp-content/uploads/2019/10/prc1.jpg',
           doctor_licence_exp: '2023-01-09',
         },
         {
-          doctor_uid: '67b769a5-25e7-4da4-b9b6-28435e4a06ea',
+          doctor_uid: '31e7e881-4b37-4cee-80f9-4ab32a25773d',
           doctor_licence_num: '1206496',
           doctor_verification_status: 'PENDING',
+          doctor_licence_img:
+            'http://newstogov.com/wp-content/uploads/2019/10/prc1.jpg',
+          doctor_licence_exp: '2025-01-09',
+        },
+        {
+          doctor_uid: '0e890190-1559-4edd-a0f5-3c61073fe576',
+          doctor_licence_num: '6423463',
+          doctor_verification_status: 'VERIFIED',
           doctor_licence_img:
             'http://newstogov.com/wp-content/uploads/2019/10/prc1.jpg',
           doctor_licence_exp: '2022-05-09',

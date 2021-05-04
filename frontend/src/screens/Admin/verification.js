@@ -1,24 +1,13 @@
 import React from 'react';
-import {
-    StyleSheet,
-    View,
-    Image,
-    Platform,
-    Linking,
-}
-    from 'react-native';
-import {
-    Button,
-    Card,
-    Modal,
-    Text,
-}
-    from '@ui-kitten/components';
+import { StyleSheet, View, Image, Platform, Linking }from 'react-native';
+import { Button, Card, Modal, Text,}from '@ui-kitten/components';
+import { useMutation } from '@apollo/client';
+import { UPDATE_DOCTOR } from './queries'
 
 const openLink =(url) => { Platform.OS == 'web' ? window.open(url) : Linking.openURL(url) }
-
-const verifyLicenseBtn = (
+const linkToPRC = (
     <Button
+    testID="linkPRCBtn"
     status='danger'
     style={{marginTop:20}}         
     size='medium' 
@@ -29,35 +18,64 @@ const verifyLicenseBtn = (
 )
 
 const DoctorDetails = ({ doctor, isShown, onHide }) => {
+    const [updateDoctor, { errorMutate }] = useMutation(UPDATE_DOCTOR)
+    const updateDoctorStatus = (uidCode, verification) => {
+        updateDoctor({
+            variables: {
+                uid: uidCode,
+                verificationStatus: verification
+            }
+        });
+
+        if (errorMutate) {
+            console.log(errorMutate)
+        }
+    }
+    
+    const verifyBtn = () => {
+        updateDoctorStatus(doctor.uid, 'VERIFIED')
+        onHide()
+    }
+    const denyBtn = () => {
+        updateDoctorStatus(doctor.uid, 'UNVERIFIED')
+        onHide()
+    }
+
+    let color;
+    doctor.verificationStatus === 'PENDING' ? color='#FFCD3F' : doctor.verificationStatus === 'VERIFIED' ? color='#B0D239' : color = '#FF7661';
 
     const Header = (props) => (
-        <View {...props}>
-            <Text category='h6'>{doctor.name}</Text>
-            <Text category='s2'>{doctor.specialization}</Text>
+        <View {...props} style={{backgroundColor:color, padding:15}}>
+            <Text category='h6'>{doctor.firstName}</Text>
+            <Text category='s2'>{doctor.specialization[0]}</Text>
         </View>
     )
-
     const Footer = (props) => (
-        doctor.verification == 'Verified' 
+        doctor.verificationStatus === 'PENDING' 
         ? 
-            <></> 
-        :
             <View {...props} style={styles.buttons}>
                 <Button 
+                testID="denyBtn"
                 style={styles.button}
-                onPress={onHide}>
+                onPress={denyBtn}>
                     Deny
                 </Button>
                 <Button 
+                testID="verifyBtn"
                 style={styles.button} 
-                onPress={onHide}>
+                onPress={verifyBtn}>
                     Verify
                 </Button>
             </View>
+        // : <></>
+        : <View {...props} style={styles.buttons}>
+            <Button onPress={() => updateDoctorStatus(doctor.uid,'PENDING')}>Go to pending</Button>
+        </View>
     )
 
     return (
         <Modal
+        testID="doctorInformation"
         style={styles.container}
         visible={isShown}
         backdropStyle={styles.backdrop}
@@ -69,9 +87,15 @@ const DoctorDetails = ({ doctor, isShown, onHide }) => {
                 <Text category='s1'>License Card Information </Text>
                 <Image style={styles.image} source={{ uri: 'http://newstogov.com/wp-content/uploads/2019/10/prc1.jpg' }} />
                 <Text category='s1'>Birthdate: 
-                    <Text> {doctor.birthdate}</Text>
+                    {/* <Text> {doctor.birthdate}</Text> */}
                 </Text>
-                {verifyLicenseBtn}
+                <Text category='s1'>License Number: 
+                    <Text> {doctor.licenceNum}</Text>
+                </Text>
+                <Text category='s1'>License Expiration Date: 
+                    <Text> {doctor.licenceExp}</Text>
+                </Text>
+                {linkToPRC}
             </Card>
         </Modal>
     );
