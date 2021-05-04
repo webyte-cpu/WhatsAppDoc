@@ -1,5 +1,7 @@
+import React from "react";
 import {
   ApolloClient,
+  ApolloProvider,
   ApolloLink,
   HttpLink,
   InMemoryCache,
@@ -8,36 +10,56 @@ import { getData } from "./src/screens/auth/utils/handleData";
 import { setContext } from "@apollo/client/link/context";
 import { onError } from "@apollo/client/link/error";
 import { Platform } from "react-native";
+import { useAuth } from "./src/screens/auth/utils/authProvider";
 
 if (!process.env.EXPO_IP_ADDRESS && Platform.OS !== "web")
   throw new Error("No expo ip provided");
 
-const httpLink = new HttpLink({
-  uri: `http://${
-    Platform.OS === "web" ? "localhost" : process.env.EXPO_IP_ADDRESS
-  }:4000/graphql`,
-});
+const ApolloClientProvider = ({ children }) => {
+  const auth = useAuth();
 
-const errorLink = onError(({ graphQLErrors, networkError }) => {
-  if (graphQLErrors) {
-    graphQLErrors.map(({ message, locations, path }) =>
-      console.log(`GraphQL Error: ${message}`)
-    );
-  }
-  if (networkError) {
-    console.log(`Network Error: ${networkError.message}`);
-  }
-});
+  const httpLink = new HttpLink({
+    uri: `http://${
+      Platform.OS === "web" ? "localhost" : process.env.EXPO_IP_ADDRESS
+    }:4000/graphql`,
+  });
 
-const authLink = setContext((_, { headers }) => {
-  const token = getData("token");
-  headers.authorization = token ? `Bearer ${token}` : "";
-  return { headers };
-});
+  const errorLink = onError(({ graphQLErrors, networkError }) => {
+    // if (graphQLErrors) {
+    //   graphQLErrors.map(({ extensions }) => {
+    //     switch (extensions.code) {
+    //       case "VALIDATION_ERROR": {
+    //         auth.setGQLErr("Invalid email/password");
+    //         break;
+    //       }
+    //       default: {
+    //         console.error("Error code not supported");
+    //       }
+    //     }
+    //   });
+    // }
+    if (networkError) {
+      auth.setGQLErr("No internet connection");
+      console.error(`Network Error: ${networkError.message}`);
+    }
+  });
 
+  const authLink = setContext(async (_, { headers }) => {
+    const token = await getData("token");
+    return {
+      headers: {
+        ...headers,
+        Authorization: token ? `Bearer ${token}` : "",
+      },
+    };
+  });
 
-const client = new ApolloClient({
-  link: { ...authLink, ...errorLink, ...httpLink },
-  cache: new InMemoryCache(),
-});
-export default client;
+  const client = new ApolloClient({
+    link: ApolloLink.from([errorLink, authLink, httpLink]),
+    cache: new InMemoryCache(),
+  });
+
+  return <ApolloProvider client={client}>{children}</ApolloProvider>;
+};
+
+export default ApolloClientProvider;

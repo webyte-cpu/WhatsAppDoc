@@ -1,15 +1,6 @@
-import React, {
-  createContext,
-  useReducer,
-  useMemo,
-  useEffect,
-  useContext,
-} from "react";
+import React, { createContext, useReducer, useEffect, useContext } from "react";
 import { getData, removeData, storeData } from "./handleData";
-//import { loginUser, logoutUser } from "./authMethods";
 import ACTIONS from "./actions";
-import { gql, useQuery } from "@apollo/client";
-import { GET_USER } from "./queries";
 import jwt_decode from "jwt-decode";
 
 const initial = {
@@ -17,7 +8,7 @@ const initial = {
     isLoading: true,
     user: null,
   },
-  gqlError: { msg: "" }, // TODO: handle error
+  gqlError: { msg: "" },
 };
 
 const AuthContext = createContext(initial);
@@ -46,6 +37,13 @@ const reducer = (initial, action) => {
         appState: {
           isLoading: false,
           user: action.payload.user,
+        },
+      };
+    case ACTIONS.SET_GQL_ERR:
+      return {
+        ...initial,
+        gqlError: {
+          msg: action.payload.gqlError,
         },
       };
     default:
@@ -80,8 +78,14 @@ const useProvideAuth = () => {
     dispatch({ type: ACTIONS.LOGOUT });
   };
 
-  return { ...state, login, logout };
+  const setGQLErr = (gqlError) => {
+    dispatch({ type: ACTIONS.SET_GQL_ERR, payload: { gqlError } });
+  };
+
+  return { ...state, login, logout, setGQLErr };
 };
+
+const useAuth = () => useContext(AuthContext);
 
 const AuthProvider = ({ children }) => {
   const authContext = useProvideAuth();
@@ -89,7 +93,5 @@ const AuthProvider = ({ children }) => {
     <AuthContext.Provider value={authContext}>{children}</AuthContext.Provider>
   );
 };
-
-const useAuth = () => useContext(AuthContext);
 
 export { AuthProvider, useAuth };

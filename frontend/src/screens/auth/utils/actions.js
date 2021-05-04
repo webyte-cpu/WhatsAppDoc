@@ -3,7 +3,8 @@
 const ACTIONS = {
   LOGIN: 'login',
   LOGOUT: 'logout',
-  RETRIEVE: 'retrieve'
+  RETRIEVE: 'retrieve',
+  SET_GQL_ERR: 'set_gql_err'
 };
 
 export default ACTIONS;
