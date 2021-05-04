@@ -49,8 +49,7 @@
     "@babel/core": "~7.9.0",
     "@expo/webpack-config": "^0.12.63",
     "cypress-cucumber-preprocessor": "^4.0.3",
-    "cypress-file-upload": "^5.0.6",
-    "cypress": "3.0.0"
+    "cypress-file-upload": "^5.0.6"
   },
   "cypress-cucumber-preprocessor": {
     "nonGlobalStepDefinitions": true
