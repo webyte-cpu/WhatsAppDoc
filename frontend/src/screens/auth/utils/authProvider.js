@@ -6,7 +6,7 @@ import React, {
   useContext,
 } from "react";
 import { getData, removeData, storeData } from "./handleData";
-import { loginUser, logoutUser } from "./authMethods";
+//import { loginUser, logoutUser } from "./authMethods";
 import ACTIONS from "./actions";
 import { gql, useQuery } from "@apollo/client";
 import { GET_USER } from "./queries";

@@ -3,13 +3,14 @@ import resolvers from "./rootResolver/resolver.js";
 import typeDefs from "./rootTypeDef/typeDefs.js";
 import expressJwt from "express-jwt";
 import express from "express";
-import cors from 'cors';
+import cors from "cors";
 import "dotenv/config.js";
 
 const port = 4000;
 const app = express();
-app.use(cors())
-app.use( // decode JWT Token, store in req.user
+app.use(cors());
+app.use(
+  // decode JWT Token, store in req.user
   expressJwt({
     secret: process.env.JWT_SECRET_KEY,
     algorithms: ["HS256"],
@@ -18,13 +19,25 @@ app.use( // decode JWT Token, store in req.user
 );
 
 const context = async ({ req }) => {
-  return { user: req?.user || {} };
+  return {
+    user: req?.user || {},
+  };
 };
 
 const server = new ApolloServer({
   typeDefs,
   resolvers,
   context,
+  formatError: (err) => {
+    // Don't give the specific errors to the client.
+    if (err.message.startsWith("Database Error: ")) {
+      return new Error("Internal server error");
+    }
+
+    // Otherwise return the original error. The error can also
+    // be manipulated in other ways, as long as it's returned.
+    return err;
+  },
 });
 
 server.applyMiddleware({ app });
