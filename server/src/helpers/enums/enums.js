@@ -27,6 +27,15 @@ const enums = {
     VERIFIED: "VERIFIED",
     UNVERIFIED: "UNVERIFIED",
   },
+  daysOfTheWeek: {
+    SUNDAY: "SUNDAY",
+    MONDAY: "MONDAY",
+    TUESDAY: "TUESDAY",
+    WEDNESDAY: "WEDNESDAY",
+    THURSDAY: "THURSDAY",
+    FRIDAY: "FRIDAY",
+    SATURDAY: "SATURDAY"
+  }
 };
 
 export default enums;

@@ -31,14 +31,16 @@ const patient = (knex = pg) => ({
       .returning("*");
     return patient().fromDb(__.first(dbResponse));
   },
+
   update: async (patientData) => {
     const dbResponse = await knex("patients")
       .where({ patient_uid: patientData.uid })
-      .update(objectFilter(patient().toDb(patientData)))
-      .returning("*");
+        .update(objectFilter(patient().toDb(patientData)))
+        .returning("*");
 
-    return patient().fromDb(__.first(dbResponse));
+      return patient().fromDb(__.first(dbResponse));
   },
+
   get: async (uid) => {
     const doctorSelectQuery = uid
       ? knex.select("*").from("patients").where({ patient_uid: uid })
