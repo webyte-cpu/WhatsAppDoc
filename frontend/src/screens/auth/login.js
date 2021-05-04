@@ -2,12 +2,12 @@ import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view
 import { EmailField, PasswordField } from "../../components/fields";
 import { View, StyleSheet, Platform, Image } from "react-native";
 import { loginSchema } from "../../../helpers/validationType";
-import { Button, Text, Spinner } from "@ui-kitten/components";
+import { Button, Text } from "@ui-kitten/components";
 import loginImg from "../../../assets/img/login-welcome.jpg";
 import LoadingScreen from "../../components/loadingScreen";
 import { AppRoute } from "../../navigation/app-routes";
 import { SIGNIN_MUTATION } from "./utils/queries";
-import { gql, useMutation } from "@apollo/client";
+import { useMutation } from "@apollo/client";
 import customStyle from "../../../themes/styles";
 import { useAuth } from "./utils/authProvider";
 import React, { useState } from "react";
@@ -15,25 +15,22 @@ import { Formik } from "formik";
 
 const SignInScreen = ({ navigation }) => {
   const auth = useAuth();
+  const [loginErr, setLoginErr] = useState("");
 
   const mutationOptions = {
     onCompleted: ({ signIn: token }) => {
       if (token) {
-        console.log(token);
         auth.login(token);
       }
     },
     onError: (error) => {
-      // TODO: fix error handling
-      if (error) {
-        console.log(error);
-        setLoginErr("User not found");
+      if (error.code === "VALIDATION_ERROR") {
+        setLoginErr("Invalid Email/Password")
       }
     },
   };
 
-  const [loginErr, setLoginErr] = useState("");
-  const [signInUser, { loading, error }] = useMutation(
+  const [signInUser, { loading }] = useMutation(
     SIGNIN_MUTATION,
     mutationOptions
   );
@@ -128,10 +125,9 @@ const SignInScreen = ({ navigation }) => {
     </View>
   );
 
-  if (loading) {
-    // TODO: create global loading component
-    return <LoadingScreen />;
-  }
+  // if (loading) { // temporary comment
+  //   return <LoadingScreen />;
+  // }
 
   return (
     <KeyboardAwareScrollView contentContainerStyle={customStyle.contentFill}>
