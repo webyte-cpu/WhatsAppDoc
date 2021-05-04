@@ -30,7 +30,14 @@ const schedule = (knex = pg) => ({
   update: async (scheduleData) => {
     const dbResponse = await knex("schedule")
       .where({ schedule_uid: scheduleData.uid })
-      .update(objectFilter(schedule().toDb(scheduleData)))
+      .update(
+        objectFilter({
+          schedule_uid: scheduleData.uid,
+          start_time_ms: scheduleData.startTime,
+          end_time_ms: scheduleData.endTime,
+          day_of_the_week: scheduleData.dayOfTheWeek
+        })
+      )
       .returning("*");
 
     return patient().fromDb(__.first(dbResponse));
