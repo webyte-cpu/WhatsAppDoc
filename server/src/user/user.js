@@ -148,7 +148,7 @@ const user = (knex = pg) => {
       const userData = dbResponse[0];
 
       if (__.isEmpty(userData)) {
-        throw new ValidationError("Email not found");
+        throw new ApolloError("User not found", "VALIDATION_ERROR");
       }
       
       const match = await bcrypt.compare(password, userData.password);

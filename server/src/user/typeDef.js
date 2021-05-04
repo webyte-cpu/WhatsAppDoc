@@ -68,7 +68,7 @@ const user = gql`
 
     deleteUser(uid: UUID!): User!
 
-    signIn(email: EmailAddress!, password: Password!): JWT!
+    signIn(email: EmailAddress!, password: String!): JWT!
   }
 `;
 
