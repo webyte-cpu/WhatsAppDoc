@@ -50,6 +50,17 @@ const user = (knex = pg) => {
       return knex.transaction(async (trx) => {
         const response = {};
         const saltRounds = 10;
+        const passwordFormat = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})/g;
+        const isValid = passwordFormat.test(userData.password);
+
+        if (!isValid) {
+          throw new ApolloError(
+            `Password format is not valid; Password must be 8 or more characters long and contain at least one of the following:
+            number, uppercase letter, lowercase letter, and symbol.`,
+            "INVALID_PASSWORD"
+          );
+        }
+
         const hashedPassword = bcrypt.hashSync(userData.password, saltRounds);
 
         userData.uid = uuidV4();
@@ -147,14 +158,11 @@ const user = (knex = pg) => {
       const dbResponse = await user().find({ email });
       const userData = dbResponse[0];
 
-      if (__.isEmpty(userData)) {
-        throw new ApolloError("User not found", "VALIDATION_ERROR");
+      if (!__.isUndefined(userData)) {
+        const match = await bcrypt.compare(password, userData?.password);
+        delete userData.password;
+        if (match) return userData;
       }
-      
-      const match = await bcrypt.compare(password, userData.password);
-      delete userData.password;
-
-      if (match) return userData;
 
       throw new ApolloError("Invalid Email or Password.", "VALIDATION_ERROR");
     },
