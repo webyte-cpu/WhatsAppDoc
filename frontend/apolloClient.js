@@ -1,3 +1,8 @@
+import { useAuth } from "./src/screens/auth/utils/authProvider";
+import { getData } from "./src/screens/auth/utils/handleData";
+import { setContext } from "@apollo/client/link/context";
+import { onError } from "@apollo/client/link/error";
+import { Platform } from "react-native";
 import React from "react";
 import {
   ApolloClient,
@@ -6,11 +11,6 @@ import {
   HttpLink,
   InMemoryCache,
 } from "@apollo/client";
-import { getData } from "./src/screens/auth/utils/handleData";
-import { setContext } from "@apollo/client/link/context";
-import { onError } from "@apollo/client/link/error";
-import { Platform } from "react-native";
-import { useAuth } from "./src/screens/auth/utils/authProvider";
 
 if (!process.env.EXPO_IP_ADDRESS && Platform.OS !== "web")
   throw new Error("No expo ip provided");

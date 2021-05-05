@@ -24,8 +24,11 @@ const SignInScreen = ({ navigation }) => {
       }
     },
     onError: (error) => {
-      if (error.code === "VALIDATION_ERROR") {
-        setLoginErr("Invalid Email/Password")
+      if (error) {
+        const { extensions } = error.graphQLErrors[0];
+        if (extensions.code === "VALIDATION_ERROR") {
+          setLoginErr("Invalid Email/Password");
+        }
       }
     },
   };
