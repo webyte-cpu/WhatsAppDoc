@@ -1,27 +1,27 @@
-import React, { useState } from 'react';
-import { View, StyleSheet, ImageBackground, Platform } from 'react-native';
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+import { View, StyleSheet, ImageBackground, Platform } from "react-native";
+import { Button, Text, useTheme } from "@ui-kitten/components";
+import LoadingScreen from "../../components/loadingScreen";
+import { SIGNUP_MUTATION } from "./utils/queries";
+import customStyle from "../../../themes/styles";
+import { formatDate } from "./utils/formatters";
+import { useAuth } from "./utils/authProvider";
+import { useMutation } from "@apollo/client";
+import enums from "../../../helpers/enums";
+import SignUpDoctor from "./signUpDoctor";
+import React, { useState } from "react";
+import { ErrorMessage, Formik } from "formik";
 import {
   userSignUpSchema,
   doctorSignUpSchema,
-} from '../../../helpers/validationType';
+} from "../../../helpers/validationType";
 import {
   EmailField,
   PasswordField,
   DateField,
   NameFields,
   SexField,
-} from '../../components/fields';
-import { Button, Text, useTheme } from '@ui-kitten/components';
-import { useAuth } from './utils/authProvider';
-import { Formik } from 'formik';
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
-import { useMutation } from '@apollo/client';
-import { SIGNUP_MUTATION } from './utils/queries';
-import { formatDate } from './utils/formatters';
-import LoadingScreen from '../../components/loadingScreen';
-import SignUpDoctor from './signUpDoctor';
-import customStyle from '../../../themes/styles';
-import enums from '../../../helpers/enums';
+} from "../../components/fields";
 
 const ROLE = enums.role;
 
@@ -29,41 +29,59 @@ const SignupScreen = ({ navigation }) => {
   const theme = useTheme();
   const auth = useAuth();
   const doctorDetails = {
-    specialization: '',
-    licenseNum: '',
-    licenseImg: '',
-    expirationDate: '',
+    specialization: "",
+    licenseNum: "",
+    licenseImg: "",
+    expirationDate: "",
     verificationStatus: enums.verificationStatus.PENDING, //default
   };
   const userDetails = {
-    email: '',
-    password: '',
-    fname: '',
-    lname: '',
-    midName: '', //optional
+    email: "",
+    password: "",
+    fname: "",
+    lname: "",
+    midName: "", //optional
     role: ROLE.PATIENT,
-    sex: '',
-    birthdate: '',
+    sex: "",
+    birthdate: "",
   };
-  const [signUpDetails, setSignUpDetails] = useState(userDetails);
-  const signUpSchema =
-    signUpDetails.role === ROLE.PATIENT
-      ? userSignUpSchema
-      : userSignUpSchema.concat(doctorSignUpSchema);
 
-  const [signUpUser, { loading, error }] = useMutation(SIGNUP_MUTATION, {
+  const mutationOptions = {
     onCompleted({ signUp: token }) {
       if (token) {
         console.log(token);
         auth.login(token);
       }
     },
-  });
+    onError: (error) => {
+      if (error) {
+        const { extensions } = error.graphQLErrors[0];
+        if (extensions.code === "ALREADY_EXIST_EMAIL") {
+          /* 
+          
+          
+                  E R R O R  H A N D L I N G   H E R E
+          
+          
+          */
+        }
+      }
+    },
+  };
+
+  const [signUpDetails, setSignUpDetails] = useState(userDetails);
+  const signUpSchema =
+    signUpDetails.role === ROLE.PATIENT
+      ? userSignUpSchema
+      : userSignUpSchema.concat(doctorSignUpSchema);
+
+  const [signUpUser, { loading, error }] = useMutation(
+    SIGNUP_MUTATION,
+    mutationOptions
+  );
 
   const signup = (values) => {
-    console.log(values);
-    console.log(values.licenseImg);
-
+    setSignUpDetails(values);
     const doctor =
       values.role === ROLE.DOCTOR
         ? {
@@ -103,7 +121,7 @@ const SignupScreen = ({ navigation }) => {
           role,
         });
       default:
-        throw new Error('Role is invalid');
+        throw new Error("Role is invalid");
     }
   };
 
@@ -118,7 +136,7 @@ const SignupScreen = ({ navigation }) => {
           onPress={() => changeRole(ROLE.PATIENT)}
         >
           <ImageBackground
-            source={require('../../../assets/role-patient.png')}
+            source={require("../../../assets/role-patient.png")}
             style={styles.image}
           />
         </Button>
@@ -129,7 +147,7 @@ const SignupScreen = ({ navigation }) => {
           onPress={() => changeRole(ROLE.DOCTOR)}
         >
           <ImageBackground
-            source={require('../../../assets/role-doctor.png')}
+            source={require("../../../assets/role-doctor.png")}
             style={styles.image}
           />
         </Button>
@@ -148,19 +166,21 @@ const SignupScreen = ({ navigation }) => {
       <Formik
         initialValues={signUpDetails}
         validationSchema={signUpSchema}
-        onSubmit={(values) => signup(values)}
+        onSubmit={signup}
       >
         {(props) => (
           <>
             <RoleButtons {...props} />
             <View style={styles.form}>
               <EmailField />
+              {props.errors.name && props.touched.name ? (
+                <div>{props.errors.name}</div>
+              ) : null}
+              <ErrorMessage name="name" />
               <PasswordField />
-
               <Text category="h6" style={customStyle.formTitle}>
                 Personal Information
               </Text>
-
               <NameFields />
               <SexField {...props} />
               <DateField
@@ -170,7 +190,6 @@ const SignupScreen = ({ navigation }) => {
                 testID="birthdate"
                 max={new Date()}
               />
-
               {props.values.role === ROLE.DOCTOR ? (
                 <SignUpDoctor {...props} />
               ) : (
@@ -194,14 +213,14 @@ const SignupScreen = ({ navigation }) => {
     return <LoadingScreen />;
   }
 
-  if (error) {
-    console.log(error);
-    return <Text>Error!</Text>;
-  }
+  // if (error) {
+  //   console.log(error);
+  //   return <Text>Error!</Text>;
+  // }
 
   return (
     <KeyboardAwareScrollView
-      style={{ backgroundColor: theme['color-primary-500'] }}
+      style={{ backgroundColor: theme["color-primary-500"] }}
     >
       <SignUpForm />
     </KeyboardAwareScrollView>
@@ -210,16 +229,16 @@ const SignupScreen = ({ navigation }) => {
 
 const styles = StyleSheet.create({
   subtitle: {
-    textAlign: 'center',
+    textAlign: "center",
     paddingBottom: 5,
-    color: 'white',
+    color: "white",
   },
   buttonContainer: {
     paddingVertical: 15,
-    flexWrap: 'wrap',
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
+    flexWrap: "wrap",
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
   },
   button: {
     width: 150,
@@ -235,7 +254,7 @@ const styles = StyleSheet.create({
   form: {
     flex: 1,
     padding: 30,
-    backgroundColor: 'white',
+    backgroundColor: "white",
     borderTopLeftRadius: 50,
   },
   image: {
