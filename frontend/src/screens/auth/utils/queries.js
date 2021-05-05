@@ -12,7 +12,7 @@ export const SIGNUP_MUTATION = gql`
     $middleName: String
     $lastName: String!
     $email: EmailAddress!
-    $password: Password!
+    $password: String!
     $role: Role!
     $sex: Sex!
     $birthdate: Date!
