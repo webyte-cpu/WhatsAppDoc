@@ -15,7 +15,11 @@ import { Formik } from "formik";
 
 const SignInScreen = ({ navigation }) => {
   const auth = useAuth();
-  const [loginErr, setLoginErr] = useState("");
+
+  const loginDetails = {
+    email: "",
+    password: "",
+  };
 
   const mutationOptions = {
     onCompleted: ({ signIn: token }) => {
@@ -33,6 +37,9 @@ const SignInScreen = ({ navigation }) => {
     },
   };
 
+  const [loginErr, setLoginErr] = useState("");
+  const [savedLoginDetails, setLoginDetails] = useState(loginDetails);
+
   const [signInUser, { loading }] = useMutation(
     SIGNIN_MUTATION,
     mutationOptions
@@ -41,6 +48,7 @@ const SignInScreen = ({ navigation }) => {
   const goToSignUp = () => navigation.navigate(AppRoute.SIGNUP);
   const forgotPassword = () => navigation.navigate(AppRoute.FORGOT_PASS);
   const login = async (variables) => {
+    setLoginDetails(variables);
     const queryResponse = await signInUser({ variables });
     return queryResponse.signIn;
   };
@@ -72,15 +80,10 @@ const SignInScreen = ({ navigation }) => {
   );
 
   const LoginForm = () => {
-    const loginDetails = {
-      email: "",
-      password: "",
-    };
-
     return (
       <View>
         <Formik
-          initialValues={loginDetails}
+          initialValues={savedLoginDetails}
           validationSchema={loginSchema}
           onSubmit={login}
         >
