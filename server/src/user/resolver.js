@@ -38,8 +38,11 @@ const resolverMap = {
   },
 
   Mutation: {
-    signUp: async (obj, arg) => {
-      if (arg?.role === enums.role.ADMIN && user?.role !== enums.role.ADMIN) {
+    signUp: async (obj, arg, context) => {
+      if (
+        arg?.role === enums.role.ADMIN &&
+        context?.user?.role !== enums.role.ADMIN
+      ) {
         throw new ForbiddenError("Not authorize to signUp an admin");
       }
 

@@ -15,7 +15,11 @@ import { Formik } from "formik";
 
 const SignInScreen = ({ navigation }) => {
   const auth = useAuth();
-  const [loginErr, setLoginErr] = useState("");
+
+  const loginDetails = {
+    email: "",
+    password: "",
+  };
 
   const mutationOptions = {
     onCompleted: ({ signIn: token }) => {
@@ -23,14 +27,18 @@ const SignInScreen = ({ navigation }) => {
         auth.login(token);
       }
     },
-    onError: ({graphQLErrors}) => {
-      graphQLErrors.map(({extensions}) => {
+    onError: (error) => {
+      if (error) {
+        const { extensions } = error.graphQLErrors[0];
         if (extensions.code === "VALIDATION_ERROR") {
-          setLoginErr("Invalid Email/Password")
+          setLoginErr("Invalid Email/Password");
         }
-      })
+      }
     },
   };
+
+  const [loginErr, setLoginErr] = useState("");
+  const [savedLoginDetails, setLoginDetails] = useState(loginDetails);
 
   const [signInUser, { loading }] = useMutation(
     SIGNIN_MUTATION,
@@ -40,6 +48,7 @@ const SignInScreen = ({ navigation }) => {
   const goToSignUp = () => navigation.navigate(AppRoute.SIGNUP);
   const forgotPassword = () => navigation.navigate(AppRoute.FORGOT_PASS);
   const login = async (variables) => {
+    setLoginDetails(variables);
     const queryResponse = await signInUser({ variables });
     return queryResponse.signIn;
   };
@@ -71,15 +80,10 @@ const SignInScreen = ({ navigation }) => {
   );
 
   const LoginForm = () => {
-    const loginDetails = {
-      email: "",
-      password: "",
-    };
-
     return (
       <View>
         <Formik
-          initialValues={loginDetails}
+          initialValues={savedLoginDetails}
           validationSchema={loginSchema}
           onSubmit={login}
         >

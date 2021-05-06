@@ -3,11 +3,10 @@ import user from "../user/resolver.js";
 import patient from "../patient/resolver.js";
 import doctor from "../doctor/resolver.js";
 import address from "../address/resolver.js";
+import clinic from "../clinic/resolver.js";
 // import schedule from "../schedule/resolver.js";
 
-import { resolvers as customerScalarResolvers } from "../customScalar/index.js";
+const rootResolvers = [user, patient, doctor, address, clinic];
 
-const rootResolvers = [user, patient, doctor, address];
-
-const resolvers = [...rootResolvers, scalarResolvers, customerScalarResolvers];
+const resolvers = [...rootResolvers, scalarResolvers];
 export default resolvers;
