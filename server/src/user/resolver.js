@@ -53,9 +53,13 @@ const resolverMap = {
     signIn: async (obj, { email, password }) => {
       console.log(email, password);
       const result = await user().check({ email, password });
+
       const payload = {
         uid: result.uid,
         role: result.role,
+        firstName: result.firstName,
+        lastName: result.lastName,
+        email: result.email,
         verificationStatus: result.verificationStatus,
       };
       return jwt.sign(payload, process.env.JWT_SECRET_KEY, {
