@@ -1,6 +1,6 @@
 import React from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
-import SchedulePage from '../../screens/home/schedulePage';
+import SchedulePage from '../../screens/schedules/schedulePage';
 import DrawerMenuBtn from '../../components/drawer/drawerBtn';
 
 const ScheduleStack = createStackNavigator();
