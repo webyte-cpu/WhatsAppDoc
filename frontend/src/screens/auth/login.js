@@ -23,10 +23,12 @@ const SignInScreen = ({ navigation }) => {
         auth.login(token);
       }
     },
-    onError: (error) => {
-      if (error.code === "VALIDATION_ERROR") {
-        setLoginErr("Invalid Email/Password")
-      }
+    onError: ({graphQLErrors}) => {
+      graphQLErrors.map(({extensions}) => {
+        if (extensions.code === "VALIDATION_ERROR") {
+          setLoginErr("Invalid Email/Password")
+        }
+      })
     },
   };
 
