@@ -14,7 +14,8 @@ const AppRoute = {
   NOTIFICATION: 'Notification',
   SCHEDULE: 'Schedule',
   CATEGORY: 'Category',
-  ADMIN: 'Admin'
+  ADMIN: 'Admin',
+  APPOINTMENT_PROPERTIES: 'AppointmentProperties'
 }
 
 export { AppRoute };

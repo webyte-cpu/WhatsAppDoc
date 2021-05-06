@@ -7,7 +7,7 @@ const user = gql`
     middleName: String
     lastName: String!
     email: EmailAddress!
-    password: Password!
+    password: String!
     birthdate: Date!
     sex: Sex
     address: Address
@@ -23,7 +23,7 @@ const user = gql`
     middleName: String
     lastName: String!
     email: EmailAddress!
-    password: Password!
+    password: String!
     birthdate: Date!
     sex: Sex
     address: Address
@@ -45,7 +45,7 @@ const user = gql`
       middleName: String
       lastName: String!
       email: EmailAddress!
-      password: Password!
+      password: String!
       role: Role!
       img: String
       sex: Sex!
@@ -58,7 +58,7 @@ const user = gql`
       firstName: String
       middleName: String
       lastName: String
-      password: Password
+      password: String
       sex: Sex
       birthdate: Date
       address: AddressInput
@@ -68,7 +68,7 @@ const user = gql`
 
     deleteUser(uid: UUID!): User!
 
-    signIn(email: EmailAddress!, password: Password!): JWT!
+    signIn(email: EmailAddress!, password: String!): JWT!
   }
 `;
 

@@ -1,20 +1,23 @@
-import React from 'react';
-import { SafeAreaProvider } from 'react-native-safe-area-context';
-import { NavigationContainer } from '@react-navigation/native';
-import { useFonts } from 'expo-font';
-import { useAuth } from '../screens/auth/utils/authProvider';
-import customFonts from '../../themes/custom-fonts';
-import AppLoading from 'expo-app-loading';
-import AuthNavigator from './navigatorStacks/authNavigator';
-import AdminDrawerStack from './navigatorStacks/adminStack';
-import UserDrawerStack from './navigatorStacks/userDrawer';
-import enums from '../../helpers/enums';
-import { Button, Text, Spinner } from '@ui-kitten/components';
+import React from "react";
+import { View } from 'react-native';
+import { Card, Text, Button } from '@ui-kitten/components';
+import { SafeAreaProvider } from "react-native-safe-area-context";
+import { NavigationContainer } from "@react-navigation/native";
+import { useFonts } from "expo-font";
+import { useAuth } from "../screens/auth/utils/authProvider";
+import customFonts from "../../themes/custom-fonts";
+import AppLoading from "expo-app-loading";
+import AuthNavigator from "./navigatorStacks/authNavigator";
+import AdminDrawerStack from "./navigatorStacks/adminStack";
+import UserDrawerStack from "./navigatorStacks/userDrawer";
+import enums from "../../helpers/enums";
+import LoadingScreen from "../components/loadingScreen";
+import Banner from "../components/banner";
 
 const linking = {
-  config: { 
-    screens: { 
-      SignIn: "/signin", 
+  config: {
+    screens: {
+      SignIn: "/signin",
       Signup: "/signup",
       ForgotPass: "/forgotpassword",
       AdminHome: "/admin",
@@ -22,25 +25,37 @@ const linking = {
       Search: "/search",
       Schedules: "/schedules",
       Notification: "/notif",
-      Profile: "/profile"
+      Profile: "/profile",
+      AppointmentProperties: '/properties'
     },
   },
 };
 
 const AppNavigator = () => {
-  const auth = useAuth();
+  const { appState } = useAuth();
   const [fontsLoaded] = useFonts(customFonts);
+  const auth = useAuth()
 
-  if (fontsLoaded && auth.isLoading) { // TODO : loading
-    return <Spinner testID="spinner" status="primary" size="giant" />;;
+  if (appState.isLoading) {
+    return <AppLoading />;
   }
 
   return (
+    <>
+    { auth.gqlError.msg !==  '' ? <Banner status='danger' message={auth.gqlError.msg}/> : <></>}
+        
     <SafeAreaProvider>
       <NavigationContainer linking={linking}>
-        {auth.token == null ? <AuthNavigator /> :  <AdminDrawerStack />} 
+        {appState.user == null ? (
+          <AuthNavigator />
+        ) : appState.user.role === enums.role.ADMIN ? (
+          <AdminDrawerStack />
+        ) : (
+          <UserDrawerStack />
+        )}
       </NavigationContainer>
     </SafeAreaProvider>
+    </>
   );
 };
 

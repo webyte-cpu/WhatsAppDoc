@@ -1,34 +1,19 @@
+import address from "../address/address.js";
+import clinic from "./clinic.js";
+import __ from "lodash";
+
 const resolverMap = {
+  Clinic: {
+    address: async (obj) => __.first(await address().get(obj.addressUid)),
+  },
+
   Query: {
-    getClinic: (obj, arg) => {
-      //get specific admin from the database
-      console.log(arg);
-
-      /* 
-      if uuid doesnt exist get all data
-      and check for auth
-      */
-
-      //replace with database data
-      return; //sampleData;
-    },
+    getClinic: (obj, arg) => clinic().get(arg),
   },
   Mutation: {
-    createClinic: (obj, arg) => {
-      console.log(arg);
-      //link to doctor in the database
-      return arg;
-    },
-    updateClinic: (obj, arg) => {
-      console.log(arg);
-      //link to doctor in the database
-      return arg;
-    },
-    deleteClinic: (obj, arg) => {
-      console.log(arg);
-      //link to doctor in the database
-      return arg;
-    },
+    createClinic: (obj, arg) => clinic().create(arg),
+    updateClinic: (obj, arg) => clinic().update(arg),
+    deleteClinic: (obj, arg) => clinic().remove(arg),
   },
   // Subscription: {},
 };

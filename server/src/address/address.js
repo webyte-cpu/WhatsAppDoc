@@ -1,7 +1,8 @@
-import pg from "../../db/index.js";
 import objectFilter from "../helpers/objectFilter.js";
+import pg from "../../db/index.js";
 import { v4 as uuidV4 } from "uuid";
 import __ from "lodash";
+
 const address = (knex = pg) => {
   console.log("Transacting", knex.client.transacting);
   return {
@@ -49,9 +50,10 @@ const address = (knex = pg) => {
       return address().fromDb(__.first(dbResponse));
     },
     get: async (uid) => {
-      const dbResponse = uid
-        ? await knex.select("*").from("addresses").where({ address_uid: uid })
-        : await knex.select("*").from("addresses");
+      const dbResponse = await knex
+        .select("*")
+        .from("addresses")
+        .where(objectFilter({ address_uid: uid }));
 
       return dbResponse.map(address().fromDb);
     },

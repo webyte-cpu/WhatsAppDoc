@@ -1,12 +1,14 @@
 import React from 'react';
 import { View } from "react-native"
-import { Text } from '@ui-kitten/components'
+import { Text, Button } from '@ui-kitten/components'
+import { AppRoute } from "../../navigation/app-routes";
 
-const SchedulePage = () => {
+const SchedulePage = ({navigation}) => {
   return (
     <View>
       <Text>
         Schedules
+        <Button onPress={() => navigation.navigate(AppRoute.APPOINTMENT_PROPERTIES)}> Properties </Button>
       </Text>
     </View>
   )

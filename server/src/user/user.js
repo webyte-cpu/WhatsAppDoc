@@ -1,4 +1,8 @@
-import { ApolloError, UserInputError, ValidationError } from "apollo-server-errors";
+import {
+  ApolloError,
+  UserInputError,
+  ValidationError,
+} from "apollo-server-errors";
 import specialization from "../specialization/specialization.js";
 import objectFilter from "../helpers/objectFilter.js";
 import enums from "../helpers/enums/enums.js";
@@ -46,6 +50,17 @@ const user = (knex = pg) => {
       return knex.transaction(async (trx) => {
         const response = {};
         const saltRounds = 10;
+        const passwordFormat = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})/g;
+        const isValid = passwordFormat.test(userData.password);
+
+        if (!isValid) {
+          throw new ApolloError(
+            `Password format is not valid; Password must be 8 or more characters long and contain at least one of the following:
+            number, uppercase letter, lowercase letter, and symbol.`,
+            "INVALID_PASSWORD"
+          );
+        }
+
         const hashedPassword = bcrypt.hashSync(userData.password, saltRounds);
 
         userData.uid = uuidV4();
@@ -94,18 +109,23 @@ const user = (knex = pg) => {
         }
       });
     },
-    find: async (object) => {
-      const dbResponse = await knex
-        .select("*")
-        .from("users")
-        .where(objectFilter(user().toDb(object)));
+    find: async (object) =>
+      knex.transaction(async (trx) => {
+        const dbResponse = await trx
+          .select("*")
+          .from("users")
+          .where(objectFilter(user().toDb(object)))
+          .leftJoin("doctors", "doctor_uid", "user_uid")
+          .leftJoin("patients", "patient_uid", "user_uid");
 
-      if(dbResponse.length === 0) {
-        throw new ValidationError('Email not found')
-      }
+        const data = dbResponse.map((data) => ({
+          ...user().fromDb(data),
+          ...doctor().fromDb(data),
+          ...patient().fromDb(data),
+        }));
 
-      return dbResponse.map((data) => user().fromDb(data));
-    },
+        return data;
+      }),
 
     create: async (userData) => {
       userData.uid = userData.uid || uuidV4();
@@ -137,10 +157,14 @@ const user = (knex = pg) => {
     check: async ({ email, password }) => {
       const dbResponse = await user().find({ email });
       const userData = dbResponse[0];
-      const match = await bcrypt.compare(password, userData.password);
-      delete userData.password;
-      if (match) return userData;
-      throw new ValidationError("Invalid password!");
+
+      if (!__.isUndefined(userData)) {
+        const match = await bcrypt.compare(password, userData?.password);
+        delete userData.password;
+        if (match) return userData;
+      }
+
+      throw new ApolloError("Invalid Email or Password.", "VALIDATION_ERROR");
     },
 
     get: async (uid) => {

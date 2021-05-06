@@ -38,8 +38,11 @@ const resolverMap = {
   },
 
   Mutation: {
-    signUp: async (obj, arg) => {
-      if (arg?.role === enums.role.ADMIN && user?.role !== enums.role.ADMIN) {
+    signUp: async (obj, arg, context) => {
+      if (
+        arg?.role === enums.role.ADMIN &&
+        context?.user?.role !== enums.role.ADMIN
+      ) {
         throw new ForbiddenError("Not authorize to signUp an admin");
       }
 
@@ -51,8 +54,13 @@ const resolverMap = {
       });
     },
     signIn: async (obj, { email, password }) => {
+      console.log(email, password);
       const result = await user().check({ email, password });
-      const payload = { uid: result.uid, role: result.role };
+      const payload = {
+        uid: result.uid,
+        role: result.role,
+        verificationStatus: result.verificationStatus,
+      };
       return jwt.sign(payload, process.env.JWT_SECRET_KEY, {
         algorithm: "HS256",
         expiresIn: "1d",

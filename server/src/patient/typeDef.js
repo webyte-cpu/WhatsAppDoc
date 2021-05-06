@@ -6,7 +6,7 @@ const patient = gql`
     middleName: String
     lastName: String!
     email: EmailAddress!
-    password: Password!
+    password: String!
     birthdate: Date!
     sex: Sex
     address: Address

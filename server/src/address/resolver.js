@@ -3,7 +3,7 @@ import __ from "lodash";
 
 const resolverMap = {
   Query: {
-    getAddress: async (obj, arg) => __.first(await address().get(arg.uid)),
+    getAddress: async (obj, arg) => await address().get(arg.uid),
   },
   Mutation: {
     createAddress: (obj, arg) => {
