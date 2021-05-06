@@ -41,7 +41,7 @@ const AppNavigator = () => {
 
   return (
     <>
-    { auth.gqlError.msg !==  '' ? <Banner status='danger' message={auth.gqlError.msg}/> : <></>}
+    {/* { auth.gqlError.msg !==  '' ? <Banner status='danger' message={auth.gqlError.msg}/> : <></>} */}
         
     <SafeAreaProvider>
       <NavigationContainer linking={linking}>
