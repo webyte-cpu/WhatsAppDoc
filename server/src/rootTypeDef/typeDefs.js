@@ -5,6 +5,7 @@ import enums from "../helpers/enums/typeDef.js";
 import doctor from "../doctor/typeDef.js";
 import patient from "../patient/typeDef.js";
 import user from "../user/typeDef.js";
+import clinic from "../clinic/typeDef.js";
 
 const rootTypeDefs = gql`
   type Query {
@@ -26,6 +27,7 @@ const typeDefs = [
   user,
   patient,
   doctor,
+  clinic,
 ];
 
 export default typeDefs;
