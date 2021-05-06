@@ -19,6 +19,10 @@ import { useTheme } from '@ui-kitten/components'
 import DoctorDetails from './verification'
 import { data } from './dummyDataAdmin'
 import { gql, useQuery, useMutation } from '@apollo/client';
+import WebWebView from '../../components/webMap.js'
+import AndroidWebView from '../../components/androidMap.js'
+import { SafeAreaProvider } from 'react-native-safe-area-context';
+
 
 const GET_DOCTORS = gql`
 query {
@@ -215,6 +219,14 @@ const Admin = () => {
 
             </View>
 
+
+            {
+        (Platform.OS === 'web') ? (
+          <WebWebView />
+        ) : (
+          <AndroidWebView />
+        )
+      }
 
         </ScrollView>
     );

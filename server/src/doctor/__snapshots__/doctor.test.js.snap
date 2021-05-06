@@ -3,11 +3,19 @@
 exports[`Mutations verify doctors 1`] = `
 Object {
   "data": Object {
+<<<<<<< HEAD
     "updateDoctor": null,
   },
   "errors": Array [
     [GraphQLError: Unable to acquire a connection],
   ],
+=======
+    "updateDoctor": Object {
+      "uid": "123e4567-e89b-12d3-a456-426614174000",
+    },
+  },
+  "errors": undefined,
+>>>>>>> daeb38487a1000a9217b09ffef3a5f8dfe0a6c56
   "extensions": undefined,
   "http": Object {
     "headers": Headers {

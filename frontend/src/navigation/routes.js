@@ -38,7 +38,7 @@ const AppNavigator = () => {
   return (
     <SafeAreaProvider>
       <NavigationContainer linking={linking}>
-        {auth.token == null ? <AuthNavigator /> :  <UserDrawerStack />} 
+        {auth.token == null ? <AuthNavigator /> :  <AdminDrawerStack />} 
       </NavigationContainer>
     </SafeAreaProvider>
   );

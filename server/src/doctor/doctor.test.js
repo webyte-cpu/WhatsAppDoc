@@ -2,12 +2,12 @@ import { createTestClient } from "apollo-server-testing";
 import { cleanDb, constructTestServer } from "../helpers/__utils.js";
 import { VERIFY_DOCTORS } from "./queries.js";
 
+const { server } = constructTestServer();
+    
+const { query } = createTestClient(server);
+
 describe("Mutations", () => {
   it("verify doctors", async () => {
-
-    const { server } = constructTestServer();
-    
-    const { query } = createTestClient(server);
 
     const res = await query({
       query: VERIFY_DOCTORS,
