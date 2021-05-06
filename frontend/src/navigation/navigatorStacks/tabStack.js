@@ -1,22 +1,29 @@
-import React from 'react';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { BottomNavigation, BottomNavigationTab, Divider, Icon } from '@ui-kitten/components';
-import HomeStackScreen from './homeStack';
-import ScheduleStackScreen from './scheduleStack';
-import NotificationStackScreen from './notificationStack';
+import React from "react";
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import {
+  BottomNavigation,
+  BottomNavigationTab,
+  Divider,
+  Icon,
+} from "@ui-kitten/components";
+import HomeStackScreen from "./homeStack";
+import ScheduleStackScreen from "./scheduleStack";
+import NotificationStackScreen from "./notificationStack";
 
 const BottomTab = createBottomTabNavigator();
 
-const HomeIcon = (props) => <Icon {...props} name='home' />;
-const CalendarIcon = (props) => <Icon {...props} name='calendar' />;
-const NotificationIcon = (props) => <Icon {...props} name='bell' />;
+const HomeIcon = (props) => <Icon {...props} name="home" />;
+const CalendarIcon = (props) => <Icon {...props} name="calendar" />;
+const NotificationIcon = (props) => <Icon {...props} name="bell" />;
 
-const BottomTabBar = ({ navigation, state }) => ( // ui
+const BottomTabBar = (
+  { navigation, state } // ui
+) => (
   <>
-  <Divider/>
+    <Divider />
     <BottomNavigation
       selectedIndex={state.index}
-      onSelect={index => navigation.navigate(state.routeNames[index])}
+      onSelect={(index) => navigation.navigate(state.routeNames[index])}
       appearance="noIndicator"
     >
       <BottomNavigationTab icon={HomeIcon} />
@@ -27,10 +34,13 @@ const BottomTabBar = ({ navigation, state }) => ( // ui
 );
 
 const TabStack = () => (
-  <BottomTab.Navigator tabBar={props => <BottomTabBar {...props} />}>
-    <BottomTab.Screen name='HomeStack' component={HomeStackScreen} />
-    <BottomTab.Screen name='ScheduleStack' component={ScheduleStackScreen} />
-    <BottomTab.Screen name='NotificationStack' component={NotificationStackScreen} />
+  <BottomTab.Navigator tabBar={(props) => <BottomTabBar {...props} />}>
+    <BottomTab.Screen name="HomeStack" component={HomeStackScreen} />
+    <BottomTab.Screen name="ScheduleStack" component={ScheduleStackScreen} />
+    <BottomTab.Screen
+      name="NotificationStack"
+      component={NotificationStackScreen}
+    />
   </BottomTab.Navigator>
 );
 

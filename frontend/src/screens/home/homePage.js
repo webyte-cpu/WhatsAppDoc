@@ -9,10 +9,10 @@ import customStyle from '../../../themes/styles';
 const HomePage = ({ navigation }) => {
   const {appState} = useAuth();
   const [filter, setFilter] = useState(new IndexPath(0));
-  
+
   return (
     <View style={customStyle.contentFill}>
-      <Text testID='welcome-header' category='h1' style={{marginBottom: 10}}>Welcome {appState.user.uid}!</Text>
+      <Text testID='welcome-header' category='h1' style={{marginBottom: 10}}>Welcome {appState.user.firstName}!</Text>
       <Searchbar filter={filter} setFilter={setFilter} />
     </View>
   );
