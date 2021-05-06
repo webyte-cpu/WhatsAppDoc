@@ -9,6 +9,8 @@
   "color-primary-800": "#19147B",
   "color-primary-900": "#0F0C66",
   "color-primary-dark": "#222b45",
+  "color-primary-light": "#edf1fa",
+  "color-primary-light-600": "#DEE4F2",
   "color-primary-transparent-100": "rgba(74, 64, 213, 0.08)",
   "color-primary-transparent-200": "rgba(74, 64, 213, 0.16)",
   "color-primary-transparent-300": "rgba(74, 64, 213, 0.24)",
