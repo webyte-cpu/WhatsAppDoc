@@ -3,11 +3,13 @@ import address from "../address/address.js";
 import { v4 as uuidV4 } from "uuid";
 import pg from "../../db/index.js";
 import __ from "lodash";
+import { ApolloError } from "apollo-server-errors";
 
 const clinic = (knex = pg) => ({
   knex,
   fromDb: (clinicData) => ({
     uid: clinicData.clinic_uid,
+    doctorClinicUid: clinicData.doctor_clinic_uid,
     addressUid: clinicData.address_uid,
     name: clinicData.clinic_name,
     roomNumber: clinicData.clinic_room_no,
@@ -126,18 +128,48 @@ const clinic = (knex = pg) => ({
     const dbResponse = await knex
       .select("*")
       .from("clinics")
-      .where(objectFilter({ clinic_uid: uid, doctor_uid: doctorUid }))
+      .where(objectFilter({ "clinics.clinic_uid": uid, doctor_uid: doctorUid }))
       .innerJoin(
         "doctor_clinics",
         "doctor_clinics.clinic_uid",
         "clinics.clinic_uid"
       );
- //   console.log(dbResponse.map(clinic().fromDb));
+    //   console.log(dbResponse.map(clinic().fromDb));
     return dbResponse.map(clinic().fromDb);
   },
-  remove: async (userUid) => {
-    return await pg("doctors").where({ user_uid: userUid }).del();
-  },
+  remove: async (uid) =>
+    knex.transaction(async (trx) => {
+      const getClinicResponse = __.first(await clinic(trx).get({ uid }));
+
+      if (__.isUndefined(getClinicResponse))
+        throw new ApolloError(
+          "Clinic does not exist or has been removed.",
+          "DOES_NOT_EXIST"
+        );
+
+      const { addressUid } = getClinicResponse;
+
+      const response = {
+        doctorClinicRawData: await trx("doctor_clinics")
+          .where({ clinic_uid: uid })
+          .del()
+          .returning("*"),
+        clinicRawData: await trx("clinics")
+          .where({ clinic_uid: uid })
+          .del()
+          .returning("*"),
+        address: await address(trx).remove(addressUid),
+      };
+
+      response.clinic = clinic().fromDb({
+        ...__.first(response.clinicRawData),
+        ...__.first(response.doctorClinicRawData),
+      });
+
+      response.clinic.address = response.address;
+
+      return response.clinic;
+    }),
 });
 
 export default clinic;
