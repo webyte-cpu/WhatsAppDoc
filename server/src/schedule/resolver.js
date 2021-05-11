@@ -3,18 +3,12 @@ import __ from "lodash";
 
 const resolverMap = {
   Query: {
-    getSchedule: async (obj, arg) => __.first(await schedule().get(arg.uid)),
+    getSchedule: async (obj, arg) => schedule().get(arg.uid),
   },
   Mutation: {
-    createSchedule: async (obj, arg) => {
-      return schedule().create(arg);
-    },
-    updateSchedule: async (obj, arg) => {
-      return schedule().update(arg);
-    },
-    deleteSchedule: async (obj, arg) => {
-      return schedule().remove(arg.uid);
-    },
+    createSchedule: (obj, arg) => schedule().create(arg),
+    updateSchedule: (obj, arg) => schedule().update(arg),
+    deleteSchedule: (obj, arg) => schedule().remove(arg.uid),
   },
 };
 
