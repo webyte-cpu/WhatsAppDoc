@@ -1,5 +1,6 @@
 import objectFilter from "../helpers/objectFilter.js";
 import { v4 as uuidV4 } from "uuid";
+import user from "../user/user.js";
 import pg from "../../db/index.js";
 import __ from "lodash";
 
@@ -30,19 +31,31 @@ const patient = (knex = pg) => ({
       .returning("*");
     return patient().fromDb(__.first(dbResponse));
   },
+
   update: async (patientData) => {
     const dbResponse = await knex("patients")
       .where({ patient_uid: patientData.uid })
-      .update(objectFilter(patient().toDb(patientData)))
-      .returning("*");
+        .update(objectFilter(patient().toDb(patientData)))
+        .returning("*");
 
-    return patient().fromDb(__.first(dbResponse));
+      return patient().fromDb(__.first(dbResponse));
   },
+
   get: async (uid) => {
-    const dbResponse = uid
-      ? await knex.select("*").from("patients").where({ user_uid: uid })
-      : await knex.select("*").from("patients");
-    return dbResponse.map((patientData) => patient().fromDb(patientData));
+    const doctorSelectQuery = uid
+      ? knex.select("*").from("patients").where({ patient_uid: uid })
+      : knex.select("*").from("patients");
+
+    const dbResponse = await doctorSelectQuery.innerJoin(
+      "users",
+      "user_uid",
+      "patient_uid"
+    );
+
+    return dbResponse.map((data) => ({
+      ...user().fromDb(data),
+      ...patient().fromDb(data),
+    }));
   },
   remove: async (user_uid) => {
     const dbResponse = await knex("patients")

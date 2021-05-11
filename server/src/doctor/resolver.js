@@ -1,5 +1,11 @@
 import doctor from "./doctor.js";
+import specialization from "../specialization/specialization.js";
+
 const resolverMap = {
+  Doctor: {
+    specialization: (doctor) => specialization().assignedTo(doctor.uid),
+  },
+
   Query: {
     getDoctor: (obj, arg) => {
       return doctor().get(arg.uid);

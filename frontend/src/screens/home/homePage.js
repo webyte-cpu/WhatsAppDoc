@@ -5,17 +5,14 @@ import { useAuth } from '../auth/utils/authProvider';
 import { AppRoute } from '../../navigation/app-routes';
 import Searchbar from '../search/search';
 import customStyle from '../../../themes/styles';
-import Admin from '../Admin/admin.js'
 
 const HomePage = ({ navigation }) => {
-  const auth = useAuth();
-  console.log(auth)
-  // const {fname} = auth.state.token;
+  const {appState} = useAuth();
   const [filter, setFilter] = useState(new IndexPath(0));
 
   return (
     <View style={customStyle.contentFill}>
-      <Text testID='welcome-header' category='h1' style={{ marginBottom: 10 }}>Welcome!</Text>
+      <Text testID='welcome-header' category='h1' style={{marginBottom: 10}}>Welcome {appState.user.firstName}!</Text>
       <Searchbar filter={filter} setFilter={setFilter} />
       <Card style={customStyle.warningCard} status='warning'>
         <Text>

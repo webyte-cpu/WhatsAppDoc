@@ -3,6 +3,7 @@ import enums from "../helpers/enums/enums.js";
 import jwt from "jsonwebtoken";
 import user from "./user.js";
 import __ from "lodash";
+import { AuthenticationError } from "apollo-server-express";
 
 const resolverMap = {
   User: {
@@ -21,44 +22,60 @@ const resolverMap = {
   },
 
   Query: {
-    getUser: (obj, arg) => user().get(arg.uid),
+    getUser: async (obj, arg, context) => {
+      if (__.isEmpty(context.user)) {
+        throw new AuthenticationError("No authorization header found");
+      }
+      return __.first(await user().get(context.user.uid));
+    },
     getAllUser: () => user().get(),
     viewer: (parent, arg, context) => {
-      //for checking if
-
-      console.log(context);
       if (__.isEmpty(context.user)) {
-        return null;
+        throw new AuthenticationError("No authorization header found");
       }
-      const { uid } = context.user;
-      return context.user
+      return context.user;
     },
   },
 
   Mutation: {
     signUp: async (obj, arg, context) => {
-      if (arg?.role === "ADMIN" && user?.role !== "ADMIN") {
+      if (
+        arg?.role === enums.role.ADMIN &&
+        context?.user?.role !== enums.role.ADMIN
+      ) {
         throw new ForbiddenError("Not authorize to signUp an admin");
       }
 
-      const payload = await user().signUp(arg);
+      const result = await user().signUp(arg);
+      const payload = { uid: result.uid, role: result.role };
       return jwt.sign(payload, process.env.JWT_SECRET_KEY, {
         algorithm: "HS256",
-        subject: payload.uid,
         expiresIn: "1d",
       });
     },
     signIn: async (obj, { email, password }) => {
-      const payload = await user().check({ email, password });
+      console.log(email, password);
+      const result = await user().check({ email, password });
 
-      console.log(payload);
+      const payload = {
+        uid: result.uid,
+        role: result.role,
+        firstName: result.firstName,
+        lastName: result.lastName,
+        email: result.email,
+        verificationStatus: result.verificationStatus,
+      };
       return jwt.sign(payload, process.env.JWT_SECRET_KEY, {
         algorithm: "HS256",
-        subject: payload.uid,
         expiresIn: "1d",
       });
     },
-    updateUser: () => {},
+    updateUser: (obj, arg) => {
+      return user().update(arg);
+    },
+    deleteUser: (obj, arg) => {
+      return user().delete(arg);
+    },
   },
 };
 

@@ -1,114 +1,125 @@
-import React, { useState } from 'react';
-import { View, StyleSheet, Platform, Image } from 'react-native';
-import { Button, Text, Spinner } from '@ui-kitten/components';
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
-import { AppRoute } from '../../navigation/app-routes';
-import { useAuth } from './utils/authProvider';
-import loginImg from '../../../assets/img/login-welcome.jpg';
-import customStyle from '../../../themes/styles';
-import { EmailField, PasswordField } from '../../components/fields';
-import { Formik } from 'formik';
-import { loginSchema } from '../../../helpers/validationType';
-import { gql, useMutation } from '@apollo/client';
-import LoadingScreen from '../../components/loadingScreen';
-import { SIGNIN_MUTATION } from './utils/queries';
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+import { EmailField, PasswordField } from "../../components/fields";
+import { View, StyleSheet, Platform, Image } from "react-native";
+import { loginSchema } from "../../../helpers/validationType";
+import { Button, Text } from "@ui-kitten/components";
+import loginImg from "../../../assets/img/login-welcome.jpg";
+import LoadingScreen from "../../components/loadingScreen";
+import { AppRoute } from "../../navigation/app-routes";
+import { SIGNIN_MUTATION } from "./utils/queries";
+import { useMutation } from "@apollo/client";
+import customStyle from "../../../themes/styles";
+import { useAuth } from "./utils/authProvider";
+import React, { useState } from "react";
+import { Formik } from "formik";
 
 const SignInScreen = ({ navigation }) => {
-  const auth = useAuth(); 
+  const auth = useAuth();
+
   const loginDetails = {
-    email: '',
-    password: '',
+    email: "",
+    password: "",
   };
 
-  const [loginErr, setLoginErr] = useState('');
-  const [signInUser, { loading, error, data }] = useMutation(SIGNIN_MUTATION, {
-    ignoreResults: false,
-    onCompleted({ signIn: token }) {
+  const mutationOptions = {
+    onCompleted: ({ signIn: token }) => {
       if (token) {
-        console.log(token);
         auth.login(token);
       }
     },
-    onError(error) { // TODO: fix error handling
-      if(error){
-      setLoginErr('User not found')
+    onError: (error) => {
+      if (error) {
+        const { extensions } = error.graphQLErrors[0];
+        if (extensions.code === "VALIDATION_ERROR") {
+          setLoginErr("Invalid Email/Password");
+        }
       }
-    }
-  });
-
-  const login = ({ email, password }) => {
-    console.log(email, password);
-    return signInUser({
-      variables: {
-        email: email,
-        password: password,
-      },
-    });
+    },
   };
+
+  const [loginErr, setLoginErr] = useState("");
+  const [savedLoginDetails, setLoginDetails] = useState(loginDetails);
+
+  const [signInUser, { loading }] = useMutation(
+    SIGNIN_MUTATION,
+    mutationOptions
+  );
 
   const goToSignUp = () => navigation.navigate(AppRoute.SIGNUP);
   const forgotPassword = () => navigation.navigate(AppRoute.FORGOT_PASS);
+  const login = async (variables) => {
+    setLoginDetails(variables);
+    const queryResponse = await signInUser({ variables });
+    return queryResponse.signIn;
+  };
 
   const signupBtn = (
     <Text
       testID="signupBtn"
       accessibilityRole="button"
       onPress={goToSignUp}
-      style={{ textAlign: 'center', paddingTop: 10 }}
+      style={{ textAlign: "center", paddingTop: 10 }}
     >
       Don't have an account yet?
       <Text status="primary" category="s1">
-        {' '}
+        {" "}
         Sign Up
       </Text>
     </Text>
   );
 
   const ErrorText = ({ errMsg }) => (
-    <Text testID="errText" status="danger" category="s1" style={{ textAlign: 'center' }}>
+    <Text
+      testID="errText"
+      status="danger"
+      category="s1"
+      style={{ textAlign: "center" }}
+    >
       {errMsg}
     </Text>
   );
 
-  const LoginForm = () => (
-    <View>
-      <Formik
-        initialValues={loginDetails}
-        validationSchema={loginSchema}
-        onSubmit={(values) => login(values)}
-      >
-        {(props) => (
-          <>
-            <EmailField />
-            <PasswordField />
-            <Text
-              testID="forgotPassBtn"
-              category="c2"
-              status="primary"
-              accessibilityRole="button"
-              onPress={forgotPassword}
-              style={{ textAlign: 'right', paddingBottom: 10 }}
-            >
-              Forgot Password?
-            </Text>
-            <ErrorText errMsg={loginErr} />
-            <Button
-              testID="loginBtn"
-              onPress={props.handleSubmit}
-              style={{ marginTop: 10 }}
-            >
-              Sign In
-            </Button>
-            {signupBtn}
-          </>
-        )}
-      </Formik>
-    </View>
-  );
+  const LoginForm = () => {
+    return (
+      <View>
+        <Formik
+          initialValues={savedLoginDetails}
+          validationSchema={loginSchema}
+          onSubmit={login}
+        >
+          {(props) => (
+            <>
+              <EmailField />
+              <PasswordField />
+              <Text
+                testID="forgotPassBtn"
+                category="c2"
+                status="primary"
+                accessibilityRole="button"
+                onPress={forgotPassword}
+                style={{ textAlign: "right", paddingBottom: 10 }}
+              >
+                Forgot Password?
+              </Text>
+              <ErrorText errMsg={loginErr} />
+              <Button
+                testID="loginBtn"
+                onPress={props.handleSubmit}
+                style={{ marginTop: 10 }}
+              >
+                Sign In
+              </Button>
+              {signupBtn}
+            </>
+          )}
+        </Formik>
+      </View>
+    );
+  };
 
   const signInPage = (
     <View style={(customStyle.content, customStyle.container)}>
-      <Text category="h1" style={{ textAlign: 'center' }}>
+      <Text category="h1" style={{ textAlign: "center" }}>
         WhatsAppDoc
       </Text>
       <View style={styles.imgContainer}>
@@ -120,9 +131,9 @@ const SignInScreen = ({ navigation }) => {
     </View>
   );
 
-  if (loading) { // TODO: create global loading component
-    return <LoadingScreen />
-  }
+  // if (loading) { // temporary comment
+  //   return <LoadingScreen />;
+  // }
 
   return (
     <KeyboardAwareScrollView contentContainerStyle={customStyle.contentFill}>
@@ -143,7 +154,7 @@ const styles = StyleSheet.create({
     }),
   },
   imgContainer: {
-    alignItems: 'center',
+    alignItems: "center",
     paddingTop: 10,
   },
   loginContainer: {

@@ -50,36 +50,6 @@ const DoctorForm = ({ navigation }) => {
 
   const [updateDoctor, { errorMutate }] = useMutation(UPDATE_DOCTOR)
 
-
-  // const resend = (values) => {
-    
-  //   // const doctor = {
-  //   //   doctor: {
-  //   //     uid: "b429f877-069c-42fb-9e48-088f351b5328",
-  //   //     licenseNum: "test",
-  //   //     licenseImg: "test",
-  //   //     licenseEXP: formatDate(values.expirationDate),
-  //   //     specialization: "oby",
-  //   //     verificationStatus: "PENDING"
-  //   //   }
-  //   // };
-
-  //   updateDoctor({
-  //     variables: {
-  //       uid: "b429f877-069c-42fb-9e48-088f351b5328",
-  //       verificationStatus: "PENDING"
-  //     }
-  //   })
-  //   if (errorMutate) {
-  //     console.log(errorMutate)
-  // }
-
-
-  // }
-
-  
-
-
   const resend = (values) => {
     console.log(formatDate(values.expirationDate))
     updateDoctor({
@@ -121,16 +91,7 @@ const DoctorForm = ({ navigation }) => {
       </Formik>
     </View>
   )
-
-  // if (loading) {
-  //   return <LoadingScreen />;
-  // }
-
-  // if (error) {
-  //   console.log(error);
-  //   return <Text>Error!</Text>;
-  // }
-
+  
   return (
     <KeyboardAwareScrollView>
       <ResendForm />

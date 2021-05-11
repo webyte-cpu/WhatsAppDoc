@@ -21,7 +21,7 @@ const address = gql`
   }
 
   extend type Query {
-    getAddress(uid: UUID): Address
+    getAddress(uid: UUID): [Address]
   }
 
   extend type Mutation {

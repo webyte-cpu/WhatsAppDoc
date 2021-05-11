@@ -1,4 +1,8 @@
-import { ApolloError, UserInputError } from "apollo-server-errors";
+import {
+  ApolloError,
+  UserInputError,
+  ValidationError,
+} from "apollo-server-errors";
 import specialization from "../specialization/specialization.js";
 import objectFilter from "../helpers/objectFilter.js";
 import enums from "../helpers/enums/enums.js";
@@ -18,8 +22,8 @@ const user = (knex = pg) => {
       lastName: userData.user_last_name,
       email: userData.user_email,
       password: userData.user_password,
-      birthdate: userData.birthdate,
-      sex: userData.sex,
+      birthdate: userData.user_birthdate,
+      sex: userData.user_sex,
       address: userData.address,
       role: userData.user_role,
       img: userData.user_img,
@@ -46,48 +50,82 @@ const user = (knex = pg) => {
       return knex.transaction(async (trx) => {
         const response = {};
         const saltRounds = 10;
+        const passwordFormat = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})/g;
+        const isValid = passwordFormat.test(userData.password);
+
+        if (!isValid) {
+          throw new ApolloError(
+            `Password format is not valid; Password must be 8 or more characters long and contain at least one of the following:
+            number, uppercase letter, lowercase letter, and symbol.`,
+            "INVALID_PASSWORD"
+          );
+        }
+
         const hashedPassword = bcrypt.hashSync(userData.password, saltRounds);
 
         userData.uid = uuidV4();
         userData.createdAt = new Date(Date.now());
         userData.password = hashedPassword;
 
-        response.user = await user(trx).create(userData);
-        response.patient = await patient(trx).create(userData);
+        try {
+          response.user = await user(trx).create(userData);
+          response.patient = await patient(trx).create(userData);
 
-        if (userData.role === enums.role.DOCTOR) {
-          const doctorData = userData.doctor;
-          doctorData.uid = userData.uid;
-          response.doctor = await doctor(trx).create(doctorData);
+          if (userData.role === enums.role.DOCTOR) {
+            const doctorData = userData.doctor;
+            doctorData.uid = userData.uid;
+            response.doctor = await doctor(trx).create(doctorData);
 
-          if (__.isEmpty(doctorData.specialization)) {
-            throw new UserInputError(
-              "Doctor should have atleast one specialty."
+            if (__.isEmpty(doctorData.specialization)) {
+              throw new UserInputError(
+                "Doctor should have atleast one specialty."
+              );
+            }
+
+            const specList = doctorData.specialization.map((title) =>
+              specialization(trx).assign({
+                title,
+                userUid: doctorData.uid,
+              })
             );
+
+            response.doctor.specialization = await Promise.all(specList);
           }
 
-          const specList = doctorData.specialization.map((title) =>
-            specialization(trx).assign({
-              title,
-              userUid: doctorData.uid,
-            })
-          );
+          delete response.user.password;
+          return response.user;
+        } catch (error) {
+          console.log(error);
 
-          response.doctor.specialization = await Promise.all(specList);
+          let errorCode = "";
+
+          switch (error.code) {
+            case "23505":
+              errorCode = "ALREADY_EXIST_EMAIL";
+              break;
+          }
+
+          throw new ApolloError(error.detail, errorCode);
         }
-
-        delete response.user.password;
-        return response.user;
       });
     },
-    find: async (object) => {
-      const dbResponse = await knex
-        .select("*")
-        .from("users")
-        .where(objectFilter(user().toDb(object)));
+    find: async (object) =>
+      knex.transaction(async (trx) => {
+        const dbResponse = await trx
+          .select("*")
+          .from("users")
+          .where(objectFilter(user().toDb(object)))
+          .leftJoin("doctors", "doctor_uid", "user_uid")
+          .leftJoin("patients", "patient_uid", "user_uid");
 
-      return dbResponse.map((data) => user().fromDb(data));
-    },
+        const data = dbResponse.map((data) => ({
+          ...user().fromDb(data),
+          ...doctor().fromDb(data),
+          ...patient().fromDb(data),
+        }));
+
+        return data;
+      }),
 
     create: async (userData) => {
       userData.uid = userData.uid || uuidV4();
@@ -119,40 +157,38 @@ const user = (knex = pg) => {
     check: async ({ email, password }) => {
       const dbResponse = await user().find({ email });
       const userData = dbResponse[0];
-      const match = await bcrypt.compare(password, userData.password);
-      delete userData.password;
-      if (match) return userData;
-      throw new ValidationError("Invalid password!");
+
+      if (!__.isUndefined(userData)) {
+        const match = await bcrypt.compare(password, userData?.password);
+        delete userData.password;
+        if (match) return userData;
+      }
+
+      throw new ApolloError("Invalid Email or Password.", "VALIDATION_ERROR");
     },
 
     get: async (uid) => {
-      if (!__.isUndefined(uid)) {
-        const dbResponse = await knex
-          .select("*")
-          .from("users")
-          .where(
-            objectFilter({
-              user_uid: uid,
-            })
-          );
+      const dbResponse = await knex
+        .select("*")
+        .from("users")
+        .where(objectFilter({ user_uid: uid }))
+        .leftJoin("doctors", "doctor_uid", "user_uid")
+        .leftJoin("patients", "patient_uid", "user_uid");
 
-        if (__.isEmpty(dbResponse)) {
-          throw new ApolloError("User does not exist!", "NO_DATA");
-        }
-        return user().fromDb(__.first(dbResponse));
-      }
+      const data = dbResponse.map((data) => ({
+        ...user().fromDb(data),
+        ...doctor().fromDb(data),
+        ...patient().fromDb(data),
+      }));
 
-      const dbResponse = await knex.select("*").from("users");
-
-      return dbResponse.map(user().fromDb);
+      return data;
     },
 
     delete: async (uid) => {
       const dbResponse = await knex("users")
         .where({ user_uid: uid })
         .del()
-        .returning("*")
-        .first();
+        .returning("*");
       return user().fromDb(dbResponse);
     },
   };
