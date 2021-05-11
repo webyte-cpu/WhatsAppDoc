@@ -3,7 +3,6 @@ import { View } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { Button, IndexPath, Text, Card, useTheme } from '@ui-kitten/components';
 import { useAuth } from '../auth/utils/authProvider';
-import { SIGNUP_MUTATION } from '../auth/utils/queries';
 import { NameFields } from '../../components/fields';
 import { formatDate } from '../auth/utils/formatters';
 import SignUpDoctor from '../auth/signUpDoctor';
@@ -12,9 +11,30 @@ import enums from '../../../helpers/enums';
 import { Formik } from 'formik';
 import LoadingScreen from '../../components/loadingScreen';
 import { doctorSignUpSchema } from '../../../helpers/validationType';
-
+import { gql, useMutation } from '@apollo/client';
 
 const ROLE = enums.role;
+
+const UPDATE_DOCTOR = gql`
+    mutation updateDoctor(
+      $uid:UUID!, 
+      $licenceNum: String, 
+      $licenceImg: String, 
+      $about: String,
+      $licenceExp: Date,
+      $verificationStatus: VerificationStatus )
+      {
+        updateDoctor(
+          uid: $uid , 
+          licenceNum: $licenceNum, 
+          licenceImg: $licenceImg, 
+          about: $about, 
+          licenceExp: $licenceExp,
+          verificationStatus: $verificationStatus){
+            uid
+        }
+    }
+`
 
 const DoctorForm = ({ navigation }) => {
   const auth = useAuth();
@@ -27,53 +47,56 @@ const DoctorForm = ({ navigation }) => {
     expirationDate: '',
     verificationStatus: enums.verificationStatus.PENDING, //default
   };
-  const userDetails = {
-    fname: '',
-    lname: '',
-    midName: '', //optional
-  };
 
-  // const [doctorForm] = useMutation(SIGNUP_MUTATION, {
-  //   onCompleted({ signUp: token }) {
-  //     if (token) {
-  //       console.log(token);
-  //       auth.login(token);
-  //     }
-  //   },
-  // });
-  const RESEND_REQUEST = gql`
-  mutation updateDoctor($uid:UUID!, $verificationStatus: VerificationStatus, licenceNum: String! ){
-      updateDoctor(uid: $uid , verificationStatus: $verificationStatus){
-        uid
-        verificationStatus
-        licenceNum
-      }
-  }
-`
+  const [updateDoctor, { errorMutate }] = useMutation(UPDATE_DOCTOR)
+
 
   // const resend = (values) => {
-  //   console.log(values);
-  //   console.log(values.licenseImg);
+    
+  //   // const doctor = {
+  //   //   doctor: {
+  //   //     uid: "b429f877-069c-42fb-9e48-088f351b5328",
+  //   //     licenseNum: "test",
+  //   //     licenseImg: "test",
+  //   //     licenseEXP: formatDate(values.expirationDate),
+  //   //     specialization: "oby",
+  //   //     verificationStatus: "PENDING"
+  //   //   }
+  //   // };
 
-  //   const doctor =
-  //     values === ROLE.DOCTOR
-  //       ? {
-  //           doctor: {
-  //             licenceNum: values.licenseNum,
-  //             licenceImg: values.licenseImg,
-  //             licenceExp: formatDate(values.expirationDate),
-  //             specialization: values.specialization,
-  //             verificationStatus: values.verificationStatus,
-  //           },
-  //         }
-  //       : {};
-
-  //   return doctorForm({
+  //   updateDoctor({
   //     variables: {
-  //       ...doctor,
-  //     },
-  //   });
-  // };
+  //       uid: "b429f877-069c-42fb-9e48-088f351b5328",
+  //       verificationStatus: "PENDING"
+  //     }
+  //   })
+  //   if (errorMutate) {
+  //     console.log(errorMutate)
+  // }
+
+
+  // }
+
+  
+
+
+  const resend = (values) => {
+    console.log(formatDate(values.expirationDate))
+    updateDoctor({
+        variables: {
+            uid: "b429f877-069c-42fb-9e48-088f351b5328",
+            licenceNum: values.licenseNum,
+            licenceImg: "test",
+            about: values.specialization,
+            licenceEXP: formatDate(values.expirationDate),
+            verificationStatus: "PENDING"
+        }
+    });
+
+    if (errorMutate) {
+        console.log(errorMutate)
+    }
+}
 
   const ResendForm = () => (
     <View style={{ ...customStyle.content}}>
@@ -84,10 +107,7 @@ const DoctorForm = ({ navigation }) => {
       >
         {(props) => (
           <>
-            <Text category="h6" style={customStyle.formTitle}>
-              Personal Information
-          </Text>
-            <NameFields />
+
             <SignUpDoctor {...props} />
             <Button
               testID="resendFormBtn"

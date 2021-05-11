@@ -17,16 +17,13 @@ import {
     from '@ui-kitten/components';
 import { useTheme } from '@ui-kitten/components'
 import DoctorDetails from './verification'
-import { data } from './dummyDataAdmin'
+
 import { gql, useQuery, useMutation } from '@apollo/client';
 
 const GET_DOCTORS = gql`
 query {
   getAllDoctor{
     uid
-    userFirstName
-    verificationStatus  
-    about
   }
 }
     `;
@@ -67,6 +64,7 @@ const Admin = () => {
     const { loading, error, data } = useQuery(GET_DOCTORS);
 
     const [updateDoctor, { errorMutate }] = useMutation(UPDATE_DOCTOR)
+    
     if (loading) return 'Loading...';
     if (error) return `Error! ${error.message}`;
 
@@ -123,7 +121,7 @@ const Admin = () => {
       }}
     >
         <Text testID="welcome-header" category="h1" style={{ marginBottom: 10 }}>
-          Welcome, {fname}
+          Welcome
         </Text>
         <Divider/>
             <View>

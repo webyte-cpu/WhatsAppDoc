@@ -18,9 +18,9 @@ const doctor = gql`
     createdAt: DateTime
     updatedAt: DateTime
 
-    licenceNum: String!
-    licenceImg: String!
-    licenceExpiration: Date!
+    licenceNum: String
+    licenceImg: String
+    licenceExpiration: Date
     verificationStatus: VerificationStatus
     experience: Int
     about: String
