@@ -60,8 +60,8 @@ const address = (knex = pg) => {
     remove: async (uid) => {
       const dbResponse = await knex("addresses")
         .where({ address_uid: uid })
-        .del();
-
+        .del()
+        .returning("*");
       return address().fromDb(__.first(dbResponse));
     },
   };
