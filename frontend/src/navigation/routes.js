@@ -26,6 +26,7 @@ const linking = {
       Schedules: "/schedules",
       Notification: "/notif",
       Profile: "/profile",
+      DoctorForm: "/resendform",
       AppointmentProperties: '/properties'
     },
   },
