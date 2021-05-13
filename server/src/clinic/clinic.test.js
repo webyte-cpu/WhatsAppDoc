@@ -21,7 +21,7 @@ describe("Queries", () => {
 
   it("creates a clinic", async () => {
 
-    const rest = await query({
+    const res = await query({
       query: CREATE_CLINIC,
       variables: {
         doctorUid: "4007903d-918e-4613-9e61-14958511576e",
@@ -32,6 +32,30 @@ describe("Queries", () => {
         slotDurationInMins: 3,
         consultationFee: 500
       }
+    })
+
+    expect(res).toMatchSnapshot();
+  })
+
+  it("updates a clinic", async () => {
+
+    const res = await query({
+      query: UPDATE_CLINIC,
+      variables: {
+        uid: "027ae0ac-05d6-43bf-818e-a76607b7f976",
+        name: "Clinic number 5",
+        roomNumber: "9"
+      }
+    })
+
+    expect(res).toMatchSnapshot();
+  })
+
+  it("deletes a clinic", async () => {
+
+    const res = await query({
+      query: DELETE_CLINIC,
+      variables: { uid: "f9609c66-d0a1-48c6-b8bd-3a1a975986d4" }
     })
 
     expect(res).toMatchSnapshot();
