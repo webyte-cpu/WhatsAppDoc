@@ -2,6 +2,7 @@ import objectFilter from "../helpers/objectFilter.js";
 import { v4 as uuidV4 } from "uuid";
 import pg from "../../db/index.js";
 import __ from "lodash";
+import { ApolloError } from "apollo-server-errors";
 
 const schedule = (knex = pg) => ({
   fromDb: (scheduleData) => ({
@@ -47,14 +48,22 @@ const schedule = (knex = pg) => ({
       scheduleData.uid = scheduleData.uid || uuidV4();
       return schedule().toDb(scheduleData);
     });
-    const dbResponse = await knex
-      .insert(newSchedList)
-      .into("schedules")
-      .returning("*")
-      .onConflict("schedule_uid")
-      .merge();
 
-    return dbResponse.map((data) => schedule().fromDb(data));
+    try {
+      const dbResponse = await knex
+        .insert(newSchedList)
+        .into("schedules")
+        .returning("*")
+        .onConflict("schedule_uid")
+        .merge();
+
+      return dbResponse.map((data) => schedule().fromDb(data));
+    } catch (error) {
+      if (error.code && error.column == "doctor_clinic_uid")
+        throw new ApolloError(
+          "A unique identifier for the physician's clinic is needed!"
+        );
+    }
   },
 
   get: async (uid) => {

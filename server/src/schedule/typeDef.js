@@ -17,7 +17,7 @@ const schedule = gql`
 
   input SchedUpsertInput {
     uid:UUID
-    doctorClinicUid: UUID
+    doctorClinicUid: UUID!
     startTime: Time
     endTime: Time
     daysOfTheWeek: [Int]
