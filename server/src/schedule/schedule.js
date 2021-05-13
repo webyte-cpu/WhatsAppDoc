@@ -2,6 +2,7 @@ import objectFilter from "../helpers/objectFilter.js";
 import { v4 as uuidV4 } from "uuid";
 import pg from "../../db/index.js";
 import __ from "lodash";
+import { ApolloError } from "apollo-server-errors";
 
 const schedule = (knex = pg) => ({
   fromDb: (scheduleData) => ({
@@ -20,13 +21,17 @@ const schedule = (knex = pg) => ({
     doctor_clinic_uid: scheduleData.doctorClinicUid,
   }),
 
-  create: async (scheduleData) => {
-    scheduleData.uid = scheduleData.uid || uuidV4();
+  create: async (scheduleList) => {
+    const newSchedList = scheduleList.map((scheduleData) => {
+      scheduleData.uid = scheduleData.uid || uuidV4();
+      return schedule().toDb(scheduleData);
+    });
     const dbResponse = await knex
-      .insert(schedule().toDb(scheduleData))
+      .insert(newSchedList)
       .into("schedules")
       .returning("*");
-    return schedule().fromDb(__.first(dbResponse));
+
+    return dbResponse.map((data) => schedule().fromDb(data));
   },
 
   update: async (scheduleData) => {
@@ -36,6 +41,29 @@ const schedule = (knex = pg) => ({
       .returning("*");
 
     return schedule().fromDb(__.first(dbResponse));
+  },
+
+  upsert: async (scheduleList) => {
+    const newSchedList = scheduleList.map((scheduleData) => {
+      scheduleData.uid = scheduleData.uid || uuidV4();
+      return schedule().toDb(scheduleData);
+    });
+
+    try {
+      const dbResponse = await knex
+        .insert(newSchedList)
+        .into("schedules")
+        .returning("*")
+        .onConflict("schedule_uid")
+        .merge();
+
+      return dbResponse.map((data) => schedule().fromDb(data));
+    } catch (error) {
+      if (error.code && error.column == "doctor_clinic_uid")
+        throw new ApolloError(
+          "A unique identifier for the physician's clinic is needed!"
+        );
+    }
   },
 
   get: async (uid) => {

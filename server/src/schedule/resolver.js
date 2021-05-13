@@ -6,7 +6,8 @@ const resolverMap = {
     getSchedule: async (obj, arg) => schedule().get(arg.uid),
   },
   Mutation: {
-    createSchedule: (obj, arg) => schedule().create(arg),
+    upsertSchedule:(obj, arg) => schedule().upsert(arg.data),
+    createSchedule: (obj, arg) => schedule().create(arg.data),
     updateSchedule: (obj, arg) => schedule().update(arg),
     deleteSchedule: (obj, arg) => schedule().remove(arg.uid),
   },
