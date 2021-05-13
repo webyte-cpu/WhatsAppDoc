@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { StyleSheet, TouchableWithoutFeedback } from 'react-native';
+import React, { useState } from "react";
+import { StyleSheet, TouchableWithoutFeedback, View } from "react-native";
 import {
   Input,
   Select,
@@ -10,11 +10,11 @@ import {
   RadioGroup,
   Icon,
   useTheme,
-} from '@ui-kitten/components';
-import { Field } from 'formik';
-import { CustomInput } from './customInput';
-import enums from '../../helpers/enums';
-import countryList from '../utils/countries.json';
+} from "@ui-kitten/components";
+import { Field } from "formik";
+import { CustomInput, CustomSelectField } from "./customInput";
+import enums from "../../helpers/enums";
+import countryList from "../utils/countries.json";
 
 // const editForm = (formType, formSetter, key, value) => formSetter({ ...formType, [key]: value });
 
@@ -27,8 +27,8 @@ const InputLabelOptional = (props) => {
   return (
     <Text {...props}>
       {props.label}
-      <Text style={{ color: theme['text-hint-color'], fontSize: 11 }}>
-        {' (optional)'}
+      <Text style={{ color: theme["text-hint-color"], fontSize: 11 }}>
+        {" (optional)"}
       </Text>
     </Text>
   );
@@ -55,7 +55,7 @@ const PasswordField = (props) => {
 
   const showPasswordIcon = (props) => (
     <TouchableWithoutFeedback onPress={toggleSecureEntry}>
-      <Icon {...props} name={!secureTextEntry ? 'eye' : 'eye-off'} />
+      <Icon {...props} name={!secureTextEntry ? "eye" : "eye-off"} />
     </TouchableWithoutFeedback>
   );
 
@@ -112,20 +112,20 @@ const SexField = ({ setValues, values, touched, setFieldTouched, errors }) => {
     },
   });
 
-  const hasError = errors['sex'] && touched['sex'];
-  const dynamicStatus = hasError ? 'danger' : 'basic';
+  const hasError = errors["sex"] && touched["sex"];
+  const dynamicStatus = hasError ? "danger" : "basic";
   return (
     <>
-      <Text category="label" style={{ color: theme['text-hint-color'] }}>
+      <Text category="label" style={{ color: theme["text-hint-color"] }}>
         Sex:
       </Text>
       <RadioGroup
         selectedIndex={SEX.indexOf(values.sex)}
         onChange={(index) => {
-          setFieldTouched('sex');
+          setFieldTouched("sex");
           setValues({ ...values, sex: SEX[index] });
         }}
-        style={{ flexDirection: 'row' }}
+        style={{ flexDirection: "row" }}
       >
         <Radio testID="sex-male" style={styles.radio} status={dynamicStatus}>
           Male
@@ -136,7 +136,7 @@ const SexField = ({ setValues, values, touched, setFieldTouched, errors }) => {
       </RadioGroup>
       {hasError ? (
         <Text category="c1" status="danger">
-          {errors['sex']}
+          {errors["sex"]}
         </Text>
       ) : (
         <></>
@@ -161,14 +161,14 @@ const DateField = (props) => {
     <>
       <Datepicker
         {...props}
-        status={hasError ? 'danger' : 'basic'}
-        min={new Date('1905-01-01')}
+        status={hasError ? "danger" : "basic"}
+        min={new Date("1905-01-01")}
         date={values[name]}
         onSelect={(date) => {
           setFieldTouched(name);
           setValues({ ...values, [name]: date });
         }}
-        caption={hasError ? errors[name] : ''}
+        caption={hasError ? errors[name] : ""}
         placement="bottom start"
       />
     </>
@@ -184,7 +184,7 @@ const NationalityField = ({ form, editForm }) => {
       placeholder="Select your Nationality"
       value={nationalitiesData[form.nationality.row]}
       selectedIndex={form.nationality}
-      onSelect={(value) => editForm('nationality', value)}
+      onSelect={(value) => editForm("nationality", value)}
     >
       {nationalitiesData.map((nationality, index) => (
         <SelectItem key={index} title={nationality} />
@@ -201,7 +201,7 @@ const CivilStatusField = ({ form, editForm }) => {
       placeholder="Select Civil Status"
       value={CIVIL_STATUS[form.civilStatus.row]}
       selectedIndex={form.civilStatus}
-      onSelect={(value) => editForm('civilStatus', value)}
+      onSelect={(value) => editForm("civilStatus", value)}
     >
       {CIVIL_STATUS.map((status) => (
         <SelectItem key={status} title={status}></SelectItem>
@@ -216,7 +216,7 @@ const ContactNumberField = ({ form, editForm }) => {
       testID="contactNum"
       label="Contact Number"
       value={form.contactNum}
-      onChangeText={(value) => editForm('contactNum', value)}
+      onChangeText={(value) => editForm("contactNum", value)}
       placeholder="Enter Contact Number"
       textContentType="telephoneNumber"
       keyboardType="number-pad"
@@ -224,64 +224,86 @@ const ContactNumberField = ({ form, editForm }) => {
   );
 };
 
-const AddressFields = ({ form, editForm }) => {
+const AddressFields = ({submitForm}) => {
   const countriesData = countryList.map((data) => data.country);
 
   return (
     <>
-      <Input
-        testID="address"
-        label="Address"
+      <Field
+        testID="streetAddress"
+        label="Street Address"
+        component={CustomInput}
+        name="streetAddress"
+        placeholder="Street Address"
         caption="House Number, Street Name, Barangay"
-        value={form.address}
-        onChangeText={(value) => editForm('address', value)}
-        placeholder="Enter Address"
-        returnKeyType="next"
+        submitOnChange={(values) => submitForm(values)}
         multiline
-        style={{ marginBottom: 10 }}
       />
+      <View
+        style={{
+          flexDirection: "row",
+          // justifyContent: "center",
+          // marginVertical: 10,
+        }}
+      >
+        <Field
+          testID="city"
+          label="City"
+          component={CustomInput}
+          name="city"
+          placeholder="City"
+          style={{ flex: 0.4 }}
+          submitOnChange={(values) => submitForm(values)}
+        />
+        <Field
+          testID="province"
+          label="State/Province"
+          component={CustomInput}
+          name="province"
+          placeholder="State/Province"
+          style={{ flex: 0.6, marginLeft: 10 }}
+          submitOnChange={(values) => submitForm(values)}
+        />
+      </View>
+      <View
+        style={{
+          flexDirection: "row",
+        }}
+      >
+        <Field
+          testID="zipCode"
+          label="Zip/Postal Code"
+          component={CustomInput}
+          name="zipCode"
+          placeholder="Zip/Postal Code"
+          style={{ flex: 0.3 }}
+          submitOnChange={(values) => submitForm(values)}
 
-      <Input
-        testID="city"
-        label="City"
-        value={form.city}
-        onChangeText={(value) => editForm('city', value)}
-        placeholder="City"
-        returnKeyType="next"
-      />
+        />
+        <Field
+          testID="country"
+          label="Country"
+          placeholder="Country"
+          name="country"
+          component={CustomInput}
+          style={{ flex: 0.7, marginLeft: 10 }}
+          submitOnChange={(values) => submitForm(values)}
 
-      <Input
-        testID="province"
-        label="State/Province"
-        value={form.province}
-        placeholder="Enter State/Province"
-        onChangeText={(value) => editForm('province', value)}
-        returnKeyType="next"
-      />
-
-      <Input
-        testID="zipCode"
-        label="Zip/Postal Code"
-        value={form.zipCode}
-        placeholder="Enter Zip/Postal Code"
-        onChangeText={(value) => editForm('zipCode', value)}
-        returnKeyType="next"
-        style={{ flex: 0.4, marginRight: 10 }}
-      />
-
-      <Select
+        />
+      </View>
+      {/* <Select
         testID="country"
         label="Country"
         placeholder="Select your Country"
         value={countriesData[form.country.row]}
         selectedIndex={form.country}
-        onSelect={(value) => editForm('country', value)}
+        onSelect={(value) => editForm("country", value)}
         style={{ flex: 0.6 }}
       >
         {countriesData.map((country, index) => (
           <SelectItem key={index} title={country} />
         ))}
-      </Select>
+      </Select> */}
     </>
   );
 };
@@ -291,5 +313,6 @@ export {
   PasswordField,
   NameFields,
   SexField,
-  DateField
+  DateField,
+  AddressFields,
 };

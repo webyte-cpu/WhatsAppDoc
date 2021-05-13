@@ -5,7 +5,6 @@ import {
   Button,
   List,
   Icon,
-  Popover,
   Divider,
   ListItem,
   useTheme,
@@ -13,40 +12,10 @@ import {
   Card,
 } from "@ui-kitten/components";
 import customStyle from "../../../themes/styles";
-
-const MenuIcon = (props) => {
-  const [openMenu, setOpenMenu] = useState(false);
-
-  const MenuBtn = () => {
-    return (
-      <TouchableWithoutFeedback onPress={() => setOpenMenu(true)}>
-        <Icon
-          {...props}
-          name="
-more-vertical-outline"
-        />
-      </TouchableWithoutFeedback>
-    );
-  };
-  const PopoverMenu = () => {
-    return (
-      <Popover
-        anchor={MenuBtn}
-        visible={openMenu}
-        placement="bottom-end"
-        onBackdropPress={() => setOpenMenu(false)}
-      >
-        <Text>something</Text>
-      </Popover>
-    );
-  };
-  return (
-    <>
-      <MenuBtn />
-      <PopoverMenu />
-    </>
-  );
-};
+import { AppRoute } from "../../navigation/app-routes";
+import { Formik, Field } from "formik";
+import { CustomInput } from "../../components/customInput";
+import { clinicNameSchema } from "../../../helpers/validationType";
 
 const DeleteIcon = (props) => {
   const theme = useTheme();
@@ -106,7 +75,7 @@ const DeleteIcon = (props) => {
   );
 };
 
-const AddNewClinicBtn = () => {
+const AddNewClinicBtn = ({ setOpenModal }) => {
   const theme = useTheme();
 
   const addIcon = (props) => (
@@ -135,42 +104,115 @@ const AddNewClinicBtn = () => {
       title={btnTitle}
       accessoryLeft={addIcon}
       style={{ backgroundColor: theme["color-primary-transparent-100"] }}
-      onPress={() => console.log("go to properties")}
+      onPress={() => setOpenModal(true)}
     />
   );
 };
 
-const ClinicPage = () => {
+const goToProperties = (navigation, initialValues) => navigation.navigate(AppRoute.APPOINTMENT_PROPERTIES, {initialValues: initialValues})
+const ClinicPage = ({ navigation }) => {
   const theme = useTheme();
+  const [openModal, setOpenModal] = useState(false);
+  const clinicDetails = {
+    clinicName: "",
+  };
+
+  const sendData = (values) => {
+    const clinicProperties = {
+      roomNumber: "",
+      address: {
+        streetAddress: "",
+        city: "",
+        province: "",
+        country: "",
+        zipCode: "",
+      },
+      minimumSchedulingNoticeMins: "",
+      slotDurationInMins: "",
+      consultationFee: "",
+      ...values,
+    };
+    setOpenModal(false);
+    goToProperties(navigation, clinicProperties)
+  };
 
   const clinicData = [
-    { name: "Clinic 1" },
-    { name: "Clinic 2" },
-    { name: "Clinic 3" },
-    { name: "Clinic 1" },
-    { name: "Clinic 2" },
-    { name: "Clinic 3" },
-    { name: "Clinic 1" },
-    { name: "Clinic 2" },
-    { name: "Clinic 3" },
-    { name: "Clinic 1" },
-    { name: "Clinic 2" },
-    { name: "Clinic 3" },
+    {
+      clinicName: "Clinic 1",
+      roomNumber: "",
+      address: {
+        streetAddress: "Brgy. Milibili",
+        city: "Roxas City",
+        province: "Capiz",
+        country: "Philippines",
+        zipCode: "5800",
+      },
+      minimumSchedulingNoticeMins: "15",
+      slotDurationInMins: "30",
+      consultationFee: "500",
+    },
+    {
+      clinicName: "Clinic 2",
+      roomNumber: "",
+      address: {
+        streetAddress: "Brgy. Loctugan",
+        city: "Roxas City",
+        province: "Capiz",
+        country: "Philippines",
+        zipCode: "5800",
+      },
+      minimumSchedulingNoticeMins: "120",
+      slotDurationInMins: "45",
+      consultationFee: "580",
+    },
   ];
+
+  const NewClinicModal = () => {
+    return (
+      <Modal
+        visible={openModal}
+        style={customStyle.modalContainer}
+        backdropStyle={customStyle.backdrop}
+        onBackdropPress={() => setOpenModal(false)}
+      >
+        <Formik
+          initialValues={clinicDetails}
+          validationSchema={clinicNameSchema}
+          onSubmit={(values) => sendData(values)}
+        >
+          {({ handleSubmit }) => (
+            <Card>
+              <Field
+                component={CustomInput}
+                testID="clinicName"
+                name="clinicName"
+                label="Clinic Name"
+                placeholder="Enter clinic name"
+              />
+              <Button onPress={() => handleSubmit()}>Next</Button>
+            </Card>
+          )}
+        </Formik>
+      </Modal>
+    );
+  };
 
   const renderClinic = ({ item, index }) => {
     return item !== null ? (
       <>
         <ListItem
+          key={index}
           testID={`clinic-${index}`}
-          title={`${item.name}`}
+          title={`${item.clinicName}`}
           accessoryRight={(props) => (
-            <DeleteIcon {...props} clinic={item.name} />
+            <DeleteIcon {...props} clinic={item.clinicName} />
           )}
-          onPress={() => console.log("go to properties")}
-        />
-        <Divider />
-      </>
+          onPress={() =>
+            goToProperties(navigation, item)
+          }
+          />
+          <Divider />
+      </> 
     ) : (
       <> </>
     );
@@ -179,7 +221,8 @@ const ClinicPage = () => {
   return (
     <ScrollView style={customStyle.listBackground}>
       <List testID="clinicList" data={clinicData} renderItem={renderClinic} />
-      <AddNewClinicBtn />
+      <AddNewClinicBtn setOpenModal={setOpenModal} />
+      <NewClinicModal clinicDetails={clinicDetails} />
     </ScrollView>
   );
 };
