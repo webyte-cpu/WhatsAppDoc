@@ -1,4 +1,4 @@
-import { gql } from 'apollo-server-address';
+import { gql } from 'apollo-server-express';
 
 export const GET_CLINIC = gql`
   query GetClinic($uid: UUID, $doctorUid: UUID) {
