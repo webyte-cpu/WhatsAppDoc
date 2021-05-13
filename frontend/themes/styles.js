@@ -1,11 +1,10 @@
-import { StyleSheet } from "react-native";
-import { Platform } from "react-native";
+import { StyleSheet } from 'react-native';
 
 const customStyle = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   content: {
     paddingTop: 10,
@@ -15,11 +14,11 @@ const customStyle = StyleSheet.create({
   contentFill: {
     paddingTop: 10,
     paddingHorizontal: 10,
-    backgroundColor: "#fff",
+    backgroundColor: '#fff',
     flex: 1,
   },
   headerStyle: {
-    backgroundColor: "#f9f9f9",
+    backgroundColor: '#f9f9f9'
   },
   uploadImgContainer: {
     height: 100,
@@ -30,21 +29,14 @@ const customStyle = StyleSheet.create({
     marginBottom: 20,
     marginTop: 50,
   },
-  tabStyle: { height: 40 },
-  modalContainer: {
-    width: 300,
-    ...Platform.select({
-      web: {
-        width: 600,
-      },
-    }),
+  dateCard: {
+    width: 30,
+    borderRadius: 70,
   },
-  backdrop: {
-    backgroundColor: "rgba(0, 0, 0, 0.5)",
-  },
-  listBackground: {
-    backgroundColor: "white"
-  },
+  warningCard: {
+    margin: 2,
+    width:500,
+  }
 });
 
 export default customStyle;
