@@ -2,6 +2,7 @@ import { gql } from "apollo-server-core";
 const clinic = gql`
   type Clinic {
     uid: UUID!
+    doctorClinicUid: UUID!
     name: String!
     roomNumber: String
     address: Address

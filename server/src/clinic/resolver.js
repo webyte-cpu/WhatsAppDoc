@@ -11,9 +11,9 @@ const resolverMap = {
     getClinic: (obj, arg) => clinic().get(arg),
   },
   Mutation: {
-    createClinic: (obj, arg) => clinic().create(arg),
-    updateClinic: (obj, arg) => clinic().update(arg),
-    deleteClinic: (obj, arg) => clinic().remove(arg),
+    createClinic: (obj, clinicData) => clinic().create(clinicData),
+    updateClinic: (obj, clinicData) => clinic().update(clinicData),
+    deleteClinic: (obj, clinicData) => clinic().remove(clinicData.uid),
   },
   // Subscription: {},
 };
