@@ -1,29 +1,28 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import { ScrollView, TouchableOpacity, View, StyleSheet } from "react-native";
-import { Text, Card, Icon } from "@ui-kitten/components";
+import { Text, Card, Icon, useTheme } from "@ui-kitten/components";
 import customStyle from "../../../themes/styles";
 import {  Agenda } from 'react-native-calendars';
 
 const AgendaScreen = () => {
-  const [items, setItems] = useState({
-      '2021-05-14': [
-          {name: 'Ayesha', date:'May 14 7:00 - 7:30'},
-          {name: 'Danielle', date:'May 14 9:00 - 9:30'}],
+  const refAgenda = useRef(null);  const [items, setItems] = useState({
       '2021-05-15': [
-          {name: 'Em', date:'May 15 1:00 - 1:30'},
-          {name: 'Mallare', date:'May 15 4:00 - 4:30'}],
-      '2021-05-16': [
-          {name: 'Siroy', date:'May 16 7:00 - 7:30'},
-          {name: 'Manok', date:'May 16 7:30 - 8:00'}],
+          {name: 'Ayesha', date:'7:00 AM'},
+          {name: 'Danielle', date:'9:00 AM'}],
       '2021-05-17': [
-          {name: 'Harreh', date:'May 17 11:30 - 12:00'},
-          {name: 'Bertolto', date:'May 17 1:30 - 2:00'},
-          {name: 'Jam hakdog', date:'May 17 3:30 - 4:00'}],
+          {name: 'Em', date:'1:00 PM'},
+          {name: 'Mallare', date:'4:00 PM'}],
       '2021-05-18': [
-          {name: 'Alexis', date:'May 18 8:30 - 9:00'},
-          {name: 'Dalisay', date:'May 18 10:30 - 11:00'}],
+          {name: 'Siroy', date:'7:00 AM'},
+          {name: 'Manok', date:'7:30 AM'}],
+      '2021-05-19': [
+          {name: 'Harreh', date:'11:30 AM'},
+          {name: 'Bertolto', date:'1:30 PM'},
+          {name: 'Jam hakdog', date:'3:30 PM'}],
+      '2021-05-20': [
+          {name: 'Alexis', date:'8:30 AM'},
+          {name: 'Dalisay', date:'10:30 AM'}],
     });
-
 
   const renderItem = (item) => {
     return(
@@ -38,22 +37,30 @@ const AgendaScreen = () => {
     )
   }
 
+  const openCalendar = () => {
+    // let initPos = refAgenda.current.initialScrollPadPosition()
+    refAgenda.current.setScrollPadPosition(0, true);
+    refAgenda.current.enableCalendarScrolling();
+  }
+
+  const Knob = (props) => {
+    return (
+      <TouchableOpacity onPress={openCalendar} >
+        <Icon {...props} style={[props.style, { width: 20, height: 20, }]} name='arrow-ios-downward-outline' />
+      </TouchableOpacity>
+    )
+  }
+  const theme = useTheme();
+
   return (
       <Agenda
+        ref={refAgenda}
         items={items}
         renderItem={renderItem}
+        renderEmptyData={() => {return <View />}}
+        renderKnob={() => <Knob />}
         pastScrollRange={10}
         futureScrollRange={10}
-      // hideKnob={false}
-      //   renderKnob={(props) => { 
-      //     return (
-      //       <View>
-      //         <TouchableOpacity /*onPress = {() => openCalendar ? setOpenCalendar(false) : setOpenCalendar(true)}*/>
-      //           <Icon {...props} name='arrow-ios-downward-outline' />
-      //         </TouchableOpacity>
-      //       </View>
-      //     ); 
-      // }}
       />
   );
 }
@@ -76,7 +83,7 @@ const styles = StyleSheet.create({
     margin: 5,
     borderRadius: 15,
     justifyContent: 'center',
-    alignItems: 'center',
+    // alignItems: 'center',
     flex: 1,
   },
 });
