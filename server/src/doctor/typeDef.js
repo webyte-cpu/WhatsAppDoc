@@ -14,7 +14,7 @@ const doctor = gql`
     img: String
     createdAt: DateTime
     updatedAt: DateTime
-    
+
     licenceNum: String!
     licenceImg: String!
     licenceExp: Date!
@@ -62,7 +62,7 @@ const doctor = gql`
       educational: String
       rating: Int
     ): Doctor
-    deleteDoctor(uid: UUID!): UUID!
+    deleteDoctor(uid: UUID!): Doctor
   }
   # type Subcription {
   # }

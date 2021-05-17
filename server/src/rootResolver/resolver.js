@@ -5,6 +5,17 @@ import address from "../address/resolver.js";
 import doctor from "../doctor/resolver.js";
 import clinic from "../clinic/resolver.js";
 import user from "../user/resolver.js";
-const rootResolvers = [user, patient, doctor, address, clinic, schedule];
+import signUp from "../signUp/resolver.js";
+import signIn from "../signIn/resolver.js";
+const rootResolvers = [
+  user,
+  patient,
+  doctor,
+  address,
+  clinic,
+  schedule,
+  signIn,
+  signUp,
+];
 const resolvers = [...rootResolvers, scalarResolvers];
 export default resolvers;

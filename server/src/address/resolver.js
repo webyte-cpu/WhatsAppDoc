@@ -1,22 +1,13 @@
-import address from "./address.js";
-import __ from "lodash";
+import address from "./model.js";
 
-const resolverMap = {
+export default {
   Query: {
-    getAddress: async (obj, arg) => await address().get(arg.uid),
+    getAddress: (obj, arg) => address.get(arg.uid),
   },
   Mutation: {
-    createAddress: (obj, arg) => {
-      return address().create(arg);
-    },
-    updateAddress: (obj, arg) => {
-      return address().update(arg);
-    },
-    deleteAddress: (obj, arg) => {
-      return address().remove(arg.uid);
-    },
+    createAddress: (obj, arg) => address.create(arg),
+    updateAddress: (obj, arg) => address.update(arg),
+    deleteAddress: (obj, arg) => address.remove(arg.uid),
   },
   // Subscription: {},
 };
-
-export default resolverMap;

@@ -4,6 +4,8 @@ import schedule from "../schedule/typeDef.js";
 import patient from "../patient/typeDef.js";
 import { gql } from "apollo-server-express";
 import address from "../address/typeDef.js";
+import signUp from "../signUp/typeDef.js";
+import signIn from "../signIn/typeDef.js";
 import doctor from "../doctor/typeDef.js";
 import clinic from "../clinic/typeDef.js";
 import user from "../user/typeDef.js";
@@ -30,6 +32,8 @@ const typeDefs = [
   doctor,
   clinic,
   schedule,
+  signIn,
+  signUp,
 ];
 
 export default typeDefs;
