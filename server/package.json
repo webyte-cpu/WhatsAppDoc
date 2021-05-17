@@ -1,5 +1,25 @@
 {
+  "name": "server",
+  "jest": {
+    "moduleFileExtensions": [
+      "js"
+    ],
+    "moduleDirectories": [
+      "node_modules",
+      "src"
+    ]
+  },
+  "version": "1.0.0",
+  "main": "index.js",
   "type": "module",
+  "scripts": {
+    "test": "cross-env NODE_OPTIONS=--experimental-vm-modules npx jest",
+    "test:migrate:up": "knex --knexfile ./knex/knexfile.js migrate:latest --env test",
+    "test:seed:run": "knex --knexfile ./knex/knexfile.js seed:run --env test",
+    "server": "nodemon src/app.js ",
+    "migration": "knex --knexfile ./knex/knexfile.js migrate:latest",
+    "seed": "knex --knexfile ./knex/knexfile.js seed:run"
+  },
   "dependencies": {
     "apollo-datasource-rest": "^0.11.0",
     "apollo-server-express": "^2.21.2",
@@ -19,24 +39,14 @@
     "pg": "^8.5.1",
     "uuid": "^8.3.2"
   },
-  "name": "server",
-  "version": "1.0.0",
-  "main": "index.js",
   "devDependencies": {
     "@types/jest": "^26.0.22",
+    "cross-env": "^7.0.3",
     "easygraphql-tester": "^6.0.1",
     "faker": "^5.5.3",
     "jest": "^26.6.3",
     "knex": "^0.95.2",
     "nodemon": "^2.0.7"
-  },
-  "scripts": {
-    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js",
-    "test:migrate:up": "knex --knexfile ./knex/knexfile.js migrate:latest --env test",
-    "test:seed:run": "knex --knexfile ./knex/knexfile.js seed:run --env test",
-    "server": "nodemon src/app.js ",
-    "migration": "knex --knexfile ./knex/knexfile.js migrate:latest",
-    "seed": "knex --knexfile ./knex/knexfile.js seed:run"
   },
   "author": "",
   "license": "ISC",
