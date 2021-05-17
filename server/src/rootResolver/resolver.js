@@ -8,5 +8,3 @@ import user from "../user/resolver.js";
 const rootResolvers = [user, patient, doctor, address, clinic, schedule];
 const resolvers = [...rootResolvers, scalarResolvers];
 export default resolvers;
-
-

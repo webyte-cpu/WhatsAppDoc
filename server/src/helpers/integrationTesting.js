@@ -1,9 +1,4 @@
-import {
-  typeDefs,
-  resolvers,
-  ApolloServer,
-  context as defaultContext,
-} from "../app.js";
+import { ApolloServer, context, server, typeDefs, resolvers } from "../app.js";
 import faker from "faker";
 import pg from "../../db/index.js";
 import knexCleaner from "knex-cleaner";
@@ -18,7 +13,7 @@ const defaultMocks = {
   EmailAddress: () => faker.internet.email(),
 };
 
-const constructTestServer = ({ context = defaultContext, mocks = {} } = {}) => {
+const constructTestServer = ({ context, mocks = {} } = {}) => {
   const server = new ApolloServer({
     typeDefs,
     resolvers,
@@ -26,7 +21,6 @@ const constructTestServer = ({ context = defaultContext, mocks = {} } = {}) => {
     mockEntireSchema: false,
     context: context,
   });
-
   return { server };
 };
 
@@ -35,7 +29,6 @@ const cleanDb = () => {
     mode: "truncate",
     restartIdentity: true,
   };
-  
   knexCleaner.clean(pg, options);
 };
 

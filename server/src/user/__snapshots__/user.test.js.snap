@@ -4,7 +4,7 @@ exports[`Queries deletes the user 1`] = `
 Object {
   "data": null,
   "errors": Array [
-    [GraphQLError: delete from "users" where "user_uid" = $1 returning * - invalid input syntax for type uuid: "{"uid":"8b686839-4c94-48ac-ac51-86d36b7bf17c"}"],
+    [GraphQLError: user(...).delete is not a function],
   ],
   "extensions": undefined,
   "http": Object {
@@ -17,9 +17,9 @@ Object {
 
 exports[`Queries fetches single user 1`] = `
 Object {
-  "data": null,
+  "data": undefined,
   "errors": Array [
-    [GraphQLError: User does not exist!],
+    [ValidationError: Unknown argument "uid" on field "Query.getUser".],
   ],
   "extensions": undefined,
   "http": Object {
@@ -32,9 +32,9 @@ Object {
 
 exports[`Queries it signs up user 1`] = `
 Object {
-  "data": null,
+  "data": undefined,
   "errors": Array [
-    [GraphQLError: insert into "users" ("created_at", "user_birthdate", "user_email", "user_first_name", "user_last_name", "user_password", "user_role", "user_sex", "user_uid") values ($1, $2, $3, $4, $5, $6, $7, $8, $9) returning * - duplicate key value violates unique constraint "users_user_email_unique"],
+    [ValidationError: Unknown type "Password".],
   ],
   "extensions": undefined,
   "http": Object {
@@ -47,9 +47,9 @@ Object {
 
 exports[`Queries updates the user 1`] = `
 Object {
-  "data": null,
+  "data": undefined,
   "errors": Array [
-    [GraphQLError: Cannot read property 'user_uid' of undefined],
+    [ValidationError: Unknown type "Password".],
   ],
   "extensions": undefined,
   "http": Object {

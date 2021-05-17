@@ -30,10 +30,10 @@ const doctor = (knex = pg) => ({
   create: async (doctorData) => {
     doctorData.uid = doctorData.uid || uuidV4();
     const dbResponse = await knex
-      .insert(objectFilter(doctor().toDb(doctorData)))
+      .insert(objectFilter(toDb(doctorData)))
       .into("doctors")
       .returning("*");
-    return doctor().fromDb(__.first(dbResponse));
+    return fromDb(__.first(dbResponse));
   },
   update: async (doctorData) => {
     const dbResponse = await knex("doctors")
@@ -51,7 +51,7 @@ const doctor = (knex = pg) => ({
         })
       )
       .returning("*");
-    return doctor().fromDb(__.first(dbResponse));
+    return fromDb(__.first(dbResponse));
   },
   get: async (uid) => {
     const doctorSelectQuery = uid
@@ -66,12 +66,12 @@ const doctor = (knex = pg) => ({
 
     return dbResponse.map((data) => ({
       ...user().fromDb(data),
-      ...doctor().fromDb(data),
+      ...fromDb(data),
     }));
   },
   remove: async (uid) => {
     const dbResponse = await knex("doctors").where({ doctor_uid: uid }).del();
-    return doctor().fromDb(__.first(dbResponse));
+    return fromDb(__.first(dbResponse));
   },
 });
 
