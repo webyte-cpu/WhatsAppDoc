@@ -43,18 +43,16 @@ const customStyle = StyleSheet.create({
     justifyContent: 'center',
     // alignItems: 'center',
   },
-  agendaPatientName: {
-    width: 200,
-    height: 23,
-    font: 'bold',
+  agendaItem: {
     color: '#FFFFFF',
   },
-  agendaClinic: {
-    margin: 5,
-    width: 200,
-    height: 12,
-    color: '#FFFFFF',
+  agendaCardHeader: {
+    flexDirection: "row", 
+    justifyContent:'space-between', 
+    marginHorizontal:25, 
+    paddingVertical:10
   },
+
 });
 
 export default customStyle;
