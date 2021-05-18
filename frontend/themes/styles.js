@@ -35,8 +35,26 @@ const customStyle = StyleSheet.create({
   },
   warningCard: {
     margin: 2,
-    width:500,
-  }
+    width: 500,
+  },
+  agendaContainer: {
+    margin: 5,
+    borderRadius: 15,
+    justifyContent: 'center',
+    // alignItems: 'center',
+  },
+  agendaPatientName: {
+    width: 200,
+    height: 23,
+    font: 'bold',
+    color: '#FFFFFF',
+  },
+  agendaClinic: {
+    margin: 5,
+    width: 200,
+    height: 12,
+    color: '#FFFFFF',
+  },
 });
 
 export default customStyle;
