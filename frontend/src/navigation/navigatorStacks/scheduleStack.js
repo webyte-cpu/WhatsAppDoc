@@ -1,9 +1,11 @@
 import React, { useState } from "react";
 import { createStackNavigator } from "@react-navigation/stack";
+import { View } from 'react-native';
+
 import SchedulePage from "../../screens/schedules/schedulePage";
 import AppointmentProperties from "../../screens/appointment/properties/properties";
 import DrawerMenuBtn from "../../components/drawer/drawerBtn";
-import { Button, Text, useTheme, Modal, Card, Spinner,View } from "@ui-kitten/components";
+import { Button, Text, useTheme, Modal, Card, Spinner } from "@ui-kitten/components";
 import { AppRoute } from "../app-routes";
 import {
   PropertiesFormProvider,
@@ -49,26 +51,18 @@ const handleSaveError = (initialValues, values) => {
   return null;
 };
 
-const AlertModal = () => {
-  const [openModal, setOpenModal] = useState(true)
-  
-  // const Footer = (footerProps) => {
-  //   return (
-  //     <View {...footerProps}>
-        
-  //     </View>
-  //   )
-  // }
+const AlertModal = ({open, setOpen}) => {
   return (
     <Modal
-        visible={openModal}
+        visible={open}
         style={customStyle.modalContainer}
         backdropStyle={customStyle.backdrop}
+        onBackdropPress={() => setOpen(false)} //temporary
+        style={{justifyContent: 'center', alignSelf: 'center'}}
       >
-        <Spinner size='large' status='primary'/>
-      {/* <Card footer={(props) => <Footer {...props}/>}>
-        <Button onPress={() => handleSubmit()}>Next</Button>
-      </Card> */}
+        <Card style={{width: 'fit-content'}}>
+          <Spinner size='large' status='primary'/>
+        </Card>
       </Modal>
   )
 }
@@ -96,7 +90,7 @@ const ScheduleStackScreen = (props) => {
             },
             headerRight: () => {
               const { initialValues, values } = usePropertiesForm();
-
+              let [open, setOpen] = useState(false);
               const saveData = () => {
                 const error = handleSaveError(initialValues, values);
 
@@ -108,31 +102,34 @@ const ScheduleStackScreen = (props) => {
 
                 if (R.equals(initialValues, values)) {
                   // if no changes to saved data
-                  alert("Nothing to save, exiting...", initialValues, values);
+                  // alert("Nothing to save, exiting...", initialValues, values);
+                  setOpen(true)
                   return
-                  // <AlertModal />
                 }
+
                 // save to db then alert
-                // return <AlertModal />
-                // const []
+                setOpen(true) // if loading
                 console.log("SAVING...", values);
                 return;
               };
 
               return (
+               <View>
                 <Button
-                  style={{ marginRight: 10, backgroundColor: "white" }}
-                  onPress={() => saveData()}
-                >
-                  <Text
-                    style={{
-                      color: theme["color-primary-default"],
-                      fontWeight: "bold",
-                    }}
+                    style={{ marginRight: 10, backgroundColor: "white" }}
+                    onPress={() => saveData()}
                   >
-                    SAVE
-                  </Text>
-                </Button>
+                    <Text
+                      style={{
+                        color: theme["color-primary-default"],
+                        fontWeight: "bold",
+                      }}
+                    >
+                      SAVE
+                    </Text>
+                  </Button> 
+                  <AlertModal open={open} setOpen={setOpen}/> 
+                </View>
               );
             },
           })}
