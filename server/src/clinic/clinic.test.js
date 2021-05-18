@@ -4,11 +4,11 @@ import { GET_CLINIC, CREATE_CLINIC, UPDATE_CLINIC, DELETE_CLINIC } from "./queri
 
 describe("Queries", () => {
 
+  const { server } = constructTestServer;
+
+  const { query } = createTestClient(server);
+
   it("fetches single clinic", async () => {
-
-    const { server } = constructTestServer;
-
-    const { query } = createTestClient(server);
 
     const res = await query({
       query: GET_CLINIC,

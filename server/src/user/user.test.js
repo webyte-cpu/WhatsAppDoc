@@ -5,14 +5,16 @@ import {
   UPDATE_USER,
   DELETE_USER,
 } from "./queries.js";
-import { cleanDb, constructTestServer } from "../helpers/__utils.js";
+import { constructTestServer } from "../helpers/__utils.js";
 import { createTestClient } from "apollo-server-testing";
 import pg from "../../db/index.js";
 import jwt from "jsonwebtoken";
 
 describe("Queries", () => {
   it("fetches single user", async () => {
+
     const { server } = constructTestServer();
+    
     const { query } = createTestClient(server);
 
     const res = await query({
@@ -72,9 +74,9 @@ describe("Queries", () => {
       },
     });
 
-    console.log(res.data.signIn);
+    // console.log(res.data.signIn);
     const payload = jwt.verify(res.data.signIn, process.env.JWT_SECRET_KEY);
-    console.log(payload);
+    // console.log(payload);
     expect(payload).toMatchSnapshot();
   });
 
