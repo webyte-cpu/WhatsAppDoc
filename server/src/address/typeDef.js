@@ -1,6 +1,6 @@
 import { gql } from "apollo-server-express";
 
-const address = gql`
+export default gql`
   type Address {
     uid: UUID!
     address: String!
@@ -45,5 +45,3 @@ const address = gql`
     deleteAddress(uid: UUID!): Address
   }
 `;
-
-export default address;

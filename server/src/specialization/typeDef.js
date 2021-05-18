@@ -1,11 +1,9 @@
 import { gql } from "apollo-server-express";
 
-const specialization = gql`
+export default gql`
   type Specialization {
     uid: UUID!
     description: String!
     tag: String!
   }
 `;
-
-export default specialization;

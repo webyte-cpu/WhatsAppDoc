@@ -1,33 +1,18 @@
-import doctor from "./doctor.js";
-import specialization from "../specialization/specialization.js";
+import doctor from "./model.js";
+import specialization from "../specialization/model.js";
 
-const resolverMap = {
+export default {
   Doctor: {
-    specialization: (doctor) => specialization().assignedTo(doctor.uid),
+    specialization: (doctor) => specialization.assignedTo(doctor.uid),
   },
 
   Query: {
-    getDoctor: (obj, arg) => {
-      return doctor().get(arg.uid);
-    },
-
-    getAllDoctor: async (obj, arg) => {
-      return doctor().get(null)
-    }
+    getDoctor: (obj, arg) => doctor.get(arg.uid),
   },
   Mutation: {
-    createDoctor: async (obj, arg) => {
-      return await doctor().create(arg);
-    },
-    updateDoctor: async (obj, arg) => {
-      return await doctor().update(arg);
-    },
-    deleteDoctor: async (obj, arg) => {
-      const dbResponse = await doctor().remove(arg.uid);
-      return dbResponse.uid;
-    },
+    createDoctor: (obj, arg) => doctor.create(arg),
+    updateDoctor: (obj, arg) => doctor.update(arg),
+    deleteDoctor: (obj, arg) => doctor.remove(arg.uid),
   },
   // Subscription: {},
 };
-
-export default resolverMap;

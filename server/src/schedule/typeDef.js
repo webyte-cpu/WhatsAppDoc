@@ -1,21 +1,26 @@
 import { gql } from "apollo-server-express";
 
 const schedule = gql`
-  enum DaysOfTheWeek {
-    SUNDAY
-    MONDAY
-    TUESDAY
-    WEDNESDAY
-    THURSDAY
-    FRIDAY
-    SATURDAY
-  }
-
   type Schedule {
     uid: UUID!
     startTime: Time!
     endTime: Time!
-    daysOfTheWeek: [DaysOfTheWeek!]!
+    daysOfTheWeek: [Int!]
+  }
+
+  input SchedInput {
+    doctorClinicUid: UUID!
+    startTime: Time
+    endTime: Time
+    daysOfTheWeek: [Int!]
+  }
+
+  input SchedUpsertInput {
+    uid:UUID
+    doctorClinicUid: UUID!
+    startTime: Time
+    endTime: Time
+    daysOfTheWeek: [Int]
   }
 
   extend type Query {
@@ -23,18 +28,13 @@ const schedule = gql`
   }
 
   extend type Mutation {
-    createSchedule(
-      doctorClinicUid: UUID!
-      startTime: Time
-      endTime: Time
-      daysOfTheWeek: [DaysOfTheWeek!]!
-    ): Schedule
-
+    upsertSchedule(data: [SchedUpsertInput!]): [Schedule]
+    createSchedule(data: [SchedInput!]): [Schedule]
     updateSchedule(
       uid: UUID!
       startTime: Time
       endTime: Time
-      daysOfTheWeek: [DaysOfTheWeek]
+      daysOfTheWeek: [Int]
     ): Schedule
 
     deleteSchedule(uid: UUID!): Schedule

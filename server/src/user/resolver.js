@@ -1,11 +1,9 @@
-import { ForbiddenError } from "apollo-server-errors";
-import enums from "../helpers/enums/enums.js";
-import jwt from "jsonwebtoken";
-import user from "./user.js";
-import __ from "lodash";
 import { AuthenticationError } from "apollo-server-express";
+import enums from "../helpers/enums/enums.js";
+import user from "./model.js";
+import __ from "lodash";
 
-const resolverMap = {
+export default {
   User: {
     __resolveType(obj) {
       switch (obj.role) {
@@ -26,57 +24,13 @@ const resolverMap = {
       if (__.isEmpty(context.user)) {
         throw new AuthenticationError("No authorization header found");
       }
-      return __.first(await user().get(context.user.uid));
+      return __.first(await user.get(context.user.uid));
     },
-    getAllUser: () => user().get(),
-    viewer: (parent, arg, context) => {
-      if (__.isEmpty(context.user)) {
-        throw new AuthenticationError("No authorization header found");
-      }
-      return context.user;
-    },
+    getAllUser: () => user.get(),
   },
 
   Mutation: {
-    signUp: async (obj, arg, context) => {
-      if (
-        arg?.role === enums.role.ADMIN &&
-        context?.user?.role !== enums.role.ADMIN
-      ) {
-        throw new ForbiddenError("Not authorize to signUp an admin");
-      }
-
-      const result = await user().signUp(arg);
-      const payload = { uid: result.uid, role: result.role };
-      return jwt.sign(payload, process.env.JWT_SECRET_KEY, {
-        algorithm: "HS256",
-        expiresIn: "1d",
-      });
-    },
-    signIn: async (obj, { email, password }) => {
-      console.log(email, password);
-      const result = await user().check({ email, password });
-
-      const payload = {
-        uid: result.uid,
-        role: result.role,
-        firstName: result.firstName,
-        lastName: result.lastName,
-        email: result.email,
-        verificationStatus: result.verificationStatus,
-      };
-      return jwt.sign(payload, process.env.JWT_SECRET_KEY, {
-        algorithm: "HS256",
-        expiresIn: "1d",
-      });
-    },
-    updateUser: (obj, arg) => {
-      return user().update(arg);
-    },
-    deleteUser: (obj, arg) => {
-      return user().delete(arg);
-    },
+    updateUser: (obj, arg) => user.update(arg),
+    deleteUser: (obj, arg) => user.remove(arg),
   },
 };
-
-export default resolverMap;
