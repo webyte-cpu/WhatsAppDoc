@@ -15,7 +15,7 @@ const AppRoute = {
   SCHEDULE: 'Schedule',
   CATEGORY: 'Category',
   ADMIN: 'Admin',
-  DOCTOR_FORM: 'Doctor Form',
+  DOCTOR_FORM: 'DoctorForm',
   APPOINTMENT_PROPERTIES: 'AppointmentProperties'
 }
 

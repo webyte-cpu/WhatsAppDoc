@@ -17,7 +17,7 @@ const HomePage = ({ navigation }) => {
       {appState.user.role === enums.role.DOCTOR &&
       appState.user.verificationStatus ===
         enums.verificationStatus.UNVERIFIED ? (
-        <ResendForm />
+        <ResendForm navigation={navigation}/>
       ) : (
         <></>
       )}
