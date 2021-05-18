@@ -9,6 +9,20 @@ import { VALID_PATTERNS, ERR_MSG } from "./validators";
 // const {email ,password} = req.body
 // });
 
+const availabilitySchema = yup.object({
+  scheduleSlotDuration: yup.number().required(),
+  intervals: yup.array().of(yup.object({
+    time: yup.array().of(yup.object({
+      from: yup.number().required(),
+      to: yup.number().required(),
+    })),
+    days: yup.array().of(yup.number()).required()
+  }))
+})
+
+const schedulingNoticeSchema = yup.object({
+  schedulingNotice: yup.number().label('Minimum scheduling notice').required()
+})
 const clinicAboutSchema = yup.object({
   consultationFee: yup.number().label("Consultation fee").required(),
   roomNumber: yup.string().label("Room Number")
@@ -65,4 +79,6 @@ export {
   addressSchema,
   clinicAboutSchema,
   clinicNameSchema,
+  schedulingNoticeSchema,
+  availabilitySchema
 };
