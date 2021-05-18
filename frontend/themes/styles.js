@@ -45,6 +45,15 @@ const customStyle = StyleSheet.create({
   listBackground: {
     backgroundColor: "white"
   },
+  button: {
+    marginHorizontal: 2
+  },
+  buttonGroup: {
+    marginTop: 0,
+    flexDirection: "row",
+    justifyContent: "flex-end",
+    padding: 10,
+  },
 });
 
 export default customStyle;
