@@ -1,14 +1,11 @@
 import React from "react";
-import { Text, Divider, Input, IndexPath } from "@ui-kitten/components";
+import { Text, Divider } from "@ui-kitten/components";
 import { View, StyleSheet, Image, Platform, ScrollView } from "react-native";
 import { Formik, Field } from "formik";
-import {
-  addressSchema,
-  clinicAboutSchema,
-} from "../../../../helpers/validationType";
+import { addressSchema, clinicAboutSchema, clinicNameSchema } from "../../../../helpers/validationType";
 import { AddressFields } from "../../../components/fields";
 import { CustomInput } from "../../../components/customInput";
-import { AppRoute } from "../../../navigation/app-routes";
+import { usePropertiesForm } from "./formProvider";
 
 const prefix = (prefix) => {
   return <Text category="s1">{prefix}</Text>;
@@ -31,24 +28,36 @@ const LocationMap = () => {
 };
 
 const About = ({ route, navigation }) => {
+  const form = usePropertiesForm();
+  const initial = form.initialValues;
+
   const initialValues = {
-    consultationFee: "",
-    roomNumber: "",
-    streetAddress: "",
-    city: "",
-    province: "",
-    country: "",
-    zipCode: "",
+    clinicName: initial.clinicName,
+    consultationFee: initial.consultationFee,
+    roomNumber: initial.roomNumber,
+    streetAddress: initial.address.streetAddress,
+    city: initial.address.city,
+    province: initial.address.province,
+    country: initial.address.country,
+    zipCode: initial.address.zipCode,
   };
 
-  const clinicSchema = clinicAboutSchema.concat(addressSchema);
+  const clinicSchema = clinicAboutSchema.concat(addressSchema).concat(clinicNameSchema);
 
-  const submitForm = (values) => {
-    navigation.navigate({
-      name: AppRoute.APPOINTMENT_PROPERTIES,
-      params: { values },
-      merge: true,
-    });
+  const submitForm = (data) => {
+    const newData = {
+      clinicName: data.clinicName,
+      consultationFee: Number(data.consultationFee),
+      roomNumber: data.roomNumber,
+      address: {
+        streetAddress: data.streetAddress,
+        city: data.city,
+        province: data.province,
+        country: data.country,
+        zipCode: data.zipCode,
+      },
+    };
+    form.setValues(newData)
   };
 
   return (
@@ -56,6 +65,13 @@ const About = ({ route, navigation }) => {
       <Formik initialValues={initialValues} validationSchema={clinicSchema}>
         {() => (
           <>
+            <Text category="h6">Clinic Name</Text>
+            <Field
+              name="clinicName"
+              component={CustomInput}
+              submitOnChange={(values) => submitForm(values)}
+            />
+
             <Text category="h6">Consultation Fee</Text>
             <Field
               name="consultationFee"

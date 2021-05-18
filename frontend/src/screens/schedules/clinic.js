@@ -16,6 +16,55 @@ import { AppRoute } from "../../navigation/app-routes";
 import { Formik, Field } from "formik";
 import { CustomInput } from "../../components/customInput";
 import { clinicNameSchema } from "../../../helpers/validationType";
+import { usePropertiesForm } from "../appointment/properties/formProvider";
+
+const clinicData = [
+  {
+    clinicName: "Clinic 1",
+    roomNumber: "",
+    address: {
+      streetAddress: "Brgy. Milibili",
+      city: "Roxas City",
+      province: "Capiz",
+      country: "Philippines",
+      zipCode: "5800",
+    },
+    schedulingNotice: 15,
+    scheduleSlotDuration: 30,
+    consultationFee: 500,
+    intervals: [
+      {
+        time: [
+          { from: { hours: 12, minutes: 0 }, to: { hours: 18, minutes: 0 } },
+        ],
+        days: [0, 2, 4],
+      },
+    ],
+  },
+  {
+    clinicName: "Clinic 2",
+    roomNumber: "",
+    address: {
+      streetAddress: "Brgy. Loctugan",
+      city: "Roxas City",
+      province: "Capiz",
+      country: "Philippines",
+      zipCode: "5800",
+    },
+    schedulingNotice: 120,
+    scheduleSlotDuration: 120,
+    consultationFee: 580,
+    intervals: [
+      {
+        time: [
+          { from: { hours: 8, minutes: 0 }, to: { hours: 11, minutes: 0 } },
+          { from: { hours: 13, minutes: 0 }, to: { hours: 17, minutes: 0 } },
+        ],
+        days: [1, 3, 5],
+      },
+    ],
+  },
+];
 
 const DeleteIcon = (props) => {
   const theme = useTheme();
@@ -109,8 +158,13 @@ const AddNewClinicBtn = ({ setOpenModal }) => {
   );
 };
 
-const goToProperties = (navigation, initialValues) => navigation.navigate(AppRoute.APPOINTMENT_PROPERTIES, {initialValues: initialValues})
+const goToProperties = (navigation, initialValues, form) => {
+  form.setInitialValues(initialValues)
+  return navigation.navigate(AppRoute.APPOINTMENT_PROPERTIES);
+};
+
 const ClinicPage = ({ navigation }) => {
+  const form = usePropertiesForm()
   const theme = useTheme();
   const [openModal, setOpenModal] = useState(false);
   const clinicDetails = {
@@ -119,6 +173,7 @@ const ClinicPage = ({ navigation }) => {
 
   const sendData = (values) => {
     const clinicProperties = {
+      // SETS INITIAL VALUES IN ROUTE.PARAMS
       roomNumber: "",
       address: {
         streetAddress: "",
@@ -127,45 +182,16 @@ const ClinicPage = ({ navigation }) => {
         country: "",
         zipCode: "",
       },
-      minimumSchedulingNoticeMins: "",
-      slotDurationInMins: "",
+      schedulingNotice: '',
+      scheduleSlotDuration: '',
       consultationFee: "",
+      intervals: [],
       ...values,
     };
     setOpenModal(false);
-    goToProperties(navigation, clinicProperties)
-  };
 
-  const clinicData = [
-    {
-      clinicName: "Clinic 1",
-      roomNumber: "",
-      address: {
-        streetAddress: "Brgy. Milibili",
-        city: "Roxas City",
-        province: "Capiz",
-        country: "Philippines",
-        zipCode: "5800",
-      },
-      minimumSchedulingNoticeMins: "15",
-      slotDurationInMins: "30",
-      consultationFee: "500",
-    },
-    {
-      clinicName: "Clinic 2",
-      roomNumber: "",
-      address: {
-        streetAddress: "Brgy. Loctugan",
-        city: "Roxas City",
-        province: "Capiz",
-        country: "Philippines",
-        zipCode: "5800",
-      },
-      minimumSchedulingNoticeMins: "120",
-      slotDurationInMins: "45",
-      consultationFee: "580",
-    },
-  ];
+    goToProperties(navigation, clinicProperties, form);
+  };
 
   const NewClinicModal = () => {
     return (
@@ -207,12 +233,10 @@ const ClinicPage = ({ navigation }) => {
           accessoryRight={(props) => (
             <DeleteIcon {...props} clinic={item.clinicName} />
           )}
-          onPress={() =>
-            goToProperties(navigation, item)
-          }
-          />
-          <Divider />
-      </> 
+          onPress={() => goToProperties(navigation, item, form)}
+        />
+        <Divider />
+      </>
     ) : (
       <> </>
     );
@@ -220,7 +244,9 @@ const ClinicPage = ({ navigation }) => {
 
   return (
     <ScrollView style={customStyle.listBackground}>
-      <List testID="clinicList" data={clinicData} renderItem={renderClinic} />
+      <View>
+        <List testID="clinicList" data={clinicData} renderItem={renderClinic} />
+      </View>
       <AddNewClinicBtn setOpenModal={setOpenModal} />
       <NewClinicModal clinicDetails={clinicDetails} />
     </ScrollView>
