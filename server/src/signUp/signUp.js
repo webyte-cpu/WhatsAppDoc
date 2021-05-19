@@ -32,16 +32,21 @@ export default async (userData) => {
     userData.password = hashedPassword;
 
     try {
+      let doctorInfo = {}
       response.user = await user.create(userData, trx);
       response.patient = await patient.create(userData, trx);
 
       if (userData.role === enums.role.DOCTOR) {
+        if(__.isEmpty(userData.doctor)) {
+          throw new ApolloError("Missing required doctor field", "MISSING_FIELD");
+        }
+        
         const doctorData = userData.doctor;
         doctorData.uid = userData.uid;
         response.doctor = await doctor.create(doctorData, trx);
 
         if (__.isEmpty(doctorData.specialization)) {
-          throw new UserInputError("Doctor should have atleast one specialty.");
+          throw new ApolloError("Doctor should have atleast one specialization.", "MISSING_FIELD");
         }
 
         const specList = doctorData.specialization.map((title) =>
@@ -55,22 +60,23 @@ export default async (userData) => {
         );
 
         response.doctor.specialization = await Promise.all(specList);
+        doctorInfo = response.doctor
       }
 
       delete response.user.password;
-      return response.user;
+      return {...response.user, ...response.patient, ...doctorInfo};
     } catch (error) {
-      console.log(error);
+      // console.log(error);
 
-      let errorCode = "";
+      // let errorCode =  error;
 
-      switch (error.code) {
-        case "23505":
-          errorCode = "ALREADY_EXIST_EMAIL";
-          break;
-      }
+      // switch (error.code) {
+      //   case "23505":
+      //     errorCode = "ALREADY_EXIST_EMAIL";
+      //     break;
+      // }
 
-      throw new ApolloError(error.detail, errorCode);
+      throw error;
     }
   });
 };
