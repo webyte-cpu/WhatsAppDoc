@@ -1,4 +1,4 @@
-import { StyleSheet } from 'react-native';
+import { StyleSheet, Platform } from 'react-native';
 
 const customStyle = StyleSheet.create({
   container: {
@@ -32,6 +32,21 @@ const customStyle = StyleSheet.create({
   dateCard: {
     width: 30,
     borderRadius: 70,
+  },
+  tabStyle: { height: 40 },
+  modalContainer: {
+    width: 300,
+    ...Platform.select({
+      web: {
+        width: 600,
+      },
+    }),
+  },
+  backdrop: {
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+  },
+  listBackground: {
+    backgroundColor: "white"
   },
   button: {
     marginHorizontal: 2
