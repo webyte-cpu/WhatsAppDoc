@@ -125,7 +125,7 @@ const update = (clinicData, knex = pg) =>
       });
 
       response.clinic.address = response.address;
-      
+
       return response.clinic;
     } catch (error) {
       console.log(error);
@@ -169,13 +169,12 @@ const remove = async (uid, knex = pg) =>
       address: await address.remove(addressUid, trx),
     };
 
-
     response.clinic = fromDb({
       ...__.first(response.clinicRawData),
       ...__.first(response.doctorClinicRawData),
     });
 
-    response.clinic.address = response.address;    
+    response.clinic.address = response.address;
     return response.clinic;
   });
 
@@ -185,13 +184,12 @@ const upsert = async (clinicData, knex = pg) =>
       if (clinicData.uid == null) {
         const createClinicResponse = await create(clinicData, trx);
         // return createClinicResponse;
-      return {uid: clinicData.uid}
-
+        return { uid: clinicData.uid };
       }
 
-      const updateClinicResponse = await update(clinicData, trx);   
+      const updateClinicResponse = await update(clinicData, trx);
       // return updateClinicResponse;
-      return {uid: clinicData.uid}
+      return { uid: clinicData.uid };
     } catch (error) {
       throw new ApolloError(error);
     }

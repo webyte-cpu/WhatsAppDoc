@@ -3,10 +3,15 @@ import { gql } from "apollo-server-express";
 export const GET_CLINIC = gql`
   query GetClinic($uid: UUID, $doctorUid: UUID) {
     getClinic(uid: $uid, doctorUid: $doctorUid) {
-      doctorUid
       name
       roomNumber
-      address
+      address {
+        address
+        city
+        province
+        zipCode
+        country
+      }
       minimumSchedulingNoticeMins
       slotDurationInMins
       consultationFee
@@ -16,7 +21,6 @@ export const GET_CLINIC = gql`
 
 export const CREATE_CLINIC = gql`
   mutation CreateClinic(
-    $doctorUid: UUID!
     $name: String!
     $roomNumber: String!
     $address: AddressInput!
@@ -25,7 +29,6 @@ export const CREATE_CLINIC = gql`
     $consultationFee: Int
   ) {
     createClinic(
-      doctorUid: $doctorUid
       name: $name
       roomNumber: $roomNumber
       address: $address
@@ -33,10 +36,15 @@ export const CREATE_CLINIC = gql`
       slotDurationInMins: $slotDurationInMins
       consultationFee: $consultationFee
     ) {
-      doctorUid
       name
       roomNumber
-      address
+      address {
+        address
+        city
+        province
+        zipCode
+        country
+      }
       minimumSchedulingNoticeMins
       slotDurationInMins
       consultationFee
@@ -73,10 +81,15 @@ export const UPDATE_CLINIC = gql`
 export const DELETE_CLINIC = gql`
   mutation DeleteClinic($uid: UUID!) {
     deleteClinic(uid: $uid) {
-      doctorUid
       name
       roomNumber
-      address
+      address {
+        address
+        city
+        province
+        zipCode
+        country
+      }
       minimumSchedulingNoticeMins
       slotDurationInMins
       consultationFee
