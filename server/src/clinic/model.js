@@ -73,7 +73,6 @@ const create = async (clinicData, knex = pg) =>
     });
 
     response.clinic.address = response.address;
-    console.log(response, "CREATE_CLINIC");
     return response.clinic;
   });
 const update = (clinicData, knex = pg) =>
@@ -119,9 +118,6 @@ const update = (clinicData, knex = pg) =>
           )
           .returning("*");
       }
-
-      console.log(response.clinicRawData, "CLINIC RAW");
-      console.log(response.doctorClinicRawData, "DOCTOR RAW");
 
       response.clinic = fromDb({
         ...__.first(response.clinicRawData),
@@ -186,15 +182,16 @@ const remove = async (uid, knex = pg) =>
 const upsert = async (clinicData, knex = pg) =>
   knex.transaction(async (trx) => {
     try {
-      console.log(clinicData, "CLINIC DATA");
       if (clinicData.uid == null) {
         const createClinicResponse = await create(clinicData, trx);
-        return createClinicResponse;
+        // return createClinicResponse;
+      return {uid: clinicData.uid}
+
       }
 
-      const updateClinicResponse = await update(clinicData, trx);
-
-      return updateClinicResponse;
+      const updateClinicResponse = await update(clinicData, trx);   
+      // return updateClinicResponse;
+      return {uid: clinicData.uid}
     } catch (error) {
       throw new ApolloError(error);
     }
