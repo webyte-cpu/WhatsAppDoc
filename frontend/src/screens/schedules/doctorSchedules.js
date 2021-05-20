@@ -4,6 +4,7 @@ import { createMaterialTopTabNavigator } from "@react-navigation/material-top-ta
 import AppointmentScreen from "./appointmentScreen";
 import ClinicPage from "./clinic";
 import customStyle from "../../../themes/styles";
+import { AppRoute } from "../../navigation/app-routes";
 
 const { Navigator, Screen } = createMaterialTopTabNavigator();
 
@@ -30,8 +31,8 @@ const DoctorScheduleNavigator = () => {
       tabBar={(props) => <TopTabBar {...props} />}
       style={{ backgroundColor: theme["color-primary-light-600"] }}
     >
-      <Screen name="Appointments" component={AppointmentScreen} />
-      <Screen name="Clinics" component={ClinicPage} />
+      <Screen name={AppRoute.APPOINTMENTS} component={AppointmentScreen} />
+      <Screen name={AppRoute.CLINICS} component={ClinicPage} />
     </Navigator>
   );
 };
