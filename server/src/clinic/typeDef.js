@@ -2,7 +2,7 @@ import { gql } from "apollo-server-core";
 const clinic = gql`
   type Clinic {
     uid: UUID!
-    doctorClinicUid: UUID!
+    doctorClinicUid: UUID
     name: String!
     roomNumber: String
     address: Address
@@ -16,10 +16,19 @@ const clinic = gql`
   }
 
   extend type Mutation {
+    upsertClinic(
+      uid: UUID
+      name: String
+      roomNumber: String
+      address: AddressInput
+      minimumSchedulingNoticeMins: Int
+      slotDurationInMins: Int
+      consultationFee: Int
+    ): Clinic
+
     createClinic(
-      doctorUid: UUID!
       name: String!
-      roomNumber: String!
+      roomNumber: String
       address: AddressInput!
       minimumSchedulingNoticeMins: Int!
       slotDurationInMins: Int!
