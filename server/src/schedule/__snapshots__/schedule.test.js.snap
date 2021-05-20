@@ -1,0 +1,82 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Queries and Mutations Testing creates a schedule 1`] = `
+Object {
+  "data": Object {
+    "createSchedule": null,
+  },
+  "errors": Array [
+    [GraphQLError: Cannot read property 'map' of undefined],
+  ],
+  "extensions": undefined,
+  "http": Object {
+    "headers": Headers {
+      Symbol(map): Object {},
+    },
+  },
+}
+`;
+
+exports[`Queries and Mutations Testing deletes a schedule 1`] = `
+Object {
+  "data": undefined,
+  "errors": Array [
+    [ValidationError: Field "deleteSchedule" of type "Schedule" must have a selection of subfields. Did you mean "deleteSchedule { ... }"?],
+  ],
+  "extensions": undefined,
+  "http": Object {
+    "headers": Headers {
+      Symbol(map): Object {},
+    },
+  },
+}
+`;
+
+exports[`Queries and Mutations Testing fetches a schedule 1`] = `
+Object {
+  "data": Object {
+    "getSchedule": Array [],
+  },
+  "errors": undefined,
+  "extensions": undefined,
+  "http": Object {
+    "headers": Headers {
+      Symbol(map): Object {},
+    },
+  },
+}
+`;
+
+exports[`Queries and Mutations Testing updates a schedule 1`] = `
+Object {
+  "data": Object {
+    "updateSchedule": null,
+  },
+  "errors": Array [
+    [GraphQLError: Cannot read property 'schedule_uid' of undefined],
+  ],
+  "extensions": undefined,
+  "http": Object {
+    "headers": Headers {
+      Symbol(map): Object {},
+    },
+  },
+}
+`;
+
+exports[`Queries and Mutations Testing upserts a schedule 1`] = `
+Object {
+  "data": Object {
+    "upsertSchedule": null,
+  },
+  "errors": Array [
+    [GraphQLError: Cannot read property 'map' of undefined],
+  ],
+  "extensions": undefined,
+  "http": Object {
+    "headers": Headers {
+      Symbol(map): Object {},
+    },
+  },
+}
+`;

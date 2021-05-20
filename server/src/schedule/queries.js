@@ -1,4 +1,4 @@
-import { gql } from 'appolo-server-express';
+import { gql } from 'apollo-server-express';
 
 export const GET_SCHEDULE = gql`
   query GetSchedule($uid: UUID!){
@@ -36,8 +36,8 @@ export const CREATE_SCHEDULE = gql`
 export const UPDATE_SCHEDULE = gql`
   mutation UpdateSchedule(
     $uid: UUID!
-    $startTime: Time
-    $endTime: Time
+    $startTime: LocalTime
+    $endTime: LocalTime
     $daysOfTheWeek: [Int]
   ) {
     updateSchedule(
@@ -56,6 +56,11 @@ export const UPDATE_SCHEDULE = gql`
 
 export const DELETE_SCHEDULE = gql`
   mutation DeleteSchedule($uid: UUID!){
-    deleteSchedule(uid: $uid)
+    deleteSchedule(uid: $uid) {
+      uid
+      startTime
+      endTime
+      daysOfTheWeek
+    }
   }
 `
