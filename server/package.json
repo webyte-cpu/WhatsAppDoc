@@ -13,12 +13,15 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "test": "cross-env NODE_OPTIONS=--experimental-vm-modules npx jest",
-    "test:migrate:up": "knex --knexfile ./knex/knexfile.js migrate:latest --env test",
-    "test:seed:run": "knex --knexfile ./knex/knexfile.js seed:run --env test",
+    "test": "cross-env NODE_OPTIONS=--experimental-vm-modules npx jest --detectOpenHandles",
+    "test:migrate:up": "knex migrate:latest --env test",
+    "test:seed:run": "knex seed:run --env test",
+    "test:seed:make": "knex seed:make --env test",
     "server": "nodemon src/app.js ",
-    "migration": "knex --knexfile ./knex/knexfile.js migrate:latest",
-    "seed": "knex --knexfile ./knex/knexfile.js seed:run"
+    "migration": "knex migrate:latest",
+    "migration:make": "knex migrate:make",
+    "seed": "knex seed:run",
+    "seed:make": "knex seed:make"
   },
   "dependencies": {
     "apollo-datasource-rest": "^0.11.0",
