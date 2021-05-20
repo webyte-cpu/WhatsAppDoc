@@ -2,6 +2,7 @@ import objectFilter from "../helpers/objectFilter.js";
 import { v4 as uuidV4 } from "uuid";
 import pg from "../../db/index.js";
 import __ from "lodash";
+import { ApolloError } from "apollo-server-express";
 
 const fromDb = (data) => ({
   uid: data.address_uid,
@@ -34,20 +35,31 @@ const create = async (addressData, knex = pg) => {
 };
 
 const update = async (addressData, knex = pg) => {
-  const dbResponse = await knex("doctors")
+  try {
+    console.log(addressData,'addDATA')
+  const dbResponse = await knex("addresses")
     .where({ address_uid: addressData.uid })
     .update(
       objectFilter({
-        address_address: addressData.address,
+        address: addressData.address,
         address_city: addressData.city,
         address_province: addressData.province,
         address_zip_code: addressData.zipCode,
         address_country: addressData.country,
         address_coordinates: addressData.coordinates,
       })
-    );
+    )
+    .returning("*")
+
+    console.log(dbResponse, 'DB')
 
   return fromDb(__.first(dbResponse));
+    
+  } catch (error) {
+    console.log(error)
+    throw new ApolloError(error)
+  }
+  
 };
 
 const get = async (uid, knex = pg) => {
