@@ -19,13 +19,18 @@ const caption = (caption) => {
 const Availability = ({ navigation, route }) => {
   const form = usePropertiesForm();
   const { initialValues } = form
+  const defaultTime = {
+    from: { hours: '', minutes: '', ampm: 'am' },
+    to: { hours: '', minutes: '', ampm: 'am'},
+  };
 
+  const defaultInterval = {
+    time: [defaultTime],
+    days: []
+  }
+  
   const [scheduleSlotDuration, setScheduleSlotDuration] = useState(initialValues.scheduleSlotDuration);
-  const [intervals, setIntervals] = useState(R.isEmpty(initialValues.intervals) ? [{time: [{ 
-    from: { hours: 0, minutes: 0 }, 
-    to: { hours: 0, minutes: 0 }
-  }],
-  days: []}] : initialValues.intervals );
+  const [intervals, setIntervals] = useState(R.isEmpty(initialValues.intervals) ? [defaultInterval] : initialValues.intervals );
   const timeSlotDuration = [15, 30, 45, 60];
 
   const editScheduleSlotDuration = (time) => {
@@ -46,26 +51,14 @@ const Availability = ({ navigation, route }) => {
   };
 
   const addNewTime = (intervalIndex) => {
-    const newTime = {
-      from: { hours: 0, minutes: 0 },
-      to: { hours: 0, minutes: 0 },
-    };
     const copy = R.clone(intervals);
-    copy[intervalIndex].time.push(newTime);
+    copy[intervalIndex].time.push(defaultTime);
     editIntervals(copy);
   };
 
   function addNewInterval () {
-    const newInterval = {
-      time: [{ 
-        from: { hours: 0, minutes: 0 }, 
-        to: { hours: 0, minutes: 0 }
-      }],
-      days: [],
-    };
-
     const copy = R.clone(intervals);
-    copy.push({ ...newInterval });
+    copy.push({ ...defaultInterval });
     editIntervals(copy);
   };
 

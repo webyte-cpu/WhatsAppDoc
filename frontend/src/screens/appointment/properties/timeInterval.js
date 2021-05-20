@@ -97,12 +97,12 @@ const IntervalButtons = (props) => {
 const IntervalForm = ({ interval, setInterval, intervalIndex, addNewTime, removeTime }) => {
   
   const TimeInterval = ({ from, to, timeIndex }) => {
-    const changeTime = (timeIndex, name, hours, minutes) => {
+    const changeTime = (timeIndex, name, hours, minutes, ampm) => {
       const intervalCopy = R.clone(interval); //deepClone
       const selectedTime = intervalCopy.time[timeIndex];
       const newTime = {
         ...selectedTime,
-        [name]: { hours: Number(hours), minutes: Number(minutes) },
+        [name]: { hours: Number(hours), minutes: Number(minutes), ampm: ampm },
       };
       intervalCopy.time.splice(timeIndex, 1, newTime); //modify array
       setInterval(intervalCopy, intervalIndex);
@@ -114,15 +114,18 @@ const IntervalForm = ({ interval, setInterval, intervalIndex, addNewTime, remove
           <Text category="label" appearance="hint">
             From
           </Text>
-          <TimePicker
-            style={styles.timeInput}
-            zeroPadding={true}
-            testID="timeIntervalFrom"
-            value={{ hours: from.hours, minutes: from.minutes }}
-            onChange={({ hours, minutes }) => {
-              changeTime(timeIndex, "from", hours, minutes);
-            }}
-          />
+             <TimePicker
+              style={styles.timeInput}
+              zeroPadding={true}
+              testID="timeIntervalFrom"
+              isAmpm={true}
+              emptyLabel=''
+              ampmLocalization={{am: 'AM', pm: 'PM'}}
+              value={{ hours: from.hours, minutes: from.minutes, ampm: from.ampm}}
+              onChange={({ hours, minutes, ampm }) => {
+                changeTime(timeIndex, "from", hours, minutes, ampm);
+              }}
+            />
         </View>
         <View style={styles.timeField}>
           <Text category="label" appearance="hint">
@@ -132,9 +135,12 @@ const IntervalForm = ({ interval, setInterval, intervalIndex, addNewTime, remove
             style={styles.timeInput}
             zeroPadding={true}
             testID="timeIntervalTo"
-            value={{ hours: to.hours, minutes: to.minutes }}
-            onChange={({ hours, minutes }) => {
-              changeTime(timeIndex, "to", hours, minutes);
+            isAmpm={true}
+            emptyLabel=''
+            ampmLocalization={{am: 'AM', pm: 'PM'}}
+            value={{ hours: to.hours, minutes: to.minutes, ampm: to.ampm }}
+            onChange={({ hours, minutes, ampm}) => {
+              changeTime(timeIndex, "to", hours, minutes, ampm);
             }}
           />
         </View>
