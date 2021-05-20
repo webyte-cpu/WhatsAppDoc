@@ -22,8 +22,8 @@ function getDistanceBetweenPoints(lat1, lng1, lat2, lng2){
     let c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
     let distance = R * c;
 
-    return (distance / 1000) + " KM";
+    return (distance / 1000);
 }
 
 
-export default getDistanceBetweenPoints;
+module.exports = getDistanceBetweenPoints;
