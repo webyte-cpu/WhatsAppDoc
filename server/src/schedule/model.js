@@ -14,10 +14,10 @@ const fromDb = (scheduleData) => ({
 
 const toDb = (scheduleData) => ({
   schedule_uid: scheduleData.uid,
+  doctor_clinic_uid: scheduleData.doctorClinicUid,
   start_time: scheduleData.startTime,
   end_time: scheduleData.endTime,
   day_of_week: JSON.stringify(scheduleData?.daysOfTheWeek),
-  doctor_clinic_uid: scheduleData.doctorClinicUid,
 });
 
 const create = async (scheduleList, knex = pg) => {
@@ -58,19 +58,22 @@ const upsert = async (scheduleList, knex = pg) => {
 
     return dbResponse.map((data) => fromDb(data));
   } catch (error) {
-    if (error.code && error.column == "doctor_clinic_uid")
-      throw new ApolloError(
-        "A unique identifier for the physician's clinic is needed!"
-      );
+    // if (error.code && error.column == "doctor_clinic_uid") {
+    //   throw new ApolloError(
+    //     "A unique identifier for the physician's clinic is needed!"
+    //   )
+    // }
+    throw new ApolloError(error.detail, 'DOES_NOT_EXIST')
   }
 };
 
-const get = async (uid, knex = pg) => {
+const get = async ({uid, doctorClinicUid}, knex = pg) => {
   const dbResponse = await knex
     .select("*")
     .from("schedules")
-    .where(objectFilter({ schedule_uid: uid }));
-  return dbResponse.map(fromDb);
+    .where(objectFilter({ schedule_uid: uid, doctor_clinic_uid: doctorClinicUid }))
+
+    return dbResponse.map(fromDb);
 };
 
 const remove = async (uid, knex = pg) => {

@@ -3,28 +3,28 @@ import { gql } from "apollo-server-express";
 const schedule = gql`
   type Schedule {
     uid: UUID!
-    startTime: Time!
-    endTime: Time!
+    startTime: LocalTime!
+    endTime: LocalTime!
     daysOfTheWeek: [Int!]
   }
 
   input SchedInput {
     doctorClinicUid: UUID!
-    startTime: Time
-    endTime: Time
+    startTime: LocalTime
+    endTime: LocalTime
     daysOfTheWeek: [Int!]
   }
 
   input SchedUpsertInput {
     uid:UUID
     doctorClinicUid: UUID!
-    startTime: Time
-    endTime: Time
+    startTime: LocalTime
+    endTime: LocalTime
     daysOfTheWeek: [Int]
   }
 
   extend type Query {
-    getSchedule(uid: UUID): [Schedule]
+    getSchedule(uid: UUID, doctorClinicUid: UUID): [Schedule]
   }
 
   extend type Mutation {
@@ -32,8 +32,8 @@ const schedule = gql`
     createSchedule(data: [SchedInput!]): [Schedule]
     updateSchedule(
       uid: UUID!
-      startTime: Time
-      endTime: Time
+      startTime: LocalTime
+      endTime: LocalTime
       daysOfTheWeek: [Int]
     ): Schedule
 

@@ -35,7 +35,7 @@ const clinicData = [
     intervals: [
       {
         time: [
-          { from: { hours: 12, minutes: 0 }, to: { hours: 18, minutes: 0 } },
+          { from: { hours: 12, minutes: 0, ampm: "pm"}, to: { hours: 6, minutes: 0, ampm: 'pm' } },
         ],
         days: [0, 2, 4],
       },
@@ -57,8 +57,8 @@ const clinicData = [
     intervals: [
       {
         time: [
-          { from: { hours: 8, minutes: 0 }, to: { hours: 11, minutes: 0 } },
-          { from: { hours: 13, minutes: 0 }, to: { hours: 17, minutes: 0 } },
+          { from: { hours: 8, minutes: 0, ampm: 'am'}, to: { hours: 11, minutes: 0, ampm: 'am'} },
+          { from: { hours: 1, minutes: 0, ampm: 'pm'}, to: { hours: 5, minutes: 0, ampm: 'pm'} },
         ],
         days: [1, 3, 5],
       },

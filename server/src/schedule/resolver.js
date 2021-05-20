@@ -3,7 +3,8 @@ import __ from "lodash";
 
 const resolverMap = {
   Query: {
-    getSchedule: async (obj, arg) => schedule.get(arg.uid),
+    // accepts specific schedule UID || doctorClinicUidto get all schedules
+    getSchedule: async (obj, arg) => schedule.get(arg), 
   },
   Mutation: {
     upsertSchedule: (obj, arg) => schedule.upsert(arg.data),

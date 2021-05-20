@@ -16,6 +16,8 @@ const AppRoute = {
   CATEGORY: 'Category',
   ADMIN: 'Admin',
   DOCTOR_FORM: 'DoctorForm',
+  CLINICS:'Clinics',
+  APPOINTMENTS: 'Appointments',
   APPOINTMENT_PROPERTIES: 'AppointmentProperties'
 }
 

@@ -2,6 +2,7 @@ import { AuthenticationError } from "apollo-server-express";
 import jwt from "jsonwebtoken";
 import check from "./check.js";
 import __ from "lodash";
+import { generateJWT } from "../helpers/generateJWT.js";
 
 export default {
   Query: {
@@ -16,18 +17,8 @@ export default {
     signIn: async (obj, { email, password }) => {
       const result = await check({ email, password });
 
-      const payload = {
-        uid: result.uid,
-        role: result.role,
-        firstName: result.firstName,
-        lastName: result.lastName,
-        email: result.email,
-        verificationStatus: result.verificationStatus,
-      };
-      return jwt.sign(payload, process.env.JWT_SECRET_KEY, {
-        algorithm: "HS256",
-        expiresIn: "1d",
-      });
+      const jwtToken = generateJWT(result);
+      return jwtToken;
     },
   },
 };

@@ -73,55 +73,64 @@ const create = async (clinicData, knex = pg) =>
     });
 
     response.clinic.address = response.address;
-
     return response.clinic;
   });
 const update = (clinicData, knex = pg) =>
   knex.transaction(async (trx) => {
-    const response = {};
+    try {
+      const response = {};
 
-    const {
-      clinic_uid,
-      clinic_name,
-      clinic_room_no,
-      consultation_fee,
-      slot_duration_in_mins,
-      minimum_scheduling_notice_mins,
-    } = toDb(clinicData);
+      const {
+        clinic_uid,
+        clinic_name,
+        clinic_room_no,
+        consultation_fee,
+        slot_duration_in_mins,
+        minimum_scheduling_notice_mins,
+      } = toDb(clinicData);
 
-    const addressData = clinicData.address;
+      const addressData = clinicData.address;
 
-    if (!__.isUndefined(addressData))
-      response.address = await address.update(addressData, trx);
+      if (!__.isUndefined(addressData)) {
+        response.address = await address.update(addressData, trx);
+      }
 
-    if (clinic_name || clinic_room_no)
-      response.clinicRawData = await trx("clinics")
-        .where({ clinic_uid })
-        .update(objectFilter({ clinic_name, clinic_room_no }))
-        .returning("*");
-    if (
-      consultation_fee ||
-      slot_duration_in_mins ||
-      minimum_scheduling_notice_mins
-    )
-      response.doctorClinicRawData = await trx("doctor_clinics")
-        .where({ clinic_uid })
-        .update(
-          objectFilter({
-            consultation_fee,
-            slot_duration_in_mins,
-            minimum_scheduling_notice_mins,
-          })
-        )
-        .returning("*");
+      if (clinic_name || clinic_room_no) {
+        response.clinicRawData = await trx("clinics")
+          .where({ clinic_uid })
+          .update(objectFilter({ clinic_name, clinic_room_no }))
+          .returning("*");
+      }
 
-    response.clinic = fromDb({
-      ...__.first(response.clinicRawData),
-      ...__.first(response.doctorClinicRawData),
-    });
+      if (
+        consultation_fee ||
+        slot_duration_in_mins ||
+        minimum_scheduling_notice_mins
+      ) {
+        response.doctorClinicRawData = await trx("doctor_clinics")
+          .where({ clinic_uid })
+          .update(
+            objectFilter({
+              consultation_fee,
+              slot_duration_in_mins,
+              minimum_scheduling_notice_mins,
+            })
+          )
+          .returning("*");
+      }
 
-    response.clinic.address = response.address;
-    return response.clinic;
+      response.clinic = fromDb({
+        ...__.first(response.clinicRawData),
+        ...__.first(response.doctorClinicRawData),
+      });
+
+      response.clinic.address = response.address;
+      
+      return response.clinic;
+    } catch (error) {
+      console.log(error);
+      throw new ApolloError(error.detail);
+    }
   });
 const get = async ({ uid, doctorUid }, knex = pg) => {
   const dbResponse = await knex
@@ -133,12 +142,12 @@ const get = async ({ uid, doctorUid }, knex = pg) => {
       "doctor_clinics.clinic_uid",
       "clinics.clinic_uid"
     );
-  //   console.log(dbResponse.map(fromDb));
+
   return dbResponse.map(fromDb);
 };
 const remove = async (uid, knex = pg) =>
   knex.transaction(async (trx) => {
-    const getClinicResponse = __.first(await get({ uid }));
+    const getClinicResponse = __.first(await get({ uid }, trx));
 
     if (__.isUndefined(getClinicResponse))
       throw new ApolloError(
@@ -160,14 +169,32 @@ const remove = async (uid, knex = pg) =>
       address: await address.remove(addressUid, trx),
     };
 
+
     response.clinic = fromDb({
       ...__.first(response.clinicRawData),
       ...__.first(response.doctorClinicRawData),
     });
 
-    response.clinic.address = response.address;
-
+    response.clinic.address = response.address;    
     return response.clinic;
   });
 
-export default { create, update, get, remove };
+const upsert = async (clinicData, knex = pg) =>
+  knex.transaction(async (trx) => {
+    try {
+      if (clinicData.uid == null) {
+        const createClinicResponse = await create(clinicData, trx);
+        // return createClinicResponse;
+      return {uid: clinicData.uid}
+
+      }
+
+      const updateClinicResponse = await update(clinicData, trx);   
+      // return updateClinicResponse;
+      return {uid: clinicData.uid}
+    } catch (error) {
+      throw new ApolloError(error);
+    }
+  });
+
+export default { create, update, get, remove, upsert };

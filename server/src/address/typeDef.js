@@ -12,11 +12,12 @@ export default gql`
   }
 
   input AddressInput {
-    address: String!
-    city: String!
-    province: String!
-    zipCode: String!
-    country: String!
+    uid: UUID
+    address: String
+    city: String
+    province: String
+    zipCode: String
+    country: String
     coordinates: String
   }
 
@@ -35,11 +36,11 @@ export default gql`
     ): Address
     updateAddress(
       uid: UUID!
-      address: String!
-      city: String!
-      province: String!
-      zipCode: String!
-      country: String!
+      address: String
+      city: String
+      province: String
+      zipCode: String
+      country: String
       coordinates: String
     ): Address
     deleteAddress(uid: UUID!): Address

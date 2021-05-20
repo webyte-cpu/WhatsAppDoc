@@ -1,4 +1,4 @@
-import { StyleSheet } from 'react-native';
+import { StyleSheet, Platform } from 'react-native';
 
 const customStyle = StyleSheet.create({
   container: {
@@ -33,6 +33,21 @@ const customStyle = StyleSheet.create({
     width: 30,
     borderRadius: 70,
   },
+  tabStyle: { height: 40 },
+  modalContainer: {
+    width: 300,
+    ...Platform.select({
+      web: {
+        width: 600,
+      },
+    }),
+  },
+  backdrop: {
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+  },
+  listBackground: {
+    backgroundColor: "white"
+  },
   button: {
     marginHorizontal: 2
   },
@@ -43,8 +58,7 @@ const customStyle = StyleSheet.create({
     padding: 10,
   },
   warningCard: {
-    margin: 2,
-    width:500,
+    marginBottom: 15,
   }
 });
 

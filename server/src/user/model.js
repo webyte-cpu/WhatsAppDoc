@@ -2,6 +2,7 @@ import objectFilter from "../helpers/objectFilter.js";
 import { v4 as uuidV4 } from "uuid";
 import pg from "../../db/index.js";
 import __ from "lodash";
+import { ApolloError } from "apollo-server-express";
 
 const fromDb = (userData) => ({
   uid: userData.user_uid,
@@ -71,13 +72,17 @@ const find = async (object, knex = pg) =>
   });
 
 const create = async (userData, knex = pg) => {
-  userData.uid = userData.uid || uuidV4();
-  const dbResponse = await knex
-    .insert(objectFilter(toDb(userData)))
-    .into("users")
-    .returning("*");
-
-  return fromDb(__.first(dbResponse));
+  try {
+    userData.uid = userData.uid || uuidV4();
+    const dbResponse = await knex
+      .insert(objectFilter(toDb(userData)))
+      .into("users")
+      .returning("*");
+      
+    return fromDb(__.first(dbResponse));
+  } catch (error) {
+    throw new ApolloError('Email not unique', 'ALREADY_EXIST_EMAIL')
+  }
 };
 
 const update = async (userData, knex = pg) => {
