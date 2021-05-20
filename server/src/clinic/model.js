@@ -34,7 +34,7 @@ const create = async (clinicData, knex = pg) =>
     const addressData = clinicData.address;
 
     addressData.uid = addressUid;
-    response.address = await address.create(addressData.trx);
+    response.address = await address.create(addressData, trx);
 
     const {
       doctor_uid,
@@ -57,12 +57,12 @@ const create = async (clinicData, knex = pg) =>
 
     response.doctorClinicRawData = await trx
       .insert({
+        doctor_clinic_uid: doctorClinicUid,
+        clinic_uid: clinicUid,
         doctor_uid,
         consultation_fee,
         slot_duration_in_mins,
-        clinic_uid: clinicUid,
         minimum_scheduling_notice_mins,
-        doctor_clinic_uid: doctorClinicUid,
       })
       .into("doctor_clinics")
       .returning("*");
@@ -138,7 +138,7 @@ const get = async ({ uid, doctorUid }, knex = pg) => {
 };
 const remove = async (uid, knex = pg) =>
   knex.transaction(async (trx) => {
-    const getClinicResponse = __.first(await clinic(trx).get({ uid }));
+    const getClinicResponse = __.first(await get({ uid }));
 
     if (__.isUndefined(getClinicResponse))
       throw new ApolloError(
