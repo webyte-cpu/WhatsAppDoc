@@ -51,19 +51,59 @@ const handleSaveError = (initialValues, values) => {
   return null;
 };
 
-const AlertModal = ({open, setOpen}) => {
+const formatTime = (hours, minutes, ampm) => {
+    let hourValue = hours;
+
+    if(hourValue === 12 && ampm === 'am') {
+      hourValue = 0
+    }
+
+    if(hourValue !== 12 && ampm === 'pm') {
+      hourValue += 12
+    }
+
+    const formatNum = (num) => num.toString().padStart(2,0)
+    return `${formatNum(hourValue)}:${formatNum(minutes)}`
+  } 
+
+const editIntervals = (values, clinicUID) => { 
+  const {intervals} = R.clone(values)
+  const newIntervals = intervals.map((interval) => 
+     interval.time.map(({ from, to }) => ({
+       doctorClinicUid: clinicUID,
+       startTime: formatTime(from.hours, from.minutes, from.ampm), 
+       endTime: formatTime(to.hours, to.minutes, to.ampm), // TODO: convert 12hr to 24hr
+       daysOfTheWeek: interval.days})))
+
+  return newIntervals
+}
+
+const getClinicData = (values) => {
+  return {
+    name: values.clinicName,
+    roomNumber: values.roomNumber,
+    address: values.address,
+    minimumSchedulingNoticeMins: values.schedulingNotice,
+    slotDurationInMins: values.scheduleSlotDuration,
+    consultationFee: values.consultationFee
+  }
+}
+
+const getScheduleData = (values) => values.intervals
+
+const AlertModal = ({open, setOpen }) => {
   return (
     <Modal
-        visible={open}
-        style={customStyle.modalContainer}
-        backdropStyle={customStyle.backdrop}
-        onBackdropPress={() => setOpen(false)} //temporary
-        style={{justifyContent: 'center', alignSelf: 'center'}}
-      >
-        <Card style={{width: 'fit-content'}}>
-          <Spinner size='large' status='primary'/>
-        </Card>
-      </Modal>
+      visible={open}
+      style={customStyle.modalContainer}
+      backdropStyle={customStyle.backdrop}
+      onBackdropPress={() => setOpen(false)} //temporary
+      style={{justifyContent: 'center', alignSelf: 'center'}}
+    >
+      <Card style={{width: 'fit-content'}}>
+        <Spinner size='large' status='primary'/>
+      </Card>
+    </Modal>
   )
 }
 
@@ -90,7 +130,8 @@ const ScheduleStackScreen = (props) => {
             },
             headerRight: () => {
               const { initialValues, values } = usePropertiesForm();
-              let [open, setOpen] = useState(false);
+              const [open, setOpen] = useState(false);
+
               const saveData = () => {
                 const error = handleSaveError(initialValues, values);
 
@@ -102,14 +143,19 @@ const ScheduleStackScreen = (props) => {
 
                 if (R.equals(initialValues, values)) {
                   // if no changes to saved data
-                  // alert("Nothing to save, exiting...", initialValues, values);
                   setOpen(true)
-                  return
+                  return setTimeout(() => { // fake save
+                    setOpen(false)
+                    return navigation.navigate(AppRoute.CLINICS)
+                  }, 1500)
                 }
 
-                // save to db then alert
+                
+                // save clinic, then save
                 setOpen(true) // if loading
-                console.log("SAVING...", values);
+                // const newIntervals = editIntervals(values)
+                // const saveValues = {...values, intervals: newIntervals}
+                // console.log("SAVING...", saveValues);
                 return;
               };
 
