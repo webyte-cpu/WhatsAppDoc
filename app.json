@@ -1,0 +1,13 @@
+{
+  "name": "maps",
+  "displayName": "maps",
+  "android.config.googleMaps.apiKey":"AIzaSyD6jR5RvAaq4VaRSDCd9jrdh9U8j6ErKkg",
+  "expo": {
+    "name": "maps",
+    "slug": "maps",
+    "version": "1.0.0",
+    "assetBundlePatterns": [
+      "**/*"
+    ]
+  }
+}
