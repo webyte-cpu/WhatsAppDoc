@@ -27,14 +27,17 @@ describe("Queries", () => {
     }
   });
 
-  const { server } = constructTestServer();
+  const context = () => ({
+    user: { uid: "0353121f-eeed-4687-8676-f788d3e9c8e6" },
+  });
+
+  const { server } = constructTestServer({ context });
   const { query } = createTestClient(server);
 
   it("creates a clinic", async () => {
     const res = await query({
       query: CREATE_CLINIC,
       variables: {
-        doctorUid: "0353121f-eeed-4687-8676-f788d3e9c8e6",
         name: "Clinic number 4",
         roomNumber: "4",
         address: {
