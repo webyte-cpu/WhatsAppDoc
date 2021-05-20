@@ -6,7 +6,7 @@ import customStyle from "../../../themes/styles";
 
 const ResendForm = ({ navigation }) => {
   return (
-    <Card status="danger" testID="resendForm" style={{marginBottom: 15}}>
+    <Card status="danger" testID="resendForm" style={customStyle.warningCard}>
       <Text>
         Uh oh! Looks like your verification request has been rejected but you
         can send another request{" "}

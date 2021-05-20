@@ -58,8 +58,7 @@ const customStyle = StyleSheet.create({
     padding: 10,
   },
   warningCard: {
-    margin: 2,
-    width:500,
+    marginBottom: 15,
   }
 });
 
