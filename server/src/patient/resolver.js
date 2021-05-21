@@ -1,26 +1,14 @@
-import patient from "./patient.js";
+import patient from "./model.js";
 import __ from "lodash";
 
 const resolverMap = {
   Query: {
-    getPatient: async (obj, arg) => await patient().get(arg.uid),
+    getPatient: (obj, arg) => patient.get(arg.uid),
   },
   Mutation: {
-    createPatient: (obj, arg) => {
-      console.log(arg);
-      //link to patient in the database
-      return arg;
-    },
-    updatePatient: (obj, arg) => {
-      console.log(arg);
-      //link to patient in the database
-      return arg;
-    },
-    deletePatient: (obj, arg) => {
-      console.log(arg);
-      //link to patient in the database
-      return arg;
-    },
+    createPatient: (obj, arg) => patient.create(arg),
+    updatePatient: (obj, arg) => patient.update(arg),
+    deletePatient: (obj, arg) => patient.remove(arg.uid),
   },
   //Subscription: {},
 };

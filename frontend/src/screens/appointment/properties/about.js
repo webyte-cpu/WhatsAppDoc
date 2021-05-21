@@ -1,58 +1,124 @@
-import React from 'react';
-import { Text, Divider, Input } from '@ui-kitten/components';
-import { View, StyleSheet, Image, Platform, ScrollView } from 'react-native';
+import React from "react";
+import { Text, Divider } from "@ui-kitten/components";
+import { View, StyleSheet, Image, Platform, ScrollView } from "react-native";
+import { Formik, Field } from "formik";
+import { addressSchema, clinicAboutSchema, clinicNameSchema } from "../../../../helpers/validationType";
+import { AddressFields } from "../../../components/fields";
+import { CustomInput } from "../../../components/customInput";
+import { usePropertiesForm } from "./formProvider";
 
 const prefix = (prefix) => {
-  return <Text category='s1'>{prefix}</Text>
-}
+  return <Text category="s1">{prefix}</Text>;
+};
 
-const LocationForm = () => {
-  return(
-    <View style={{marginTop:20}}>
-      <Input style={{width:'80%', alignSelf:'center', marginVertical:10}} placeholder="Street Address" />
-      <View style={{ flexDirection: 'row',  justifyContent: 'center', marginVertical:10 }}>
-        <Input style={{marginHorizontal:10, width:'35%'}} placeholder="City" />
-        <Input style={{marginHorizontal:10, width:'35%'}} placeholder="Province" />
-      </View>
-      <View style={{ flexDirection: 'row',  justifyContent: 'center', marginVertical:10 }}>
-        <Input style={{marginHorizontal:10, width:'35%'}} placeholder="Zip Code" />
-        <Input style={{marginHorizontal:10, width:'35%'}} placeholder="Country" />
-      </View>
-    </View>
-  )
-}
-
-const About = () => {
+const LocationMap = () => {
   return (
-    <View style={styles.container}>
-      <Text category='h6'>Consultation Fee</Text>
-      <Input accessoryLeft={ () => prefix('PHP')} caption='Display as an information only' />
-      <Divider style={{marginTop:20}} />
-      <Text category='h6' style={{ marginVertical:10}}>Location</Text>
-      <Image style={styles.locationImg} source={{uri:'http://www.destination360.com/asia/philippines/iloilo/days-hotel-ilo-ilo-city-map.gif'}} />
-      <LocationForm />
+    <View>
+      <Text category="h6" style={{ marginVertical: 10 }}>
+        Location
+      </Text>
+      <Image
+        style={styles.locationImg}
+        source={{
+          uri: "http://www.destination360.com/asia/philippines/iloilo/days-hotel-ilo-ilo-city-map.gif",
+        }}
+      />
     </View>
+  );
+};
+
+const About = ({ route, navigation }) => {
+  const form = usePropertiesForm();
+  const initial = form.initialValues;
+
+  const initialValues = {
+    clinicName: initial.clinicName,
+    consultationFee: initial.consultationFee,
+    roomNumber: initial.roomNumber,
+    streetAddress: initial.address.streetAddress,
+    city: initial.address.city,
+    province: initial.address.province,
+    country: initial.address.country,
+    zipCode: initial.address.zipCode,
+  };
+
+  const clinicSchema = clinicAboutSchema.concat(addressSchema).concat(clinicNameSchema);
+
+  const submitForm = (data) => {
+    const newData = {
+      clinicName: data.clinicName,
+      consultationFee: Number(data.consultationFee),
+      roomNumber: data.roomNumber,
+      address: {
+        streetAddress: data.streetAddress,
+        city: data.city,
+        province: data.province,
+        country: data.country,
+        zipCode: data.zipCode,
+      },
+    };
+    form.setValues(newData)
+  };
+
+  return (
+    <ScrollView style={styles.container}>
+      <Formik initialValues={initialValues} validationSchema={clinicSchema}>
+        {() => (
+          <>
+            <Text category="h6">Clinic Name</Text>
+            <Field
+              name="clinicName"
+              component={CustomInput}
+              submitOnChange={(values) => submitForm(values)}
+            />
+
+            <Text category="h6">Consultation Fee</Text>
+            <Field
+              name="consultationFee"
+              component={CustomInput}
+              accessoryLeft={() => prefix("PHP")}
+              caption="Displayed as an information only."
+              submitOnChange={(values) => submitForm(values)}
+            />
+
+            <Divider style={{ marginTop: 20 }} />
+
+            <LocationMap />
+
+            <View style={{ marginTop: 20 }}>
+              <Field
+                submitOnChange={(values) => submitForm(values)}
+                testID="roomNumber"
+                name="roomNumber"
+                label="Room Number"
+                component={CustomInput}
+                placeholder="Room Number"
+              />
+              <AddressFields submitForm={submitForm} />
+            </View>
+          </>
+        )}
+      </Formik>
+    </ScrollView>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    padding:20,
-    backgroundColor:'white',
-    height:'100%'
+    padding: 20,
+    backgroundColor: "white",
   },
-  locationImg:{
-    width: '100%',
+  locationImg: {
+    width: "100%",
     height: 200,
-    resizeMode: 'contain',
+    resizeMode: "contain",
     ...Platform.select({
-        web: {
-            width: '100%',
-            height: 400,
-        },
+      web: {
+        width: "100%",
+        height: 400,
+      },
     }),
   },
-})
+});
 
-export default About 
-
+export default About;

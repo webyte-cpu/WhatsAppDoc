@@ -1,19 +1,33 @@
-import address from "../address/address.js";
-import clinic from "./clinic.js";
+import { AuthenticationError } from "apollo-server-express";
+import address from "../address/model.js";
+import clinic from "./model.js";
 import __ from "lodash";
 
 const resolverMap = {
   Clinic: {
-    address: async (obj) => __.first(await address().get(obj.addressUid)),
+    address: async (obj) => __.first(await address.get(obj.addressUid)),
   },
 
   Query: {
-    getClinic: (obj, arg) => clinic().get(arg),
+    getClinic: (obj, clinicData) => clinic.get(clinicData),
   },
   Mutation: {
-    createClinic: (obj, arg) => clinic().create(arg),
-    updateClinic: (obj, arg) => clinic().update(arg),
-    deleteClinic: (obj, arg) => clinic().remove(arg),
+    upsertClinic: (obj, clinicData, context) => {
+      if (__.isEmpty(context.user)) {
+        throw new AuthenticationError("No authorization header found");
+      }
+      
+      return clinic.upsert({doctorUid: context.user.uid, ...clinicData})
+    },
+    createClinic: (obj, clinicData, context) => {
+      if (__.isEmpty(context.user)) {
+        throw new AuthenticationError("No authorization header found");
+      }
+      
+      return clinic.create({doctorUid: context.user.uid, ...clinicData})
+    },
+    updateClinic: (obj, clinicData) => clinic.update(clinicData),
+    deleteClinic: (obj, clinicData) => clinic.remove(clinicData.uid),
   },
   // Subscription: {},
 };

@@ -5,7 +5,6 @@ import {
   Button,
   List,
   Icon,
-  Popover,
   Divider,
   ListItem,
   useTheme,
@@ -13,40 +12,59 @@ import {
   Card,
 } from "@ui-kitten/components";
 import customStyle from "../../../themes/styles";
+import { AppRoute } from "../../navigation/app-routes";
+import { Formik, Field } from "formik";
+import { CustomInput } from "../../components/customInput";
+import { clinicNameSchema } from "../../../helpers/validationType";
+import { usePropertiesForm } from "../appointment/properties/formProvider";
 
-const MenuIcon = (props) => {
-  const [openMenu, setOpenMenu] = useState(false);
-
-  const MenuBtn = () => {
-    return (
-      <TouchableWithoutFeedback onPress={() => setOpenMenu(true)}>
-        <Icon
-          {...props}
-          name="
-more-vertical-outline"
-        />
-      </TouchableWithoutFeedback>
-    );
-  };
-  const PopoverMenu = () => {
-    return (
-      <Popover
-        anchor={MenuBtn}
-        visible={openMenu}
-        placement="bottom-end"
-        onBackdropPress={() => setOpenMenu(false)}
-      >
-        <Text>something</Text>
-      </Popover>
-    );
-  };
-  return (
-    <>
-      <MenuBtn />
-      <PopoverMenu />
-    </>
-  );
-};
+const clinicData = [
+  {
+    clinicName: "Clinic 1",
+    roomNumber: "",
+    address: {
+      streetAddress: "Brgy. Milibili",
+      city: "Roxas City",
+      province: "Capiz",
+      country: "Philippines",
+      zipCode: "5800",
+    },
+    schedulingNotice: 15,
+    scheduleSlotDuration: 30,
+    consultationFee: 500,
+    intervals: [
+      {
+        time: [
+          { from: { hours: 12, minutes: 0, ampm: "pm"}, to: { hours: 6, minutes: 0, ampm: 'pm' } },
+        ],
+        days: [0, 2, 4],
+      },
+    ],
+  },
+  {
+    clinicName: "Clinic 2",
+    roomNumber: "",
+    address: {
+      streetAddress: "Brgy. Loctugan",
+      city: "Roxas City",
+      province: "Capiz",
+      country: "Philippines",
+      zipCode: "5800",
+    },
+    schedulingNotice: 120,
+    scheduleSlotDuration: 120,
+    consultationFee: 580,
+    intervals: [
+      {
+        time: [
+          { from: { hours: 8, minutes: 0, ampm: 'am'}, to: { hours: 11, minutes: 0, ampm: 'am'} },
+          { from: { hours: 1, minutes: 0, ampm: 'pm'}, to: { hours: 5, minutes: 0, ampm: 'pm'} },
+        ],
+        days: [1, 3, 5],
+      },
+    ],
+  },
+];
 
 const DeleteIcon = (props) => {
   const theme = useTheme();
@@ -106,7 +124,7 @@ const DeleteIcon = (props) => {
   );
 };
 
-const AddNewClinicBtn = () => {
+const AddNewClinicBtn = ({ setOpenModal }) => {
   const theme = useTheme();
 
   const addIcon = (props) => (
@@ -135,39 +153,87 @@ const AddNewClinicBtn = () => {
       title={btnTitle}
       accessoryLeft={addIcon}
       style={{ backgroundColor: theme["color-primary-transparent-100"] }}
-      onPress={() => console.log("go to properties")}
+      onPress={() => setOpenModal(true)}
     />
   );
 };
 
-const ClinicPage = () => {
-  const theme = useTheme();
+const goToProperties = (navigation, initialValues, form) => {
+  form.setInitialValues(initialValues)
+  return navigation.navigate(AppRoute.APPOINTMENT_PROPERTIES);
+};
 
-  const clinicData = [
-    { name: "Clinic 1" },
-    { name: "Clinic 2" },
-    { name: "Clinic 3" },
-    { name: "Clinic 1" },
-    { name: "Clinic 2" },
-    { name: "Clinic 3" },
-    { name: "Clinic 1" },
-    { name: "Clinic 2" },
-    { name: "Clinic 3" },
-    { name: "Clinic 1" },
-    { name: "Clinic 2" },
-    { name: "Clinic 3" },
-  ];
+const ClinicPage = ({ navigation }) => {
+  const form = usePropertiesForm()
+  const theme = useTheme();
+  const [openModal, setOpenModal] = useState(false);
+  const clinicDetails = {
+    clinicName: "",
+  };
+
+  const sendData = (values) => {
+    const clinicProperties = {
+      // SETS INITIAL VALUES IN ROUTE.PARAMS
+      roomNumber: "",
+      address: {
+        streetAddress: "",
+        city: "",
+        province: "",
+        country: "",
+        zipCode: "",
+      },
+      schedulingNotice: '',
+      scheduleSlotDuration: '',
+      consultationFee: "",
+      intervals: [],
+      ...values,
+    };
+    setOpenModal(false);
+
+    goToProperties(navigation, clinicProperties, form);
+  };
+
+  const NewClinicModal = () => {
+    return (
+      <Modal
+        visible={openModal}
+        style={customStyle.modalContainer}
+        backdropStyle={customStyle.backdrop}
+        onBackdropPress={() => setOpenModal(false)}
+      >
+        <Formik
+          initialValues={clinicDetails}
+          validationSchema={clinicNameSchema}
+          onSubmit={(values) => sendData(values)}
+        >
+          {({ handleSubmit }) => (
+            <Card>
+              <Field
+                component={CustomInput}
+                testID="clinicName"
+                name="clinicName"
+                label="Clinic Name"
+                placeholder="Enter clinic name"
+              />
+              <Button onPress={() => handleSubmit()}>Next</Button>
+            </Card>
+          )}
+        </Formik>
+      </Modal>
+    );
+  };
 
   const renderClinic = ({ item, index }) => {
     return item !== null ? (
       <>
         <ListItem
+          key={index}
           testID={`clinic-${index}`}
-          title={`${item.name}`}
+          title={`${item.clinicName}`}
           accessoryRight={(props) => (
-            <DeleteIcon {...props} clinic={item.name} />
+            <DeleteIcon {...props} clinic={item.clinicName} />
           )}
-          onPress={() => console.log("go to properties")}
+          onPress={() => goToProperties(navigation, item, form)}
         />
         <Divider />
       </>
@@ -178,8 +244,11 @@ const ClinicPage = () => {
 
   return (
     <ScrollView style={customStyle.listBackground}>
-      <List testID="clinicList" data={clinicData} renderItem={renderClinic} />
-      <AddNewClinicBtn />
+      <View>
+        <List testID="clinicList" data={clinicData} renderItem={renderClinic} />
+      </View>
+      <AddNewClinicBtn setOpenModal={setOpenModal} />
+      <NewClinicModal clinicDetails={clinicDetails} />
     </ScrollView>
   );
 };

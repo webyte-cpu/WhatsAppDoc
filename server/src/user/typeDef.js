@@ -36,23 +36,9 @@ const user = gql`
   extend type Query {
     getUser: User!
     getAllUser: [User!]
-    viewer: User
   }
 
   extend type Mutation {
-    signUp(
-      firstName: String!
-      middleName: String
-      lastName: String!
-      email: EmailAddress!
-      password: String!
-      role: Role!
-      img: String
-      sex: Sex!
-      birthdate: Date!
-      doctor: DoctorInput
-    ): JWT!
-
     updateUser(
       uid: UUID!
       firstName: String
@@ -67,8 +53,6 @@ const user = gql`
     ): User!
 
     deleteUser(uid: UUID!): User!
-
-    signIn(email: EmailAddress!, password: String!): JWT!
   }
 `;
 

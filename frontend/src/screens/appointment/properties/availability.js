@@ -1,133 +1,178 @@
-import React, { useState } from 'react';
-import { Text, Divider, Input, Button, Select, SelectItem, IndexPath, Icon } from '@ui-kitten/components';
-import { View, StyleSheet, Platform } from 'react-native';
+import React, { useState } from "react";
+import { Text, Divider, Input, Button, Icon } from "@ui-kitten/components";
+import { View, StyleSheet, Platform, ScrollView } from "react-native";
+import { usePropertiesForm } from "./formProvider";
+import * as R from "ramda";
+import IntervalForm from "./timeInterval";
 
-const plusIcon = (props) => <Icon {...props} name='plus' />;
-const plusCircleIcon = (props) => <Icon {...props} style={[props.style, { width: 35, height: 35 }]} name='plus-circle' />;
-const caption = (caption) => { return <Text appearance='hint' category='label' >{caption}</Text> }
-
-const SelectDate = () => {
-  const [selectedIndex, setSelectedIndex] = React.useState([new IndexPath(0), new IndexPath(1)]);
-  const data = [
-    'Monday',
-    'Tuesday',
-    'Wednesday',
-    'Thursday',
-    'Friday',
-    'Saturday',
-  ];
-
-  const displayValue = selectedIndex.map( (index) => {
-    return data[index.row]
-  });
-
-  const renderOption = (title) => <SelectItem title={title} />;
-
+// ELEMENTS
+const plusIcon = (props) => <Icon {...props} name="plus-outline" />;
+const caption = (caption) => {
   return (
-    <View style={styles.selectDay}>
-      <Select
-        multiSelect={true}
-        placeholder='Days'
-        value={displayValue.join(', ')}
-        selectedIndex={selectedIndex}
-        onSelect={index => setSelectedIndex(index)}>
-        {data.map(renderOption)}
-      </Select>
-    </View>
+    <Text appearance="hint" category="label">
+      {caption}
+    </Text>
   );
 };
 
 
-const Availability = () => {
-  const [scheduleSlot, setScheduleSlot] = useState(0);
-  const timeSlot = [15, 30, 45, 60];
+const Availability = ({ navigation, route }) => {
+  const form = usePropertiesForm();
+  const { initialValues } = form
+  const defaultTime = {
+    from: { hours: '', minutes: '', ampm: 'am' },
+    to: { hours: '', minutes: '', ampm: 'am'},
+  };
 
-  const TimeInterval = () => (
-    <View style={styles.inputs}>
-      <Input style={styles.input} label={evaProps => <Text {...evaProps}>From</Text>} />
-      <Input style={styles.input} label={evaProps => <Text {...evaProps}>To</Text>} />
-      <Button size='large' appearance='ghost' accessoryLeft={plusCircleIcon}></Button>
-    </View>
-  )
-
-  const IntervalForm = () => (
-    <>
-      <TimeInterval />
-      <SelectDate />
-    </>
-  )
+  const defaultInterval = {
+    time: [defaultTime],
+    days: []
+  }
   
+  const [scheduleSlotDuration, setScheduleSlotDuration] = useState(initialValues.scheduleSlotDuration);
+  const [intervals, setIntervals] = useState(R.isEmpty(initialValues.intervals) ? [defaultInterval] : initialValues.intervals );
+  const timeSlotDuration = [15, 30, 45, 60];
+
+  const editScheduleSlotDuration = (time) => {
+    const scheduleSlotDuration = Number(time)
+    setScheduleSlotDuration(scheduleSlotDuration)
+    form.setValues({scheduleSlotDuration})
+  }
+
+  const editIntervals = (intervals) => {
+    setIntervals(intervals);
+    form.setValues({intervals})
+  }
+
+  const removeTime = (intervalIndex) => {
+    const copy = R.clone(intervals);
+    copy[intervalIndex].time.pop();
+    editIntervals(copy);
+  };
+
+  const addNewTime = (intervalIndex) => {
+    const copy = R.clone(intervals);
+    copy[intervalIndex].time.push(defaultTime);
+    editIntervals(copy);
+  };
+
+  function addNewInterval () {
+    const copy = R.clone(intervals);
+    copy.push({ ...defaultInterval });
+    editIntervals(copy);
+  };
+
+  const setInterval = (data, intervalIndex) => {
+    const copy = R.clone(intervals);
+    copy[intervalIndex] = data;
+    editIntervals(copy);
+  };
+
+  const rendertimeSlotDurationBtn = (time) => (
+    <Button
+      key={`${time}-mins`}
+      testID="timeDurationBtn"
+      style={styles.button}
+      disabled={scheduleSlotDuration === time}
+      onPress={() => editScheduleSlotDuration(time)}
+    >
+      {time} mins
+    </Button>
+  );
+
   return (
-    <View style={styles.container}>
-      <Text category='h6'>Appointment Schedule Slot</Text>
+    <ScrollView style={styles.container}>
+      <Text category="h6">Appointment Schedule Slot</Text>
       <View style={styles.buttons}>
-        <Button size='small' style={styles.button} disabled={scheduleSlot === 15} onPress={() => setScheduleSlot(15)}>15 mins</Button>
-        <Button size='small' style={styles.button} disabled={scheduleSlot === 30} onPress={() => setScheduleSlot(30)}>30 mins</Button>
-        <Button size='small' style={styles.button} disabled={scheduleSlot === 45} onPress={() => setScheduleSlot(45)}>45 mins</Button>
-        <Button size='small' style={styles.button} disabled={scheduleSlot === 60} onPress={() => setScheduleSlot(60)}>60 mins</Button>
-        <Button size='small' style={styles.button} disabled={!timeSlot.includes(scheduleSlot)}>
+        {timeSlotDuration.map(rendertimeSlotDurationBtn)}
+        <Button
+          testID="timeDurationCustom"
+          size="small"
+          style={styles.button}
+          disabled={!timeSlotDuration.includes(scheduleSlotDuration)}
+        >
           <Input
-            caption={() => caption('*custom')}
+            value={
+              !timeSlotDuration.includes(scheduleSlotDuration)
+                ? scheduleSlotDuration
+                : ""
+            }
+            testID="timeDurationInput"
+            caption={() => caption("*custom")}
             multiline={true}
             style={styles.customInput}
             clearTextOnFocus={true}
-            onChangeText={(text) => setScheduleSlot(parseInt(text))}
+            onChangeText={(time) => editScheduleSlotDuration(time)}
           />
         </Button>
       </View>
       <Divider style={{ marginTop: 20 }} />
-      <Text category='h6' style={{ marginBottom: 5, marginTop: 20, }}>Intervals</Text>
-      <Text appearance='hint'>Select the days and times you will accept appointments.</Text>
-      <Text appearance='hint'>This intervals will repeat each week.</Text>
-      <IntervalForm />
-      <Button style={{ marginVertical: 20 }} appearance='outline' accessoryLeft={plusIcon}>Add New Interval</Button>
-    </View>
+      <Text category="h6" style={{ marginBottom: 5, marginTop: 20 }}>
+        Intervals
+      </Text>
+      <Text appearance="hint">
+        Select the days and times you will accept appointments.
+      </Text>
+      <Text appearance="hint">This intervals will repeat each week.</Text>
+      {intervals.map((interval, intervalIndex) => {
+        return (
+          <IntervalForm
+            key={`interval-${intervalIndex}`}
+            interval={interval}
+            intervalIndex={intervalIndex}
+            setInterval={setInterval}
+            addNewTime={addNewTime}
+            removeTime={removeTime}
+          />
+        );
+      })}
+      <Button
+        testID="addNewIntervalForm"
+        style={{ marginVertical: 20, maxWidth: 300 }}
+        appearance="outline"
+        accessoryLeft={plusIcon}
+        onPress={() => addNewInterval()}
+      >
+        Add New Interval
+      </Button>
+    </ScrollView>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     padding: 20,
-    backgroundColor: 'white',
-    height: '100%'
+    backgroundColor: "white",
+    height: "100%",
   },
   button: {
-    marginHorizontal: 2,
-    width: '20%',
-    textAlign: 'center',
-    ...Platform.select({
-      web:{
-        marginHorizontal: 10,
-        width: '10%',
-      }
-    })
+    margin: 4,
+    width: 90,
+    height: 60,
+    // width: "20%",
+    textAlign: "center",
+    // ...Platform.select({
+    //   web: {
+    //     marginHorizontal: 10,
+    //     // width: "10%",
+    //   },
+    // }),
   },
-  customInput:{
-    width: '35%',
-    ...Platform.select({
-      web:{
-        width: '50%',
-      }
-    })
+  customInput: {
+    width: 60,
+    // ...Platform.select({
+    //   web: {
+    //     width: "50%",
+    //   },
+    // }),
   },
   buttons: {
-    marginVertical:10,
-    flexDirection: 'row',
+    marginVertical: 10,
+    flexDirection: "row",
+    alignItems: "center",
+    flexWrap: "wrap",
     // justifyContent: 'center',
   },
-  inputs: {
-    marginTop: 20,
-    flexDirection: 'row',
-    width:'30%'
-  },
-  input: {
-    marginRight: 10,
-  },
-  selectDay: {
-    marginTop: 10,
-    width: '70%'
-  }
-})
+});
 
-export default Availability
-
+export default Availability;

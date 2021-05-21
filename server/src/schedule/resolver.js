@@ -1,20 +1,16 @@
-import schedule from "./schedule.js";
+import schedule from "./model.js";
 import __ from "lodash";
 
 const resolverMap = {
   Query: {
-    getSchedule: async (obj, arg) => __.first(await schedule().get(arg.uid)),
+    // accepts specific schedule UID || doctorClinicUidto get all schedules
+    getSchedule: async (obj, arg) => schedule.get(arg), 
   },
   Mutation: {
-    createSchedule: async (obj, arg) => {
-      return schedule().create(arg);
-    },
-    updateSchedule: async (obj, arg) => {
-      return schedule().update(arg);
-    },
-    deleteSchedule: async (obj, arg) => {
-      return schedule().remove(arg.uid);
-    },
+    upsertSchedule: (obj, arg) => schedule.upsert(arg.data),
+    createSchedule: (obj, arg) => schedule.create(arg.data),
+    updateSchedule: (obj, arg) => schedule.update(arg),
+    deleteSchedule: (obj, arg) => schedule.remove(arg.uid),
   },
 };
 
