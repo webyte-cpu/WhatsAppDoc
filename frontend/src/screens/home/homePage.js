@@ -5,6 +5,8 @@ import { useAuth } from '../auth/utils/authProvider';
 import { AppRoute } from '../../navigation/app-routes';
 import Searchbar from '../search/search';
 import customStyle from '../../../themes/styles';
+import NearbyDoctors from '../search/doctors/nearbyDoctors';
+import Rating from '../search/doctors/doctorRatings';
 
 const HomePage = ({ navigation }) => {
   const {appState} = useAuth();
@@ -20,6 +22,9 @@ const HomePage = ({ navigation }) => {
         </Text>
         <Button  onPress={() => navigation.navigate(AppRoute.DOCTOR_FORM)}>Edit and Resend Form</Button>
       </Card>
+      <Rating></Rating>
+      <NearbyDoctors></NearbyDoctors>
+
     </View>
   );
 };
