@@ -58,8 +58,24 @@ const customStyle = StyleSheet.create({
     padding: 10,
   },
   warningCard: {
-    marginBottom: 15,
-  }
+    margin: 2,
+    width: 500,
+  },
+  agendaContainer: {
+    margin: 5,
+    borderRadius: 15,
+    justifyContent: 'center',
+    // alignItems: 'center',
+  },
+  agendaItem: {
+    color: '#FFFFFF',
+  },
+  agendaCardHeader: {
+    flexDirection: "row", 
+    justifyContent:'space-between', 
+    marginHorizontal:25, 
+    paddingVertical:10
+  },
 });
 
 export default customStyle;
