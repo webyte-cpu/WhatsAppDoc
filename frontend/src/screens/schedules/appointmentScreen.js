@@ -4,6 +4,15 @@ import { Text, Card, Icon, useTheme } from "@ui-kitten/components";
 import customStyle from "../../../themes/styles";
 import { Agenda } from 'react-native-calendars';
 
+const TimeIcon = (props) => {
+  return <Icon {...props} style={[props.style, { width: 15, height: 12}]} fill='white' name="clock-outline" />
+};
+const LocationIcon = (props) => {
+  return <Icon {...props} style={[props.style, { width: 15, height: 12}]} fill='white' name="navigation-2-outline" />
+};
+const KnobIcon = (props) => {
+  return <Icon {...props} style={[props.style, {width: 25, height: 25, alignSelf:'center'}]} name='arrow-ios-downward-outline' />
+};
 
 const Header = ({name,status}) => {
   const theme = useTheme();
@@ -35,14 +44,6 @@ const Header = ({name,status}) => {
   )
 }
 
-const TimeIcon = (props) => {
-  return <Icon {...props} style={[props.style, { width: 15, height: 12}]} fill='white' name="clock-outline" />
-};
-
-const LocationIcon = (props) => {
-  return <Icon {...props} style={[props.style, { width: 15, height: 12}]} fill='white' name="navigation-2-outline" />
-};
-
 const renderItem = (item) => {
   return (
       <TouchableOpacity style={{ marginRight: 10, marginTop: 17 }}>
@@ -56,7 +57,6 @@ const renderItem = (item) => {
                   <Text category='s1' style={customStyle.agendaItem}><LocationIcon /> {item.clinic} </Text>
                 </View>
                 <View style={{flexDirection: "row"}}>
-                  
                   <Text category='s2' style={customStyle.agendaItem}><TimeIcon /> {item.date}</Text>
                   </View>
               </View>
@@ -65,22 +65,25 @@ const renderItem = (item) => {
   )
 }
 
-const openCalendar = () => {
+const openCalendar = (refAgenda) => {
   // let initPos = refAgenda.current.initialScrollPadPosition()
   refAgenda.current.setScrollPadPosition(0, true);
   refAgenda.current.enableCalendarScrolling();
 }
 
-const Knob = (props) => {
+const renderKnob = (agenda) => {
   return (
-      <TouchableOpacity onPress={openCalendar} >
-          <Icon {...props} style={[props.style, { width: 20, height: 20,}]} name='arrow-ios-downward-outline' />
+    <View style={{width:200}}>
+      <TouchableOpacity onPress={() => openCalendar(agenda)} >
+          <KnobIcon />
       </TouchableOpacity>
+      </View>
   )
 }
 
 const AgendaScreen = () => {
-    const refAgenda = useRef(null); const [items, setItems] = useState({
+    const refAgenda = useRef(null); 
+    const [items, setItems] = useState({
         '2021-05-15': [
             { name: 'Ayesha', clinic: 'Doctor’s Medical Hospital', date: '7:00 AM', status:'In Queue' },
             { name: 'Danielle', clinic: 'Doctor’s Medical Hospital', date: '9:00 AM', status:'In Queue' }],
@@ -105,7 +108,7 @@ const AgendaScreen = () => {
             items={items}
             renderItem={renderItem}
             renderEmptyData={() => { return <View /> }}
-            renderKnob={() => <Knob />}
+            renderKnob={() => renderKnob(refAgenda)}
             pastScrollRange={10}
             futureScrollRange={10}
         />
@@ -113,14 +116,10 @@ const AgendaScreen = () => {
 }
 
 const AppointmentScreen = () => {
-
     return (
-        // <ScrollView style={customStyle.listBackground}>
-        <View style={{ flex: 1 }}>
-            {/* <Text>Appointment</Text> */}
+        <View style={{flex:1}}>
             <AgendaScreen />
         </View>
-        // </ScrollView> 
     );
 };
 
