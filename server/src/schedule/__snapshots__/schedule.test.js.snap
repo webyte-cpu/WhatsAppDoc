@@ -6,7 +6,7 @@ Object {
     "createSchedule": null,
   },
   "errors": Array [
-    [GraphQLError: Cannot read property 'map' of undefined],
+    [GraphQLError: insert into "schedules" ("day_of_week", "doctor_clinic_uid", "end_time", "schedule_uid", "start_time") values ($1, $2, $3, $4, $5) returning * - insert or update on table "schedules" violates foreign key constraint "schedules_doctor_clinic_uid_foreign"],
   ],
   "extensions": undefined,
   "http": Object {
@@ -19,9 +19,11 @@ Object {
 
 exports[`Queries and Mutations Testing deletes a schedule 1`] = `
 Object {
-  "data": undefined,
+  "data": Object {
+    "deleteSchedule": null,
+  },
   "errors": Array [
-    [ValidationError: Field "deleteSchedule" of type "Schedule" must have a selection of subfields. Did you mean "deleteSchedule { ... }"?],
+    [GraphQLError: SCHEDULE DOES NOT EXIST.],
   ],
   "extensions": undefined,
   "http": Object {
@@ -70,7 +72,7 @@ Object {
     "upsertSchedule": null,
   },
   "errors": Array [
-    [GraphQLError: Cannot read property 'map' of undefined],
+    [GraphQLError: Key (doctor_clinic_uid)=(0353121f-eeed-4687-8676-f788d3e9c8e6) is not present in table "doctor_clinics".],
   ],
   "extensions": undefined,
   "http": Object {
