@@ -10,7 +10,8 @@ const seed = function (knex) {
           user_first_name: "Kyle",
           user_last_name: "Osunero",
           user_email: "kyle@webyte.org",
-          user_password: "$3cR3tP4ss",
+          user_password:
+            "$2b$10$5dJnrR/Df2k08uzIG2d02OUBKX/1tGS2trJHvhQYj8MvKnPMGMOkm", //"$3cR3tP4ss",
           user_birthdate: "1999-09-25",
           user_sex: "MALE",
           user_role: "ADMIN",
@@ -21,7 +22,8 @@ const seed = function (knex) {
           user_first_name: "Em",
           user_last_name: "Mallare",
           user_email: "em@webyte.org",
-          user_password: "$3cR3tP4ss1",
+          user_password:
+            "$2b$10$IePitzyeVvYnDcB264J4s.qIHzQimDiRfN6fJidpTjNGdMPbUsR0W", //"$3cR3tP4ss1",
           user_birthdate: "1999-09-25",
           user_sex: "FEMALE",
           user_role: "PATIENT",
@@ -32,14 +34,15 @@ const seed = function (knex) {
           user_first_name: "Kent",
           user_last_name: "Handumon",
           user_email: "kent@webyte.org",
-          user_password: "$3cR3tP4ss2",
+          user_password:
+            "$2b$10$ewQcGP8mzFRviwYcU0A7suyBZGMs7SLmpTXcx99QEsFFdJbDnrdbW", //"$3cR3tP4ss2",
           user_birthdate: "1999-09-25",
           user_sex: "MALE",
           user_role: "DOCTOR",
           created_at: new Date(Date.now()),
         },
       ]);
-    })
+    });
 };
 
 export { seed };
