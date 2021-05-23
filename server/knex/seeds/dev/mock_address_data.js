@@ -1,7 +1,7 @@
 const seed = function (knex) {
   // Deletes ALL existing entries
   return knex('addresses')
-    .del()
+    // .del()
     .then(function () {
       // Inserts seed entries
       return knex('addresses').insert([
@@ -14,7 +14,7 @@ const seed = function (knex) {
           address_country: 'Philippines',
           address_coordinates: '14.6488, 121.0509'
         },
-        {
+        { 
           address_uid: 'd88e25f9-75fc-463b-8c06-4edb67195a6b',
           address: 'Lopez Jaena',
           address_city: 'Jaro',

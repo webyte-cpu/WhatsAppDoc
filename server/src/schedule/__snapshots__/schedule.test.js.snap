@@ -3,11 +3,19 @@
 exports[`Queries and Mutations Testing creates a schedule 1`] = `
 Object {
   "data": Object {
-    "createSchedule": null,
+    "createSchedule": Array [
+      Object {
+        "daysOfTheWeek": Array [
+          1,
+          4,
+        ],
+        "endTime": "19:00:00",
+        "startTime": "18:00:00",
+        "uid": "2a66bf81-ecb0-4321-be52-1f7addfbf409",
+      },
+    ],
   },
-  "errors": Array [
-    [GraphQLError: insert into "schedules" ("day_of_week", "doctor_clinic_uid", "end_time", "schedule_uid", "start_time") values ($1, $2, $3, $4, $5) returning * - insert or update on table "schedules" violates foreign key constraint "schedules_doctor_clinic_uid_foreign"],
-  ],
+  "errors": undefined,
   "extensions": undefined,
   "http": Object {
     "headers": Headers {
@@ -20,11 +28,18 @@ Object {
 exports[`Queries and Mutations Testing deletes a schedule 1`] = `
 Object {
   "data": Object {
-    "deleteSchedule": null,
+    "deleteSchedule": Object {
+      "daysOfTheWeek": Array [
+        1,
+        2,
+        3,
+      ],
+      "endTime": "11:00:00",
+      "startTime": "10:00:00",
+      "uid": "9733cbae-dc7d-451c-af9c-ed7618ca9029",
+    },
   },
-  "errors": Array [
-    [GraphQLError: SCHEDULE DOES NOT EXIST.],
-  ],
+  "errors": undefined,
   "extensions": undefined,
   "http": Object {
     "headers": Headers {
@@ -37,7 +52,16 @@ Object {
 exports[`Queries and Mutations Testing fetches a schedule 1`] = `
 Object {
   "data": Object {
-    "getSchedule": Array [],
+    "getSchedule": Array [
+      Object {
+        "daysOfTheWeek": Array [
+          4,
+        ],
+        "endTime": "11:30:00",
+        "startTime": "10:30:00",
+        "uid": "d8b605d8-68c8-4f97-b80b-633ef167b801",
+      },
+    ],
   },
   "errors": undefined,
   "extensions": undefined,
@@ -52,11 +76,18 @@ Object {
 exports[`Queries and Mutations Testing updates a schedule 1`] = `
 Object {
   "data": Object {
-    "updateSchedule": null,
+    "updateSchedule": Object {
+      "daysOfTheWeek": Array [
+        1,
+        2,
+        3,
+      ],
+      "endTime": "11:00:00",
+      "startTime": "10:00:00",
+      "uid": "9733cbae-dc7d-451c-af9c-ed7618ca9029",
+    },
   },
-  "errors": Array [
-    [GraphQLError: Cannot read property 'schedule_uid' of undefined],
-  ],
+  "errors": undefined,
   "extensions": undefined,
   "http": Object {
     "headers": Headers {
@@ -69,11 +100,19 @@ Object {
 exports[`Queries and Mutations Testing upserts a schedule 1`] = `
 Object {
   "data": Object {
-    "upsertSchedule": null,
+    "upsertSchedule": Array [
+      Object {
+        "daysOfTheWeek": Array [
+          1,
+          4,
+        ],
+        "endTime": "14:00:00",
+        "startTime": "13:00:00",
+        "uid": "9733cbae-dc7d-451c-af9c-ed7618ca9029",
+      },
+    ],
   },
-  "errors": Array [
-    [GraphQLError: Key (doctor_clinic_uid)=(0353121f-eeed-4687-8676-f788d3e9c8e6) is not present in table "doctor_clinics".],
-  ],
+  "errors": undefined,
   "extensions": undefined,
   "http": Object {
     "headers": Headers {

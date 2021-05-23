@@ -41,7 +41,7 @@ const update = async (scheduleData, knex = pg) => {
     .update(objectFilter(toDb(scheduleData)))
     .returning("*");
 
-  console.log(scheduleData);
+  // console.log(scheduleData)
 
   return fromDb(__.first(dbResponse));
 };

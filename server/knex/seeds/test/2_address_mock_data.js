@@ -12,6 +12,7 @@ const seed = function (knex) {
           address_province: "Antique",
           address_zip_code: "5700",
           address_country: "Philippines",
+          address_coordinates: '14.6488, 121.0509'
           // address_coordinates:""
         },
       ]);

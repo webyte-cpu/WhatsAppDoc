@@ -12,6 +12,10 @@ const seed = function (knex) {
           doctor_licence_img:
             "http://newstogov.com/wp-content/uploads/2019/10/prc1.jpg",
           doctor_licence_exp: "2022-10-28",
+          doctor_experience: 2,
+          doctor_about: "Test doctor",
+          doctor_educational: "Test educational background",
+          doctor_rating: "9"
         },
       ]);
     });

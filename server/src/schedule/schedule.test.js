@@ -29,8 +29,8 @@ describe("Queries and Mutations Testing", () => {
     const res = await query({
       query: UPSERT_SCHEDULE,
       variables: { data: [{
-          uid: "8db4bd7b-9da8-4ffe-9ba3-11e79b5275db",
-          doctorClinicUid: "0353121f-eeed-4687-8676-f788d3e9c8e6",
+          uid: "9733cbae-dc7d-451c-af9c-ed7618ca9029",
+          doctorClinicUid: "0afdaddf-536e-4b67-8617-52783e64f6b5",
           startTime: "13:00:00",
           endTime: "14:00:00",
           daysOfTheWeek: [1, 4]
@@ -47,7 +47,7 @@ describe("Queries and Mutations Testing", () => {
       query: CREATE_SCHEDULE,
       variables: { data: [
         {
-          doctorClinicUid: "0353121f-eeed-4687-8676-f788d3e9c8e6",
+          doctorClinicUid: "0afdaddf-536e-4b67-8617-52783e64f6b5",
           startTime: "18:00:00",
           endTime: "19:00:00",
           daysOfTheWeek: [1, 4]
@@ -63,7 +63,7 @@ describe("Queries and Mutations Testing", () => {
     const res = await query({
       query: UPDATE_SCHEDULE,
       variables: {
-        uid: "d8b605d8-68c8-4f97-b80b-633ef167b801",
+        uid: "9733cbae-dc7d-451c-af9c-ed7618ca9029",
         startTime: "10:00:00",
         endTime: "11:00:00",
         daysOfTheWeek: [1, 2, 3]
