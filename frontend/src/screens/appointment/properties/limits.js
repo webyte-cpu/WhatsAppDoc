@@ -13,13 +13,11 @@ const suffix = (suffix) => {
 const Limits = ({ route, navigation }) => {
   const form = usePropertiesForm();
   const data = {
-    schedulingNotice: form.initialValues.schedulingNotice
+    schedulingNotice: Number(form.initialValues.schedulingNotice)
   }
   
-  const submitForm = (data) => {
-    form.setValues(data)
-  };
-  
+  const submitForm = (data) => form.setValues(data)
+
   return (
     <View style={styles.container}>
       <Text category="h6">Minimum Scheduling Notice</Text>

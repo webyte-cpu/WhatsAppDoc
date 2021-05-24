@@ -46,7 +46,10 @@ const Availability = ({ navigation, route }) => {
 
   const removeTime = (intervalIndex) => {
     const copy = R.clone(intervals);
-    copy[intervalIndex].time.pop();
+    const intervalToDelete = copy[intervalIndex].time.pop();
+    console.log(intervalToDelete)
+
+    form.setIntervalsToDelete(intervalToDelete);
     editIntervals(copy);
   };
 

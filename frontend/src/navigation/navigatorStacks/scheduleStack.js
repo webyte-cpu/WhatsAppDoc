@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { createStackNavigator } from "@react-navigation/stack";
 import { View } from 'react-native';
-
+import { useMutation } from "@apollo/client";
 import SchedulePage from "../../screens/schedules/schedulePage";
 import AppointmentProperties from "../../screens/appointment/properties/properties";
 import DrawerMenuBtn from "../../components/drawer/drawerBtn";
@@ -13,6 +13,8 @@ import {
 } from "../../screens/appointment/properties/formProvider";
 import * as R from "ramda";
 import customStyle from "../../../themes/styles";
+import { GET_CLINICS, GET_SCHEDULES, SAVE_CLINIC_MUTATION, SAVE_SCHEDULE_MUTATION } from "../../screens/schedules/queries";
+import { clinicDataToDB, intervalsToDB } from "../../screens/schedules/utils/convertData";
 
 const ScheduleStack = createStackNavigator();
 
@@ -25,7 +27,7 @@ const deconstructData = (item) => {
 
 const getInvalidFields = (dataObj) => {
   const data = deconstructData(dataObj);
-  const notRequiredKeys = ["roomNumber"];
+  const notRequiredKeys = ["roomNumber", "coordinates"];
   const invalidKeys = [];
 
   for (const key in data) {
@@ -51,61 +53,7 @@ const handleSaveError = (initialValues, values) => {
   return null;
 };
 
-const formatTime = (hours, minutes, ampm) => {
-    let hourValue = hours;
-
-    if(hourValue === 12 && ampm === 'am') {
-      hourValue = 0
-    }
-
-    if(hourValue !== 12 && ampm === 'pm') {
-      hourValue += 12
-    }
-
-    const formatNum = (num) => num.toString().padStart(2,0)
-    return `${formatNum(hourValue)}:${formatNum(minutes)}`
-  } 
-
-const editIntervals = (values, clinicUID) => { 
-  const {intervals} = R.clone(values)
-  const newIntervals = intervals.map((interval) => 
-     interval.time.map(({ from, to }) => ({
-       doctorClinicUid: clinicUID,
-       startTime: formatTime(from.hours, from.minutes, from.ampm), 
-       endTime: formatTime(to.hours, to.minutes, to.ampm), // TODO: convert 12hr to 24hr
-       daysOfTheWeek: interval.days})))
-
-  return newIntervals
-}
-
-const getClinicData = (values) => {
-  return {
-    name: values.clinicName,
-    roomNumber: values.roomNumber,
-    address: values.address,
-    minimumSchedulingNoticeMins: values.schedulingNotice,
-    slotDurationInMins: values.scheduleSlotDuration,
-    consultationFee: values.consultationFee
-  }
-}
-
-const getScheduleData = (values) => values.intervals
-
-const AlertModal = ({open, setOpen }) => {
-  return (
-    <Modal
-      visible={open}
-      style={customStyle.modalContainer}
-      backdropStyle={customStyle.backdrop}
-      onBackdropPress={() => setOpen(false)} //temporary
-      style={{justifyContent: 'center', alignSelf: 'center'}}
-    >
-      <Card style={{width: 'fit-content'}}>
-        <Spinner size='large' status='primary'/>
-      </Card>
-    </Modal>
-  )
-}
+const getClinicData = (values) => clinicDataToDB(R.omit(["intervals"], values))
 
 const ScheduleStackScreen = (props) => {
   const theme = useTheme();
@@ -129,53 +77,74 @@ const ScheduleStackScreen = (props) => {
               backgroundColor: theme["color-primary-default"],
             },
             headerRight: () => {
-              const { initialValues, values } = usePropertiesForm();
-              const [open, setOpen] = useState(false);
+              const { initialValues, values, setLoading, isLoading } = usePropertiesForm();
+              const [saveSchedule] = useMutation(SAVE_SCHEDULE_MUTATION, {
+                onCompleted: () => {
+                  setLoading(false)
+                  return navigation.navigate(AppRoute.CLINICS)
+                },
+                onError: (error) => {
+                  if(error) {
+                    console.error(error)
+                  }
+                },
+                refetchQueries: [{query: GET_CLINICS}]
+              })
 
-              const saveData = () => {
+              const [ saveClinic ] = useMutation(SAVE_CLINIC_MUTATION, {
+                onCompleted: async ({result}) => {
+                  const newIntervals = intervalsToDB(values.intervals)
+      
+                  const saveValues = newIntervals.map((interval) => ({doctorClinicUid: result.doctorClinicUid, ...interval}))
+                  console.log(saveValues)
+                  await saveSchedule({ variables: {data: saveValues} })
+                },
+                onError: (error) => {
+                  if(error) {
+                    console.log('whra')
+                    console.error(error)
+
+                  }
+                }
+              })
+
+              const saveData = async () => {
                 const error = handleSaveError(initialValues, values);
 
                 if (error) {
                   alert(error.join(" , "));
-
                   return;
                 }
+                 
+                // if no changes to saved data
+                setLoading(true)
 
                 if (R.equals(initialValues, values)) {
-                  // if no changes to saved data
-                  setOpen(true)
                   return setTimeout(() => { // fake save
-                    setOpen(false)
+                    setLoading(false)
                     return navigation.navigate(AppRoute.CLINICS)
-                  }, 1500)
+                  }, 1000)
                 }
 
-                
-                // save clinic, then save
-                setOpen(true) // if loading
-                // const newIntervals = editIntervals(values)
-                // const saveValues = {...values, intervals: newIntervals}
-                // console.log("SAVING...", saveValues);
-                return;
+                const clinicData = getClinicData(values)
+                console.log(clinicData)
+                await saveClinic({variables: clinicData})
               };
 
               return (
-               <View>
                 <Button
                     style={{ marginRight: 10, backgroundColor: "white" }}
                     onPress={() => saveData()}
                   >
-                    <Text
-                      style={{
-                        color: theme["color-primary-default"],
-                        fontWeight: "bold",
-                      }}
-                    >
-                      SAVE
-                    </Text>
-                  </Button> 
-                  <AlertModal open={open} setOpen={setOpen}/> 
-                </View>
+                  <Text
+                    style={{
+                      color: theme["color-primary-default"],
+                      fontWeight: "bold",
+                    }}
+                  >
+                    SAVE
+                  </Text>
+                </Button> 
               );
             },
           })}

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { ScrollView, View, TouchableWithoutFeedback } from "react-native";
 import {
   Text,
@@ -17,57 +17,12 @@ import { Formik, Field } from "formik";
 import { CustomInput } from "../../components/customInput";
 import { clinicNameSchema } from "../../../helpers/validationType";
 import { usePropertiesForm } from "../appointment/properties/formProvider";
-
-const clinicData = [
-  {
-    clinicName: "Clinic 1",
-    roomNumber: "",
-    address: {
-      streetAddress: "Brgy. Milibili",
-      city: "Roxas City",
-      province: "Capiz",
-      country: "Philippines",
-      zipCode: "5800",
-    },
-    schedulingNotice: 15,
-    scheduleSlotDuration: 30,
-    consultationFee: 500,
-    intervals: [
-      {
-        time: [
-          { from: { hours: 12, minutes: 0, ampm: "pm"}, to: { hours: 6, minutes: 0, ampm: 'pm' } },
-        ],
-        days: [0, 2, 4],
-      },
-    ],
-  },
-  {
-    clinicName: "Clinic 2",
-    roomNumber: "",
-    address: {
-      streetAddress: "Brgy. Loctugan",
-      city: "Roxas City",
-      province: "Capiz",
-      country: "Philippines",
-      zipCode: "5800",
-    },
-    schedulingNotice: 120,
-    scheduleSlotDuration: 120,
-    consultationFee: 580,
-    intervals: [
-      {
-        time: [
-          { from: { hours: 8, minutes: 0, ampm: 'am'}, to: { hours: 11, minutes: 0, ampm: 'am'} },
-          { from: { hours: 1, minutes: 0, ampm: 'pm'}, to: { hours: 5, minutes: 0, ampm: 'pm'} },
-        ],
-        days: [1, 3, 5],
-      },
-    ],
-  },
-];
+import { useQuery } from "@apollo/client";
+import { GET_CLINICS, GET_SCHEDULES } from "./queries";
+import LoadingScreen from "../../components/loadingScreen";
+import { clinicDataFromDB, intervalsFromDB } from "./utils/convertData";
 
 const DeleteIcon = (props) => {
-  const theme = useTheme();
   const [visible, setVisible] = useState(false);
 
   const FooterBtns = () => {
@@ -159,13 +114,14 @@ const AddNewClinicBtn = ({ setOpenModal }) => {
 };
 
 const goToProperties = (navigation, initialValues, form) => {
-  form.setInitialValues(initialValues)
+  form.setInitialValues(initialValues);
   return navigation.navigate(AppRoute.APPOINTMENT_PROPERTIES);
 };
 
-const ClinicPage = ({ navigation }) => {
-  const form = usePropertiesForm()
-  const theme = useTheme();
+const ClinicPage = ({ navigation, route }) => {
+  const { loading, error, data } = useQuery(GET_CLINICS);
+
+  const form = usePropertiesForm();
   const [openModal, setOpenModal] = useState(false);
   const clinicDetails = {
     clinicName: "",
@@ -181,9 +137,10 @@ const ClinicPage = ({ navigation }) => {
         province: "",
         country: "",
         zipCode: "",
+        coordinates: "",
       },
-      schedulingNotice: '',
-      scheduleSlotDuration: '',
+      schedulingNotice: "",
+      scheduleSlotDuration: "",
       consultationFee: "",
       intervals: [],
       ...values,
@@ -223,34 +180,84 @@ const ClinicPage = ({ navigation }) => {
     );
   };
 
-  const renderClinic = ({ item, index }) => {
-    return item !== null ? (
-      <>
-        <ListItem
-          key={index}
-          testID={`clinic-${index}`}
-          title={`${item.clinicName}`}
-          accessoryRight={(props) => (
-            <DeleteIcon {...props} clinic={item.clinicName} />
-          )}
-          onPress={() => goToProperties(navigation, item, form)}
-        />
-        <Divider />
-      </>
-    ) : (
-      <> </>
-    );
-  };
+  if (loading) {
+    return <LoadingScreen />;
+  }
 
-  return (
-    <ScrollView style={customStyle.listBackground}>
+  if (error) {
+    console.error(error);
+    return (
       <View>
-        <List testID="clinicList" data={clinicData} renderItem={renderClinic} />
+        <Text status="danger">Uh oh! an error has occurred</Text>
       </View>
-      <AddNewClinicBtn setOpenModal={setOpenModal} />
-      <NewClinicModal clinicDetails={clinicDetails} />
-    </ScrollView>
-  );
+    );
+  }
+
+  if (data) {
+    const RenderClinic = ({ item, index }) => {
+      const doctorClinicUid = item.doctorClinicUid;
+      const { loading, error, data, refetch, networkStatus } = useQuery(
+        GET_SCHEDULES,
+        {
+          variables: { doctorClinicUid },
+        }
+      );
+
+      useEffect(() => {
+        refetch(); // TODO: open for refactoring
+      }, [doctorClinicUid]);
+
+      if (error) {
+        console.log(error);
+        return (
+          <View style={{ justifyContent: "center", alignContent: "center" }}>
+            <Text status="danger">Error has occured</Text>
+          </View>
+        );
+      }
+
+      if (loading) {
+        return <LoadingScreen />;
+      }
+
+      const intervals = intervalsFromDB(data.getSchedule);
+      const clinicData = { ...item, intervals };
+      const formattedData = clinicDataFromDB(clinicData); // final data for frontend
+
+      return clinicData !== null ? (
+        <>
+          <ListItem
+            key={index}
+            testID={`clinic-${index}`}
+            title={`${formattedData.clinicName}`}
+            accessoryRight={(props) => (
+              <DeleteIcon {...props} clinic={formattedData.clinicName} />
+            )}
+            onPress={() => {
+              goToProperties(navigation, formattedData, form);
+            }}
+          />
+          <Divider />
+        </>
+      ) : (
+        <> </>
+      );
+    };
+
+    return (
+      <ScrollView style={customStyle.listBackground}>
+        <View>
+          <List
+            testID="clinicList"
+            data={data.getClinic}
+            renderItem={(props) => <RenderClinic {...props} />}
+          />
+        </View>
+        <AddNewClinicBtn setOpenModal={setOpenModal} />
+        <NewClinicModal clinicDetails={clinicDetails} />
+      </ScrollView>
+    );
+  }
 };
 
 export default ClinicPage;

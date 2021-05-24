@@ -17,12 +17,15 @@ const LocationMap = () => {
       <Text category="h6" style={{ marginVertical: 10 }}>
         Location
       </Text>
-      <Image
+      <Text>
+      { Platform.OS === 'web' ? 'Map function is not yet supported': 'There is a map function.'}
+      </Text>
+      {/* <Image
         style={styles.locationImg}
         source={{
           uri: "http://www.destination360.com/asia/philippines/iloilo/days-hotel-ilo-ilo-city-map.gif",
         }}
-      />
+      /> */}
     </View>
   );
 };
