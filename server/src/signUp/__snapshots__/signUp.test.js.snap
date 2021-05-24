@@ -1,0 +1,73 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Sign Up Has an invalid email and password 1`] = `
+Object {
+  "data": undefined,
+  "errors": Array [
+    [UserInputError: Variable "$email" got invalid value ""; Expected type "EmailAddress". Value is not a valid email address: ],
+  ],
+  "extensions": undefined,
+  "http": Object {
+    "headers": Headers {
+      Symbol(map): Object {},
+    },
+  },
+}
+`;
+
+exports[`Sign Up Has valid email but invalid password 1`] = `
+Object {
+  "data": null,
+  "errors": Array [
+    [GraphQLError: Password format is not valid; Password must be 8 or more characters long and contain at least one of the following:
+                  number, uppercase letter, lowercase letter, and symbol.],
+  ],
+  "extensions": undefined,
+  "http": Object {
+    "headers": Headers {
+      Symbol(map): Object {},
+    },
+  },
+}
+`;
+
+exports[`Sign Up Should sign up a Doctor 1`] = `
+Object {
+  "birthdate": undefined,
+  "email": "doc_kyle@webyte.org",
+  "firstName": "Kyle",
+  "img": undefined,
+  "lastName": "Osunero",
+  "role": "DOCTOR",
+  "sex": undefined,
+  "uid": "20cafda8-70ef-4ecc-b14d-b6c9e42e4888",
+}
+`;
+
+exports[`Sign Up Should sign up a Patient 1`] = `
+Object {
+  "birthdate": undefined,
+  "email": "patient_kyle@webyte.org",
+  "firstName": "Kyle",
+  "img": undefined,
+  "lastName": "Osunero",
+  "role": "PATIENT",
+  "sex": undefined,
+  "uid": "b17f488c-e7b6-42ed-8871-1ef46f34fb00",
+}
+`;
+
+exports[`Sign Up Trys to sign up with existing user 1`] = `
+Object {
+  "data": null,
+  "errors": Array [
+    [GraphQLError: Email not unique],
+  ],
+  "extensions": undefined,
+  "http": Object {
+    "headers": Headers {
+      Symbol(map): Object {},
+    },
+  },
+}
+`;

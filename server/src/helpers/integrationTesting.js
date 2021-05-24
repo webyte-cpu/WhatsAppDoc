@@ -29,7 +29,7 @@ const cleanDb = () => {
     mode: "truncate",
     restartIdentity: true,
   };
-  knexCleaner.clean(pg, options);
+  return knexCleaner.clean(pg, options);
 };
 
 export { constructTestServer, cleanDb };

@@ -21,10 +21,12 @@ const toDb = (scheduleData) => ({
 });
 
 const create = async (scheduleList, knex = pg) => {
+  
   const newSchedList = scheduleList.map((scheduleData) => {
     scheduleData.uid = scheduleData.uid || uuidV4();
     return toDb(scheduleData);
   });
+
   const dbResponse = await knex
     .insert(newSchedList)
     .into("schedules")
@@ -39,10 +41,13 @@ const update = async (scheduleData, knex = pg) => {
     .update(objectFilter(toDb(scheduleData)))
     .returning("*");
 
+  // console.log(scheduleData)
+
   return fromDb(__.first(dbResponse));
 };
 
 const upsert = async (scheduleList, knex = pg) => {
+
   const newSchedList = scheduleList.map((scheduleData) => {
     scheduleData.uid = scheduleData.uid || uuidV4();
     return toDb(scheduleData);
@@ -77,11 +82,17 @@ const get = async ({uid, doctorClinicUid}, knex = pg) => {
 };
 
 const remove = async (uid, knex = pg) => {
+
   const dbResponse = await knex("schedules")
     .where({ schedule_uid: uid })
     .del()
     .returning("*");
-  return fromDb(__.first(dbResponse));
+
+    if (__.isEmpty(dbResponse)) {
+      throw new ApolloError("SCHEDULE DOES NOT EXIST.");
+    }
+  
+    return fromDb(__.first(dbResponse));;
 };
 
 export default { create, update, get, remove, upsert };

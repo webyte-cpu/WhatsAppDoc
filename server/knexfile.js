@@ -13,9 +13,10 @@ const defaultConfig = {
     min: 2,
     max: 10,
   },
+  
   migrations: {
     tableName: "knex_migrations",
-    directory: "migrations",
+    directory: "./knex/migrations",
   },
   timezone: "UTC",
 };
@@ -24,7 +25,7 @@ const knex = {
   development: {
     ...defaultConfig,
     seeds: {
-      directory: "./seeds/dev",
+      directory: "./knex/seeds/dev",
     },
   },
   test: {
@@ -32,8 +33,9 @@ const knex = {
     connection: process.env.PG_TEST_CONNECTION_STRING,
     pool: { min: 0, max: 10, idleTimeoutMillis: 500 },
     seeds: {
-      directory: "./seeds/test",
+      directory: "./knex/seeds/test",
     },
+    
   },
   production: {
     ...defaultConfig,

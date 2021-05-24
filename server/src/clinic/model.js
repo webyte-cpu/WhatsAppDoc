@@ -57,12 +57,12 @@ const create = async (clinicData, knex = pg) =>
 
     response.doctorClinicRawData = await trx
       .insert({
+        doctor_clinic_uid: doctorClinicUid,
+        clinic_uid: clinicUid,
         doctor_uid,
         consultation_fee,
         slot_duration_in_mins,
-        clinic_uid: clinicUid,
         minimum_scheduling_notice_mins,
-        doctor_clinic_uid: doctorClinicUid,
       })
       .into("doctor_clinics")
       .returning("*");
@@ -125,7 +125,7 @@ const update = (clinicData, knex = pg) =>
       });
 
       response.clinic.address = response.address;
-      
+
       return response.clinic;
     } catch (error) {
       console.log(error);
@@ -169,13 +169,12 @@ const remove = async (uid, knex = pg) =>
       address: await address.remove(addressUid, trx),
     };
 
-
     response.clinic = fromDb({
       ...__.first(response.clinicRawData),
       ...__.first(response.doctorClinicRawData),
     });
 
-    response.clinic.address = response.address;    
+    response.clinic.address = response.address;
     return response.clinic;
   });
 
@@ -188,7 +187,7 @@ const upsert = async (clinicData, knex = pg) =>
         return {uid: createClinicResponse.uid, doctorClinicUid: createClinicResponse.doctorClinicUid}
       }
 
-      const updateClinicResponse = await update(clinicData, trx);   
+      const updateClinicResponse = await update(clinicData, trx);
       // return updateClinicResponse;
       return {uid: clinicData.uid, doctorClinicUid: clinicData.doctorClinicUid}
     } catch (error) {
