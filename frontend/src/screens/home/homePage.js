@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useLayoutEffect, useState } from "react";
 import { View } from "react-native";
 import { Button, IndexPath, Text, useTheme, Card } from "@ui-kitten/components";
 import { useAuth } from "../auth/utils/authProvider";
@@ -8,9 +8,8 @@ import customStyle from "../../../themes/styles";
 import ResendForm from "./resendForm";
 import enums from "../../../helpers/enums";
 
-const HomePage = ({ navigation }) => {
+const HomePage = ({ navigation, route}) => {
   const { appState } = useAuth();
-  const [filter, setFilter] = useState(new IndexPath(0));
 
   return (
     <View style={customStyle.contentFill}>
@@ -25,7 +24,7 @@ const HomePage = ({ navigation }) => {
       <Text testID="welcome-header" category="h1" style={{ marginBottom: 10 }}>
         Welcome {appState.user.firstName}!
       </Text>
-      <Searchbar filter={filter} setFilter={setFilter} />
+      <Searchbar navigation={navigation} route={route} />
     </View>
   );
 };

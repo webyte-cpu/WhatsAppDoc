@@ -5,6 +5,7 @@ import customStyle from '../../../themes/styles';
 import { AppRoute } from '../app-routes';
 import HomePage from '../../screens/home/homePage';
 import DoctorForm from '../../screens/home/doctorForm'
+import SearchPage from '../../screens/search/searchPage';
 
 const HomeStack = createStackNavigator();
 
@@ -22,6 +23,10 @@ const HomeStackScreen = (props) => {
       <HomeStack.Screen
         name={AppRoute.DOCTOR_FORM}
         component={DoctorForm}
+      />
+      <HomeStack.Screen
+        name={AppRoute.SEARCH}
+        component={SearchPage}
       />
     </HomeStack.Navigator>
   );
