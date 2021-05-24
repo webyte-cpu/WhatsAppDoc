@@ -43,7 +43,7 @@ const get = async (userUid) => {
     : pg.select("*").from("doctors");
 };
 const remove = async (userUid) => {
-  return await pg("docotrs").where({ user_uid: userUid }).del();
+  return await pg("doctors").where({ user_uid: userUid }).del();
 };
 
 export default { create, update, get, remove };

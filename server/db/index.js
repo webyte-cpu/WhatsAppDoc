@@ -1,4 +1,3 @@
 import knex from "knex";
-import knexFile from "../knex/knexfile.js";
-const pg = knex(knexFile.development);
-export default pg;
+import knexFile from "../knexfile.js";
+export default knex(knexFile[process.env.NODE_ENV]);

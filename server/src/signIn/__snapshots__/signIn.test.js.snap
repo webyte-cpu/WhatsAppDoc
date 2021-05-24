@@ -1,0 +1,57 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Sign In Has an invalid email and password 1`] = `
+Object {
+  "data": undefined,
+  "errors": Array [
+    [UserInputError: Variable "$email" got invalid value ""; Expected type "EmailAddress". Value is not a valid email address: ],
+  ],
+  "extensions": undefined,
+  "http": Object {
+    "headers": Headers {
+      Symbol(map): Object {},
+    },
+  },
+}
+`;
+
+exports[`Sign In Has valid email but wrong password 1`] = `
+Object {
+  "data": null,
+  "errors": Array [
+    [GraphQLError: Invalid Email or Password.],
+  ],
+  "extensions": undefined,
+  "http": Object {
+    "headers": Headers {
+      Symbol(map): Object {},
+    },
+  },
+}
+`;
+
+exports[`Sign In Should login 1`] = `
+Object {
+  "email": "kent@webyte.org",
+  "firstName": "Kent",
+  "lastName": "Handumon",
+  "role": "DOCTOR",
+  "uid": null,
+  "verificationStatus": "PENDING",
+}
+`;
+
+exports[`Sign In Trys to login a non-existing user 1`] = `
+Object {
+  "data": null,
+  "errors": Array [
+    [GraphQLError: Invalid Email or Password.],
+  ],
+  "extensions": undefined,
+  "http": Object {
+    "headers": Headers {
+      Symbol(map): Object {},
+    },
+  },
+}
+`;

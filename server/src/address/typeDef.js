@@ -1,6 +1,6 @@
 import { gql } from "apollo-server-express";
 
-const address = gql`
+export default gql`
   type Address {
     uid: UUID!
     address: String!
@@ -12,16 +12,17 @@ const address = gql`
   }
 
   input AddressInput {
-    address: String!
-    city: String!
-    province: String!
-    zipCode: String!
-    country: String!
+    uid: UUID
+    address: String
+    city: String
+    province: String
+    zipCode: String
+    country: String
     coordinates: String
   }
 
   extend type Query {
-    getAddress(uid: UUID): Address
+    getAddress(uid: UUID): [Address]
   }
 
   extend type Mutation {
@@ -35,15 +36,13 @@ const address = gql`
     ): Address
     updateAddress(
       uid: UUID!
-      address: String!
-      city: String!
-      province: String!
-      zipCode: String!
-      country: String!
+      address: String
+      city: String
+      province: String
+      zipCode: String
+      country: String
       coordinates: String
     ): Address
-    deleteAddress(uid:UUID!): Address
+    deleteAddress(uid: UUID!): Address
   }
 `;
-
-export default address;

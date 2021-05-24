@@ -1,11 +1,11 @@
-import data from "../../db/sampleData.js";
-import user from "./user.js";
+import { AuthenticationError } from "apollo-server-express";
 import enums from "../helpers/enums/enums.js";
+import user from "./model.js";
+import __ from "lodash";
 
-const resolverMap = {
+export default {
   User: {
-    __resolveType(obj, context, info) {
-      console.log(obj.role);
+    __resolveType(obj) {
       switch (obj.role) {
         case enums.role.ADMIN:
           return "Admin";
@@ -20,22 +20,17 @@ const resolverMap = {
   },
 
   Query: {
-    getUser: (obj, arg) => {
-      const { uid, email } = obj;
-      return user.get(uid, email);
+    getUser: async (obj, arg, context) => {
+      if (__.isEmpty(context.user)) {
+        throw new AuthenticationError("No authorization header found");
+      }
+      return __.first(await user.get(context.user.uid));
     },
-    getAllUser: async (obj, arg) => {
-      return user.get();
-    },
+    getAllUser: () => user.get(),
   },
 
   Mutation: {
-    signUp: async (obj, arg) => {
-      const signUpResponse = user.signUp(arg);
-      console.log(await signUpResponse);
-      return signUpResponse;
-    },
+    updateUser: (obj, arg) => user.update(arg),
+    deleteUser: (obj, arg) => user.remove(arg),
   },
 };
-
-export default resolverMap;

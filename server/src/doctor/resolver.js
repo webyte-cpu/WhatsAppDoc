@@ -1,37 +1,18 @@
-import doctor from "./doctor.js";
-const resolverMap = {
+import doctor from "./model.js";
+import specialization from "../specialization/model.js";
+
+export default {
+  Doctor: {
+    specialization: (doctor) => specialization.assignedTo(doctor.uid),
+  },
+
   Query: {
-    getDoctor: (obj, arg) => {
-      //get specific admin from the database
-      console.log(arg);
-
-      /* 
-      if uuid doesnt exist get all data
-      and check for auth
-      */
-
-      //replace with database data
-      return doctor.get(arg);
-    },
+    getDoctor: (obj, arg) => doctor.get(arg.uid),
   },
   Mutation: {
-    createDoctor: (obj, arg) => {
-      console.log(arg);
-      //link to doctor in the database
-      return doctor.create(arg);
-    },
-    updateDoctor: (obj, arg) => {
-      console.log(arg);
-      //link to doctor in the database
-      return doctor.update(arg);
-    },
-    deleteDoctor: (obj, arg) => {
-      console.log(arg);
-      //link to doctor in the database
-      return doctor.remove(arg.uid);
-    },
+    createDoctor: (obj, arg) => doctor.create(arg),
+    updateDoctor: (obj, arg) => doctor.update(arg),
+    deleteDoctor: (obj, arg) => doctor.remove(arg.uid),
   },
   // Subscription: {},
 };
-
-export default resolverMap;

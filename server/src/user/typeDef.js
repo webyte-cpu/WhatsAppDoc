@@ -4,11 +4,15 @@ const user = gql`
   interface User {
     uid: UUID!
     firstName: String!
-    MiddleName: String
+    middleName: String
     lastName: String!
     email: EmailAddress!
-    password: Password!
+    password: String!
+    birthdate: Date!
+    sex: Sex
+    address: Address
     role: Role!
+    img: String
     createdAt: DateTime
     updatedAt: DateTime
   }
@@ -16,36 +20,39 @@ const user = gql`
   type Admin implements User {
     uid: UUID!
     firstName: String!
-    MiddleName: String
+    middleName: String
     lastName: String!
     email: EmailAddress!
-    password: Password!
+    password: String!
+    birthdate: Date!
+    sex: Sex
+    address: Address
     role: Role!
+    img: String
     createdAt: DateTime
     updatedAt: DateTime
   }
 
   extend type Query {
-    getUser(uid: UUID!): [User]
-    getAllUser: [User]
+    getUser: User!
+    getAllUser: [User!]
   }
 
   extend type Mutation {
-    signUp(
-      firstName: String!
-      MiddleName: String
-      lastName: String!
-      email: EmailAddress!
-      password: Password!
-      role: Role!
-      address: AddressInput
+    updateUser(
+      uid: UUID!
+      firstName: String
+      middleName: String
+      lastName: String
+      password: String
       sex: Sex
       birthdate: Date
-      licenceNum: String
-      licenceImg: String
-    ): User
+      address: AddressInput
+      img: String
+      role: Role
+    ): User!
 
-    login(email: EmailAddress!, password: Password!): User
+    deleteUser(uid: UUID!): User!
   }
 `;
 

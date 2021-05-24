@@ -1,0 +1,150 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Queries creates a clinic 1`] = `
+Object {
+  "data": Object {
+    "createClinic": Object {
+      "address": Object {
+        "address": "test address",
+        "city": "test city",
+        "country": "test country",
+        "province": "test province",
+        "zipCode": "test zipCode",
+      },
+      "consultationFee": 500,
+      "minimumSchedulingNoticeMins": 5,
+      "name": "Clinic number 4",
+      "roomNumber": "4",
+      "slotDurationInMins": 3,
+    },
+  },
+  "errors": undefined,
+  "extensions": undefined,
+  "http": Object {
+    "headers": Headers {
+      Symbol(map): Object {},
+    },
+  },
+}
+`;
+
+exports[`Queries deletes a clinic 1`] = `
+Object {
+  "data": Object {
+    "deleteClinic": Object {
+      "address": Object {
+        "address": "Test Address",
+        "city": "San Jose",
+        "country": "Philippines",
+        "province": "Antique",
+        "zipCode": "5700",
+      },
+      "consultationFee": 500,
+      "minimumSchedulingNoticeMins": 4,
+      "name": "Clinic number 5",
+      "roomNumber": "9",
+      "slotDurationInMins": 3,
+    },
+  },
+  "errors": undefined,
+  "extensions": undefined,
+  "http": Object {
+    "headers": Headers {
+      Symbol(map): Object {},
+    },
+  },
+}
+`;
+
+exports[`Queries fetches created clinic 1`] = `
+Object {
+  "data": Object {
+    "getClinic": Array [
+      Object {
+        "address": Object {
+          "address": "Test Address",
+          "city": "San Jose",
+          "country": "Philippines",
+          "province": "Antique",
+          "zipCode": "5700",
+        },
+        "consultationFee": 500,
+        "minimumSchedulingNoticeMins": 4,
+        "name": "Webyte Test Clinic",
+        "roomNumber": "21",
+        "slotDurationInMins": 3,
+      },
+      Object {
+        "address": Object {
+          "address": "test address",
+          "city": "test city",
+          "country": "test country",
+          "province": "test province",
+          "zipCode": "test zipCode",
+        },
+        "consultationFee": 500,
+        "minimumSchedulingNoticeMins": 5,
+        "name": "Clinic number 4",
+        "roomNumber": "4",
+        "slotDurationInMins": 3,
+      },
+    ],
+  },
+  "errors": undefined,
+  "extensions": undefined,
+  "http": Object {
+    "headers": Headers {
+      Symbol(map): Object {},
+    },
+  },
+}
+`;
+
+exports[`Queries fetches existing clinic 1`] = `
+Object {
+  "data": Object {
+    "getClinic": Array [
+      Object {
+        "address": Object {
+          "address": "Test Address",
+          "city": "San Jose",
+          "country": "Philippines",
+          "province": "Antique",
+          "zipCode": "5700",
+        },
+        "consultationFee": 500,
+        "minimumSchedulingNoticeMins": 4,
+        "name": "Webyte Test Clinic",
+        "roomNumber": "21",
+        "slotDurationInMins": 3,
+      },
+    ],
+  },
+  "errors": undefined,
+  "extensions": undefined,
+  "http": Object {
+    "headers": Headers {
+      Symbol(map): Object {},
+    },
+  },
+}
+`;
+
+exports[`Queries updates a clinic 1`] = `
+Object {
+  "data": Object {
+    "updateClinic": Object {
+      "name": "Clinic number 5",
+      "roomNumber": "9",
+      "uid": "027ae0ac-05d6-43bf-818e-a76607b7f976",
+    },
+  },
+  "errors": undefined,
+  "extensions": undefined,
+  "http": Object {
+    "headers": Headers {
+      Symbol(map): Object {},
+    },
+  },
+}
+`;

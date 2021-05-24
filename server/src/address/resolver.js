@@ -1,38 +1,13 @@
-import address from "./address.js";
+import address from "./model.js";
 
-const resolverMap = {
+export default {
   Query: {
-    getAddress: (obj, arg) => {
-      //get specific admin from the database
-      console.log(arg);
-
-      /* 
-      if uuid doesnt exist get all data
-      and check for auth
-      */
-
-      //replace with database data
-      return address.get(arg.uid);
-    },
+    getAddress: (obj, arg) => address.get(arg.uid),
   },
   Mutation: {
-    createAddress: (obj, arg) => {
-      console.log(arg);
-      //link to doctor in the database
-      return address.create(arg);
-    },
-    updateAddress: (obj, arg) => {
-      console.log(arg);
-      //link to doctor in the database
-      return address.update(arg);
-    },
-    updateDelete: (obj, arg) => {
-      console.log(arg);
-      //link to doctor in the database
-      return address.remove(arg.uid);
-    },
+    createAddress: (obj, arg) => address.create(arg),
+    updateAddress: (obj, arg) => address.update(arg),
+    deleteAddress: (obj, arg) => address.remove(arg.uid),
   },
   // Subscription: {},
 };
-
-export default resolverMap;

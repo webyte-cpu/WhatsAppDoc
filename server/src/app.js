@@ -1,16 +1,37 @@
-import "dotenv/config.js";
-import express from "express";
 import { ApolloServer } from "apollo-server-express";
-import typeDefs from "./rootTypeDef/typeDefs.js";
 import resolvers from "./rootResolver/resolver.js";
+import typeDefs from "./rootTypeDef/typeDefs.js";
+import expressJwt from "express-jwt";
+import express from "express";
+import cors from "cors";
+import "dotenv/config.js";
 
-// The ApolloServer constructor requires two parameters:
-// your schema definition and your set of resolvers.
-
-const server = new ApolloServer({ typeDefs, resolvers });
+const port = 4000;
 const app = express();
+
+app.use(cors());
+app.use(
+  expressJwt({
+    secret: process.env.JWT_SECRET_KEY,
+    algorithms: ["HS256"],
+    credentialsRequired: false,
+  })
+);
+
+const context = async ({ req }) => {
+  return { user: req?.user || {} };
+};
+
+const server = new ApolloServer({
+  typeDefs,
+  resolvers,
+  context,
+});
+
 server.applyMiddleware({ app });
 
-app.listen({ port: 4000 }, () =>
-  console.log("Now browse to http://localhost:4000" + server.graphqlPath)
+app.listen({ port }, () =>
+  console.log(`Now browse to http://localhost:${port}` + server.graphqlPath)
 );
+
+export { typeDefs, server, ApolloServer, context, resolvers };

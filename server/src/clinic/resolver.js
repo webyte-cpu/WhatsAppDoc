@@ -1,34 +1,36 @@
+import { AuthenticationError } from "apollo-server-express";
+import address from "../address/model.js";
+import doctor from "../doctor/model.js"
+import clinic from "./model.js";
+import __ from "lodash";
+
 const resolverMap = {
+  Clinic: {
+    address: async (obj) => __.first(await address.get(obj.addressUid)),
+
+    doctor:  async (obj) => __.first(await doctor.get(obj.doctorUid))
+  },
+
   Query: {
-    getClinic: (obj, arg) => {
-      //get specific admin from the database
-      console.log(arg);
-
-      /* 
-      if uuid doesnt exist get all data
-      and check for auth
-      */
-
-      //replace with database data
-      return; //sampleData;
-    },
+    getClinic: (obj, clinicData) => clinic.get(clinicData),
   },
   Mutation: {
-    createClinic: (obj, arg) => {
-      console.log(arg);
-      //link to doctor in the database
-      return arg;
+    upsertClinic: (obj, clinicData, context) => {
+      if (__.isEmpty(context.user)) {
+        throw new AuthenticationError("No authorization header found");
+      }
+      
+      return clinic.upsert({doctorUid: context.user.uid, ...clinicData})
     },
-    updateClinic: (obj, arg) => {
-      console.log(arg);
-      //link to doctor in the database
-      return arg;
+    createClinic: (obj, clinicData, context) => {
+      if (__.isEmpty(context.user)) {
+        throw new AuthenticationError("No authorization header found");
+      }
+      
+      return clinic.create({doctorUid: context.user.uid, ...clinicData})
     },
-    deleteClinic: (obj, arg) => {
-      console.log(arg);
-      //link to doctor in the database
-      return arg;
-    },
+    updateClinic: (obj, clinicData) => clinic.update(clinicData),
+    deleteClinic: (obj, clinicData) => clinic.remove(clinicData.uid),
   },
   // Subscription: {},
 };
