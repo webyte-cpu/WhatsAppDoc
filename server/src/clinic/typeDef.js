@@ -18,11 +18,12 @@ const clinic = gql`
   extend type Mutation {
     upsertClinic(
       uid: UUID
-      name: String
-      roomNumber: String
-      address: AddressInput
-      minimumSchedulingNoticeMins: Int
-      slotDurationInMins: Int
+      doctorClinicUid: UUID
+      name: String!
+      roomNumber: String!
+      address: AddressInput!
+      minimumSchedulingNoticeMins: Int!
+      slotDurationInMins: Int!
       consultationFee: Int
     ): Clinic
 
