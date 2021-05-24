@@ -38,6 +38,7 @@ const addressSchema = yup.object({
   province: yup.string().label("State/Province").required(),
   country: yup.string().label("Country").required(),
   zipCode: yup.string().label("Zipcode").required(),
+  coordinates: yup.string()
 });
 
 const doctorSignUpSchema = yup.object({
