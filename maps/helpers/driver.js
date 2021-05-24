@@ -16,15 +16,15 @@ const searchDistance = (yourCords, data, parameter) => {
 
 }
 
-const searchAge = (data, parameter) => {
+const searchFilter = (data, filter, parameter ) => {
     return data.filter( (people) => {
 
-        console.log(people["age"])
-        return people["age"] <= parameter
+        console.log(people[filter])
+        return people[filter] <= parameter
     })
 }
 
 let yourCords = [10.744589557784257, 122.55163398653211]
 
-console.log(searchAge(data, 17))
+console.log(searchFilter(data, "age", 17))
 // console.log(searchDistance(yourCords, data, 100))
