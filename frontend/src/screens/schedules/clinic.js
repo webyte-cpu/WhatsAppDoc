@@ -18,7 +18,7 @@ import { CustomInput } from "../../components/customInput";
 import { clinicNameSchema } from "../../../helpers/validationType";
 import { usePropertiesForm } from "../appointment/properties/formProvider";
 import { useQuery } from "@apollo/client";
-import { GET_CLINICS, GET_SCHEDULES } from "./queries";
+import { GET_CLINICS, GET_SCHEDULES } from "./utils/queries";
 import LoadingScreen from "../../components/loadingScreen";
 import { clinicDataFromDB, intervalsFromDB } from "./utils/convertData";
 
@@ -171,6 +171,7 @@ const ClinicPage = ({ navigation, route }) => {
                 name="clinicName"
                 label="Clinic Name"
                 placeholder="Enter clinic name"
+                autoCapitalize='sentences'
               />
               <Button onPress={() => handleSubmit()}>Next</Button>
             </Card>

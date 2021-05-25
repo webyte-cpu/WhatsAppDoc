@@ -71,3 +71,14 @@ export const GET_SCHEDULES = gql`
     }
   }
 `
+
+export const DELETE_SCHEDULES = gql`
+  mutation deleteSchedules($uids: [UUID!]) {
+    deleteSchedules(uids: $uids) {
+      uid
+      startTime
+      endTime
+      daysOfTheWeek
+    }
+  }
+`

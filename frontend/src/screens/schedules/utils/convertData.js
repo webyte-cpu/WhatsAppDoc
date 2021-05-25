@@ -1,6 +1,9 @@
 import { convertTo12HrFormat, convertTo24HrFormat } from "../../../utils/generateTimeSlot.js";
 import * as R from 'ramda';
 
+const minutesToHours = (minutes) => minutes / 60;
+const hoursToMinutes = (hours) => hours *  60
+
 export const intervalsFromDB = (schedules) => {
 
   const formattedIntervals = schedules.map((schedule) => {
@@ -53,7 +56,7 @@ export const clinicDataFromDB = (clinicData) => {
     address: {
       streetAddress: clinicData.address.address
     },
-    schedulingNotice: Number(clinicData.minimumSchedulingNoticeMins),
+    schedulingNotice: minutesToHours(Number(clinicData.minimumSchedulingNoticeMins)),
     scheduleSlotDuration: clinicData.slotDurationInMins,
   }
 
@@ -71,7 +74,7 @@ export const clinicDataToDB = (clinicData) => {
     address: {
       address: clinicData.address.streetAddress
     },
-    minimumSchedulingNoticeMins: Number(clinicData.schedulingNotice),
+    minimumSchedulingNoticeMins: hoursToMinutes(Number(clinicData.schedulingNotice)),
     slotDurationInMins: clinicData.scheduleSlotDuration,
   }
 
@@ -81,6 +84,19 @@ export const clinicDataToDB = (clinicData) => {
   const newClinicData = R.omit(['clinicName','schedulingNotice', 'scheduleSlotDuration','__typename'], clinicData)
   const mergedData = R.mergeDeepRight(newClinicData, formattedData)
   return mergedData
+}
+
+export const getIntervalUIDs = (intervalsToDelete) => {
+  const getUIDS = R.pluck('uid')
+  const uids = getUIDS(intervalsToDelete)
+  const trimmedUIDS = uids.filter((uid) => uid != undefined)
+  console.log('uids', trimmedUIDS) 
+
+  if(trimmedUIDS.length > 0) {
+    return trimmedUIDS
+  }
+
+  return null
 }
 
 const schedules = [

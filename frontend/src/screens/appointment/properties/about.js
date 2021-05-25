@@ -57,7 +57,7 @@ const About = ({ route, navigation }) => {
         city: data.city,
         province: data.province,
         country: data.country,
-        zipCode: data.zipCode,
+        zipCode: data.zipCode
       },
     };
     form.setValues(newData)
@@ -73,6 +73,7 @@ const About = ({ route, navigation }) => {
               name="clinicName"
               component={CustomInput}
               submitOnChange={(values) => submitForm(values)}
+              autoCapitalize="sentences"
             />
 
             <Text category="h6">Consultation Fee</Text>
@@ -82,6 +83,7 @@ const About = ({ route, navigation }) => {
               accessoryLeft={() => prefix("PHP")}
               caption="Displayed as an information only."
               submitOnChange={(values) => submitForm(values)}
+              keyboardType='numeric'
             />
 
             <Divider style={{ marginTop: 20 }} />
