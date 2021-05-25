@@ -137,6 +137,7 @@ const get = async ({ uid, doctorUid }, knex = pg) => {
     .select("*")
     .from("clinics")
     .where(objectFilter({ "clinics.clinic_uid": uid, doctor_uid: doctorUid }))
+    .orderBy("clinic_name")
     .innerJoin(
       "doctor_clinics",
       "doctor_clinics.clinic_uid",
