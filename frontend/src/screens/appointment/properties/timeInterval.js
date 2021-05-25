@@ -14,27 +14,45 @@ const PlusCircleBtn = ({ addNewTime, intervalIndex }) => {
     >
       <Icon
         fill={theme["color-primary-500"]}
-        style={{ width: 35, marginBottom: 5 }}
+        style={{ width: 30, marginBottom: 5 }}
         name="plus-circle"
       />
     </TouchableOpacity>
   );
 };
 
-const MinusCircleBtn = ({ removeTime, intervalIndex }) => {
+const MinusCircleBtn = ({ removeTime, intervalIndex, timeIndex }) => {
   return (
     <TouchableOpacity
       testID="removeTimeInterval"
-      onPress={() => removeTime(intervalIndex)}
+      onPress={() => removeTime(intervalIndex, timeIndex)}
     >
       <Icon
         fill={"#8f9bb3"}
-        style={{ width: 35, marginBottom: 5 }}
+        style={{ width: 30, marginBottom: 5 }}
         name="minus-circle"
       />
     </TouchableOpacity>
   );
 };
+
+const TrashBtn = ({removeInterval, intervalIndex}) => {
+  if(intervalIndex === 0) {
+    return <></>
+  }
+  
+  return (<TouchableOpacity
+    testID="removeDefiningTimeInterval"
+    onPress={() => removeInterval(intervalIndex)}
+    style={{width: 25, height: 28, flex: .1 }}
+  >
+    <Icon
+      fill={"#8f9bb3"}
+      style={{ width: 25, height: 28, marginLeft: 10 }}
+      name="trash"
+    />
+  </TouchableOpacity>)
+}
 
 const SelectDays = ({ interval, intervalIndex, setInterval }) => {
   const [selectedDays, setSelectedDays] = useState(interval.days.map((day) => new IndexPath(day)));
@@ -79,9 +97,9 @@ const IntervalButtons = (props) => {
   const { time, addNewTime, removeTime, intervalIndex, timeIndex } = props;
 
   return (
-    <View testID="interval-buttons" style={{ flexDirection: "row" }}>
+    <View testID="interval-buttons" style={{ flexDirection: "row", marginLeft: 3, flex: 0.1}}>
       {time.length > 1 && timeIndex !== 0 ? (
-        <MinusCircleBtn removeTime={removeTime} intervalIndex={intervalIndex} />
+        <MinusCircleBtn removeTime={removeTime} intervalIndex={intervalIndex} timeIndex={timeIndex} />
       ) : (
         <></>
       )}
@@ -94,7 +112,7 @@ const IntervalButtons = (props) => {
   );
 };
 
-const IntervalForm = ({ interval, setInterval, intervalIndex, addNewTime, removeTime }) => {
+const IntervalForm = ({ interval, setInterval, intervalIndex, addNewTime, removeTime, removeInterval}) => {
   
   const TimeInterval = ({ from, to, timeIndex }) => {
     const changeTime = (timeIndex, name, hours, minutes, ampm) => {
@@ -110,7 +128,7 @@ const IntervalForm = ({ interval, setInterval, intervalIndex, addNewTime, remove
 
     return (
       <View style={styles.inputs}>
-        <View style={styles.timeField}>
+        <View style={{...styles.timeField, marginRight: 10 }}>
           <Text category="label" appearance="hint">
             From
           </Text>
@@ -152,10 +170,10 @@ const IntervalForm = ({ interval, setInterval, intervalIndex, addNewTime, remove
     <>
       {interval.time.map(({ from, to }, timeIndex) => (
         <View
-          style={{ flexDirection: "row", alignItems: "flex-end" }}
+          style={{flexDirection: "row", alignItems: "flex-end", flexWrap: 'wrap', maxWidth: 415  }}
           key={`time-${intervalIndex}-${timeIndex}`}
         >
-          <View style={{ flexDirection: "column", flexWrap: "wrap" }}>
+          <View>
             <TimeInterval from={from} to={to} timeIndex={timeIndex} />
           </View>
           <IntervalButtons
@@ -167,13 +185,15 @@ const IntervalForm = ({ interval, setInterval, intervalIndex, addNewTime, remove
           />
         </View>
       ))}
-
-      <SelectDays
-        key={`day-${intervalIndex}`}
-        interval={interval}
-        intervalIndex={intervalIndex}
-        setInterval={setInterval}
-      />
+      <View style={{alignItems: 'center', flexDirection: 'row', maxWidth: 412}}>
+        <SelectDays
+          key={`day-${intervalIndex}`}
+          interval={interval}
+          intervalIndex={intervalIndex}
+          setInterval={setInterval}
+        />
+        <TrashBtn removeInterval={removeInterval} intervalIndex={intervalIndex}/>
+      </View>
       <Divider style={{ marginTop: 20, maxWidth: 350 }} />
     </>
   );
@@ -182,7 +202,7 @@ const IntervalForm = ({ interval, setInterval, intervalIndex, addNewTime, remove
 const styles = StyleSheet.create({
   timeField: {
     flexDirection: "column",
-    marginRight: 10,
+    // flex: 0.5
   },
   timeInput: {
     backgroundColor: "#f7f9fc",
@@ -195,17 +215,15 @@ const styles = StyleSheet.create({
   inputs: {
     marginTop: 20,
     flexDirection: "row",
+    flexWrap: 'wrap',
     // width: "30%",
-    alignItems: "flex-end",
+    // alignItems: "flex-end",
     // alignSelf: 'center',
     // alignContent: 'bottom'
   },
-  input: {
-    marginRight: 10,
-  },
   selectDay: {
     marginTop: 10,
-    maxWidth: 300,
+    flex: .9
   },
 });
 

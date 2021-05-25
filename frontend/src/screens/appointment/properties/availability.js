@@ -36,21 +36,31 @@ const Availability = ({ navigation, route }) => {
   const editScheduleSlotDuration = (time) => {
     const scheduleSlotDuration = Number(time)
     setScheduleSlotDuration(scheduleSlotDuration)
-    form.setValues({scheduleSlotDuration})
   }
 
-  const editIntervals = (intervals) => {
+  const editIntervals = (intervals, toDelete) => {
     setIntervals(intervals);
-    form.setValues({intervals})
+    let newData = {intervals}
+
+    if(toDelete != undefined) {
+      newData = {...newData, intervalsToDelete: toDelete}
+    }
+
+    form.setValues(newData)
   }
 
-  const removeTime = (intervalIndex) => {
+  const removeInterval = (intervalIndex) => {
     const copy = R.clone(intervals);
-    const intervalToDelete = copy[intervalIndex].time.pop();
-    console.log(intervalToDelete)
+    const removeTimes = copy[intervalIndex].time.map((time) => time)
 
-    form.setIntervalsToDelete(intervalToDelete);
-    editIntervals(copy);
+    copy.splice(intervalIndex, 1)
+    editIntervals(copy, removeTimes);
+  }
+
+  const removeTime = (intervalIndex, timeIndex) => {
+    const copy = R.clone(intervals);
+    const removedTime = copy[intervalIndex].time.splice(timeIndex, 1)
+    editIntervals(copy, removedTime);
   };
 
   const addNewTime = (intervalIndex) => {
@@ -105,7 +115,10 @@ const Availability = ({ navigation, route }) => {
             multiline={true}
             style={styles.customInput}
             clearTextOnFocus={true}
+            onBlur={() => form.setValues({scheduleSlotDuration})}
             onChangeText={(time) => editScheduleSlotDuration(time)}
+            keyboardType='numeric'
+            maxLength={3}
           />
         </Button>
       </View>
@@ -126,6 +139,7 @@ const Availability = ({ navigation, route }) => {
             setInterval={setInterval}
             addNewTime={addNewTime}
             removeTime={removeTime}
+            removeInterval={removeInterval}
           />
         );
       })}
