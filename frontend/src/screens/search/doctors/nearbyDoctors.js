@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { ScrollView, View, TouchableWithoutFeedback, StyleSheet} from "react-native";
+import { ScrollView, View, TouchableWithoutFeedback, StyleSheet } from "react-native";
 import {
     Text,
     Button,
@@ -12,27 +12,57 @@ import {
     Modal,
     Card,
 } from "@ui-kitten/components";
-import Stars from 'react-native-stars';
-import customStyle from "../../../themes/styles";
+import StarRatingComponent from 'react-star-rating-component';
+import customStyle from "../../../../themes/styles";
+import { useQuery } from '@apollo/client';
+import { GET_DOCTORS } from './queries'
 
-const NearbyDoctors = (props) => {
+const NearbyDoctors = () => {
+    // const { loading, error, data } = useQuery(GET_DOCTORS, { pollInterval: 500 });
+    // const [ doctors, setDoctors] = useState([{hello:"hello"}])
+
+    // if (loading) return 'Loading...';
+    // if (error) return `Error! ${error.message}`;
+
+    // const dataDoctors = data.getDoctor
+    // console.log(dataDoctors)
+    // console.log(typeof(Doctors))
+
+
+
+    // return (
+    //     <View>
+    //       <Text>Test Component</Text>
+
+    //       {
+    //         doctors.map( (doctor) => {
+    //           <Text>Helllllllo</Text>
+    //         })
+    //       }
+    //     </View>
+
+    // );
 
     const doctorData = [
-        { name: 'Alexis', title: 'Physician', rating: 5, exp: 2 },
-        { name: 'Uchimaru', title: 'Dentist', rating: 5, exp: 2 },
-        { name: 'Reki', title: 'Psychologist', rating: 3, exp: 5 },
-        { name: 'Snow', title: 'Neurologist', rating: 3, exp: 5 },
+        { name: 'Alexis', specialization: 'Physician', rating: 5, exp: 2 },
+        { name: 'Uchimaru', specialization: 'Dentist', rating: 5, exp: 2 },
+        { name: 'Reki', specialization: 'Psychologist', rating: 3, exp: 5 },
+        { name: 'Snow', specialization: 'Neurologist', rating: 3, exp: 5 },
     ]
 
-    // const renderRating = ({ item }) => {
-    //     return (
-    //         <>
-    //             <Rating>
+    const RenderRating = ({ rating }) => {
+        return (
+            <View>
+                <StarRatingComponent    //https://github.com/voronianski/react-star-rating-component
+                    name="ratings"
+                    editing={false}
+                    starCount={5}
+                    value={rating}
+                />
+            </View>
+        )
 
-    //             </Rating>
-    //         </>
-    //     )
-    // }
+    }
 
     const renderDoctor = ({ item, index }) => {
         return item !== null ? (
@@ -42,8 +72,8 @@ const NearbyDoctors = (props) => {
                     testID={`doctor-${index}`}
                     title={`${item.name}`}
                     description={`
-                    ${item.title}
-                    ${item.rating}
+                    ${item.specialization}
+                    ${<RenderRating rating={item.rating} />}
                     ${item.exp}`}
                 />
                 <Divider />
@@ -63,16 +93,3 @@ const NearbyDoctors = (props) => {
 }
 
 export default NearbyDoctors;
-
-const styles = StyleSheet.create({
-    myStarStyle: {
-        color: 'yellow',
-        backgroundColor: 'transparent',
-        textShadowColor: 'black',
-        textShadowOffset: { width: 1, height: 1 },
-        textShadowRadius: 2,
-    },
-    myEmptyStarStyle: {
-        color: 'white',
-    }
-});
