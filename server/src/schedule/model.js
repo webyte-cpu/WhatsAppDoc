@@ -81,18 +81,19 @@ const get = async ({uid, doctorClinicUid}, knex = pg) => {
     return dbResponse.map(fromDb);
 };
 
-const remove = async (uid, knex = pg) => {
-
+const remove = async ({uids}, knex = pg) => {
   const dbResponse = await knex("schedules")
-    .where({ schedule_uid: uid })
+    .select("*")
+    .whereIn('schedule_uid', uids)
     .del()
     .returning("*");
 
     if (__.isEmpty(dbResponse)) {
+      console.log(dbResponse)
       throw new ApolloError("SCHEDULE DOES NOT EXIST.");
     }
   
-    return fromDb(__.first(dbResponse));;
+    return dbResponse.map((response) => fromDb(response))
 };
 
 export default { create, update, get, remove, upsert };
