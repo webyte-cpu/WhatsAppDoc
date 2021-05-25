@@ -20,7 +20,7 @@ const clinic = gql`
       uid: UUID
       doctorClinicUid: UUID
       name: String!
-      roomNumber: String!
+      roomNumber: String
       address: AddressInput!
       minimumSchedulingNoticeMins: Int!
       slotDurationInMins: Int!
