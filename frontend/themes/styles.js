@@ -35,10 +35,10 @@ const customStyle = StyleSheet.create({
   },
   tabStyle: { height: 40 },
   modalContainer: {
-    width: 300,
+    maxWidth: 300,
     ...Platform.select({
       web: {
-        width: 600,
+        maxWidth: 600,
       },
     }),
   },
@@ -62,10 +62,8 @@ const customStyle = StyleSheet.create({
     width: 500,
   },
   agendaContainer: {
-    margin: 5,
+    height: 150,
     borderRadius: 15,
-    justifyContent: 'center',
-    // alignItems: 'center',
   },
   agendaItem: {
     color: '#FFFFFF',

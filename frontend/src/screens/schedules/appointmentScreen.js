@@ -1,17 +1,19 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { ScrollView, TouchableOpacity, View, StyleSheet } from "react-native";
 import { Text, Card, Icon, useTheme } from "@ui-kitten/components";
 import customStyle from "../../../themes/styles";
 import { Agenda } from 'react-native-calendars';
 
 const TimeIcon = (props) => {
-  return <Icon {...props} style={[props.style, { width: 15, height: 12}]} fill='white' name="clock-outline" />
+  const theme = useTheme()
+  return <Icon {...props} style={{ width: 20, height: 17}} fill={theme['color-primary-500']} name="clock-outline" />
 };
 const LocationIcon = (props) => {
-  return <Icon {...props} style={[props.style, { width: 15, height: 12}]} fill='white' name="navigation-2-outline" />
+  const theme = useTheme()
+  return <Icon {...props} style={{ width: 20, height: 17}} fill={theme['color-primary-500']} name="pin-outline" />
 };
 const KnobIcon = (props) => {
-  return <Icon {...props} style={[props.style, {width: 25, height: 25, alignSelf:'center'}]} name='arrow-ios-downward-outline' />
+  return <Icon {...props} style={{width: 25, height: 25, alignSelf:'center'}} name='arrow-ios-downward-outline' />
 };
 
 const Header = ({name,status}) => {
@@ -32,7 +34,7 @@ const Header = ({name,status}) => {
 
   return(
     <View style={customStyle.agendaCardHeader}>
-      <Text category='h6' style={customStyle.agendaItem}>{name}</Text>
+      <Text category='h6'>{name}</Text>
       <Text style={{
         color:statusTextColor, 
         backgroundColor:statusBgColor,
@@ -46,20 +48,22 @@ const Header = ({name,status}) => {
 
 const renderItem = (item) => {
   return (
-      <TouchableOpacity style={{ marginRight: 10, marginTop: 17 }}>
+      <TouchableOpacity style={{ marginRight: 10, marginTop: 17 }} activeOpacity={0.6}>
           <Card 
           disabled={true}
-          header= {() => <Header name={item.name} status={item.status} />}
-          style={{ background: '#4A40D5', height: 150, }}
+          header= {(props) => <Header {...props} name={item.name} status={item.status} />}
+          style={customStyle.agendaContainer}
           >
-              <View style={customStyle.agendaContainer}>
-                <View style={{flexDirection: "row"}}>
-                  <Text category='s1' style={customStyle.agendaItem}><LocationIcon /> {item.clinic} </Text>
-                </View>
-                <View style={{flexDirection: "row"}}>
-                  <Text category='s2' style={customStyle.agendaItem}><TimeIcon /> {item.date}</Text>
-                  </View>
+            <View>
+              <View style={{flexDirection: "row", alignItems: 'center', marginBottom: 5}}>
+                <LocationIcon />
+                <Text category='s1'> {item.clinic}</Text>
               </View>
+              <View style={{flexDirection: "row", alignItems: 'center'}}>
+                <TimeIcon />
+                <Text category='s1'> {item.date}</Text>
+                </View>
+            </View>
           </Card>
       </TouchableOpacity>
   )
@@ -77,7 +81,7 @@ const renderKnob = (agenda) => {
       <TouchableOpacity onPress={() => openCalendar(agenda)} >
           <KnobIcon />
       </TouchableOpacity>
-      </View>
+    </View>
   )
 }
 
@@ -107,7 +111,14 @@ const AgendaScreen = () => {
             ref={refAgenda}
             items={items}
             renderItem={renderItem}
-            renderEmptyData={() => { return <View /> }}
+            renderEmptyData={() => { return ( 
+              <View style={{flex: 1, justifyContent: 'center', alignItems:'center'}}>
+                <Text appearance="hint" category="s1">
+                  No scheduled appointments
+                </Text>
+              </View>
+              )
+            }}
             renderKnob={() => renderKnob(refAgenda)}
             pastScrollRange={10}
             futureScrollRange={10}
