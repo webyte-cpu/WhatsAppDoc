@@ -14,7 +14,7 @@ export const GET_APPOINTMENT = gql`
 `
 
 export const CREATE_APPOINTMENT = gql`
-  query CreateAppointment(
+  mutation CreateAppointment(
     $patientUid: UUID
     $doctorClinicUid: UUID
     $status: Status
@@ -39,7 +39,7 @@ export const CREATE_APPOINTMENT = gql`
 `
 
 export const UPDATE_APPOINTMENT = gql`
-  query UpdateAppointment(
+  mutation UpdateAppointment(
     $uid: UUID
     $patientUid: UUID
     $doctorClinicUid: UUID
@@ -66,8 +66,8 @@ export const UPDATE_APPOINTMENT = gql`
 `
 
 export const DELETE_APPOINTMENT = gql`
-  query DeleteAppointment($uid: UUID){ 
-    query deleteAppointment(uid: $uid){ 
+  mutation DeleteAppointment($uid: UUID){ 
+    deleteAppointment(uid: $uid){ 
       uid
       patientUid
       doctorClinicUid

@@ -9,6 +9,7 @@ import signIn from "../signIn/typeDef.js";
 import doctor from "../doctor/typeDef.js";
 import clinic from "../clinic/typeDef.js";
 import user from "../user/typeDef.js";
+import appointment from "../appointment/typeDef.js";
 
 const rootTypeDefs = gql`
   type Query {
@@ -34,6 +35,7 @@ const typeDefs = [
   schedule,
   signIn,
   signUp,
+  appointment
 ];
 
 export default typeDefs;
