@@ -1,18 +1,17 @@
-import React, { Component } from 'react'
-import { View, Placform, StyleSheet, Text } from 'react-native'
-import { Icon } from '@ui-kitten/components'
+import React from 'react'
+import { View } from 'react-native'
 import StarRatingComponent from 'react-star-rating-component';
 
-const Rating = () => {
+const Rating = ({ rating }) => {
     return (
-        <View style={{ alignItems: 'center' }}>
-            <StarRatingComponent
-            name="rating"
-            editing={false}
-            starCount={5}
-            value={3}
+        <>
+            <StarRatingComponent    //https://github.com/voronianski/react-star-rating-component
+                name="ratings"
+                editing={false}
+                starCount={5}
+                value={rating}
             />
-        </View>
+        </>
     )
 
 }

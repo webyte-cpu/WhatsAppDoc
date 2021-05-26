@@ -12,10 +12,12 @@ import {
     Modal,
     Card,
 } from "@ui-kitten/components";
-import StarRatingComponent from 'react-star-rating-component';
 import customStyle from "../../../../themes/styles";
+import StarRatingComponent from 'react-star-rating-component';
 import { useQuery } from '@apollo/client';
 import { GET_DOCTORS } from './queries'
+import Ratings from './doctorRatings'
+import ProfileIcon from "../../../components/profileIcon";
 
 const NearbyDoctors = () => {
     // const { loading, error, data } = useQuery(GET_DOCTORS, { pollInterval: 500 });
@@ -44,24 +46,33 @@ const NearbyDoctors = () => {
     // );
 
     const doctorData = [
-        { name: 'Alexis', specialization: 'Physician', rating: 5, exp: 2 },
-        { name: 'Uchimaru', specialization: 'Dentist', rating: 5, exp: 2 },
-        { name: 'Reki', specialization: 'Psychologist', rating: 3, exp: 5 },
-        { name: 'Snow', specialization: 'Neurologist', rating: 3, exp: 5 },
+        { firstName: 'Alexis', lastName:'Dalisay', specialization: 'Physician', rating: 5, exp: 2 },
+        { firstName: 'Uchimaru', lastName:'Sho', specialization: 'Dentist', rating: 5, exp: 2 },
+        { firstName: 'Reki', lastName:'Rawr', specialization: 'Psychologist', rating: 3, exp: 5 },
+        { firstName: 'Snow', lastName:'Bhie', specialization: 'Neurologist', rating: 3, exp: 5 },
     ]
 
-    const RenderRating = ({ rating }) => {
-        return (
+    // const RenderRating = ({ rating }) => {
+    //     return (
+    //         <View>
+    //             <StarRatingComponent    //https://github.com/voronianski/react-star-rating-component
+    //                 name="ratings"
+    //                 editing={false}
+    //                 starCount={5}
+    //                 value={rating}
+    //             />
+    //         </View>
+    //     )
+    // }
+
+    const RenderDescription = ({item}) => {
+        return(
             <View>
-                <StarRatingComponent    //https://github.com/voronianski/react-star-rating-component
-                    name="ratings"
-                    editing={false}
-                    starCount={5}
-                    value={rating}
-                />
+                {item.specialization}
+                <Ratings rating={item.rating}/>
+                {item.exp}
             </View>
         )
-
     }
 
     const renderDoctor = ({ item, index }) => {
@@ -70,11 +81,11 @@ const NearbyDoctors = () => {
                 <ListItem
                     key={index}
                     testID={`doctor-${index}`}
-                    title={`${item.name}`}
-                    description={`
-                    ${item.specialization}
-                    ${<RenderRating rating={item.rating} />}
-                    ${item.exp}`}
+                    title={`${item.firstName} ${item.lastName}`}
+                    accessoryLeft={() => <ProfileIcon firstName={item.firstName} lastName={item.lastName} />}
+                    description={<RenderDescription item={item} />}
+                    // accessoryRight={() => <RenderRating rating={item.rating} />}
+                    // description={`${item.specialization} \n${item.exp}`}
                 />
                 <Divider />
             </>
