@@ -19,6 +19,44 @@ import { GET_DOCTORS } from './queries'
 import Ratings from './doctorRatings'
 import ProfileIcon from "../../../components/profileIcon";
 
+const BookmarkIcon = (...props) => <Icon {...props} style={[props.style, {width:30, height:30}]} name='bookmark-outline' />
+const ExperienceIcon =(...props) =>  <Icon {...props} style={[props.style, {width:15, height:15}]} fill='gray' name='briefcase-outline' /> 
+
+const RenderDescription = ({item}) => {
+    return(
+        <View style={{justifyContent:'flex-start', alignItems:'flex-start'}}>
+            {item.specialization}
+            <Ratings rating={item.rating}/>
+            <View style={{flexDirection:'row'}}> 
+                <ExperienceIcon />
+                {item.exp} Years of Experience
+            </View>
+        </View>
+    )
+}
+
+const RenderDoctor = ({ item, index, disabled=false }) => {
+    return item !== null ? (
+        <>
+            <ListItem
+                disabled={disabled}
+                key={index}
+                testID={`doctor-${index}`}
+                title={`${item.firstName} ${item.lastName}`}
+                accessoryLeft={() => <ProfileIcon firstName={item.firstName} lastName={item.lastName} />}
+                accessoryRight={() => <BookmarkIcon />}
+                description={<RenderDescription item={item} />}
+                onPress={() => console.log(item.firstName)}
+                // accessoryRight={() => <RenderRating rating={item.rating} />}
+                // description={`${item.specialization} \n${item.exp}`}
+            />
+            <Divider />
+        </>
+    ) : (
+            <> </>
+        );
+};
+
 const NearbyDoctors = () => {
     // const { loading, error, data } = useQuery(GET_DOCTORS, { pollInterval: 500 });
     // const [ doctors, setDoctors] = useState([{hello:"hello"}])
@@ -31,20 +69,6 @@ const NearbyDoctors = () => {
     // console.log(typeof(Doctors))
 
 
-
-    // return (
-    //     <View>
-    //       <Text>Test Component</Text>
-
-    //       {
-    //         doctors.map( (doctor) => {
-    //           <Text>Helllllllo</Text>
-    //         })
-    //       }
-    //     </View>
-
-    // );
-
     const doctorData = [
         { firstName: 'Alexis', lastName:'Dalisay', specialization: 'Physician', rating: 5, exp: 2 },
         { firstName: 'Uchimaru', lastName:'Sho', specialization: 'Dentist', rating: 5, exp: 2 },
@@ -52,55 +76,13 @@ const NearbyDoctors = () => {
         { firstName: 'Snow', lastName:'Bhie', specialization: 'Neurologist', rating: 3, exp: 5 },
     ]
 
-    // const RenderRating = ({ rating }) => {
-    //     return (
-    //         <View>
-    //             <StarRatingComponent    //https://github.com/voronianski/react-star-rating-component
-    //                 name="ratings"
-    //                 editing={false}
-    //                 starCount={5}
-    //                 value={rating}
-    //             />
-    //         </View>
-    //     )
-    // }
-
-    const RenderDescription = ({item}) => {
-        return(
-            <View>
-                {item.specialization}
-                <Ratings rating={item.rating}/>
-                {item.exp}
-            </View>
-        )
-    }
-
-    const renderDoctor = ({ item, index }) => {
-        return item !== null ? (
-            <>
-                <ListItem
-                    key={index}
-                    testID={`doctor-${index}`}
-                    title={`${item.firstName} ${item.lastName}`}
-                    accessoryLeft={() => <ProfileIcon firstName={item.firstName} lastName={item.lastName} />}
-                    description={<RenderDescription item={item} />}
-                    // accessoryRight={() => <RenderRating rating={item.rating} />}
-                    // description={`${item.specialization} \n${item.exp}`}
-                />
-                <Divider />
-            </>
-        ) : (
-                <> </>
-            );
-    };
-
     return (
         <ScrollView style={customStyle.listBackground}>
             <View>
-                <List testID="doctorList" data={doctorData} renderItem={renderDoctor} />
+                <List testID="doctorList" data={doctorData} renderItem={RenderDoctor} />
             </View>
         </ScrollView>
     );
 }
 
-export default NearbyDoctors;
+export { NearbyDoctors, RenderDoctor };
