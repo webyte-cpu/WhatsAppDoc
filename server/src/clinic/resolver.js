@@ -5,7 +5,8 @@ import __ from "lodash";
 const resolverMap = {
   Clinic: {
     address: async (clinic, arg, { loader }) => {
-      return loader.address.load(clinic.addressUid);
+      const response = await loader.address.load(clinic.addressUid);
+      return __.first(response);
     },
     schedule: async (clinic, arg, { loader }) => {
       return loader.schedule.load(clinic.doctorClinicUid);
