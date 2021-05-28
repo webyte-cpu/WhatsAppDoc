@@ -1,6 +1,7 @@
 import objectFilter from "../helpers/objectFilter.js";
 import { ApolloError } from "apollo-server-errors";
 import address from "../address/model.js";
+import findModel from "../helpers/find.js";
 import { v4 as uuidV4 } from "uuid";
 import pg from "../../db/index.js";
 import __ from "lodash";
@@ -9,6 +10,7 @@ const fromDb = (clinicData) => ({
   uid: clinicData.clinic_uid,
   doctorClinicUid: clinicData.doctor_clinic_uid,
   addressUid: clinicData.address_uid,
+  doctorUid: clinicData.doctor_uid,
   name: clinicData.clinic_name,
   roomNumber: clinicData.clinic_room_no,
   consultationFee: clinicData.consultation_fee,
@@ -132,11 +134,27 @@ const update = (clinicData, knex = pg) =>
       throw new ApolloError(error.detail);
     }
   });
-const get = async ({ uid, doctorUid }, knex = pg) => {
+const get = async (doctorUid, knex = pg) => {
+  try {
+    const dbResponse = await knex
+      .select("*")
+      .from("clinics")
+      .where("doctor_uid", doctorUid)
+      .innerJoin(
+        "doctor_clinics",
+        "doctor_clinics.clinic_uid",
+        "clinics.clinic_uid"
+      );
+    return dbResponse.map(fromDb);
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+const getAll = async (knex = pg) => {
   const dbResponse = await knex
     .select("*")
     .from("clinics")
-    .where(objectFilter({ "clinics.clinic_uid": uid, doctor_uid: doctorUid }))
     .innerJoin(
       "doctor_clinics",
       "doctor_clinics.clinic_uid",
@@ -145,6 +163,7 @@ const get = async ({ uid, doctorUid }, knex = pg) => {
 
   return dbResponse.map(fromDb);
 };
+
 const remove = async (uid, knex = pg) =>
   knex.transaction(async (trx) => {
     const getClinicResponse = __.first(await get({ uid }, trx));
@@ -195,4 +214,12 @@ const upsert = async (clinicData, knex = pg) =>
     }
   });
 
-export default { create, update, get, remove, upsert };
+const find = findModel("clinics", fromDb, toDb, pg, (knex) =>
+  knex.innerJoin(
+    "doctor_clinics",
+    "doctor_clinics.clinic_uid",
+    "clinics.clinic_uid"
+  )
+);
+
+export default { create, update, get, remove, upsert, getAll, find };
