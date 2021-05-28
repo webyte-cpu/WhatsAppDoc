@@ -14,6 +14,7 @@ const patient = gql`
     img: String
     createdAt: DateTime
     updatedAt: DateTime
+    appointment: Appointment
 
     contactNumber: PhoneNumber
     weight: PositiveFloat
@@ -23,7 +24,8 @@ const patient = gql`
   }
 
   extend type Query {
-    getPatient(uid: UUID): [Patient]
+    getPatient: Patient
+    getAllPatients: [Patient]
   }
 
   extend type Mutation {

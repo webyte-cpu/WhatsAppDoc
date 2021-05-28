@@ -50,6 +50,34 @@ const get = async (uid, knex = pg) => {
     "patient_uid"
   );
 
+  return __.first(
+    dbResponse.map((data) => ({
+      ...{
+        uid: data.user_uid,
+        firstName: data.user_first_name,
+        middleName: data.user_middle_name,
+        lastName: data.user_last_name,
+        email: data.user_email,
+        password: data.user_password,
+        birthdate: data.user_birthdate,
+        sex: data.user_sex,
+        address: data.address,
+        role: data.user_role,
+        img: data.user_img,
+        createdAt: data.created_at,
+        updatedAt: data.updated_at,
+      },
+      ...fromDb(data),
+    }))
+  );
+};
+
+const getAll = async (knex = pg) => {
+  const dbResponse = await knex
+    .select("*")
+    .from("patients")
+    .innerJoin("users", "user_uid", "patient_uid");
+
   return dbResponse.map((data) => ({
     ...{
       uid: data.user_uid,
@@ -78,4 +106,4 @@ const remove = async (user_uid, knex = pg) => {
   return fromDb(__.first(dbResponse)).uid;
 };
 
-export default { fromDb, toDb, create, update, get, remove };
+export default { fromDb, toDb, create, update, get, remove, getAll };
