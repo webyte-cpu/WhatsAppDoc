@@ -35,7 +35,7 @@ const create = async (doctorData, knex = pg) => {
     .returning("*");
   return fromDb(__.first(dbResponse));
 };
-const update = async (doctorData, knex = pg) => {
+const update = async (uid, doctorData, knex = pg) => {
   const dbResponse = await knex("doctors")
     .where({ doctor_uid: doctorData.uid })
     .update(
@@ -54,15 +54,11 @@ const update = async (doctorData, knex = pg) => {
   return fromDb(__.first(dbResponse));
 };
 const get = async (uid, knex = pg) => {
-  const doctorSelectQuery = uid
-    ? knex.select("*").from("doctors").where({ doctor_uid: uid })
-    : knex.select("*").from("doctors");
-
-  const dbResponse = await doctorSelectQuery.innerJoin(
-    "users",
-    "user_uid",
-    "doctor_uid"
-  );
+  const dbResponse = await knex
+    .select("*")
+    .from("doctors")
+    .where(objectFilter({ doctor_uid: uid }))
+    .innerJoin("users", "user_uid", "doctor_uid");
 
   return dbResponse.map((data) => ({
     ...{
@@ -74,7 +70,7 @@ const get = async (uid, knex = pg) => {
       password: data.user_password,
       birthdate: data.user_birthdate,
       sex: data.user_sex,
-      address: data.address,
+      addressUid: data.address_uid,
       role: data.user_role,
       img: data.user_img,
       createdAt: data.created_at,
