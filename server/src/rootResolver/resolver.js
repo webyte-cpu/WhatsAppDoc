@@ -19,5 +19,6 @@ const rootResolvers = [
   signUp,
   appointment,
 ];
+
 const resolvers = [...rootResolvers, scalarResolvers];
 export default resolvers;

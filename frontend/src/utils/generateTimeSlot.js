@@ -5,17 +5,17 @@ const dummyData = [
     { startTime: '00:15', endTime: '1:00', slotDurationInMins: 25 },
 ]
 
-function splitHrsAndMins(time) {
+export const formatNum = (num) => num.toString().padStart(2,0)
+
+export function splitHrsAndMins(time) {
     let splitTime = time.split(':')
     let minutes = parseInt(splitTime[1])
     let hours = parseInt(splitTime[0])
     return { hours: hours, minutes: minutes }
 }
 
-const convertTo12HrFormat = (timeTobeConverted) => {
-    let splitTime = splitHrsAndMins(timeTobeConverted)
-    let minutes = parseInt(splitTime.minutes)
-    let hours = parseInt(splitTime.hours)
+export const convertTo12HrFormat = (timeTobeConverted) => {
+    let { hours, minutes } = splitHrsAndMins(timeTobeConverted)
     let ampm = 'am';
 
     if (hours >= 12) {
@@ -30,33 +30,28 @@ const convertTo12HrFormat = (timeTobeConverted) => {
         hours = 12
     }
 
-    const convertedTime = { hours: hours, minutes: minutes, ampm: ampm }
+    const convertedTime = { hours, minutes, ampm }
     return convertedTime
 }
 
-const convertTo24HrFormat = (timeObj) => {
-    let hours = timeObj.hours
-    let minutes = timeObj.minutes
-    let ampm = timeObj.ampm
+export const convertTo24HrFormat = (timeObj) => {
+    let {hours, minutes, ampm} = timeObj
 
-    if (hours < 12 && ampm == 'pm') {
+    if (hours < 12 && ampm === 'pm') {
         hours += 12
-    } else if (hours === 12 && ampm == 'am') {
+    } else if (hours === 12 && ampm === 'am') {
         hours = 0
     }
 
-    if (minutes === 0) {
-        minutes = String(minutes).padStart(2, '0')
-    }
-
-    const timeToString24HrFormat = `${hours}:${minutes}`
+    const timeToString24HrFormat = `${formatNum(hours)}:${formatNum(minutes)}`
     return timeToString24HrFormat
 }
 
-const addTimeDuration = (time, slotDurationInMins) => {
+
+export const addTimeDuration = (time, slotDurationInMins) => {
     let splitTime = splitHrsAndMins(time)
-    let minutes = parseInt(splitTime.minutes) + slotDurationInMins
-    let hours = parseInt(splitTime.hours)
+    let minutes = splitTime.minutes + slotDurationInMins
+    let hours = splitTime.hours
 
     if (minutes >= 60) {
         hours++
@@ -73,17 +68,17 @@ const addTimeDuration = (time, slotDurationInMins) => {
     const currentPeriod = convertedTo12HrFormat.ampm
 
     let timeObj = { hours: currentHrs, minutes: currentMinutes, ampm: currentPeriod }
-    timeObj.timeToString24HrFormat = `${hours}:${minutes}`
+    timeObj.timeToString24HrFormat = convertTo24HrFormat(timeObj)
     return timeObj
 }
 
-const checkTimeSlot = (currentTime, endTime) => {
+export const checkTimeSlot = (currentTime, endTime) => {
     const currentTimeSplit = splitHrsAndMins(currentTime)
-    const currentMins = parseInt(currentTimeSplit.minutes)
-    const currentHrs = parseInt(currentTimeSplit.hours)
+    const currentMins = currentTimeSplit.minutes
+    const currentHrs = currentTimeSplit.hours
     const endTimeSplit = splitHrsAndMins(endTime)
-    const endMins = parseInt(endTimeSplit.minutes)
-    const endHrs = parseInt(endTimeSplit.hours)
+    const endMins = endTimeSplit.minutes
+    const endHrs = endTimeSplit.hours
     let time = { closingTime: false, availTimeSlot: true }
 
     if (currentHrs === endHrs) {
@@ -101,10 +96,10 @@ const checkTimeSlot = (currentTime, endTime) => {
     return time
 }
 
-const generateTimeSlot = () => {
+export const generateTimeSlot = (data) => {
     let timeArr = []
 
-    dummyData.map((time) => {
+    data.map((time) => {
         const duration = time.slotDurationInMins
         const endTime = time.endTime
         let currentTime = time.startTime
@@ -133,4 +128,5 @@ const generateTimeSlot = () => {
     })
     return timeArr
 }
-console.log(generateTimeSlot())
+// console.log(generateTimeSlot(dummyData))
+// console.log(convertTo24HrFormat({hours: 1, minutes: 2, ampm: 'pm'}))

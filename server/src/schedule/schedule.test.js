@@ -28,17 +28,14 @@ describe("Queries and Mutations Testing", () => {
 
     const res = await query({
       query: UPSERT_SCHEDULE,
-      variables:
-        [
-          {
-            uid: "8db4bd7b-9da8-4ffe-9ba3-11e79b5275db",
-            doctorClinicUid: "0353121f-eeed-4687-8676-f788d3e9c8e6",
-            startTime: "13:00:00",
-            endTime: "14:00:00",
-            daysOfTheWeek: [1, 4]
-          }
-        ]
-
+      variables: { data: [{
+          uid: "9733cbae-dc7d-451c-af9c-ed7618ca9029",
+          doctorClinicUid: "0afdaddf-536e-4b67-8617-52783e64f6b5",
+          startTime: "13:00:00",
+          endTime: "14:00:00",
+          daysOfTheWeek: [1, 4]
+        }] 
+      }
     })
 
     expect(res).toMatchSnapshot();
@@ -48,15 +45,14 @@ describe("Queries and Mutations Testing", () => {
 
     const res = await query({
       query: CREATE_SCHEDULE,
-      variables:
-        [
-          {
-            doctorClinicUid: "0353121f-eeed-4687-8676-f788d3e9c8e6",
-            startTime: "18:00:00",
-            endTime: "19:00:00",
-            daysOfTheWeek: [1, 4]
-          }
-        ]
+      variables: { data: [
+        {
+          doctorClinicUid: "0afdaddf-536e-4b67-8617-52783e64f6b5",
+          startTime: "18:00:00",
+          endTime: "19:00:00",
+          daysOfTheWeek: [1, 4]
+        }
+      ]}
     })
 
     expect(res).toMatchSnapshot();
@@ -67,8 +63,8 @@ describe("Queries and Mutations Testing", () => {
     const res = await query({
       query: UPDATE_SCHEDULE,
       variables: {
-        uid: "d8b605d8-68c8-4f97-b80b-633ef167b801",
-        startTime: "10:00:00", 
+        uid: "9733cbae-dc7d-451c-af9c-ed7618ca9029",
+        startTime: "10:00:00",
         endTime: "11:00:00",
         daysOfTheWeek: [1, 2, 3]
       }
@@ -81,10 +77,10 @@ describe("Queries and Mutations Testing", () => {
 
     const res = await query({
       query: DELETE_SCHEDULE,
-      variables: { uid: "9733cbae-dc7d-451c-af9c-ed7618ca9029"}
+      variables: { uid: "9733cbae-dc7d-451c-af9c-ed7618ca9029" }
     })
 
     expect(res).toMatchSnapshot();
-  }) 
+  })
 })
 

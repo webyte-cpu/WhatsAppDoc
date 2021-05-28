@@ -12,6 +12,7 @@ import {
   Icon,
 } from '@ui-kitten/components';
 import {searchFilters} from './filters';
+import { AppRoute } from '../../navigation/app-routes';
 
 // TODO: refactor to change filtering base on options
 // TODO: dynamically change to cater doctor cards
@@ -20,17 +21,14 @@ const selectItem = (title, index) => (
   <SelectItem key={`${title}-${index}`} title={title} />
 );
 
-const Searchbar = ({filter, setFilter}) => {
+const Searchbar = ({inputFilter, inputQuery, navigation, route}) => {
   const theme = useTheme();
-  // const [filter, setFilter] = useState(new IndexPath(0))
-  const [query, setQuery] = useState('')
-  
-  const selectType = (
+  const [filter, setFilter] = useState(inputFilter == null ? new IndexPath(0): new IndexPath(inputFilter))
+  const [query, setQuery] = useState(inputQuery ?? '')
+
+  const SelectType = () => (
     <Select
       style={{width: 135}}
-    
-
-      // style={{ borderRightWidth: 1, borderRightColor: '#e4e9f2', width: 125, color: 'red'}}
       status="warning"
       value={searchFilters[filter.row]}
       selectedIndex={filter}
@@ -39,9 +37,15 @@ const Searchbar = ({filter, setFilter}) => {
       {searchFilters.map(selectItem)}
     </Select>
   );
-
+console.log(navigation, 'route')
   const searchBtn = (props) => (
-    <TouchableWithoutFeedback onPress={() => alert('search')}>
+    <TouchableWithoutFeedback onPress={() => {
+      if(route.name === AppRoute.HOME) {
+       return navigation.navigate(AppRoute.SEARCH, {query, filter: filter.row})
+      }
+
+      return alert('get query')
+      }}>
    <View style={{borderLeftWidth: 1, borderLeftColor: '#e4e9f2', paddingLeft: 5}}>
    <Icon {...props} name="search"/>
 
@@ -59,7 +63,7 @@ const Searchbar = ({filter, setFilter}) => {
       }}
     >
       <View style={{flexDirection: 'row' }}>
-      {selectType}
+      <SelectType />
       <Input
         textStyle={{ paddingLeft: 10 }}
         placeholderTextColor={theme['color-primary-dark']}

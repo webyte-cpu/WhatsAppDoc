@@ -1,111 +1,20 @@
 import React, { useState } from "react";
 import { createStackNavigator } from "@react-navigation/stack";
 import { View } from 'react-native';
-
+import { useMutation } from "@apollo/client";
 import SchedulePage from "../../screens/schedules/schedulePage";
 import AppointmentProperties from "../../screens/appointment/properties/properties";
 import DrawerMenuBtn from "../../components/drawer/drawerBtn";
-import { Button, Text, useTheme, Modal, Card, Spinner } from "@ui-kitten/components";
+import { Button, Text, useTheme } from "@ui-kitten/components";
 import { AppRoute } from "../app-routes";
-import {
-  PropertiesFormProvider,
-  usePropertiesForm,
-} from "../../screens/appointment/properties/formProvider";
+import { PropertiesFormProvider, usePropertiesForm} from "../../screens/appointment/properties/formProvider";
+import { DELETE_SCHEDULES, GET_CLINICS, SAVE_CLINIC_MUTATION, SAVE_SCHEDULE_MUTATION } from "../../screens/schedules/utils/queries";
+import { intervalsToDB } from "../../screens/schedules/utils/convertData";
+import { getClinicData, handleSaveError, toUpperCase } from "../../screens/schedules/utils/saveHelpers";
+import EmptyFieldsModal from "../../screens/schedules/utils/errorModal";
 import * as R from "ramda";
-import customStyle from "../../../themes/styles";
 
 const ScheduleStack = createStackNavigator();
-
-const deconstructData = (item) => {
-  const deconstructedAddress = { ...item.address };
-  const itemObj = R.omit(["address"], item); // {all without address}
-
-  return { ...itemObj, ...deconstructedAddress };
-};
-
-const getInvalidFields = (dataObj) => {
-  const data = deconstructData(dataObj);
-  const notRequiredKeys = ["roomNumber"];
-  const invalidKeys = [];
-
-  for (const key in data) {
-    if (R.isEmpty(data[key]) || R.isNil(data[key])) {
-      if (!notRequiredKeys.includes(key)) {
-        invalidKeys.push(key);
-      }
-    }
-  }
-
-  return invalidKeys;
-};
-
-const handleSaveError = (initialValues, values) => {
-  // if saving...
-  const dataObj = R.isEmpty(values) ? initialValues : values;
-  const invalidFields = getInvalidFields(dataObj);
-
-  if (invalidFields.length > 0) {
-    return invalidFields;
-  }
-
-  return null;
-};
-
-const formatTime = (hours, minutes, ampm) => {
-    let hourValue = hours;
-
-    if(hourValue === 12 && ampm === 'am') {
-      hourValue = 0
-    }
-
-    if(hourValue !== 12 && ampm === 'pm') {
-      hourValue += 12
-    }
-
-    const formatNum = (num) => num.toString().padStart(2,0)
-    return `${formatNum(hourValue)}:${formatNum(minutes)}`
-  } 
-
-const editIntervals = (values, clinicUID) => { 
-  const {intervals} = R.clone(values)
-  const newIntervals = intervals.map((interval) => 
-     interval.time.map(({ from, to }) => ({
-       doctorClinicUid: clinicUID,
-       startTime: formatTime(from.hours, from.minutes, from.ampm), 
-       endTime: formatTime(to.hours, to.minutes, to.ampm), // TODO: convert 12hr to 24hr
-       daysOfTheWeek: interval.days})))
-
-  return newIntervals
-}
-
-const getClinicData = (values) => {
-  return {
-    name: values.clinicName,
-    roomNumber: values.roomNumber,
-    address: values.address,
-    minimumSchedulingNoticeMins: values.schedulingNotice,
-    slotDurationInMins: values.scheduleSlotDuration,
-    consultationFee: values.consultationFee
-  }
-}
-
-const getScheduleData = (values) => values.intervals
-
-const AlertModal = ({open, setOpen }) => {
-  return (
-    <Modal
-      visible={open}
-      style={customStyle.modalContainer}
-      backdropStyle={customStyle.backdrop}
-      onBackdropPress={() => setOpen(false)} //temporary
-      style={{justifyContent: 'center', alignSelf: 'center'}}
-    >
-      <Card style={{width: 'fit-content'}}>
-        <Spinner size='large' status='primary'/>
-      </Card>
-    </Modal>
-  )
-}
 
 const ScheduleStackScreen = (props) => {
   const theme = useTheme();
@@ -129,39 +38,91 @@ const ScheduleStackScreen = (props) => {
               backgroundColor: theme["color-primary-default"],
             },
             headerRight: () => {
-              const { initialValues, values } = usePropertiesForm();
-              const [open, setOpen] = useState(false);
+              const { initialValues, values, setLoading, intervalsToDelete } = usePropertiesForm()
+              const [deleteSchedules] = useMutation(DELETE_SCHEDULES, {
+                onCompleted: () => {
+                  setLoading(false)
+                  return navigation.navigate(AppRoute.CLINICS)
+                },
+                onError: (error) => {
+                  if(error) {
+                    console.error(error)
+                  }
+                },
+                refetchQueries: [{query: GET_CLINICS}]
+              })
+              const [saveSchedule] = useMutation(SAVE_SCHEDULE_MUTATION, {
+                onCompleted: async () => {
+                  if(intervalsToDelete.length > 0) {
+                    const getUIDS = R.pluck('uid')
+                    const uids = getUIDS(intervalsToDelete)
+                    const trimmedUIDS = uids.filter((uid) => uid != undefined)
+                    console.log('uids', trimmedUIDS) 
 
-              const saveData = () => {
+                    if(trimmedUIDS.length > 0) {
+                      return await deleteSchedules({ variables: {uids: trimmedUIDS}})
+                    }
+                  }
+
+                  setLoading(false)
+                  return navigation.navigate(AppRoute.CLINICS)
+                },
+                onError: (error) => {
+                  if(error) {
+                    console.error(error)
+                  }
+                },
+                refetchQueries: [{query: GET_CLINICS}]
+              })
+              const [ saveClinic ] = useMutation(SAVE_CLINIC_MUTATION, {
+                onCompleted: async ({result}) => {
+                  const newIntervals = intervalsToDB(values.intervals)
+      
+                  const saveValues = newIntervals.map((interval) => ({doctorClinicUid: result.doctorClinicUid, ...interval}))
+                  console.log(saveValues)
+                  await saveSchedule({ variables: {data: saveValues} })
+                },
+                onError: (error) => {
+                  if(error) {
+                    console.error(error)
+                  }
+                }
+              })
+
+              const [showErr, setShowErr] = useState({
+                status: false,
+                fields: []
+              })
+
+              // SAVE CLINIC DATA
+              const saveData = async () => { 
                 const error = handleSaveError(initialValues, values);
 
-                if (error) {
-                  alert(error.join(" , "));
-
+                // empty fields
+                if (error) { 
+                  const transformedErrKeys = error.map((key) => key.replace(/(?=[A-Z])[A-Z]/g, toUpperCase))
+                  .map((converted) => converted.replace(/^[a-z]/, (match) => `• ${match.toUpperCase()}`))
+                  .join('\n')
+                  setShowErr({status: true, fields: transformedErrKeys})
                   return;
                 }
-
+                setLoading(true)
+                // fake save if no changes to saved data
                 if (R.equals(initialValues, values)) {
-                  // if no changes to saved data
-                  setOpen(true)
-                  return setTimeout(() => { // fake save
-                    setOpen(false)
+                  return setTimeout(() => { 
+                    setLoading(false)
                     return navigation.navigate(AppRoute.CLINICS)
-                  }, 1500)
+                  }, 800)
                 }
-
                 
-                // save clinic, then save
-                setOpen(true) // if loading
-                // const newIntervals = editIntervals(values)
-                // const saveValues = {...values, intervals: newIntervals}
-                // console.log("SAVING...", saveValues);
-                return;
+                const clinicData = getClinicData(values)
+                console.log(clinicData)
+                await saveClinic({variables: clinicData})
               };
 
               return (
-               <View>
-                <Button
+                <View>
+                  <Button
                     style={{ marginRight: 10, backgroundColor: "white" }}
                     onPress={() => saveData()}
                   >
@@ -174,7 +135,7 @@ const ScheduleStackScreen = (props) => {
                       SAVE
                     </Text>
                   </Button> 
-                  <AlertModal open={open} setOpen={setOpen}/> 
+                  <EmptyFieldsModal fields={showErr.fields} showErr={showErr.status} setShowErr={setShowErr} />
                 </View>
               );
             },

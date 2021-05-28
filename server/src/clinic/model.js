@@ -200,15 +200,15 @@ const remove = async (uid, knex = pg) =>
 const upsert = async (clinicData, knex = pg) =>
   knex.transaction(async (trx) => {
     try {
-      if (clinicData.uid == null) {
+      if (clinicData.uid == null ||clinicData.doctorClinicUid == null ) {
         const createClinicResponse = await create(clinicData, trx);
         // return createClinicResponse;
-        return { uid: clinicData.uid };
+        return {uid: createClinicResponse.uid, doctorClinicUid: createClinicResponse.doctorClinicUid}
       }
 
       const updateClinicResponse = await update(clinicData, trx);
       // return updateClinicResponse;
-      return { uid: clinicData.uid };
+      return {uid: clinicData.uid, doctorClinicUid: clinicData.doctorClinicUid}
     } catch (error) {
       throw new ApolloError(error);
     }

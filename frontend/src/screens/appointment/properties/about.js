@@ -17,12 +17,15 @@ const LocationMap = () => {
       <Text category="h6" style={{ marginVertical: 10 }}>
         Location
       </Text>
-      <Image
+      <Text>
+      { Platform.OS === 'web' ? 'Map function is not yet supported': 'There is a map function.'}
+      </Text>
+      {/* <Image
         style={styles.locationImg}
         source={{
           uri: "http://www.destination360.com/asia/philippines/iloilo/days-hotel-ilo-ilo-city-map.gif",
         }}
-      />
+      /> */}
     </View>
   );
 };
@@ -54,7 +57,7 @@ const About = ({ route, navigation }) => {
         city: data.city,
         province: data.province,
         country: data.country,
-        zipCode: data.zipCode,
+        zipCode: data.zipCode
       },
     };
     form.setValues(newData)
@@ -70,6 +73,7 @@ const About = ({ route, navigation }) => {
               name="clinicName"
               component={CustomInput}
               submitOnChange={(values) => submitForm(values)}
+              autoCapitalize="sentences"
             />
 
             <Text category="h6">Consultation Fee</Text>
@@ -79,6 +83,7 @@ const About = ({ route, navigation }) => {
               accessoryLeft={() => prefix("PHP")}
               caption="Displayed as an information only."
               submitOnChange={(values) => submitForm(values)}
+              keyboardType='numeric'
             />
 
             <Divider style={{ marginTop: 20 }} />

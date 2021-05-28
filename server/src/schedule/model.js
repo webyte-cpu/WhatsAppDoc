@@ -46,6 +46,8 @@ const update = async (scheduleData, knex = pg) => {
     .update(objectFilter(toDb(scheduleData)))
     .returning("*");
 
+  // console.log(scheduleData)
+
   return fromDb(__.first(dbResponse));
 };
 
@@ -86,10 +88,10 @@ const getAll = async (knex = pg) => {
 
 const find = findModel("schedules", fromDb, toDb, pg);
 
-const remove = async (uid, knex = pg) => {
+const remove = async (uids, knex = pg) => {
   try {
     const dbResponse = await knex("schedules")
-      .where({ schedule_uid: uid })
+    .whereIn('schedule_uid', uids)
       .del("*");
 
     if (__.isEmpty(dbResponse)) {
@@ -103,6 +105,7 @@ const remove = async (uid, knex = pg) => {
   } catch (error) {
     console.error(error);
   }
+
 };
 
 export default { create, update, get, remove, upsert, getAll, find };

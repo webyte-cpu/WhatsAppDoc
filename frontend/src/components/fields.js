@@ -83,6 +83,7 @@ const NameFields = (props) => {
         name="fname"
         placeholder="Enter First Name"
         textContentType="givenName"
+        autoCapitalize='words'
       />
       <Field
         testID="midname"
@@ -91,6 +92,7 @@ const NameFields = (props) => {
         name="midName"
         placeholder="Enter Middle Name"
         textContentType="middleName"
+        autoCapitalize='words'
       />
       <Field
         testID="lname"
@@ -99,6 +101,7 @@ const NameFields = (props) => {
         name="lname"
         placeholder="Enter Last Name"
         textContentType="familyName"
+        autoCapitalize='words'
       />
     </>
   );
@@ -219,7 +222,7 @@ const ContactNumberField = ({ form, editForm }) => {
       onChangeText={(value) => editForm("contactNum", value)}
       placeholder="Enter Contact Number"
       textContentType="telephoneNumber"
-      keyboardType="number-pad"
+      keyboardType="phone-pad"
     />
   );
 };
@@ -238,6 +241,7 @@ const AddressFields = ({submitForm}) => {
         caption="House Number, Street Name, Barangay"
         submitOnChange={(values) => submitForm(values)}
         multiline
+        autoCapitalize='sentences'
       />
       <View
         style={{
@@ -254,6 +258,7 @@ const AddressFields = ({submitForm}) => {
           placeholder="City"
           style={{ flex: 0.4 }}
           submitOnChange={(values) => submitForm(values)}
+          autoCapitalize='sentences'
         />
         <Field
           testID="province"
@@ -263,6 +268,7 @@ const AddressFields = ({submitForm}) => {
           placeholder="State/Province"
           style={{ flex: 0.6, marginLeft: 10 }}
           submitOnChange={(values) => submitForm(values)}
+          autoCapitalize='sentences'
         />
       </View>
       <View
@@ -288,7 +294,7 @@ const AddressFields = ({submitForm}) => {
           component={CustomInput}
           style={{ flex: 0.7, marginLeft: 10 }}
           submitOnChange={(values) => submitForm(values)}
-
+          autoCapitalize='sentences'
         />
       </View>
       {/* <Select

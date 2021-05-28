@@ -1,16 +1,14 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View } from 'react-native';
 import { Text, IndexPath } from '@ui-kitten/components';
 import Searchbar from './search';
 
 const SearchPage = ({ navigation, route }) => {
-  // const { filter: inputFilter } = route.params
-  const [query, setQuery] = useState('')
-  const [filter, setFilter] = useState(new IndexPath(0))
+  const { filter, query} = route.params
 
   const searchPage = (
     <View>
-      <Searchbar filter={filter} setFilter={setFilter} query={query} setQuery={setQuery}/>
+      <Searchbar inputFilter={filter} inputQuery={query} route={route} />
     </View>
   )
   return (
