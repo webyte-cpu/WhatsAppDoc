@@ -91,7 +91,7 @@ const find = findModel("schedules", fromDb, toDb, pg);
 const remove = async (uids, knex = pg) => {
   try {
     const dbResponse = await knex("schedules")
-    .whereIn('schedule_uid', uids)
+      .whereIn("schedule_uid", uids)
       .del("*");
 
     if (__.isEmpty(dbResponse)) {
@@ -101,11 +101,10 @@ const remove = async (uids, knex = pg) => {
       );
     }
 
-    return fromDb(__.first(dbResponse));
+    return dbResponse.map(fromDb);
   } catch (error) {
     console.error(error);
   }
-
 };
 
 export default { create, update, get, remove, upsert, getAll, find };

@@ -23,9 +23,12 @@ const resolverMap = {
       loader?.schedule?.clear(arg.doctorClinicUid);
       return response;
     },
-    deleteSchedule: async (obj, arg, { loader }) => {
-      const response = schedule.remove(arg.uid);
-      loader?.schedule?.clear(arg.doctorClinicUid);
+    deleteSchedules: async (obj, arg, { loader }) => {
+      const response = await schedule.remove(arg.uids);
+      response.forEach((sched) =>
+        loader?.schedule?.clear(sched.doctorClinicUid)
+      );
+
       return response;
     },
   },
