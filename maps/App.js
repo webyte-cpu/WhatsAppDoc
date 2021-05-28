@@ -3,6 +3,7 @@ import React from 'react';
 import { StyleSheet, Text, View, Dimensions } from 'react-native';
 import AndroidMap from "./AndroidMap.js"
 import Clinics from "./Clinics/Clinics.js"
+import Appointments from "./appointments/appointments.js"
 // import WebMap from "./WebMap.js"
 import { AppRegistry } from 'react-native';
 import { ApolloClient, InMemoryCache, ApolloProvider } from '@apollo/client';
@@ -30,7 +31,8 @@ export default function App() {
         {/* <WebMap /> */}
         <Text>Hello World</Text>
 
-        <Clinics />
+        {/* <Clinics /> */}
+        <Appointments />
 
       </View>
 

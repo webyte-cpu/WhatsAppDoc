@@ -4,6 +4,7 @@ import __ from "lodash";
 const resolverMap = {
   Query: {
     getPatient: (obj, arg) => patient.get(arg.uid),
+    getAllPatients: (obj, arg) => patient.getAll(),
   },
   Mutation: {
     createPatient: (obj, arg) => patient.create(arg),

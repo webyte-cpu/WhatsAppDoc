@@ -5,11 +5,6 @@ export const GET_CLINIC = gql`
     getClinic(uid: $uid, doctorUid: $doctorUid) {
       name
       roomNumber
-      doctor {
-        firstName
-        middleName
-        lastName
-      }
       address {
         address
         city

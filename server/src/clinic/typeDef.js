@@ -10,10 +10,13 @@ const clinic = gql`
     minimumSchedulingNoticeMins: Int
     slotDurationInMins: Int
     consultationFee: Int
+    appointment: [Appointment]
+    schedule: [Schedule]
   }
 
   extend type Query {
-    getClinic(uid: UUID, doctorUid: UUID): [Clinic]
+    getClinic(doctorUid: UUID): [Clinic]
+    getAllClinic: [Clinic]
   }
 
   extend type Mutation {
@@ -21,7 +24,7 @@ const clinic = gql`
       uid: UUID
       doctorClinicUid: UUID
       name: String!
-      roomNumber: String!
+      roomNumber: String
       address: AddressInput!
       minimumSchedulingNoticeMins: Int!
       slotDurationInMins: Int!

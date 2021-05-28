@@ -8,7 +8,7 @@ export default gql`
     province: String!
     zipCode: String!
     country: String!
-    coordinates: String
+    coordinates: String!
   }
 
   input AddressInput {
@@ -22,7 +22,8 @@ export default gql`
   }
 
   extend type Query {
-    getAddress(uid: UUID): [Address]
+    getAddress: Address
+    getAllAddresses: [Address]
   }
 
   extend type Mutation {
