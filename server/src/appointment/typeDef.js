@@ -6,32 +6,25 @@ export default gql`
     patientUid: UUID
     doctorClinicUid: UUID
     status: Status
-    timestamp: DateTime
+    dateTime: DateTime
     doctorRemarks: String
+    createdAt: DateTime
+    updatedAt: DateTime
   }
 
   extend type Query {
     getAppointment(uid: UUID): Appointment
+    getAllAppointment: [Appointment]
   }
 
   extend type Mutation {
-    createAppointment(
-      patientUid: UUID
-      doctorClinicUid: UUID
-      status: Status
-      timestamp: DateTime
-      doctorRemarks: String
-    ): Appointment
-
+    createAppointment(doctorClinicUid: UUID, dateTime: DateTime): Appointment
     updateAppointment(
       uid: UUID
-      patientUid: UUID
-      doctorClinicUid: UUID
       status: Status
-      timestamp: DateTime
+      dateTime: DateTime
       doctorRemarks: String
     ): Appointment
-
     deleteAppointment(uid: UUID): Appointment
   }
 `;
