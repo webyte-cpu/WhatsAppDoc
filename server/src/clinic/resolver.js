@@ -1,20 +1,19 @@
 import { AuthenticationError } from "apollo-server-express";
 import clinic from "./model.js";
-import doctor from "../doctor/model.js"
 import __ from "lodash";
 
 const resolverMap = {
   Clinic: {
     address: async (clinic, arg, { loader }) => {
-      return loader.address.load(clinic.addressUid);
+      const response = await loader.address.load(clinic.addressUid);
+      return __.first(response);
     },
     schedule: async (clinic, arg, { loader }) => {
       return loader.schedule.load(clinic.doctorClinicUid);
     },
     appointment: (clinic, arg, { loader }, info) => {
       return loader.appointment.load(clinic.doctorClinicUid);
-    },  
-    doctor:  async (obj) => __.first(await doctor.get(obj.doctorUid))
+    },
   },
 
   Query: {

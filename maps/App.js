@@ -31,8 +31,8 @@ export default function App() {
         {/* <WebMap /> */}
         <Text>Hello World</Text>
 
-        {/* <Clinics /> */}
-        <Appointments />
+        <Clinics />
+        {/* <Appointments /> */}
 
       </View>
 

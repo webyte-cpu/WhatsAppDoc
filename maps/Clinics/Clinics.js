@@ -15,21 +15,15 @@ export default function Clinics() {
   if (loading) return 'Loading...';
   if (error) return `Error! ${error.message}`;
 
-  const dataClinics = data.getClinic
+  const dataClinics = data.getAllClinic
   console.log(dataClinics)
-  console.log(typeof(dataClinics))
   
 
 
   return (
       <View>
         <Text>Test Component</Text>
-
-        {
-          clinics.map( (clinic) => {
-            <Text>Helllllllo</Text>
-          })
-        }
+        <Text>Check Console log</Text>
       </View>
 
   );
