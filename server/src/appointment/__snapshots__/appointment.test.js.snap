@@ -1,0 +1,89 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Queries and Mutations Testing create an appointment 1`] = `
+Object {
+  "data": Object {
+    "createAppointment": Object {
+      "doctorClinicUid": "0353121f-eeed-4687-8676-f788d3e9c8e6",
+      "doctorRemarks": "test remarks",
+      "patientUid": "d0a7af66-cf3e-46c5-8104-32ab0d4b6ba6",
+      "status": "PENDING",
+      "timestamp": 2079-04-29T14:05:57.680Z,
+      "uid": "5cd07962-9655-471c-9271-60ec7c6994fa",
+    },
+  },
+  "errors": undefined,
+  "extensions": undefined,
+  "http": Object {
+    "headers": Headers {
+      Symbol(map): Object {},
+    },
+  },
+}
+`;
+
+exports[`Queries and Mutations Testing deletes an appointment 1`] = `
+Object {
+  "data": Object {
+    "deleteAppointment": Object {
+      "doctorClinicUid": "217b1667-22f8-4b63-8944-bc122acf9229",
+      "doctorRemarks": "Hello World",
+      "patientUid": "4ea178a0-4f5a-401f-83d1-e7be56a53ab6",
+      "status": "CANCELLED",
+      "timestamp": 2019-07-14T13:49:09.052Z,
+      "uid": "1239e82b-b4ea-4e73-8861-df2ff69fac82",
+    },
+  },
+  "errors": undefined,
+  "extensions": undefined,
+  "http": Object {
+    "headers": Headers {
+      Symbol(map): Object {},
+    },
+  },
+}
+`;
+
+exports[`Queries and Mutations Testing fetches an appointment 1`] = `
+Object {
+  "data": Object {
+    "getAppointment": Object {
+      "doctorClinicUid": "336153da-9b45-4047-b5bd-907cfa314545",
+      "doctorRemarks": "Hello World",
+      "patientUid": "b767ed87-52cf-43be-8147-b4955d430312",
+      "status": "PENDING",
+      "timestamp": 2063-08-11T05:46:22.566Z,
+      "uid": "f621fddb-8b13-4c58-93d7-3159a99c06bc",
+    },
+  },
+  "errors": undefined,
+  "extensions": undefined,
+  "http": Object {
+    "headers": Headers {
+      Symbol(map): Object {},
+    },
+  },
+}
+`;
+
+exports[`Queries and Mutations Testing updates an appointment 1`] = `
+Object {
+  "data": Object {
+    "updateAppointment": Object {
+      "doctorClinicUid": "0afdaddf-536e-4b67-8617-52783e64f6b5",
+      "doctorRemarks": "test test test",
+      "patientUid": "7c03f38f-ab4f-4605-a274-706e4d8c8d6a",
+      "status": "ON_GOING",
+      "timestamp": 2017-01-15T18:29:22.355Z,
+      "uid": "49d8aaef-2d3a-4b04-8f69-86e99b5633aa",
+    },
+  },
+  "errors": undefined,
+  "extensions": undefined,
+  "http": Object {
+    "headers": Headers {
+      Symbol(map): Object {},
+    },
+  },
+}
+`;

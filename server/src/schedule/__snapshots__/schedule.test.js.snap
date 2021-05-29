@@ -1,0 +1,123 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Queries and Mutations Testing creates a schedule 1`] = `
+Object {
+  "data": Object {
+    "createSchedule": Array [
+      Object {
+        "daysOfTheWeek": Array [
+          1,
+          4,
+        ],
+        "endTime": "19:00:00",
+        "startTime": "18:00:00",
+        "uid": "2a66bf81-ecb0-4321-be52-1f7addfbf409",
+      },
+    ],
+  },
+  "errors": undefined,
+  "extensions": undefined,
+  "http": Object {
+    "headers": Headers {
+      Symbol(map): Object {},
+    },
+  },
+}
+`;
+
+exports[`Queries and Mutations Testing deletes a schedule 1`] = `
+Object {
+  "data": Object {
+    "deleteSchedule": Object {
+      "daysOfTheWeek": Array [
+        1,
+        2,
+        3,
+      ],
+      "endTime": "11:00:00",
+      "startTime": "10:00:00",
+      "uid": "9733cbae-dc7d-451c-af9c-ed7618ca9029",
+    },
+  },
+  "errors": undefined,
+  "extensions": undefined,
+  "http": Object {
+    "headers": Headers {
+      Symbol(map): Object {},
+    },
+  },
+}
+`;
+
+exports[`Queries and Mutations Testing fetches a schedule 1`] = `
+Object {
+  "data": Object {
+    "getSchedule": Array [
+      Object {
+        "daysOfTheWeek": Array [
+          4,
+        ],
+        "endTime": "11:30:00",
+        "startTime": "10:30:00",
+        "uid": "d8b605d8-68c8-4f97-b80b-633ef167b801",
+      },
+    ],
+  },
+  "errors": undefined,
+  "extensions": undefined,
+  "http": Object {
+    "headers": Headers {
+      Symbol(map): Object {},
+    },
+  },
+}
+`;
+
+exports[`Queries and Mutations Testing updates a schedule 1`] = `
+Object {
+  "data": Object {
+    "updateSchedule": Object {
+      "daysOfTheWeek": Array [
+        1,
+        2,
+        3,
+      ],
+      "endTime": "11:00:00",
+      "startTime": "10:00:00",
+      "uid": "9733cbae-dc7d-451c-af9c-ed7618ca9029",
+    },
+  },
+  "errors": undefined,
+  "extensions": undefined,
+  "http": Object {
+    "headers": Headers {
+      Symbol(map): Object {},
+    },
+  },
+}
+`;
+
+exports[`Queries and Mutations Testing upserts a schedule 1`] = `
+Object {
+  "data": Object {
+    "upsertSchedule": Array [
+      Object {
+        "daysOfTheWeek": Array [
+          1,
+          4,
+        ],
+        "endTime": "14:00:00",
+        "startTime": "13:00:00",
+        "uid": "9733cbae-dc7d-451c-af9c-ed7618ca9029",
+      },
+    ],
+  },
+  "errors": undefined,
+  "extensions": undefined,
+  "http": Object {
+    "headers": Headers {
+      Symbol(map): Object {},
+    },
+  },
+}
+`;
