@@ -130,7 +130,7 @@ const update = (clinicData, knex = pg) =>
 
       return response.clinic;
     } catch (error) {
-      console.log(error);
+      console.error(error);
       throw new ApolloError(error.detail);
     }
   });
@@ -164,10 +164,44 @@ const getAll = async (knex = pg) => {
   return dbResponse.map(fromDb);
 };
 
+
+
+const upsert = async (clinicData, knex = pg) =>
+  knex.transaction(async (trx) => {
+    try {
+      if (clinicData.uid == null || clinicData.doctorClinicUid == null) {
+        const createClinicResponse = await create(clinicData, trx);
+        // return createClinicResponse;
+        return {
+          uid: createClinicResponse.uid,
+          doctorClinicUid: createClinicResponse.doctorClinicUid,
+        };
+      }
+
+      const updateClinicResponse = await update(clinicData, trx);
+      // return updateClinicResponse;
+      return {
+        uid: clinicData.uid,
+        doctorClinicUid: clinicData.doctorClinicUid,
+      };
+    } catch (error) {
+      throw new ApolloError(error);
+    }
+  });
+
+const find = findModel("clinics", fromDb, toDb, pg, (knex) =>
+  knex.innerJoin(
+    "doctor_clinics",
+    "doctor_clinics.clinic_uid",
+    "clinics.clinic_uid"
+  )
+);
+
 const remove = async (uid, knex = pg) =>
   knex.transaction(async (trx) => {
-    const getClinicResponse = __.first(await get({ uid }, trx));
+    const getClinicResponse = await find({ uid }, trx);
 
+    console.log(getClinicResponse);
     if (__.isUndefined(getClinicResponse))
       throw new ApolloError(
         "Clinic does not exist or has been removed.",
@@ -196,30 +230,5 @@ const remove = async (uid, knex = pg) =>
     response.clinic.address = response.address;
     return response.clinic;
   });
-
-const upsert = async (clinicData, knex = pg) =>
-  knex.transaction(async (trx) => {
-    try {
-      if (clinicData.uid == null ||clinicData.doctorClinicUid == null ) {
-        const createClinicResponse = await create(clinicData, trx);
-        // return createClinicResponse;
-        return {uid: createClinicResponse.uid, doctorClinicUid: createClinicResponse.doctorClinicUid}
-      }
-
-      const updateClinicResponse = await update(clinicData, trx);
-      // return updateClinicResponse;
-      return {uid: clinicData.uid, doctorClinicUid: clinicData.doctorClinicUid}
-    } catch (error) {
-      throw new ApolloError(error);
-    }
-  });
-
-const find = findModel("clinics", fromDb, toDb, pg, (knex) =>
-  knex.innerJoin(
-    "doctor_clinics",
-    "doctor_clinics.clinic_uid",
-    "clinics.clinic_uid"
-  )
-);
 
 export default { create, update, get, remove, upsert, getAll, find };
