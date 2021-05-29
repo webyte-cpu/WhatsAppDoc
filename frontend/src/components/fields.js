@@ -45,6 +45,8 @@ const EmailField = (props) => {
       placeholder="Enter Email Address"
       textContentType="emailAddress"
       keyboardType="email-address"
+      caption={props.emailErr ? "Email already in use" : ""}
+      status={props.emailErr ? "danger" : "basic"}
     />
   );
 };

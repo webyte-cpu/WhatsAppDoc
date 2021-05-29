@@ -1,9 +1,30 @@
-const dummyData = [
-    { startTime: '7:30', endTime: '12:00', slotDurationInMins: 30 },
-    { startTime: '13:00', endTime: '15:30', slotDurationInMins: 40 },
-    { startTime: '23:40', endTime: '0:00', slotDurationInMins: 10 },
-    { startTime: '00:15', endTime: '1:00', slotDurationInMins: 25 },
-]
+import * as R from 'ramda'
+import { intervalsFromDB } from './convertData.js';
+
+const dummyClinicData = { // from DB
+	slotDuration: 30,
+	intervals: [
+		{
+			startTime: '06:00',
+			endTime: '12:00',
+			doctorClinicUid: '0de7cd8a-6410-4ebb-8006-45bee76491ea',
+			uid: 'f501dd6e-3048-41dc-9bc5-7f2233acdb7f',
+			days: [1,3,5]
+		}, {
+			startTime: '13:00',
+			endTime: '15:30',
+			doctorClinicUid: '0de7cd8a-6410-4ebb-8006-45bee76491ea',
+			uid: 'f501dd6e-3048-41dc-9bc5-7f2233acdb7f',
+			days: [1,3,5]
+		}, {
+			startTime: '00:00',
+			endTime: '05:30',
+			doctorClinicUid: '0de7cd8a-6410-4ebb-8006-45bee76491ea',
+			uid: '2eac6312-4249-4f19-8e45-ebdde07ce83f',
+			days: [2,4]
+		}
+	]
+}
 
 export const formatNum = (num) => num.toString().padStart(2,0)
 
@@ -46,7 +67,6 @@ export const convertTo24HrFormat = (timeObj) => {
     const timeToString24HrFormat = `${formatNum(hours)}:${formatNum(minutes)}`
     return timeToString24HrFormat
 }
-
 
 export const addTimeDuration = (time, slotDurationInMins) => {
     let splitTime = splitHrsAndMins(time)
@@ -96,29 +116,30 @@ export const checkTimeSlot = (currentTime, endTime) => {
     return time
 }
 
-export const generateTimeSlot = (data) => {
+export const generateTimeSlot = (intervals, slotDurationInMins) => {
     let timeArr = []
 
-    data.map((time) => {
-        const duration = time.slotDurationInMins
+    intervals.map((time) => {
         const endTime = time.endTime
         let currentTime = time.startTime
 
-        while (true) {
+        while (true) { 
             let beforeTime = convertTo12HrFormat(currentTime) //from 
-            let addedTime = addTimeDuration(currentTime, duration) //to
+            let addedTime = addTimeDuration(currentTime, slotDurationInMins) //to
             let checkTime = checkTimeSlot(addedTime.timeToString24HrFormat, endTime) //check if time slot is avail and nd lapaw sa end time
 
             if (checkTime.closingTime === false && checkTime.availTimeSlot === true) {
-                timeArr.push({
+								timeArr.push({
                     from: { hours: beforeTime.hours, minutes: beforeTime.minutes, ampm: beforeTime.ampm },
-                    to: { hours: addedTime.hours, minutes: addedTime.minutes, ampm: addedTime.ampm }
+                    to: { hours: addedTime.hours, minutes: addedTime.minutes, ampm: addedTime.ampm },
+										...time
                 })
                 currentTime = addedTime.timeToString24HrFormat
             } else if (checkTime.closingTime === true && checkTime.availTimeSlot === true) {
                 timeArr.push({
                     from: { hours: beforeTime.hours, minutes: beforeTime.minutes, ampm: beforeTime.ampm },
-                    to: { hours: addedTime.hours, minutes: addedTime.minutes, ampm: addedTime.ampm }
+                    to: { hours: addedTime.hours, minutes: addedTime.minutes, ampm: addedTime.ampm },
+										...time
                 })
                 return
             } else if (checkTime.closingTime === true && checkTime.availTimeSlot === false) {
@@ -128,5 +149,21 @@ export const generateTimeSlot = (data) => {
     })
     return timeArr
 }
-// console.log(generateTimeSlot(dummyData))
+
+export const getTimeForDisplay = (intervals, slotDuration) => {
+	const generated = generateTimeSlot(intervals, slotDuration)
+	const strippedData = intervalsFromDB(generated).map((interval) => {
+			const time = interval.time.map((time) => R.omit(['doctorClinicUid', 'uid'], time))
+			return {...interval, time}
+		}
+	)
+
+	return strippedData;
+}
+
+
+// console.log(addTimeDuration({ hours: 7, minutes: 0, ampm: 'am'}, 30))
+// console.log(checkTimeSlot(addTimeDuration({ hours: 7, minutes: 0, ampm: 'am'}, 30), { hours: 10, minutes: 0, ampm: 'am'}))
+// console.log(generateTimeSlot(dummyClinicData.intervals, dummyClinicData.slotDuration))
 // console.log(convertTo24HrFormat({hours: 1, minutes: 2, ampm: 'pm'}))
+// console.log(getTimeForDisplay(dummyClinicData.intervals, dummyClinicData.slotDuration).flatMap((d) => d ))

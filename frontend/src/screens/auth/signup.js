@@ -28,6 +28,7 @@ const ROLE = enums.role;
 const SignupScreen = ({ navigation }) => {
   const theme = useTheme();
   const auth = useAuth();
+  const [emailErr, setEmailErr] = useState(false)
   const doctorDetails = {
     specialization: "",
     licenseNum: "",
@@ -57,13 +58,7 @@ const SignupScreen = ({ navigation }) => {
       if (error) {
         const { extensions } = error.graphQLErrors[0];
         if (extensions.code === "ALREADY_EXIST_EMAIL") {
-          /* 
-          
-          
-                  E R R O R  H A N D L I N G   H E R E
-          
-          
-          */
+          setEmailErr(true)
         }
       }
     },
@@ -172,11 +167,7 @@ const SignupScreen = ({ navigation }) => {
           <>
             <RoleButtons {...props} />
             <View style={styles.form}>
-              <EmailField />
-              {props.errors.name && props.touched.name ? (
-                <div>{props.errors.name}</div>
-              ) : null}
-              <ErrorMessage name="name" />
+              <EmailField emailErr={emailErr} onFocus={() => setEmailErr(false)} />
               <PasswordField />
               <Text category="h6" style={customStyle.formTitle}>
                 Personal Information

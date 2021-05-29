@@ -20,7 +20,8 @@ import { usePropertiesForm } from "../appointment/properties/formProvider";
 import { useQuery } from "@apollo/client";
 import { GET_CLINICS, GET_SCHEDULES } from "./utils/queries";
 import LoadingScreen from "../../components/loadingScreen";
-import { clinicDataFromDB, intervalsFromDB } from "./utils/convertData";
+import { clinicDataFromDB, intervalsFromDB } from "../../utils/convertData.js";
+import { useAuth } from "../auth/utils/authProvider";
 
 const DeleteIcon = (props) => {
   const [visible, setVisible] = useState(false);
@@ -119,7 +120,10 @@ const goToProperties = (navigation, initialValues, form) => {
 };
 
 const ClinicPage = ({ navigation, route }) => {
-  const { loading, error, data } = useQuery(GET_CLINICS);
+  const { appState } = useAuth()
+  const { loading, error, data } = useQuery(GET_CLINICS, {
+    variables: { doctorUid: appState.user.uid }
+  });
 
   const form = usePropertiesForm();
   const [openModal, setOpenModal] = useState(false);
