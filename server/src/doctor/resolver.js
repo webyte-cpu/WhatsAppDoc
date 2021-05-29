@@ -1,19 +1,41 @@
-import doctor from "./model.js";
-import address from "../address/model.js";
-import appointment from "../appointment/model.js";
-import clinic from "../clinic/model.js";
-import specialization from "../specialization/model.js";
 import enums from "../helpers/enums/enums.js";
+import doctor from "./model.js";
 import __ from "lodash";
+import { ForbiddenError } from "apollo-server-errors";
 
 export default {
   Doctor: {
-    specialization: (doctor) => specialization.assignedTo(doctor.uid),
-    address: async (doctor, arg, { loader }) => {
-      return loader.address.load(doctor.addressUid);
+    specialization: async (doctor, arg, { loader }) => {
+      if (__.isNull(doctor.uid)) {
+        return null;
+      }
+      try {
+        const response = await loader.specialization.load(doctor.uid);
+        return response.map((specialization) => specialization.title);
+      } catch (error) {
+        console.error(error);
+      }
     },
-    clinic: async (doctor, arg, { loader }) => {
-      return loader.clinic.load(doctor.uid);
+    address: async (doctor, arg, { loader }) => {
+      if (__.isNull(doctor.addressUid)) {
+        return null;
+      }
+      try {
+        const response = await loader.address.load(doctor.addressUid);
+        return __.first(response);
+      } catch (error) {
+        console.error(error);
+      }
+    },
+    clinic: (doctor, arg, { loader }) => {
+      if (__.isNull(doctor.uid)) {
+        return null;
+      }
+      try {
+        return loader.clinic.load(doctor.uid);
+      } catch (error) {
+        console.error(error);
+      }
     },
   },
 
@@ -34,23 +56,45 @@ export default {
         throw new AuthenticationError("No authorization header found");
       }
 
-      if (user == enums.role.ADMIN) {
-        return doctor.create(arg);
+      if (![enums.role.ADMIN].includes(user.role)) {
+        throw new ForbiddenError("Not authorize to create doctor");
       }
 
-      throw new AuthenticationError("Not authorize to create doctor");
+      try {
+        return doctor.create(arg);
+      } catch (error) {
+        console.error(error);
+      }
     },
     updateDoctor: (obj, doctorData, { user }) => {
-      if (__.isEmpty(context.user)) {
+      if (__.isEmpty(user)) {
         throw new AuthenticationError("No authorization header found");
       }
-      return doctor.update(user.uid, doctorData);
+
+      if (![enums.role.ADMIN, enums.role.DOCTOR].includes(user.role)) {
+        throw new ForbiddenError("Not authorize to update doctor");
+      }
+
+      try {
+        return doctor.update(user.uid, doctorData);
+      } catch (error) {
+        console.error(error);
+      }
     },
     deleteDoctor: (obj, arg, { user }) => {
-      if (__.isEmpty(context.user)) {
+      if (__.isEmpty(user)) {
         throw new AuthenticationError("No authorization header found");
       }
-      return doctor.remove(user.uid);
+
+      if (![enums.role.ADMIN, enums.role.DOCTOR].includes(user.role)) {
+        throw new ForbiddenError("Not authorize to delete doctor");
+      }
+
+      try {
+        return doctor.remove(user.uid);
+      } catch (error) {
+        console.error(error);
+      }
     },
   },
   // Subscription: {},
