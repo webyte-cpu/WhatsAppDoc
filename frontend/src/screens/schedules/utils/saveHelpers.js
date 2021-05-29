@@ -1,5 +1,5 @@
 import * as R from 'ramda';
-import { clinicDataToDB } from './convertData';
+import { clinicDataToDB } from '../../../utils/convertData.js';
 
 export const deconstructData = (item) => {
   const deconstructedAddress = { ...item.address };
