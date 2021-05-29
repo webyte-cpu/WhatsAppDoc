@@ -1,6 +1,6 @@
 import React, { useContext, createContext, useState } from "react";
 import * as R from "ramda";
-import { intervalsToDB } from "../../schedules/utils/convertData";
+import { intervalsToDB } from "../../../utils/convertData.js";
 
 const initialState = {
   isLoading: false,

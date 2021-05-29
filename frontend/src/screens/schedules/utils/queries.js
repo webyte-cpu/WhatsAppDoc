@@ -39,8 +39,8 @@ export const SAVE_SCHEDULE_MUTATION = gql`
 `
 
 export const GET_CLINICS = gql`
-  query getClinic ($doctorUid: UUID) {
-    getClinic (doctorUid:$doctorUid) {
+  query getClinic ($uid: UUID, $doctorUid: UUID) {
+    getClinic (uid:$uid, doctorUid:$doctorUid) {
       doctorClinicUid
       uid
       roomNumber
@@ -56,14 +56,6 @@ export const GET_CLINICS = gql`
         country
         zipCode
         coordinates
-      }
-      ...on Clinic {
-        schedule{
-          uid
-          startTime
-          endTime
-          daysOfTheWeek
-        }
       }
     }
   }

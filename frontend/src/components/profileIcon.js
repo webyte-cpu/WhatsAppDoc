@@ -29,8 +29,8 @@ const ProfileIcon = ({ size, profileImg, firstName, lastName }) => {
       size={size ?? "medium"}
     >
       <Text style={styles.text}>
-        {firstName[0]}
-        {lastName[0]}
+        {firstName[0].toUpperCase()}
+        {lastName[0].toUpperCase()}
       </Text>
     </Avatar>
   );

@@ -9,7 +9,7 @@ import { Button, Text, useTheme } from "@ui-kitten/components";
 import { AppRoute } from "../app-routes";
 import { PropertiesFormProvider, usePropertiesForm} from "../../screens/appointment/properties/formProvider";
 import { DELETE_SCHEDULES, GET_CLINICS, SAVE_CLINIC_MUTATION, SAVE_SCHEDULE_MUTATION } from "../../screens/schedules/utils/queries";
-import { intervalsToDB } from "../../screens/schedules/utils/convertData";
+import { intervalsToDB } from "../../utils/convertData.js";
 import { getClinicData, handleSaveError, toUpperCase } from "../../screens/schedules/utils/saveHelpers";
 import EmptyFieldsModal from "../../screens/schedules/utils/errorModal";
 import * as R from "ramda";
