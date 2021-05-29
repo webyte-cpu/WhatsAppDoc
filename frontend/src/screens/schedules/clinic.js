@@ -21,6 +21,7 @@ import { useQuery } from "@apollo/client";
 import { GET_CLINICS, GET_SCHEDULES } from "./utils/queries";
 import LoadingScreen from "../../components/loadingScreen";
 import { clinicDataFromDB, intervalsFromDB } from "./utils/convertData";
+import { useAuth } from "../auth/utils/authProvider";
 
 const DeleteIcon = (props) => {
   const [visible, setVisible] = useState(false);
@@ -81,7 +82,6 @@ const DeleteIcon = (props) => {
 
 const AddNewClinicBtn = ({ setOpenModal }) => {
   const theme = useTheme();
-
   const addIcon = (props) => (
     <Icon
       {...props}
@@ -119,7 +119,10 @@ const goToProperties = (navigation, initialValues, form) => {
 };
 
 const ClinicPage = ({ navigation, route }) => {
-  const { loading, error, data } = useQuery(GET_CLINICS);
+  const { appState } = useAuth();
+  const { loading, error, data } = useQuery(GET_CLINICS, {
+    variables: { doctorUid: appState.user.uid }
+  });
 
   const form = usePropertiesForm();
   const [openModal, setOpenModal] = useState(false);
@@ -187,41 +190,34 @@ const ClinicPage = ({ navigation, route }) => {
 
   if (error) {
     console.error(error);
-    return (
-      <View>
-        <Text status="danger">Uh oh! an error has occurred</Text>
-      </View>
-    );
+    return null
   }
 
   if (data) {
+    console.log(data.schedule)
     const RenderClinic = ({ item, index }) => {
-      const doctorClinicUid = item.doctorClinicUid;
-      const { loading, error, data, refetch, networkStatus } = useQuery(
-        GET_SCHEDULES,
-        {
-          variables: { doctorClinicUid },
-        }
-      );
+      // const doctorClinicUid = item.doctorClinicUid;
+      // const { loading, error, data, refetch, networkStatus } = useQuery(
+      //   GET_SCHEDULES,
+      //   {
+      //     variables: { doctorClinicUid },
+      //   }
+      // );
 
-      useEffect(() => {
-        refetch(); // TODO: open for refactoring
-      }, [doctorClinicUid]);
+      // useEffect(() => {
+      //   refetch(); // TODO: open for refactoring
+      // }, [doctorClinicUid]);
 
       if (error) {
         console.log(error);
-        return (
-          <View style={{ justifyContent: "center", alignContent: "center" }}>
-            <Text status="danger">Error has occured</Text>
-          </View>
-        );
+        return null
       }
 
       if (loading) {
         return <LoadingScreen />;
       }
 
-      const intervals = intervalsFromDB(data.getSchedule);
+      const intervals = intervalsFromDB(data.schedule);
       const clinicData = { ...item, intervals };
       const formattedData = clinicDataFromDB(clinicData); // final data for frontend
 

@@ -134,7 +134,7 @@ const update = (clinicData, knex = pg) =>
       throw new ApolloError(error.detail);
     }
   });
-const get = async (doctorUid, knex = pg) => {
+const get = async ({doctorUid}, knex = pg) => {
   try {
     const dbResponse = await knex
       .select("*")
