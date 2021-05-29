@@ -1,6 +1,7 @@
 import { ApolloServer } from "apollo-server-express";
 import resolvers from "./rootResolver/resolver.js";
 import typeDefs from "./rootTypeDef/typeDefs.js";
+import loader from "./helpers/loader.js";
 import expressJwt from "express-jwt";
 import express from "express";
 import cors from "cors";
@@ -19,7 +20,7 @@ app.use(
 );
 
 const context = async ({ req }) => {
-  return { user: req?.user || {} };
+  return { user: req?.user || {}, loader };
 };
 
 const server = new ApolloServer({

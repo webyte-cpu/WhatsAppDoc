@@ -3,12 +3,13 @@ import { v4 as uuidV4 } from "uuid";
 import pg from "../../db/index.js";
 import __ from "lodash";
 import { ApolloError } from "apollo-server-errors";
+import findModel from "../helpers/find.js";
 
 const fromDb = (scheduleData) => ({
-  uid: scheduleData.schedule_uid,
-  doctorClinicUid: scheduleData.doctor_clinic_uid,
-  startTime: scheduleData.start_time,
-  endTime: scheduleData.end_time,
+  uid: scheduleData?.schedule_uid,
+  doctorClinicUid: scheduleData?.doctor_clinic_uid,
+  startTime: scheduleData?.start_time,
+  endTime: scheduleData?.end_time,
   daysOfTheWeek: JSON.parse(scheduleData?.day_of_week || "null"),
 });
 
@@ -20,19 +21,23 @@ const toDb = (scheduleData) => ({
   day_of_week: JSON.stringify(scheduleData?.daysOfTheWeek),
 });
 
-const create = async (scheduleList, knex = pg) => {
-  
-  const newSchedList = scheduleList.map((scheduleData) => {
-    scheduleData.uid = scheduleData.uid || uuidV4();
-    return toDb(scheduleData);
-  });
+const create = async ({ doctorClinicUid, schedList }, knex = pg) => {
+  try {
+    const newSchedList = schedList.map((scheduleData) => {
+      scheduleData.uid = scheduleData.uid || uuidV4();
+      scheduleData.doctorClinicUid = doctorClinicUid;
+      return toDb(scheduleData);
+    });
 
-  const dbResponse = await knex
-    .insert(newSchedList)
-    .into("schedules")
-    .returning("*");
+    const dbResponse = await knex
+      .insert(newSchedList)
+      .into("schedules")
+      .returning("*");
 
-  return dbResponse.map((data) => fromDb(data));
+    return dbResponse.map((data) => fromDb(data));
+  } catch (error) {
+    console.log(error);
+  }
 };
 
 const update = async (scheduleData, knex = pg) => {
@@ -46,10 +51,10 @@ const update = async (scheduleData, knex = pg) => {
   return fromDb(__.first(dbResponse));
 };
 
-const upsert = async (scheduleList, knex = pg) => {
-
-  const newSchedList = scheduleList.map((scheduleData) => {
+const upsert = async ({ doctorClinicUid, schedList }, knex = pg) => {
+  const newSchedList = schedList.map((scheduleData) => {
     scheduleData.uid = scheduleData.uid || uuidV4();
+    scheduleData.doctorClinicUid = doctorClinicUid;
     return toDb(scheduleData);
   });
 
@@ -63,37 +68,43 @@ const upsert = async (scheduleList, knex = pg) => {
 
     return dbResponse.map((data) => fromDb(data));
   } catch (error) {
-    // if (error.code && error.column == "doctor_clinic_uid") {
-    //   throw new ApolloError(
-    //     "A unique identifier for the physician's clinic is needed!"
-    //   )
-    // }
-    throw new ApolloError(error.detail, 'DOES_NOT_EXIST')
+    throw new ApolloError(error.detail, "DOES_NOT_EXIST");
   }
 };
 
-const get = async ({uid, doctorClinicUid}, knex = pg) => {
+const get = async (uid, knex = pg) => {
   const dbResponse = await knex
     .select("*")
     .from("schedules")
-    .where(objectFilter({ schedule_uid: uid, doctor_clinic_uid: doctorClinicUid }))
+    .where({ schedule_uid: uid });
 
-    return dbResponse.map(fromDb);
+  return dbResponse.map(fromDb);
 };
 
-const remove = async ({uids}, knex = pg) => {
-  const dbResponse = await knex("schedules")
-    .select("*")
-    .whereIn('schedule_uid', uids)
-    .del()
-    .returning("*");
+const getAll = async (knex = pg) => {
+  const dbResponse = await knex.select("*").from("schedules");
+  return dbResponse.map(fromDb);
+};
+
+const find = findModel("schedules", fromDb, toDb, pg);
+
+const remove = async (uids, knex = pg) => {
+  try {
+    const dbResponse = await knex("schedules")
+      .whereIn("schedule_uid", uids)
+      .del("*");
 
     if (__.isEmpty(dbResponse)) {
-      console.log(dbResponse)
-      throw new ApolloError("SCHEDULE DOES NOT EXIST.");
+      throw new ApolloError(
+        "Schedule not found or already deleted",
+        "DOES_NOT_EXIST"
+      );
     }
-  
-    return dbResponse.map((response) => fromDb(response))
+
+    return dbResponse.map(fromDb);
+  } catch (error) {
+    console.error(error);
+  }
 };
 
-export default { create, update, get, remove, upsert };
+export default { create, update, get, remove, upsert, getAll, find };

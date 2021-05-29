@@ -14,6 +14,7 @@ const doctor = gql`
     img: String
     createdAt: DateTime
     updatedAt: DateTime
+    clinic: [Clinic]
 
     licenceNum: String!
     licenceImg: String!
@@ -37,7 +38,7 @@ const doctor = gql`
     rating: Int
   }
   extend type Query {
-    getDoctor(uid: UUID): [Doctor]
+    getDoctor: Doctor!
     getAllDoctor: [Doctor]
   }
   extend type Mutation {
@@ -52,7 +53,6 @@ const doctor = gql`
       rating: Int
     ): Doctor
     updateDoctor(
-      uid: UUID!
       licenceNum: String
       licenceImg: String
       licenceExp: Date
@@ -62,7 +62,7 @@ const doctor = gql`
       educational: String
       rating: Int
     ): Doctor
-    deleteDoctor(uid: UUID!): Doctor
+    deleteDoctor: Doctor
   }
   # type Subcription {
   # }

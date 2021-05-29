@@ -9,27 +9,29 @@ const schedule = gql`
   }
 
   input SchedInput {
-    doctorClinicUid: UUID!
     startTime: LocalTime
     endTime: LocalTime
-    daysOfTheWeek: [Int!]
+    daysOfTheWeek: [Int!]!
   }
 
   input SchedUpsertInput {
-    uid:UUID
-    doctorClinicUid: UUID!
+    uid: UUID
     startTime: LocalTime
     endTime: LocalTime
     daysOfTheWeek: [Int]
   }
 
   extend type Query {
-    getSchedule(uid: UUID, doctorClinicUid: UUID): [Schedule]
+    getSchedule(uid: UUID): Schedule
+    getAllSchedule: [Schedule]
   }
 
   extend type Mutation {
-    upsertSchedule(data: [SchedUpsertInput!]): [Schedule]
-    createSchedule(data: [SchedInput!]): [Schedule]
+    upsertSchedule(
+      doctorClinicUid: UUID!
+      schedList: [SchedUpsertInput!]
+    ): [Schedule]
+    createSchedule(doctorClinicUid: UUID!, schedList: [SchedInput!]): [Schedule]
     updateSchedule(
       uid: UUID!
       startTime: LocalTime
