@@ -19,17 +19,17 @@ import { GET_DOCTORS } from './queries'
 import Ratings from './doctorRatings'
 import ProfileIcon from "../../../components/profileIcon";
 
-const BookmarkIcon = (...props) => <Icon {...props} style={[props.style, {width:30, height:30}]} name='bookmark-outline' />
-const ExperienceIcon =(...props) =>  <Icon {...props} style={[props.style, {width:15, height:15}]} fill='gray' name='briefcase-outline' /> 
+const bookmarkIcon = (props) => <Icon {...props} style={[props.style, {width:30, height:30}]} name='bookmark-outline' />
+const ExperienceIcon = (props) => <Icon {...props} style={[props.style, {width:15, height:15}]} fill='gray' name='briefcase-outline' /> 
 
 const RenderDescription = ({item}) => {
     return(
         <View style={{justifyContent:'flex-start', alignItems:'flex-start'}}>
-            {item.specialization}
+            <Text category='c1'>{item.specialization} </Text>
             <Ratings rating={item.rating}/>
             <View style={{flexDirection:'row'}}> 
                 <ExperienceIcon />
-                {item.exp} Years of Experience
+                <Text category='c1'> {item.exp} Years of Experience</Text>
             </View>
         </View>
     )
@@ -44,17 +44,15 @@ const RenderDoctor = ({ item, index, disabled=false }) => {
                 testID={`doctor-${index}`}
                 title={`${item.firstName} ${item.lastName}`}
                 accessoryLeft={() => <ProfileIcon firstName={item.firstName} lastName={item.lastName} />}
-                accessoryRight={() => <BookmarkIcon />}
+                accessoryRight={bookmarkIcon}
                 description={<RenderDescription item={item} />}
                 onPress={() => console.log(item.firstName)}
-                // accessoryRight={() => <RenderRating rating={item.rating} />}
-                // description={`${item.specialization} \n${item.exp}`}
             />
             <Divider />
         </>
-    ) : (
-            <> </>
-        );
+    ):(
+        <> </>
+    );
 };
 
 const NearbyDoctors = () => {
