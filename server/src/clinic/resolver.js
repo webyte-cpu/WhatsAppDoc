@@ -5,12 +5,13 @@ import __ from "lodash";
 
 const resolverMap = {
   Clinic: {
-    address: (clinic, arg, { loader }) => {
+    address: async (clinic, arg, { loader }) => {
       if (__.isNull(clinic.addressUid)) {
         return null;
       }
       try {
-        const response = loader.address.load(clinic.addressUid);
+        const response = await loader.address.load(clinic.addressUid);
+        console.log((response), 'RED')
         return __.first(response);
       } catch (error) {
         console.error(error);
