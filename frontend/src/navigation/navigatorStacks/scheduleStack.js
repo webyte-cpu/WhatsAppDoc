@@ -3,16 +3,17 @@ import { createStackNavigator } from "@react-navigation/stack";
 import { View } from 'react-native';
 import { useMutation } from "@apollo/client";
 import SchedulePage from "../../screens/schedules/schedulePage";
-import AppointmentProperties from "../../screens/appointment/properties/properties";
+import AppointmentProperties from "../../screens/schedules/properties/properties";
 import DrawerMenuBtn from "../../components/drawer/drawerBtn";
 import { Button, Text, useTheme } from "@ui-kitten/components";
 import { AppRoute } from "../app-routes";
-import { PropertiesFormProvider, usePropertiesForm} from "../../screens/appointment/properties/formProvider";
+import { PropertiesFormProvider, usePropertiesForm} from "../../screens/schedules/properties/formProvider";
 import { DELETE_SCHEDULES, GET_CLINICS, SAVE_CLINIC_MUTATION, SAVE_SCHEDULE_MUTATION } from "../../screens/schedules/utils/queries";
 import { intervalsToDB } from "../../utils/convertData.js";
 import { getClinicData, handleSaveError, toUpperCase } from "../../screens/schedules/utils/saveHelpers";
 import EmptyFieldsModal from "../../screens/schedules/utils/errorModal";
 import * as R from "ramda";
+import { useAuth } from "../../screens/auth/utils/authProvider";
 
 const ScheduleStack = createStackNavigator();
 
@@ -38,6 +39,7 @@ const ScheduleStackScreen = (props) => {
               backgroundColor: theme["color-primary-default"],
             },
             headerRight: () => {
+              const { appState } = useAuth()
               const { initialValues, values, setLoading, intervalsToDelete } = usePropertiesForm()
               const [deleteSchedules] = useMutation(DELETE_SCHEDULES, {
                 onCompleted: () => {
@@ -49,7 +51,13 @@ const ScheduleStackScreen = (props) => {
                     console.error(error)
                   }
                 },
-                refetchQueries: [{query: GET_CLINICS}]
+                refetchQueries: [
+                  {
+                  query: GET_CLINICS, 
+                  variables: {
+                    doctorUid: appState.user.uid
+                  }
+                }]
               })
               const [saveSchedule] = useMutation(SAVE_SCHEDULE_MUTATION, {
                 onCompleted: async () => {
@@ -72,21 +80,31 @@ const ScheduleStackScreen = (props) => {
                     console.error(error)
                   }
                 },
-                refetchQueries: [{query: GET_CLINICS}]
+                refetchQueries: [
+                  {
+                  query: GET_CLINICS, 
+                  variables: {
+                    doctorUid: appState.user.uid
+                  }
+                }]
               })
               const [ saveClinic ] = useMutation(SAVE_CLINIC_MUTATION, {
                 onCompleted: async ({result}) => {
                   const newIntervals = intervalsToDB(values.intervals)
-      
-                  const saveValues = newIntervals.map((interval) => ({doctorClinicUid: result.doctorClinicUid, ...interval}))
-                  console.log(saveValues)
-                  await saveSchedule({ variables: {data: saveValues} })
+                  await saveSchedule({ variables: {doctorClinicUid: result.doctorClinicUid  , schedList: newIntervals} })
                 },
                 onError: (error) => {
                   if(error) {
                     console.error(error)
                   }
-                }
+                },
+                refetchQueries: [
+                  {
+                  query: GET_CLINICS, 
+                  variables: {
+                    doctorUid: appState.user.uid
+                  }
+                }]
               })
 
               const [showErr, setShowErr] = useState({
@@ -116,7 +134,7 @@ const ScheduleStackScreen = (props) => {
                 }
                 
                 const clinicData = getClinicData(values)
-                console.log(clinicData)
+                console.log(clinicData, 'FINAL DATA')
                 await saveClinic({variables: clinicData})
               };
 

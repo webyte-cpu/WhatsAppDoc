@@ -28,8 +28,8 @@ export const SAVE_CLINIC_MUTATION = gql`
 `
 
 export const SAVE_SCHEDULE_MUTATION = gql`
-  mutation upsertSchedule($data: [SchedUpsertInput!]) {
-    upsertSchedule(data:$data) {
+  mutation upsertSchedule($doctorClinicUid: UUID!, 	$schedList: [SchedUpsertInput!]) {
+    upsertSchedule(doctorClinicUid:$doctorClinicUid, schedList:$schedList) {
       uid
       startTime
       endTime
@@ -56,6 +56,14 @@ export const GET_CLINICS = gql`
         country
         zipCode
         coordinates
+      }
+      ...on Clinic {
+        schedule {
+          uid
+          startTime
+          endTime
+          daysOfTheWeek
+        }
       }
     }
   }
