@@ -17,7 +17,7 @@
     "test:migrate:up": "knex migrate:latest --env test",
     "test:seed:run": "knex seed:run --env test",
     "test:seed:make": "knex seed:make --env test",
-    "server": "nodemon src/app.js ",
+    "server": "nodemon src/app.js",
     "migration": "knex migrate:latest",
     "migration:make": "knex migrate:make",
     "seed": "knex seed:run",
