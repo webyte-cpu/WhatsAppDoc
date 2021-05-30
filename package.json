@@ -1,0 +1,27 @@
+{
+  "name": "WhatsAppDoc",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "client": "cd frontend && npm run client",
+    "server": "cd server && npm run server",
+    "cypress": "cd frontend && npm run cypress",
+    "cy:run": "concurrently --names \"client,server,cypress\" -c \"bgBlue.bold,bgMagenta.bold,bgRed.bold\" \"npm run client\" \"npm run server\" \"npm run cypress\"",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/webyte-cpu/WhatsAppDoc.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/webyte-cpu/WhatsAppDoc/issues"
+  },
+  "homepage": "https://github.com/webyte-cpu/WhatsAppDoc#readme",
+  "devDependencies": {
+    "concurrently": "^6.2.0"
+  }
+}
