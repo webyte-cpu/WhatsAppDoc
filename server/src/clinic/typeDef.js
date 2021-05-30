@@ -14,7 +14,7 @@ const clinic = gql`
   }
 
   extend type Query {
-    getClinic(doctorUid: UUID): [Clinic]
+    getClinic(uid: UUID, doctorUid: UUID): [Clinic]
     getAllClinic: [Clinic]
   }
 
