@@ -1,7 +1,7 @@
 import { convertTo12HrFormat, convertTo24HrFormat } from "./generateTimeSlot.js";
 import * as R from 'ramda';
 
-const minutesToHours = (minutes) => minutes / 60;
+const minutesToHours = (minutes) => Number((minutes / 60).toFixed(2));
 const hoursToMinutes = (hours) => hours *  60
 
 export const intervalsFromDB = (schedules) => {
