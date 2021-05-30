@@ -37,7 +37,7 @@ const Searchbar = ({inputFilter, inputQuery, navigation, route}) => {
       {searchFilters.map(selectItem)}
     </Select>
   );
-console.log(navigation, 'route')
+// console.log(navigation, 'route')
   const searchBtn = (props) => (
     <TouchableWithoutFeedback onPress={() => {
       if(route.name === AppRoute.HOME) {
