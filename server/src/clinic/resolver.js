@@ -11,7 +11,6 @@ const resolverMap = {
       }
       try {
         const response = await loader.address.load(clinic.addressUid);
-        console.log((response), 'RED')
         return __.first(response);
       } catch (error) {
         console.error(error);
