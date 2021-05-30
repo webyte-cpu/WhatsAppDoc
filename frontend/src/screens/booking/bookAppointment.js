@@ -1,11 +1,11 @@
 import React, { useState } from "react";
-import { View, ScrollView, StyleSheet } from 'react-native'
+import { View, ScrollView, StyleSheet, Platform } from 'react-native'
 import { Calendar, Select, IndexPath, SelectItem, Divider, Button, Input, Text} from '@ui-kitten/components'
 import SuccessModal from './successModal'
 import { RenderDoctor } from  '../search/doctors/nearbyDoctors'
 
 
-const InfoScreen = ({doctor}) => {
+const AppointmentInfo = ({doctor}) => {
     const prefix = (prefix) => <Text category="s2" style={{ color: 'gray' }}>{prefix}</Text>;
     
     return (
@@ -29,6 +29,44 @@ const InfoScreen = ({doctor}) => {
     )
 };
 
+
+const SelectTime = ({timeData}) => {
+    const [selectedIndex, setSelectedIndex] = useState(new IndexPath(0));    
+    const displayValue = timeData[selectedIndex.row];
+    const [selectedTime, setSelectedTime] = useState(displayValue)
+
+    const renderOption = (title) => <SelectItem key={title} title={title} />
+
+    return (
+        <View style={{marginVertical:10}}>
+            <Select
+            label='TIME'
+            value={displayValue}
+            selectedIndex={selectedIndex}
+            onSelect={index => setSelectedIndex(index)}
+            onBlur={() => setSelectedTime(displayValue)}
+            >
+                {timeData.map(renderOption)}
+            </Select>
+            {/* {console.log(selectedTime)} */}
+        </View>
+    )
+}
+
+const SelectDayAppointment = () => {
+    const [selectedDate, setSelectedDate] = React.useState(new Date());
+    return (
+        <View style={{alignSelf:'center', justifyContent:'center'}}>  
+            {/* {console.log(selectedDate.toLocaleDateString())} */}
+            <Calendar
+                style={styles.calendar}
+                date={selectedDate}
+                onSelect={nextDate => setSelectedDate(nextDate)}
+            />
+        </View>
+    )
+}
+
 const BookingScreen = () => {
     const timeData = ['7:00 - 7:30', '7:30 - 8:00', '8:00 - 8:30', '8:30 - 9:00', '9:00 - 9:30']
     const doctorData = { firstName: 'Alexis', lastName:'Dalisay', specialization: 'Physician', rating: 5, exp: 2 }
@@ -37,46 +75,12 @@ const BookingScreen = () => {
     const handleClose = () => setVisible(false);
     const handleShow = () => setVisible(true);
 
-    const CalendarScreen = () => {
-        const [selectedDate, setSelectedDate] = React.useState(new Date());
-        return (
-            <>
-                {/* <Text category='h6'> Selected date: {selectedDate.toLocaleDateString()} </Text> */}
-                <Calendar
-                    date={selectedDate}
-                    onSelect={nextDate => setSelectedDate(nextDate)}
-                />
-            </>
-        )
-    }
-
-    const SelectTime = () => {
-        const [selectedIndex, setSelectedIndex] = useState(new IndexPath(0));
-        // const [selectedTime, setSelectedTime] = useState('')
-
-        const displayValue = timeData[selectedIndex.row];
-        const renderOption = (title) => <SelectItem title={title} />
-
-        return (
-            <View style={{marginVertical:10}}>
-                <Select
-                label='TIME'
-                value={displayValue}
-                selectedIndex={selectedIndex}
-                onSelect={index => setSelectedIndex(index)}
-                >
-                    {timeData.map(renderOption)}
-                </Select>
-            </View>
-        )
-    }
-
     return (
         <ScrollView style={styles.container}>
-            <InfoScreen doctor={doctorData} />
-            <SelectTime />
-            <CalendarScreen />
-            <Button style={{marginVertical:10}} onPress={handleShow}>
+            <AppointmentInfo doctor={doctorData} />
+            <SelectTime timeData={timeData} />
+            <SelectDayAppointment />
+            <Button style={{marginVertical:15}} onPress={handleShow}>
                 Book Appointment
              </Button>
             <SuccessModal isShown={visible} onHide={handleClose} />
@@ -97,6 +101,9 @@ const styles = StyleSheet.create({
     inputContainer:{
         backgroundColor: 'white', 
         marginVertical: 5
+    },
+    calendar:{
+        width:350, 
     }
 })
 
