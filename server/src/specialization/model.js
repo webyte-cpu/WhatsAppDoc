@@ -1,4 +1,4 @@
-import objectFilter from "../helpers/objectFilter.js";
+import findModel from "../helpers/find.js";
 import { v4 as uuidV4 } from "uuid";
 import pg from "../../db/index.js";
 import __ from "lodash";
@@ -7,10 +7,16 @@ import c from "case";
 const fromDb = (data = {}) => ({
   uid: data.specialization_uid,
   title: data.specialization_title,
+  doctorUid: data.doctor_uid,
+  specializationUid: data.specialization_uid,
+  doctorSpecializationUid: data.doctor_specialization_uid,
 });
 const toDb = (data = {}) => ({
   specialization_uid: data.uid,
   specialization_title: data.title,
+  doctor_uid: data.doctorUid,
+  specialization_uid: data.specializationUid,
+  doctor_specialization_uid: data.doctorSpecializationUid,
 });
 
 const create = async (data, knex = pg) => {
@@ -24,13 +30,13 @@ const create = async (data, knex = pg) => {
   return fromDb(__.first(dbResponse));
 };
 
-const find = async (object, knex = pg) => {
-  const dbResponse = await knex
-    .select("*")
-    .from("specializations")
-    .where(objectFilter(toDb(object)));
-  return dbResponse.map((data) => fromDb(data));
-};
+const find = findModel("doctor_specializations", fromDb, toDb, pg, (knex) =>
+  knex.innerJoin(
+    "specializations",
+    "specializations.specialization_uid",
+    "doctor_specializations.specialization_uid"
+  )
+);
 const assign = ({ title, userUid }, knex = pg) =>
   knex.transaction(async (trx) => {
     const response = {};

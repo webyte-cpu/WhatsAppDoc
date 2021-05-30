@@ -1,43 +1,37 @@
-import Dataloader from "dataloader";
-import clinic from "../clinic/model.js";
+import specialization from "../specialization/model.js";
 import appointment from "../appointment/model.js";
 import schedule from "../schedule/model.js";
 import address from "../address/model.js";
+import clinic from "../clinic/model.js";
+import Dataloader from "dataloader";
 import __ from "lodash";
 
-const loader = (query, column) =>
-  new Dataloader(async (ids) => {
-    const dbResponse = await query(ids);
-    const groupById = __.groupBy(dbResponse, (data) => data[column]);
-    return ids.map((id) => groupById[id]);
-  });
+const loader = (model, column) => {
+  const columnLoader = {};
 
-const loaders = {
-  clinic: loader((ids) => clinic.find({ doctorUid: ids }), "doctorUid"),
-  schedule: loader(
-    (ids) => schedule.find({ doctorClinicUid: ids }),
-    "doctorClinicUid"
-  ),
-  appointment: loader(
-    (ids) => appointment.find({ doctorClinicUid: ids }),
-    "doctorClinicUid"
-  ),
-  address: loader((ids) => address.find({ uid: ids }), "uid"),
-};
-
-const findloader = (key, query, column) => {
-  if (__.isUndefined(loaders[key])) {
-    loaders[key] = loader(query, column);
-  }
-  return loaders[key];
+  return Object.assign(
+    new Dataloader(async (ids) => {
+      const dbResponse = await model.find({ [column]: ids });
+      const groupById = __.groupBy(dbResponse, (data) => data[column]);
+      return ids.map((id) => groupById[id]);
+    }),
+    {
+      groupBy: (column) => {
+        if (__.isUndefined(columnLoader[column])) {
+          columnLoader[column] = loader(model, column);
+          console.log("added to column loader");
+        }
+        return columnLoader[column];
+      },
+      columnLoader,
+    }
+  );
 };
 
 export default {
-  ...loaders,
-  single: {
-    load: ({ key, query, column, id }) => {
-      const loader = findloader(key, query, column);
-      return loader.load(id);
-    },
-  },
+  clinic: loader(clinic, "doctorUid"),
+  schedule: loader(schedule, "doctorClinicUid"),
+  appointment: loader(appointment, "doctorClinicUid"),
+  address: loader(address, "uid"),
+  specialization: loader(specialization, "doctorUid"),
 };

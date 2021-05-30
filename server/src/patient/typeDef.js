@@ -14,7 +14,7 @@ const patient = gql`
     img: String
     createdAt: DateTime
     updatedAt: DateTime
-    appointment: Appointment
+    appointment: [Appointment]
 
     contactNumber: PhoneNumber
     weight: PositiveFloat
