@@ -134,17 +134,19 @@ const update = (clinicData, knex = pg) =>
       throw new ApolloError(error.detail);
     }
   });
-const get = async (doctorUid, knex = pg) => {
+const get = async ({uid, doctorUid}, knex = pg) => {
   try {
     const dbResponse = await knex
       .select("*")
       .from("clinics")
-      .where("doctor_uid", doctorUid)
+      .where(objectFilter({"clinics.clinic_uid": uid, doctor_uid: doctorUid}))
+      .orderBy("clinic_name")
       .innerJoin(
         "doctor_clinics",
         "doctor_clinics.clinic_uid",
         "clinics.clinic_uid"
       );
+      console.log(dbResponse)
     return dbResponse.map(fromDb);
   } catch (error) {
     console.log(error);
