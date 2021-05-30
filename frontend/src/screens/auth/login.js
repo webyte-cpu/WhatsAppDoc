@@ -131,9 +131,9 @@ const SignInScreen = ({ navigation }) => {
     </View>
   );
 
-  // if (loading) { // temporary comment
-  //   return <LoadingScreen />;
-  // }
+  if (loading) { // temporary comment
+    return <LoadingScreen />;
+  }
 
   return (
     <KeyboardAwareScrollView contentContainerStyle={customStyle.contentFill}>
