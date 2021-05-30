@@ -63,7 +63,7 @@ const AppointmentProperties = ({ navigation, route }) => {
     return unsubscribe;
   }, [navigation]);
 
-  console.log(form);
+  // console.log(form);
   return (
     <View style={{ flex: 1 }}>
       <AlertModal open={form.isLoading} />

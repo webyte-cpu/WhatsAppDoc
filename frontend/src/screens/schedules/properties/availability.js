@@ -36,6 +36,7 @@ const Availability = ({ navigation, route }) => {
   const editScheduleSlotDuration = (time) => {
     const scheduleSlotDuration = Number(time)
     setScheduleSlotDuration(scheduleSlotDuration)
+    form.setValues({scheduleSlotDuration})
   }
 
   const editIntervals = (intervals, toDelete) => {

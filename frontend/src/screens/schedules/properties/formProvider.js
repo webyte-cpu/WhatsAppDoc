@@ -15,7 +15,6 @@ const useProvideForm = () => {
   const [state, setState] = useState(initialState);
 
   const setValues = (newValues) => {
-    console.log(newValues, 'NEW')
     const clone = R.clone(state)
 
     if(newValues.intervalsToDelete != undefined) {
