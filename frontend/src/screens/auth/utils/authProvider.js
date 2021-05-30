@@ -61,6 +61,12 @@ const useProvideAuth = () => {
       if (token) {
         user = jwt_decode(token);
       }
+      const expiry = new Date(user?.exp * 1000)
+      const issuedAt = new Date(user?.iat * 1000)
+      if(Date.now() >= expiry) { // TODO: add refresh token
+        alert('Session expired, please login again.')
+        logout()
+      }
       dispatch({ type: ACTIONS.RETRIEVE, payload: { user } });
     };
 
