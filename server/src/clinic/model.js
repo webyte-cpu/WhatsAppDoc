@@ -1,10 +1,12 @@
 import objectFilter from "../helpers/objectFilter.js";
-import { ApolloError } from "apollo-server-errors";
+import { ApolloError, ForbiddenError } from "apollo-server-errors";
+import appointment from "../appointment/model.js";
 import address from "../address/model.js";
 import findModel from "../helpers/find.js";
 import { v4 as uuidV4 } from "uuid";
 import pg from "../../db/index.js";
 import __ from "lodash";
+import enums from "../helpers/enums/enums.js";
 
 const fromDb = (clinicData) => ({
   uid: clinicData.clinic_uid,
@@ -164,8 +166,6 @@ const getAll = async (knex = pg) => {
   return dbResponse.map(fromDb);
 };
 
-
-
 const upsert = async (clinicData, knex = pg) =>
   knex.transaction(async (trx) => {
     try {
@@ -198,17 +198,46 @@ const find = findModel("clinics", fromDb, toDb, pg, (knex) =>
 );
 
 const remove = async (uid, knex = pg) =>
-  knex.transaction(async (trx) => {
-    const getClinicResponse = await find({ uid }, trx);
+  /* 
+    check if the clinic have existing appointments. 
 
-    console.log(getClinicResponse);
+    true:
+    => the clinic cannot be deleted
+    => if there are active appointments
+
+    false:
+    => clinic can be deleted
+    => from address
+    => then from doctor clinic table
+    => then from the clinic table
+  */
+  knex.transaction(async (trx) => {
+    const getClinicResponse = __.first(
+      await find({ "clinics.uid": [uid] }, trx)
+    );
+
+    const { addressUid, doctorClinicUid } = getClinicResponse;
+
+    const getAppointmentResponse = await appointment.find(
+      { doctorClinicUid: [doctorClinicUid] },
+      trx
+    );
+
+    const isCleared = getAppointmentResponse.every(
+      (appointment) =>
+        appointment.status == enums.status.CANCELLED ||
+        appointment.status == enums.status.DONE
+    );
+
+    if (!isCleared) {
+      throw new ForbiddenError("Clinic have an active appointments.");
+    }
+
     if (__.isUndefined(getClinicResponse))
       throw new ApolloError(
         "Clinic does not exist or has been removed.",
         "DOES_NOT_EXIST"
       );
-
-    const { addressUid } = getClinicResponse;
 
     const response = {
       doctorClinicRawData: await trx("doctor_clinics")
