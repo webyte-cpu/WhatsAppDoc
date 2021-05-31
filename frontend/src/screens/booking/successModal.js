@@ -3,12 +3,12 @@ import { View, StyleSheet } from 'react-native'
 import { Modal, Button, Card, Icon, Text, useTheme } from '@ui-kitten/components'
 
 
-const CheckIcon = (...props) => {
+const CheckIcon = (props) => {
     const theme = useTheme()
     return <Icon {...props} style={[props.style, styles.checkIcon]} fill={theme['color-success-400']} name='checkmark-circle-2' />
 }
 
-const CloseIcon = (...props) => { return <Icon {...props} style={[props.style, styles.closeIcon]}  name='close-outline'/> }
+const CloseIcon = (props) => { return <Icon {...props} style={[props.style, styles.closeIcon]}  name='close-outline'/> }
 
 const Header = ({ onHide }) => {
     return (
@@ -26,7 +26,7 @@ const SuccessModal = ({ isShown, onHide }) => {
             <Modal
             visible={isShown}
             backdropStyle={styles.backdrop}
-            onBackdropPress={() => setVisible(false)}>
+            onBackdropPress={onHide}>
                 <Card
                 disabled={true}
                 header= {() => <Header onHide={onHide} />}

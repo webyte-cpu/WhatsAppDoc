@@ -4,7 +4,6 @@ import { Calendar, Select, IndexPath, SelectItem, Divider, Button, Input, Text} 
 import SuccessModal from './successModal'
 import { RenderDoctor } from  '../search/doctors/nearbyDoctors'
 
-
 const AppointmentInfo = ({doctor}) => {
     const prefix = (prefix) => <Text category="s2" style={{ color: 'gray' }}>{prefix}</Text>;
     
@@ -29,51 +28,51 @@ const AppointmentInfo = ({doctor}) => {
     )
 };
 
-
-const SelectTime = ({timeData}) => {
-    const [selectedIndex, setSelectedIndex] = useState(new IndexPath(0));    
-    const displayValue = timeData[selectedIndex.row];
-    const [selectedTime, setSelectedTime] = useState(displayValue)
-
-    const renderOption = (title) => <SelectItem key={title} title={title} />
-
-    return (
-        <View style={{marginVertical:10}}>
-            <Select
-            label='TIME'
-            value={displayValue}
-            selectedIndex={selectedIndex}
-            onSelect={index => setSelectedIndex(index)}
-            onBlur={() => setSelectedTime(displayValue)}
-            >
-                {timeData.map(renderOption)}
-            </Select>
-            {/* {console.log(selectedTime)} */}
-        </View>
-    )
-}
-
-const SelectDayAppointment = () => {
-    const [selectedDate, setSelectedDate] = React.useState(new Date());
-    return (
-        <View style={{alignSelf:'center', justifyContent:'center'}}>  
-            {/* {console.log(selectedDate.toLocaleDateString())} */}
-            <Calendar
-                style={styles.calendar}
-                date={selectedDate}
-                onSelect={nextDate => setSelectedDate(nextDate)}
-            />
-        </View>
-    )
-}
-
 const BookingScreen = () => {
     const timeData = ['7:00 - 7:30', '7:30 - 8:00', '8:00 - 8:30', '8:30 - 9:00', '9:00 - 9:30']
     const doctorData = { firstName: 'Alexis', lastName:'Dalisay', specialization: 'Physician', rating: 5, exp: 2 }
+    const [selectedTime, setSelectedTime] = useState(timeData[0])
+    const [selectedDate, setSelectedDate] = useState(new Date());
     const [visible, setVisible] = useState(false);
 
+    const SelectTime = ({timeData}) => {
+        const [selectedIndex, setSelectedIndex] = useState(new IndexPath(0));    
+        const displayValue = timeData[selectedIndex.row];
+
+        const renderOption = (title) => <SelectItem key={title} title={title} />
+    
+        return (
+            <View style={{marginVertical:10}}>
+                <Select
+                label='TIME'
+                value={displayValue}
+                selectedIndex={selectedIndex}
+                onSelect={index => setSelectedIndex(index)}
+                onBlur={() => setSelectedTime(displayValue)}
+                >
+                    {timeData.map(renderOption)}
+                </Select>
+            </View>
+        )
+    }
+    
+    const SelectDayAppointment = () => {
+        return (
+            <View style={{alignSelf:'center', justifyContent:'center'}}>  
+                <Calendar
+                    style={styles.calendar}
+                    date={selectedDate}
+                    onSelect={nextDate => setSelectedDate(nextDate)}
+                />
+            </View>
+        )
+    }
+
     const handleClose = () => setVisible(false);
-    const handleShow = () => setVisible(true);
+    const handleShow = () => {
+        setVisible(true)
+        console.log('data:',selectedTime,selectedDate.toLocaleDateString())
+    }
 
     return (
         <ScrollView style={styles.container}>
