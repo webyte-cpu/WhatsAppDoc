@@ -1,6 +1,7 @@
 import objectFilter from "../helpers/objectFilter.js";
 import { ApolloError, ForbiddenError } from "apollo-server-errors";
 import appointment from "../appointment/model.js";
+import schedule from "../schedule/model.js";
 import address from "../address/model.js";
 import findModel from "../helpers/find.js";
 import { v4 as uuidV4 } from "uuid";
@@ -148,7 +149,6 @@ const get = async ({uid, doctorUid}, knex = pg) => {
         "doctor_clinics.clinic_uid",
         "clinics.clinic_uid"
       );
-      console.log(dbResponse)
     return dbResponse.map(fromDb);
   } catch (error) {
     console.log(error);
@@ -209,57 +209,66 @@ const remove = async (uid, knex = pg) =>
 
     false:
     => clinic can be deleted
+    => from schedules (1)
     => from address
     => then from doctor clinic table
     => then from the clinic table
   */
   knex.transaction(async (trx) => {
-    const getClinicResponse = __.first(
-      await find({ "clinics.uid": [uid] }, trx)
-    );
-
-    const { addressUid, doctorClinicUid } = getClinicResponse;
-
-    const getAppointmentResponse = await appointment.find(
-      { doctorClinicUid: [doctorClinicUid] },
-      trx
-    );
-
-    const isCleared = getAppointmentResponse.every(
-      (appointment) =>
-        appointment.status == enums.status.CANCELLED ||
-        appointment.status == enums.status.DONE
-    );
-
-    if (!isCleared) {
-      throw new ForbiddenError("Clinic have an active appointments.");
-    }
-
-    if (__.isUndefined(getClinicResponse))
-      throw new ApolloError(
-        "Clinic does not exist or has been removed.",
-        "DOES_NOT_EXIST"
+    try {
+      const getClinicResponse = __.first(
+        await find({ "clinics.uid": [uid] }, trx)
       );
 
-    const response = {
-      doctorClinicRawData: await trx("doctor_clinics")
-        .where({ clinic_uid: uid })
-        .del()
-        .returning("*"),
-      clinicRawData: await trx("clinics")
-        .where({ clinic_uid: uid })
-        .del()
-        .returning("*"),
-      address: await address.remove(addressUid, trx),
-    };
+      const getScheduleResponse = await schedule.find({ doctorClinicUid: [getClinicResponse.doctorClinicUid]})
+      const scheduleUids = getScheduleResponse.map((response) => response.uid);
 
-    response.clinic = fromDb({
-      ...__.first(response.clinicRawData),
-      ...__.first(response.doctorClinicRawData),
-    });
+      const { addressUid, doctorClinicUid } = getClinicResponse;
+      const getAppointmentResponse = await appointment.find(
+        { doctorClinicUid: [doctorClinicUid] },
+        trx
+      );
 
-    response.clinic.address = response.address;
-    return response.clinic;
+      const isCleared = getAppointmentResponse.every(
+        (appointment) =>
+          appointment.status == enums.status.CANCELLED ||
+          appointment.status == enums.status.DONE
+      );
+  
+      if (!isCleared) {
+        throw new ForbiddenError("Clinic have an active appointments.");
+      }
+  
+      if (__.isUndefined(getClinicResponse))
+        throw new ApolloError(
+          "Clinic does not exist or has been removed.",
+          "DOES_NOT_EXIST"
+        );
+  
+      const response = {
+        schedule: await schedule.remove(scheduleUids, trx), //! order is important
+        doctorClinicRawData: await trx("doctor_clinics")
+          .where({ clinic_uid: uid })
+          .del()
+          .returning("*"),
+        clinicRawData: await trx("clinics")
+          .where({ clinic_uid: uid })
+          .del()
+          .returning("*"),
+        address: await address.remove(addressUid, trx),
+      };
+  
+      response.clinic = fromDb({
+        ...__.first(response.clinicRawData),
+        ...__.first(response.doctorClinicRawData),
+      });
+
+      response.clinic.address = response.address;
+      response.clinic.schedule = response.schedule;
+      return response.clinic;
+    } catch(error) {
+      throw error
+    }
   });
 
 export default { create, update, get, remove, upsert, getAll, find };
