@@ -69,9 +69,9 @@ export const GET_CLINICS = gql`
   }
 `
 
-export const GET_SCHEDULES = gql`
-  query GetSchedule($doctorClinicUid:UUID){
-    getSchedule(doctorClinicUid:$doctorClinicUid) {
+export const DELETE_SCHEDULES = gql`
+  mutation deleteSchedules($uids: [UUID!]) {
+    deleteSchedules(uids: $uids) {
       uid
       startTime
       endTime
@@ -80,13 +80,36 @@ export const GET_SCHEDULES = gql`
   }
 `
 
-export const DELETE_SCHEDULES = gql`
-  mutation deleteSchedules($uids: [UUID!]) {
-    deleteSchedules(uids: $uids) {
+export const DELETE_CLINIC = gql`
+  mutation deleteClinic ($uid: UUID!) {
+    deleteClinic (uid:$uid) {
+      doctorClinicUid
       uid
-      startTime
-      endTime
-      daysOfTheWeek
+      roomNumber
+      name
+      consultationFee
+      slotDurationInMins
+      minimumSchedulingNoticeMins
+      address {
+        uid
+        address
+        city
+        province
+        country
+        zipCode
+        coordinates
+      }
+      ...on Clinic {
+        appointment {
+          uid
+        }
+        schedule{
+          uid
+          startTime
+          endTime
+          daysOfTheWeek
+        }
+      }
     }
   }
 `

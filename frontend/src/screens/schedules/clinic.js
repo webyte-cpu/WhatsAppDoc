@@ -17,8 +17,8 @@ import { Formik, Field } from "formik";
 import { CustomInput } from "../../components/customInput";
 import { clinicNameSchema } from "../../../helpers/validationType";
 import { usePropertiesForm } from "./properties/formProvider";
-import { useQuery } from "@apollo/client";
-import { GET_CLINICS } from "./utils/queries";
+import { useMutation, useQuery } from "@apollo/client";
+import { DELETE_CLINIC, GET_CLINICS } from "./utils/queries";
 import LoadingScreen from "../../components/loadingScreen";
 import { clinicDataFromDB, intervalsFromDB } from "../../utils/convertData";
 import { useAuth } from "../auth/utils/authProvider";
@@ -26,7 +26,6 @@ import * as R from 'ramda';
 
 const DeleteIcon = (props) => {
   const [visible, setVisible] = useState(false);
-
   const FooterBtns = () => {
     return (
       <View
@@ -45,7 +44,7 @@ const DeleteIcon = (props) => {
         </Button>
         <Button
           testID="deleteBtn"
-          onPress={() => console.log("remove clinic")}
+          onPress={async () => await props.deleteClinic({ variables: {uid: props.uid }})}
           style={{ marginLeft: 5 }}
         >
           Delete
@@ -124,6 +123,15 @@ const ClinicPage = ({ navigation, route }) => {
   const { loading, error, data } = useQuery(GET_CLINICS, {
     variables: { doctorUid: appState.user.uid }
   });
+  const [deleteClinic] = useMutation(DELETE_CLINIC, {
+    refetchQueries: [{
+      query: GET_CLINICS, 
+      variables: {
+        doctorUid: appState.user.uid
+      }
+    }]
+    }
+  )
 
   const form = usePropertiesForm();
   const [openModal, setOpenModal] = useState(false);
@@ -199,14 +207,17 @@ const ClinicPage = ({ navigation, route }) => {
     const RenderClinic = ({ item, index }) => {
       if (error) {
         console.log(error);
-        return null
+        return null;
       }
 
       if (loading) {
         return <LoadingScreen />;
       }
 
-      const intervals = intervalsFromDB(item.schedule);
+      let intervals = item.schedule;
+      if(item.schedule != null) {
+        intervals = intervalsFromDB(item.schedule);
+      }
       const clinicData = { ...(R.omit(['schedule'], item)), intervals};
       const formattedData = clinicDataFromDB(clinicData); // final data for frontend
       return clinicData !== null ? (
@@ -216,7 +227,7 @@ const ClinicPage = ({ navigation, route }) => {
             testID={`clinic-${index}`}
             title={`${formattedData.clinicName}`}
             accessoryRight={(props) => (
-              <DeleteIcon {...props} clinic={formattedData.clinicName} />
+              <DeleteIcon {...props} clinic={formattedData.clinicName} uid={formattedData.uid} deleteClinic={deleteClinic} />
             )}
             onPress={() => {
               goToProperties(navigation, formattedData, form);
