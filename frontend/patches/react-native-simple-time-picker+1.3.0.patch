@@ -1,0 +1,111 @@
+diff --git a/node_modules/react-native-simple-time-picker/LICENSE b/node_modules/react-native-simple-time-picker/LICENSE
+old mode 100644
+new mode 100755
+diff --git a/node_modules/react-native-simple-time-picker/README.md b/node_modules/react-native-simple-time-picker/README.md
+old mode 100644
+new mode 100755
+diff --git a/node_modules/react-native-simple-time-picker/sample/lib/TimePicker.d.ts b/node_modules/react-native-simple-time-picker/sample/lib/TimePicker.d.ts
+old mode 100644
+new mode 100755
+diff --git a/node_modules/react-native-simple-time-picker/sample/lib/TimePicker.js b/node_modules/react-native-simple-time-picker/sample/lib/TimePicker.js
+old mode 100644
+new mode 100755
+index db48d19..8f6c183
+--- a/node_modules/react-native-simple-time-picker/sample/lib/TimePicker.js
++++ b/node_modules/react-native-simple-time-picker/sample/lib/TimePicker.js
+@@ -46,7 +46,7 @@ function TimePicker(_a) {
+         if (emptyLabel != null) {
+             items.push(<picker_1.Picker.Item testID="hoursItem" key="nullHoursItem" value="" label={emptyLabel} color={textColor}/>);
+         }
+-        for (let i = 0; i <= MAX_HOURS; i += hoursInterval) {
++        for (let i = isAmpm ? 1 : 0; i <= (isAmpm ? MAX_HOURS + 1: MAX_HOURS); i += hoursInterval) {
+             items.push(<picker_1.Picker.Item testID="hoursItem" key={i} value={i} label={getLabel(i, hoursUnit)} color={textColor}/>);
+         }
+         return items;
+diff --git a/node_modules/react-native-simple-time-picker/sample/lib/TimePicker.js.map b/node_modules/react-native-simple-time-picker/sample/lib/TimePicker.js.map
+old mode 100644
+new mode 100755
+diff --git a/node_modules/react-native-simple-time-picker/sample/lib/index.d.ts b/node_modules/react-native-simple-time-picker/sample/lib/index.d.ts
+old mode 100644
+new mode 100755
+diff --git a/node_modules/react-native-simple-time-picker/sample/lib/index.js b/node_modules/react-native-simple-time-picker/sample/lib/index.js
+old mode 100644
+new mode 100755
+diff --git a/node_modules/react-native-simple-time-picker/sample/lib/index.js.map b/node_modules/react-native-simple-time-picker/sample/lib/index.js.map
+old mode 100644
+new mode 100755
+diff --git a/node_modules/react-native-simple-time-picker/sample/lib/stories/Button.d.ts b/node_modules/react-native-simple-time-picker/sample/lib/stories/Button.d.ts
+old mode 100644
+new mode 100755
+diff --git a/node_modules/react-native-simple-time-picker/sample/lib/stories/Button.js b/node_modules/react-native-simple-time-picker/sample/lib/stories/Button.js
+old mode 100644
+new mode 100755
+diff --git a/node_modules/react-native-simple-time-picker/sample/lib/stories/Button.js.map b/node_modules/react-native-simple-time-picker/sample/lib/stories/Button.js.map
+old mode 100644
+new mode 100755
+diff --git a/node_modules/react-native-simple-time-picker/sample/lib/stories/Button.stories.d.ts b/node_modules/react-native-simple-time-picker/sample/lib/stories/Button.stories.d.ts
+old mode 100644
+new mode 100755
+diff --git a/node_modules/react-native-simple-time-picker/sample/lib/stories/Button.stories.js b/node_modules/react-native-simple-time-picker/sample/lib/stories/Button.stories.js
+old mode 100644
+new mode 100755
+diff --git a/node_modules/react-native-simple-time-picker/sample/lib/stories/Button.stories.js.map b/node_modules/react-native-simple-time-picker/sample/lib/stories/Button.stories.js.map
+old mode 100644
+new mode 100755
+diff --git a/node_modules/react-native-simple-time-picker/sample/lib/stories/Header.d.ts b/node_modules/react-native-simple-time-picker/sample/lib/stories/Header.d.ts
+old mode 100644
+new mode 100755
+diff --git a/node_modules/react-native-simple-time-picker/sample/lib/stories/Header.js b/node_modules/react-native-simple-time-picker/sample/lib/stories/Header.js
+old mode 100644
+new mode 100755
+diff --git a/node_modules/react-native-simple-time-picker/sample/lib/stories/Header.js.map b/node_modules/react-native-simple-time-picker/sample/lib/stories/Header.js.map
+old mode 100644
+new mode 100755
+diff --git a/node_modules/react-native-simple-time-picker/sample/lib/stories/Header.stories.d.ts b/node_modules/react-native-simple-time-picker/sample/lib/stories/Header.stories.d.ts
+old mode 100644
+new mode 100755
+diff --git a/node_modules/react-native-simple-time-picker/sample/lib/stories/Header.stories.js b/node_modules/react-native-simple-time-picker/sample/lib/stories/Header.stories.js
+old mode 100644
+new mode 100755
+diff --git a/node_modules/react-native-simple-time-picker/sample/lib/stories/Header.stories.js.map b/node_modules/react-native-simple-time-picker/sample/lib/stories/Header.stories.js.map
+old mode 100644
+new mode 100755
+diff --git a/node_modules/react-native-simple-time-picker/sample/lib/stories/Page.d.ts b/node_modules/react-native-simple-time-picker/sample/lib/stories/Page.d.ts
+old mode 100644
+new mode 100755
+diff --git a/node_modules/react-native-simple-time-picker/sample/lib/stories/Page.js b/node_modules/react-native-simple-time-picker/sample/lib/stories/Page.js
+old mode 100644
+new mode 100755
+diff --git a/node_modules/react-native-simple-time-picker/sample/lib/stories/Page.js.map b/node_modules/react-native-simple-time-picker/sample/lib/stories/Page.js.map
+old mode 100644
+new mode 100755
+diff --git a/node_modules/react-native-simple-time-picker/sample/lib/stories/Page.stories.d.ts b/node_modules/react-native-simple-time-picker/sample/lib/stories/Page.stories.d.ts
+old mode 100644
+new mode 100755
+diff --git a/node_modules/react-native-simple-time-picker/sample/lib/stories/Page.stories.js b/node_modules/react-native-simple-time-picker/sample/lib/stories/Page.stories.js
+old mode 100644
+new mode 100755
+diff --git a/node_modules/react-native-simple-time-picker/sample/lib/stories/Page.stories.js.map b/node_modules/react-native-simple-time-picker/sample/lib/stories/Page.stories.js.map
+old mode 100644
+new mode 100755
+diff --git a/node_modules/react-native-simple-time-picker/sample/lib/tsconfig.tsbuildinfo b/node_modules/react-native-simple-time-picker/sample/lib/tsconfig.tsbuildinfo
+old mode 100644
+new mode 100755
+diff --git a/node_modules/react-native-simple-time-picker/sample/lib/utils/index.d.ts b/node_modules/react-native-simple-time-picker/sample/lib/utils/index.d.ts
+old mode 100644
+new mode 100755
+diff --git a/node_modules/react-native-simple-time-picker/sample/lib/utils/index.js b/node_modules/react-native-simple-time-picker/sample/lib/utils/index.js
+old mode 100644
+new mode 100755
+diff --git a/node_modules/react-native-simple-time-picker/sample/lib/utils/index.js.map b/node_modules/react-native-simple-time-picker/sample/lib/utils/index.js.map
+old mode 100644
+new mode 100755
+diff --git a/node_modules/react-native-simple-time-picker/sample/lib/utils/zeroPad.d.ts b/node_modules/react-native-simple-time-picker/sample/lib/utils/zeroPad.d.ts
+old mode 100644
+new mode 100755
+diff --git a/node_modules/react-native-simple-time-picker/sample/lib/utils/zeroPad.js b/node_modules/react-native-simple-time-picker/sample/lib/utils/zeroPad.js
+old mode 100644
+new mode 100755
+diff --git a/node_modules/react-native-simple-time-picker/sample/lib/utils/zeroPad.js.map b/node_modules/react-native-simple-time-picker/sample/lib/utils/zeroPad.js.map
+old mode 100644
+new mode 100755
