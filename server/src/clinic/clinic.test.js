@@ -28,7 +28,7 @@ describe("Queries", () => {
   });
 
   const context = () => ({
-    user: { uid: "0353121f-eeed-4687-8676-f788d3e9c8e6" },
+    user: { uid: "0353121f-eeed-4687-8676-f788d3e9c8e6"},
   });
 
   const { server } = constructTestServer({ context });

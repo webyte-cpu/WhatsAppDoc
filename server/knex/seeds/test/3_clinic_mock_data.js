@@ -23,6 +23,15 @@ const seed = function (knex) {
         slot_duration_in_mins: 3,
         consultation_fee: 500,
       },
+
+      {
+        doctor_clinic_uid: "0353121f-eeed-4687-8676-f788d3e9c8e6",
+        doctor_uid: "0353121f-eeed-4687-8676-f788d3e9c8e6",
+        clinic_uid: "027ae0ac-05d6-43bf-818e-a76607b7f976",
+        minimum_scheduling_notice_mins: 4,
+        slot_duration_in_mins: 3,
+        consultation_fee: 500,
+      }
     ]);
   });
 };
