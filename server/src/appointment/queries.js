@@ -7,33 +7,45 @@ export const GET_APPOINTMENT = gql`
       patientUid
       doctorClinicUid
       status
-      timestamp
+      dateTime
       doctorRemarks
+      createdAt
+      updatedAt
+    }
+  }
+`
+export const GET_ALL_APPOINTMENT = gql`
+  query GetAllAppointment {
+    getAllAppointment {
+      uid
+      patientUid
+      doctorClinicUid
+      status
+      dateTime
+      doctorRemarks
+      createdAt
+      updatedAt
     }
   }
 `
 
 export const CREATE_APPOINTMENT = gql`
   mutation CreateAppointment(
-    $patientUid: UUID
-    $doctorClinicUid: UUID
-    $status: Status
-    $timestamp: DateTime
-    $doctorRemarks: String
+    $doctorClinicUid: UUID,
+    $dateTime: DateTime
   ){
     createAppointment(
-      patientUid: $patientUid,
       doctorClinicUid: $doctorClinicUid,
-      status: $status,
-      timestamp: $timestamp,
-      doctorRemarks: $doctorRemarks
+      dateTime: $dateTime
     ) {
       uid
       patientUid
       doctorClinicUid
       status
-      timestamp
+      dateTime
       doctorRemarks
+      createdAt
+      updatedAt
     }
   }
 `
@@ -41,39 +53,24 @@ export const CREATE_APPOINTMENT = gql`
 export const UPDATE_APPOINTMENT = gql`
   mutation UpdateAppointment(
     $uid: UUID
-    $patientUid: UUID
-    $doctorClinicUid: UUID
     $status: Status
-    $timestamp: DateTime
+    $dateTime: DateTime
     $doctorRemarks: String
   ){
     updateAppointment(
-      uid: $uid,
-      patientUid: $patientUid,
-      doctorClinicUid: $doctorClinicUid,
-      status: $status,
-      timestamp: $timestamp,
+      uid: $uid
+      status: $status
+      dateTime: $dateTime
       doctorRemarks: $doctorRemarks
     ) {
       uid
       patientUid
       doctorClinicUid
       status
-      timestamp
+      dateTime
       doctorRemarks
+      createdAt
+      updatedAt
     }
-  }
-`
-
-export const DELETE_APPOINTMENT = gql`
-  mutation DeleteAppointment($uid: UUID){ 
-    deleteAppointment(uid: $uid){ 
-      uid
-      patientUid
-      doctorClinicUid
-      status
-      timestamp
-      doctorRemarks
-    } 
   }
 `

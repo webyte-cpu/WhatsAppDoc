@@ -25,11 +25,11 @@ export default {
       const response = await appointment.update(arg);
       return response;
     },
-    deleteAppointment: async (obj, arg) => {
+    deleteAppointment: async (obj, arg, { user }) => {
       if (user.role !== enums.role.ADMIN) {
         throw new ApolloError("Not authorize to delete an appointment!");
       }
-      const response = await apointment.remove(arg.uid);
+      const response = await appointment.remove(arg.uid);
       return response;
     },
   },
