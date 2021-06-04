@@ -24,7 +24,7 @@ const toDb = (clinicData) => ({
   clinic_uid: clinicData.uid,
   clinic_name: clinicData.name,
   doctor_uid: clinicData.doctorUid,
-  doctor_clinic_uid: clinicData.doctorClinicUid,
+  doctor_clinic_uid:clinicData.doctorClinicUid,
   clinic_room_no: clinicData.roomNumber,
   consultation_fee: clinicData.consultationFee,
   slot_duration_in_mins: clinicData.slotDurationInMins,

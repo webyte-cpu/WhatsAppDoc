@@ -20,8 +20,9 @@ app.use(
   })
 );
 
+const pubsub = new PubSub();
 export const context = async ({ req }) => {
-  return { user: req?.user || {}, loader, pubsub: new PubSub() };
+  return { user: req?.user || {}, loader, pubsub };
 };
 
 export const server = new ApolloServer({
@@ -54,6 +55,7 @@ export const startApolloServer = async () => {
   console.log(
     `🚀 Subscriptions ready at ws://localhost:${PORT}${server.subscriptionsPath}`
   );
+  return { httpServer };
 };
 
 startApolloServer();

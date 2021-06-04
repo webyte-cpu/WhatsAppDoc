@@ -18,7 +18,7 @@ const rootTypeDefs = gql`
   type Mutation {
     root: String
   }
-  type Subcription {
+  type Subscription {
     root: String
   }
 `;
