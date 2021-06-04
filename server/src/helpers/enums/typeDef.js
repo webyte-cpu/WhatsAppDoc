@@ -40,6 +40,7 @@ const enums = gql`
     PENDING
     VERIFIED
     UNVERIFIED
+    DECLINDED
   }
 
   enum DayOfTheWeek {
@@ -51,7 +52,6 @@ const enums = gql`
     FRIDAY
     SATURDAY
   }
-  
 `;
 
-export default enums
+export default enums;

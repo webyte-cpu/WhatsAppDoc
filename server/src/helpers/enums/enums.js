@@ -23,6 +23,7 @@ const enums = {
     OTHER: "OTHER",
   },
   verificationStatus: {
+    DECLINDED: "DECLINDED",
     PENDING: "PENDING",
     VERIFIED: "VERIFIED",
     UNVERIFIED: "UNVERIFIED",
@@ -34,8 +35,8 @@ const enums = {
     WEDNESDAY: "WEDNESDAY",
     THURSDAY: "THURSDAY",
     FRIDAY: "FRIDAY",
-    SATURDAY: "SATURDAY"
-  }
+    SATURDAY: "SATURDAY",
+  },
 };
 
 export default enums;
