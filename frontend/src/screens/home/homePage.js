@@ -20,7 +20,6 @@ const HomePage = ({ navigation, route}) => {
       ) : (
         <></>
       )}
-      {/* <ResendForm navigation={navigation} /> */}
       <Text testID="welcome-header" category="h1" style={{ marginBottom: 10 }}>
         Welcome {appState.user.firstName}!
       </Text>
