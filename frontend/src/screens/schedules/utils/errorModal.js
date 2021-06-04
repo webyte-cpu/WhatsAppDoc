@@ -21,11 +21,11 @@ const EmptyFieldsModal = ({fields, showErr, setShowErr}) => {
   return (
     <Modal
       visible={showErr}
-      style={customStyle.modalContainer}
       backdropStyle={customStyle.backdrop}
       onBackdropPress={() => closeModal()}
       style={{ justifyContent: "center", alignSelf: "center" }}>
       <Card 
+        style={customStyle.modalContainer}
         status='primary' 
         header={(props) => header(props)}
         footer={(props) => footer(props)}
