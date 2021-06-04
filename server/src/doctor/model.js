@@ -38,7 +38,7 @@ const create = async (doctorData, knex = pg) => {
 };
 const update = async (uid, doctorData, knex = pg) => {
   const dbResponse = await knex("doctors")
-    .where({ doctor_uid: doctorData.uid })
+    .where({ doctor_uid: uid||doctorData.uid })
     .update(
       objectFilter({
         doctor_licence_num: doctorData.licenceNum,

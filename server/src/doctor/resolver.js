@@ -96,6 +96,57 @@ export default {
         console.error(error);
       }
     },
+    doctorVerification: async (
+      obj,
+      { doctorUid, status, message },
+      { user, pubsub }
+    ) => {
+      if (__.isEmpty(user)) {
+        throw new AuthenticationError("No authorization header found");
+      }
+
+      if (![enums.role.ADMIN].includes(user.role)) {
+        throw new ForbiddenError("Not authorize to verify doctor");
+      }
+
+      try {
+        const { verificationStatus } = await doctor.update(doctorUid, {
+          verificationStatus: status,
+        });
+
+        if (__.isUndefined(message)) {
+          switch (status) {
+            case enums.verificationStatus.PENDING:
+              message =
+                "Your account is currently undergoing verification. This process will take approximately 24 hours.";
+              break;
+            case enums.verificationStatus.VERIFIED:
+              message =
+                "Your account has been verified and is now available for appointments.";
+              break;
+            case enums.verificationStatus.DECLINDED:
+              message =
+                "Sadly, the verification has been refused for some reason.";
+              break;
+          }
+        }
+
+        const payload = { status: verificationStatus, message };
+
+        pubsub.publish("VERIFICATION_" + doctorUid, {
+          doctorVerification: payload,
+        });
+
+        return payload;
+      } catch (error) {
+        console.error(error);
+      }
+    },
   },
-  // Subscription: {},
+  Subscription: {
+    doctorVerification: {
+      subscribe: (obj, { uid }, { pubsub }) =>
+        pubsub.asyncIterator("VERIFICATION_" + uid),
+    },
+  },
 };
