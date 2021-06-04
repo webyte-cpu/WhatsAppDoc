@@ -91,7 +91,7 @@ const ScheduleStackScreen = (props) => {
               const [ saveClinic ] = useMutation(SAVE_CLINIC_MUTATION, {
                 onCompleted: async ({result}) => {
                   const newIntervals = intervalsToDB(values.intervals)
-                  await saveSchedule({ variables: {doctorClinicUid: result.doctorClinicUid  , schedList: newIntervals} })
+                  await saveSchedule({ variables: {doctorClinicUid: result.doctorClinicUid, schedList: newIntervals} })
                 },
                 onError: (error) => {
                   if(error) {
@@ -141,6 +141,8 @@ const ScheduleStackScreen = (props) => {
               return (
                 <View>
                   <Button
+                  appearance="filled"
+                  size="small"
                     style={{ marginRight: 10, backgroundColor: "white" }}
                     onPress={() => saveData()}
                   >
@@ -150,7 +152,7 @@ const ScheduleStackScreen = (props) => {
                         fontWeight: "bold",
                       }}
                     >
-                      SAVE
+                      Save
                     </Text>
                   </Button> 
                   <EmptyFieldsModal fields={showErr.fields} showErr={showErr.status} setShowErr={setShowErr} />

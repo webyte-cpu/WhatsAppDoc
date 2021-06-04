@@ -42,7 +42,7 @@ const AlertModal = ({ open }) => {
       backdropStyle={customStyle.backdrop}
       style={{ justifyContent: "center", alignSelf: "center" }}
     >
-      <Card style={{ width: "fit-content" }}>
+      <Card style={{ width: 80 }}>
         <Spinner size="large" status="primary" />
       </Card>
     </Modal>
@@ -63,7 +63,7 @@ const AppointmentProperties = ({ navigation, route }) => {
     return unsubscribe;
   }, [navigation]);
 
-  // console.log(form);
+  console.log(form);
   return (
     <View style={{ flex: 1 }}>
       <AlertModal open={form.isLoading} />

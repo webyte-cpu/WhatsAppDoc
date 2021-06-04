@@ -25,6 +25,16 @@ import { useAuth } from "../auth/utils/authProvider";
 import * as R from 'ramda';
 
 const DeleteIcon = (props) => {
+  const { appState } = useAuth();
+  const [deleteClinic] = useMutation(DELETE_CLINIC, {
+    refetchQueries: [{
+      query: GET_CLINICS, 
+      variables: {
+        doctorUid: appState.user.uid
+      }
+    }]
+  })
+
   const [visible, setVisible] = useState(false);
   const FooterBtns = () => {
     return (
@@ -44,7 +54,7 @@ const DeleteIcon = (props) => {
         </Button>
         <Button
           testID="deleteBtn"
-          onPress={async () => await props.deleteClinic({ variables: {uid: props.uid }})}
+          onPress={async () => await deleteClinic({ variables: {uid: props.uid }})}
           style={{ marginLeft: 5 }}
         >
           Delete
@@ -123,16 +133,6 @@ const ClinicPage = ({ navigation, route }) => {
   const { loading, error, data } = useQuery(GET_CLINICS, {
     variables: { doctorUid: appState.user.uid }
   });
-  const [deleteClinic] = useMutation(DELETE_CLINIC, {
-    refetchQueries: [{
-      query: GET_CLINICS, 
-      variables: {
-        doctorUid: appState.user.uid
-      }
-    }]
-    }
-  )
-
   const form = usePropertiesForm();
   const [openModal, setOpenModal] = useState(false);
   const clinicDetails = {
@@ -227,7 +227,7 @@ const ClinicPage = ({ navigation, route }) => {
             testID={`clinic-${index}`}
             title={`${formattedData.clinicName}`}
             accessoryRight={(props) => (
-              <DeleteIcon {...props} clinic={formattedData.clinicName} uid={formattedData.uid} deleteClinic={deleteClinic} />
+              <DeleteIcon {...props} clinic={formattedData.clinicName} uid={formattedData.uid} />
             )}
             onPress={() => {
               goToProperties(navigation, formattedData, form);

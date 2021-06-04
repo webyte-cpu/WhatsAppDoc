@@ -4,14 +4,12 @@ import { StyleSheet, View, Dimensions } from 'react-native';
 import MapView from 'react-native-maps';
 import * as Location from 'expo-location';
 
+export default function AndroidMap({ isViewMode = false, locationCoords, setLocationCoords }) {
 
-
-export default function AndroidMap() {
-
-  const [location, setLocation] = useState({ "coords": { "latitude": 10.7184083, "longitude": 122.5485867 } });
+  const [location, setLocation] = useState({ latitude: 10.7184083, longitude: 122.5485867 });
 
   const fetchLocation = async () => {
-    let { status } = await Location.requestBackgroundPermissionsAsync();
+    let { status } = await Location.requestPermissionsAsync();
     if (status !== 'granted') {
       setErrorMsg('Permission to access location was denied');
       return;
@@ -19,32 +17,51 @@ export default function AndroidMap() {
 
 
     let location = await Location.getCurrentPositionAsync({ accuracy: 6 });
-    console.log(location["coords"]["latitude"])
-    console.log(location["coords"]["longitude"])
+    console.log(location["latitude"])
+    console.log(location["longitude"])
     setLocation(location);
   }
 
 
-  useEffect(() => { 
-    fetchLocation();
+  const setCoordinates = (locationCoords) => {
+    const [latitude, longitude] = locationCoords.split(',').map((e) => Number(e))
+    return setLocation({latitude, longitude});
+  }
+
+  useEffect(() => {
+    if(!isViewMode && !locationCoords) { // if edit mode and no provided lcato
+      fetchLocation()
+    }
+
+    if(locationCoords) {
+      setCoordinates(locationCoords)
+    }
   },[]);
+
+  useEffect(() => {
+    console.log(location, 'LOCATION')
+    setLocationCoords(`${location.latitude},${location.longitude}`)
+  }, [location])
 
   return (
     <View style={styles.container}>
       <MapView
         style={styles.map}
-        initialRegion={{
-          latitude: location["coords"]["latitude"],
-          longitude: location["coords"]["longitude"],
+        loadingEnabled={true}
+        region={{
+          latitude: location["latitude"],
+          longitude: location["longitude"],
           latitudeDelta: 0.03358723958820065,
           longitudeDelta: 0.04250270688370961,
-        }}>
+        }}
+        // onMarkerDragEnd={(coords) => console.log(coords)}
+        >
         <MapView.Marker draggable
           coordinate={{
-            latitude: 10.7184083,
-            longitude: 122.5485867 ,
+            latitude: location["latitude"],
+            longitude: location["longitude"],
           }}
-          onDragEnd={(e) => { console.log('dragEnd', e.nativeEvent.coordinate) }}
+          onDragEnd={(e) => setLocation(e.nativeEvent.coordinate)}
         />
       </MapView>
 
@@ -55,13 +72,14 @@ export default function AndroidMap() {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    height: 350,
+    marginVertical: 10,
     backgroundColor: '#fff',
     alignItems: 'center',
     justifyContent: 'center',
   },
   map: {
-    width: Dimensions.get('window').width,
-    height: Dimensions.get('window').height,
+    width: '100%',
+    height: '100%',
   },
 });

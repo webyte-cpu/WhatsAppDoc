@@ -60,6 +60,7 @@ const resolverMap = {
         });
 
         loader?.clinic?.clear(user.uid);
+        loader?.address?.clear(clinicData.address.uid);
 
         return response;
       } catch (error) {

@@ -35,7 +35,7 @@ const customStyle = StyleSheet.create({
   },
   tabStyle: { height: 40 },
   modalContainer: {
-    maxWidth: 300,
+    width: 300,
     ...Platform.select({
       web: {
         maxWidth: 600,
