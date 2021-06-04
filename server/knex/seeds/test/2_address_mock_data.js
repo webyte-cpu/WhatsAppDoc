@@ -15,6 +15,17 @@ const seed = function (knex) {
           address_coordinates: '14.6488, 121.0509'
           // address_coordinates:""
         },
+
+        {
+          address_uid: "a9d6a29a-ae61-43c8-80f3-11a584cc1270",
+          address: "Test Address",
+          address_city: "San Jose",
+          address_province: "Antique",
+          address_zip_code: "5700",
+          address_country: "Philippines",
+          address_coordinates: '14.6488, 121.0509'
+          // address_coordinates:""
+        },
       ]);
     });
 };
