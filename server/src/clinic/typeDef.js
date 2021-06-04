@@ -6,7 +6,6 @@ const clinic = gql`
     name: String!
     roomNumber: String
     address: Address
-    doctor: Doctor
     minimumSchedulingNoticeMins: Int
     slotDurationInMins: Int
     consultationFee: Int
