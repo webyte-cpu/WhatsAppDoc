@@ -39,8 +39,8 @@ describe("Queries and Mutations Testing", () => {
       variables: {uid: "f621fddb-8b13-4c58-93d7-3159a99c06bc"}
     })
 
-    await expect(res).toMatchSnapshot();
-  }, 1000)
+    expect(res).toMatchSnapshot();
+  })
 
   it("fetches all appointments", async () => {
 
@@ -52,8 +52,8 @@ describe("Queries and Mutations Testing", () => {
       query: GET_ALL_APPOINTMENT
     })
 
-    await expect(res).toMatchSnapshot();
-  }, 1000)
+    expect(res).toMatchSnapshot();
+  })
 
   it("create an appointment", async () => {
 
@@ -73,8 +73,8 @@ describe("Queries and Mutations Testing", () => {
       }
     })
   
-    await expect(res).toMatchSnapshot();
-  }, 1000)
+    expect(res).toMatchSnapshot();
+  })
 
   it("updates an appointment", async () => {
 
@@ -92,8 +92,8 @@ describe("Queries and Mutations Testing", () => {
       }
     })
   
-    await expect(res).toMatchSnapshot();
-  }, 1000)
+    expect(res).toMatchSnapshot();
+  })
 
 });
 

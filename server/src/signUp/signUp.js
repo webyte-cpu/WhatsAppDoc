@@ -32,39 +32,39 @@ export default async (userData) => {
     userData.password = hashedPassword;
 
     try {
+      let doctorInfo = {}
       response.user = await user.create(userData, trx);
       response.patient = await patient.create(userData, trx);
 
       if (userData.role === enums.role.DOCTOR) {
-        if (__.isEmpty(userData.doctor)) {
-          throw new ApolloError(
-            "Missing required doctor field",
-            "MISSING_FIELD"
-          );
+        if(__.isEmpty(userData.doctor)) {
+          throw new ApolloError("Missing required doctor field", "MISSING_FIELD");
         }
-
+        
         const doctorData = userData.doctor;
         doctorData.uid = userData.uid;
         response.doctor = await doctor.create(doctorData, trx);
 
         if (__.isEmpty(doctorData.specialization)) {
-          throw new ApolloError(
-            "Doctor should have atleast one specialization.",
-            "MISSING_FIELD"
-          );
+          throw new ApolloError("Doctor should have atleast one specialization.", "MISSING_FIELD");
         }
 
-        response.doctor.specialization = await specialization.assign(
-          {
-            titles: doctorData.specialization,
-            userUid: doctorData.uid,
-          },
-          trx
+        const specList = doctorData.specialization.map((title) =>
+          specialization.assign(
+            {
+              title,
+              userUid: doctorData.uid,
+            },
+            trx
+          )
         );
+
+        response.doctor.specialization = await Promise.all(specList);
+        doctorInfo = response.doctor
       }
 
       delete response.user.password;
-      return { ...response.user, ...response.patient, ...response.doctor };
+      return {...response.user, ...response.patient, ...doctorInfo};
     } catch (error) {
       // console.log(error);
 

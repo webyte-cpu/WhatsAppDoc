@@ -19,7 +19,7 @@ app.use(
   })
 );
 
-const context = async ({ req } = {}) => {
+const context = async ({ req }) => {
   return { user: req?.user || {}, loader };
 };
 

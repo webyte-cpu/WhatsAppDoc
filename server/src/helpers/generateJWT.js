@@ -18,6 +18,6 @@ export const generateJWT = (data) => {
 
   return jwt.sign(payload, process.env.JWT_SECRET_KEY, {
     algorithm: "HS256",
-    expiresIn: "24h",
+    expiresIn: "2h",
   });
 }

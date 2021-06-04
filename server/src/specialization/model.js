@@ -3,7 +3,6 @@ import { v4 as uuidV4 } from "uuid";
 import pg from "../../db/index.js";
 import __ from "lodash";
 import c from "case";
-import objectFilter from "../helpers/objectFilter.js";
 
 const fromDb = (data = {}) => ({
   uid: data.specialization_uid,
@@ -16,22 +15,19 @@ const toDb = (data = {}) => ({
   specialization_uid: data.uid,
   specialization_title: data.title,
   doctor_uid: data.doctorUid,
+  specialization_uid: data.specializationUid,
   doctor_specialization_uid: data.doctorSpecializationUid,
 });
 
-const create = async (titles, knex = pg) => {
-  const dbData = titles.map((title) =>
-    objectFilter(toDb({ title: c.sentence(title), uid: uuidV4() }))
-  );
-
+const create = async (data, knex = pg) => {
+  data.uid = data.uid || uuidV4();
   const dbResponse = await knex
-    .insert(dbData)
+    .insert(toDb(data))
     .into("specializations")
     .returning("*")
     .onConflict("specialization_title")
     .ignore();
-
-  return dbResponse.map((data) => objectFilter(fromDb(data)));
+  return fromDb(__.first(dbResponse));
 };
 
 const find = findModel("doctor_specializations", fromDb, toDb, pg, (knex) =>
@@ -41,6 +37,25 @@ const find = findModel("doctor_specializations", fromDb, toDb, pg, (knex) =>
     "doctor_specializations.specialization_uid"
   )
 );
+const assign = ({ title, userUid }, knex = pg) =>
+  knex.transaction(async (trx) => {
+    const response = {};
+
+    title = c.sentence(title);
+    await create({ title }, trx);
+    response.specialization = await find({ title }, trx);
+    const data = __.first(response.specialization);
+
+    response.assignedSpecialization = await trx
+      .insert({
+        doctor_specialization_uid: uuidV4(),
+        specialization_uid: data.uid,
+        doctor_uid: userUid,
+      })
+      .into("doctor_specializations");
+
+    return data;
+  });
 
 const assignedTo = async (uid, knex = pg) => {
   const dbResponse = await knex
@@ -59,46 +74,5 @@ const assignedTo = async (uid, knex = pg) => {
     (specialization) => specialization.specialization_title
   );
 };
-
-const assign = ({ titles, userUid }, knex = pg) =>
-  knex.transaction(async (trx) => {
-    const response = {};
-
-    response.create = await create(titles, trx);
-    response.assigned = await assignedTo(userUid, trx);
-    response.get = await trx
-      .select()
-      .from("specializations")
-      .whereIn(
-        "specialization_title",
-        titles.map((title) => c.sentence(title))
-      );
-
-    const newSpecializations = response.get
-      .filter(
-        ({ specialization_title }) =>
-          !response.assigned.includes(specialization_title)
-      )
-      .map((specialization) => ({
-        ...specialization,
-        doctor_specialization_uid: uuidV4(),
-      }));
-
-    response.newlyAssigned = await trx
-      .insert(
-        newSpecializations.map(
-          ({ doctor_specialization_uid, specialization_uid }) => ({
-            doctor_uid: userUid,
-            doctor_specialization_uid,
-            specialization_uid,
-          })
-        )
-      )
-      .into("doctor_specializations");
-
-    return newSpecializations.map(
-      ({ specialization_title }) => specialization_title
-    );
-  });
 
 export default { assign, assignedTo, find, create };

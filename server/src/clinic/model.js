@@ -24,6 +24,7 @@ const toDb = (clinicData) => ({
   clinic_uid: clinicData.uid,
   clinic_name: clinicData.name,
   doctor_uid: clinicData.doctorUid,
+  doctor_clinic_uid: clinicData.doctorClinicUid,
   clinic_room_no: clinicData.roomNumber,
   consultation_fee: clinicData.consultationFee,
   slot_duration_in_mins: clinicData.slotDurationInMins,
@@ -137,12 +138,12 @@ const update = (clinicData, knex = pg) =>
       throw new ApolloError(error.detail);
     }
   });
-const get = async ({ uid, doctorUid }, knex = pg) => {
+const get = async ({uid, doctorUid}, knex = pg) => {
   try {
     const dbResponse = await knex
       .select("*")
       .from("clinics")
-      .where(objectFilter({ "clinics.clinic_uid": uid, doctor_uid: doctorUid }))
+      .where(objectFilter({"clinics.clinic_uid": uid, doctor_uid: doctorUid}))
       .orderBy("clinic_name")
       .innerJoin(
         "doctor_clinics",
@@ -173,19 +174,19 @@ const upsert = async (clinicData, knex = pg) =>
     try {
       if (clinicData.uid == null || clinicData.doctorClinicUid == null) {
         const createClinicResponse = await create(clinicData, trx);
-        return createClinicResponse;
-        // return {
-        //   uid: createClinicResponse.uid,
-        //   doctorClinicUid: createClinicResponse.doctorClinicUid,
-        // };
+        // return createClinicResponse;
+        return {
+          uid: createClinicResponse.uid,
+          doctorClinicUid: createClinicResponse.doctorClinicUid,
+        };
       }
 
       const updateClinicResponse = await update(clinicData, trx);
-      return updateClinicResponse;
-      // return {
-      //   uid: clinicData.uid,
-      //   doctorClinicUid: clinicData.doctorClinicUid,
-      // };
+      // return updateClinicResponse;
+      return {
+        uid: clinicData.uid,
+        doctorClinicUid: clinicData.doctorClinicUid,
+      };
     } catch (error) {
       throw new ApolloError(error);
     }
@@ -214,17 +215,13 @@ const remove = async (uid, knex = pg) =>
     => then from doctor clinic table
     => then from the clinic table
   */
-
   knex.transaction(async (trx) => {
     try {
-
-      console.log("UID: ", uid);
-
       const getClinicResponse = __.first(
         await find({ "clinics.uid": [uid] }, trx)
       );
 
-      const getScheduleResponse = await schedule.find({ doctorClinicUid: [getClinicResponse.doctorClinicUid] })
+      const getScheduleResponse = await schedule.find({ doctorClinicUid: [getClinicResponse.doctorClinicUid]})
       const scheduleUids = getScheduleResponse.map((response) => response.uid);
 
       const { addressUid, doctorClinicUid } = getClinicResponse;
@@ -238,20 +235,19 @@ const remove = async (uid, knex = pg) =>
           appointment.status == enums.status.CANCELLED ||
           appointment.status == enums.status.DONE
       );
-
+  
       if (!isCleared) {
         throw new ForbiddenError("Clinic have an active appointments.");
       }
-
+  
       if (__.isUndefined(getClinicResponse))
         throw new ApolloError(
           "Clinic does not exist or has been removed.",
           "DOES_NOT_EXIST"
         );
-
+  
       const response = {
-
-        schedule: __.isEmpty(getScheduleResponse) ? null : await schedule.remove(scheduleUids, trx), //! order is important
+        schedule: await schedule.remove(scheduleUids, trx), //! order is important
         doctorClinicRawData: await trx("doctor_clinics")
           .where({ clinic_uid: uid })
           .del()
@@ -260,36 +256,20 @@ const remove = async (uid, knex = pg) =>
           .where({ clinic_uid: uid })
           .del()
           .returning("*"),
+        address: await address.remove(addressUid, trx),
       };
+  
+      response.clinic = fromDb({
+        ...__.first(response.clinicRawData),
+        ...__.first(response.doctorClinicRawData),
+      });
 
-      // const promise = await Promise.all([
-      //   trx("doctor_clinics")
-      //     .where({ clinic_uid: uid })
-      //     .del()
-      //     .returning("*"),
-      //   trx("clinics")
-      //     .where({ clinic_uid: uid })
-      //     .del()
-      //     .returning("*"),
-      //   // address.remove(addressUid, trx)
-      //   // trx("addresses")
-      //   //   .where({ address_uid: addressUid })
-      //   //   .del()
-      //   //   .returning("*"),
-      // ])
-
-response.clinic = fromDb({
-  ...__.first(response.clinicRawData),
-  ...__.first(response.doctorClinicRawData),
-});
-
-// response.clinic.address = response.address;
-response.clinic.schedule = response.schedule;
-return response.clinic;
-
-    } catch (error) {
-  throw error
-}
+      response.clinic.address = response.address;
+      response.clinic.schedule = response.schedule;
+      return response.clinic;
+    } catch(error) {
+      throw error
+    }
   });
 
 export default { create, update, get, remove, upsert, getAll, find };

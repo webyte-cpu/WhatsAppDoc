@@ -22,7 +22,7 @@ export default gql`
   }
 
   extend type Query {
-    getAddress(uid: UUID): Address
+    getAddress: Address
     getAllAddresses: [Address]
   }
 

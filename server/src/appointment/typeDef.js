@@ -8,6 +8,7 @@ export default gql`
     status: Status
     dateTime: DateTime
     doctorRemarks: String
+    clinic: Clinic
     createdAt: DateTime
     updatedAt: DateTime
   }

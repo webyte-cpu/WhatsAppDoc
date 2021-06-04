@@ -3,6 +3,8 @@ import appointment from "../appointment/model.js";
 import schedule from "../schedule/model.js";
 import address from "../address/model.js";
 import clinic from "../clinic/model.js";
+import doctor from "../doctor/model.js";
+
 import Dataloader from "dataloader";
 import __ from "lodash";
 
@@ -33,5 +35,6 @@ export default {
   schedule: loader(schedule, "doctorClinicUid"),
   appointment: loader(appointment, "doctorClinicUid"),
   address: loader(address, "uid"),
+  doctor: loader(doctor, "uid"),
   specialization: loader(specialization, "doctorUid"),
 };

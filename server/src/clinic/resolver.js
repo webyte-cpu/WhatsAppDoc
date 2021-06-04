@@ -16,6 +16,18 @@ const resolverMap = {
         console.error(error);
       }
     },
+    doctor: async (clinic, arg, { loader }) => {
+      if (__.isNull(clinic.doctorUid)) {
+        return null;
+      }
+      try {
+        const response = await loader.doctor.load(clinic.doctorUid);
+        console.log(response)
+        return __.first(response);
+      } catch (error) {
+        console.error(error);
+      }
+    },
     schedule: (clinic, arg, { loader }) => {
       if (__.isNull(clinic.doctorClinicUid)) {
         return null;
@@ -60,7 +72,6 @@ const resolverMap = {
         });
 
         loader?.clinic?.clear(user.uid);
-        loader?.address?.clear(clinicData.address.uid);
 
         return response;
       } catch (error) {
@@ -68,8 +79,6 @@ const resolverMap = {
       }
     },
     createClinic: async (obj, clinicData, { user, loader }) => {
-      console.log("USER", user);
-      
       if (__.isEmpty(user)) {
         throw new AuthenticationError("No authorization header found");
       }
