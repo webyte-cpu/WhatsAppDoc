@@ -210,6 +210,7 @@ const styles = StyleSheet.create({
     borderRadius: 4,
     padding: 8,
     marginRight: 5,
+    width: 60,
     fontFamily: "Poppins-Regular",
   },
   inputs: {
