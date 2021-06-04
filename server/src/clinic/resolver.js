@@ -67,6 +67,8 @@ const resolverMap = {
       }
     },
     createClinic: async (obj, clinicData, { user, loader }) => {
+      console.log("USER", user);
+      
       if (__.isEmpty(user)) {
         throw new AuthenticationError("No authorization header found");
       }

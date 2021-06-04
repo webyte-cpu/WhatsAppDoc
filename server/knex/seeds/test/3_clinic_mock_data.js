@@ -10,6 +10,12 @@ const seed = function (knex) {
         clinic_name: "Webyte Test Clinic",
         clinic_room_no: "21",
       },
+      {
+        clinic_uid: '6eca6134-f369-4278-86d5-1b3a10fea42e',
+        address_uid: 'a9d6a29a-ae61-43c8-80f3-11a584cc1270',
+        clinic_name: 'Test Clinic',
+        clinic_room_no: '6'
+      }
     ]);
 
     // DOCTOR_CLINIC
@@ -31,6 +37,15 @@ const seed = function (knex) {
         minimum_scheduling_notice_mins: 4,
         slot_duration_in_mins: 3,
         consultation_fee: 500,
+      },
+
+      {
+        doctor_clinic_uid: "ab492a42-1738-4e2b-8404-8b75ad62b9d7",
+        doctor_uid: "0353121f-eeed-4687-8676-f788d3e9c8e6",
+        clinic_uid: "6eca6134-f369-4278-86d5-1b3a10fea42e",
+        minimum_scheduling_notice_mins: 3,
+        slot_duration_in_mins: 4,
+        consultation_fee: 1000,
       }
     ]);
   });

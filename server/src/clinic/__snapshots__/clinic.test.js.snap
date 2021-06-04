@@ -39,11 +39,11 @@ Object {
         "province": "Antique",
         "zipCode": "5700",
       },
-      "consultationFee": 500,
-      "minimumSchedulingNoticeMins": 4,
-      "name": "Clinic number 5",
-      "roomNumber": "9",
-      "slotDurationInMins": 3,
+      "consultationFee": 1000,
+      "minimumSchedulingNoticeMins": 3,
+      "name": "Test Clinic",
+      "roomNumber": "6",
+      "slotDurationInMins": 4,
     },
   },
   "errors": undefined,
@@ -62,6 +62,34 @@ Object {
     "getClinic": Array [
       Object {
         "address": Object {
+          "address": "test address",
+          "city": "test city",
+          "country": "test country",
+          "province": "test province",
+          "zipCode": "test zipCode",
+        },
+        "consultationFee": 500,
+        "minimumSchedulingNoticeMins": 5,
+        "name": "Clinic number 4",
+        "roomNumber": "4",
+        "slotDurationInMins": 3,
+      },
+      Object {
+        "address": Object {
+          "address": "Test Address",
+          "city": "San Jose",
+          "country": "Philippines",
+          "province": "Antique",
+          "zipCode": "5700",
+        },
+        "consultationFee": 1000,
+        "minimumSchedulingNoticeMins": 3,
+        "name": "Test Clinic",
+        "roomNumber": "6",
+        "slotDurationInMins": 4,
+      },
+      Object {
+        "address": Object {
           "address": "Test Address",
           "city": "San Jose",
           "country": "Philippines",
@@ -76,16 +104,16 @@ Object {
       },
       Object {
         "address": Object {
-          "address": "test address",
-          "city": "test city",
-          "country": "test country",
-          "province": "test province",
-          "zipCode": "test zipCode",
+          "address": "Test Address",
+          "city": "San Jose",
+          "country": "Philippines",
+          "province": "Antique",
+          "zipCode": "5700",
         },
         "consultationFee": 500,
-        "minimumSchedulingNoticeMins": 5,
-        "name": "Clinic number 4",
-        "roomNumber": "4",
+        "minimumSchedulingNoticeMins": 4,
+        "name": "Webyte Test Clinic",
+        "roomNumber": "21",
         "slotDurationInMins": 3,
       },
     ],
@@ -104,6 +132,20 @@ exports[`Queries fetches existing clinic 1`] = `
 Object {
   "data": Object {
     "getClinic": Array [
+      Object {
+        "address": Object {
+          "address": "Test Address",
+          "city": "San Jose",
+          "country": "Philippines",
+          "province": "Antique",
+          "zipCode": "5700",
+        },
+        "consultationFee": 500,
+        "minimumSchedulingNoticeMins": 4,
+        "name": "Webyte Test Clinic",
+        "roomNumber": "21",
+        "slotDurationInMins": 3,
+      },
       Object {
         "address": Object {
           "address": "Test Address",

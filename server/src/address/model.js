@@ -78,6 +78,7 @@ const getAll = async (knex = pg) => {
 };
 
 const remove = async (uid, knex = pg) => {
+  
   const dbResponse = await knex("addresses")
     .where({ address_uid: uid })
     .del()

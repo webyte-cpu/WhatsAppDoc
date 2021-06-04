@@ -6,26 +6,27 @@ import {
   CREATE_CLINIC,
   UPDATE_CLINIC,
   DELETE_CLINIC,
+  UPSERT_CLINIC
 } from "./queries.js";
 
 describe("Queries", () => {
-  beforeAll(async () => {
-    try {
-      await cleanDb();
-      await pg.seed.run();
-    } catch (error) {
-      console.log(error);
-    }
-  });
+  // beforeAll(async () => {
+  //   try {
+  //     await cleanDb();
+  //     await pg.seed.run();
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // });
 
-  afterAll(async () => {
-    try {
-      await cleanDb();
-      await pg.destroy();
-    } catch (error) {
-      console.log(error);
-    }
-  });
+  // afterAll(async () => {
+  //   try {
+  //     await cleanDb();
+  //     await pg.destroy();
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // });
 
   const context = () => ({
     user: { uid: "0353121f-eeed-4687-8676-f788d3e9c8e6"},
@@ -91,10 +92,19 @@ describe("Queries", () => {
     await expect(res).toMatchSnapshot();
   }, 10000);
 
+  // it("upserts a clinic", async () => {
+  //   const res = await query({
+  //     query: UPSERT_CLINIC,
+  //     variables: {
+  //       uid: "a7d6ea8b-9340-4a76-9cec-e68d1eff9757"
+  //     }
+  //   })
+  // })
+
   it("deletes a clinic", async () => {
     const res = await query({
       query: DELETE_CLINIC,
-      variables: { uid: "027ae0ac-05d6-43bf-818e-a76607b7f976" },
+      variables: { uid: "6eca6134-f369-4278-86d5-1b3a10fea42e" },
     });
     await expect(res).toMatchSnapshot();
   }, 10000);

@@ -96,3 +96,36 @@ export const DELETE_CLINIC = gql`
     }
   }
 `;
+
+export const UPSERT_CLINIC = gql`
+  mutation UpsertClinic(
+    $uid: UUID!,
+    $doctorClinicUid: UUID,
+    $name: String!,
+    $roomNumber: String,
+    $address: AddressInput!,
+    $minimumSchedulingNoticeMins: Int!,
+    $slotDurationInMins: Int!,
+    $consultationFee: Int
+  ) {
+    upsertClinic(
+      uid: $uid,
+      doctorClinicUid: $doctorClinicUid, 
+      name: $name,
+      roomNumber: $roomNumber,
+      address: $address,
+      minimumSchedulingNoticeMins: $minimumSchedulingNoticeMins, 
+      slotDurationInMins: $slotDurationInMins,
+      consultationFee: $consultationFee
+    ) {
+      uid
+      doctorClinicUid
+      name
+      roomNumber
+      address
+      minimumSchedulingNoticeMins
+      slotDurationInMins
+      consultationFee
+    }
+  }
+`
