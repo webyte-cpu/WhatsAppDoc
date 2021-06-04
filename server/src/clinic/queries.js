@@ -122,10 +122,13 @@ export const UPSERT_CLINIC = gql`
       doctorClinicUid
       name
       roomNumber
-      address
-      minimumSchedulingNoticeMins
-      slotDurationInMins
-      consultationFee
+      address {
+        address
+        city
+        province
+        zipCode
+        country
+      }
     }
   }
 `

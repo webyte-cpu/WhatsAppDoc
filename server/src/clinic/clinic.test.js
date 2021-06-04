@@ -92,14 +92,27 @@ describe("Queries", () => {
     await expect(res).toMatchSnapshot();
   }, 10000);
 
-  // it("upserts a clinic", async () => {
-  //   const res = await query({
-  //     query: UPSERT_CLINIC,
-  //     variables: {
-  //       uid: "a7d6ea8b-9340-4a76-9cec-e68d1eff9757"
-  //     }
-  //   })
-  // })
+  it("upserts a clinic", async () => {
+    const res = await query({
+      query: UPSERT_CLINIC,
+      variables: {
+        uid: "c41e1e2f-f788-44b7-bb0b-a9fa746ece0e",
+        name: "Clinic number 4",
+        roomNumber: "5",
+        address: {
+          address: "test2 address2",
+          city: "test2 city2",
+          province: "test2 province2",
+          zipCode: "test2 zipCode2",
+          country: "test2 country2",
+        },
+        minimumSchedulingNoticeMins: 10,
+        slotDurationInMins: 10,
+        consultationFee: 5000
+      }
+    })
+    await expect(res).toMatchSnapshot();
+  }, 1000);
 
   it("deletes a clinic", async () => {
     const res = await query({
