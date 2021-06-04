@@ -6,26 +6,24 @@ import { addressSchema, clinicAboutSchema, clinicNameSchema } from "../../../../
 import { AddressFields } from "../../../components/fields";
 import { CustomInput } from "../../../components/customInput";
 import { usePropertiesForm } from "./formProvider";
+import WebMap from "../../../components/maps/WebMap";
+import AndroidMap from "../../../components/maps/AndroidMap";
+import * as R from 'ramda';
 
 const prefix = (prefix) => {
   return <Text category="s1">{prefix}</Text>;
 };
 
-const LocationMap = () => {
+const LocationMap = ({submitForm, locationCoords}) => {
   return (
     <View>
-      <Text category="h6" style={{ marginVertical: 10 }}>
+      <Text category="h6" style={{ marginTop: 20 }}>
         Location
       </Text>
-      <Text>
-      { Platform.OS === 'web' ? 'Map function is not yet supported': 'There is a map function.'}
-      </Text>
-      {/* <Image
-        style={styles.locationImg}
-        source={{
-          uri: "http://www.destination360.com/asia/philippines/iloilo/days-hotel-ilo-ilo-city-map.gif",
-        }}
-      /> */}
+      <View style={{ marginTop: 10 }}>
+        { Platform.OS === 'web' ? (<WebMap setLocationCoords={submitForm} locationCoords={locationCoords} />) : 
+        (<AndroidMap setLocationCoords={submitForm} locationCoords={locationCoords} />)}
+      </View>
     </View>
   );
 };
@@ -33,7 +31,6 @@ const LocationMap = () => {
 const About = ({ route, navigation }) => {
   const form = usePropertiesForm();
   const initial = form.initialValues;
-
   const initialValues = {
     clinicName: initial.clinicName,
     consultationFee: initial.consultationFee,
@@ -42,12 +39,13 @@ const About = ({ route, navigation }) => {
     city: initial.address.city,
     province: initial.address.province,
     country: initial.address.country,
-    zipCode: initial.address.zipCode,
+    zipCode: initial.address.zipCode
   };
 
   const clinicSchema = clinicAboutSchema.concat(addressSchema).concat(clinicNameSchema);
 
   const submitForm = (data) => {
+    console.log(data, 'DATA')
     const newData = {
       clinicName: data.clinicName,
       consultationFee: Number(data.consultationFee),
@@ -60,13 +58,14 @@ const About = ({ route, navigation }) => {
         zipCode: data.zipCode
       },
     };
+
     form.setValues(newData)
   };
 
   return (
     <ScrollView style={styles.container}>
       <Formik initialValues={initialValues} validationSchema={clinicSchema}>
-        {() => (
+        {({values: formValues}) => (
           <>
             <Text category="h6">Clinic Name</Text>
             <Field
@@ -87,10 +86,21 @@ const About = ({ route, navigation }) => {
             />
 
             <Divider style={{ marginTop: 20 }} />
+            <LocationMap
+              locationCoords={initial.address.coordinates}
+              submitForm={(values) => {
+              const clone = R.clone(formValues)
+              const data = R.mergeDeepRight(clone, {coordinates: values})
+              console.log(data)
+              console.log(formValues, "FORM")
+              // return submitForm(data)
+              form.setValues({address: {coordinates: values}})
 
-            <LocationMap />
+              
+              }} />
+            {/* <LocationMap setLocationCoords={(values) => console.log({...formValues, coordinates: values}, 'mappVal')}/> */}
 
-            <View style={{ marginTop: 20 }}>
+            <View>
               <Field
                 submitOnChange={(values) => submitForm(values)}
                 testID="roomNumber"
