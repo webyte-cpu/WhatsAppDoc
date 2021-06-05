@@ -11,6 +11,7 @@ const fromDb = (patientData) => ({
   height: patientData.patient_height,
   nationality: patientData.patient_nationality,
   civilStatus: patientData.patient_civil_status,
+
 });
 
 const toDb = (patientData) => ({
@@ -67,6 +68,7 @@ const get = async (uid, knex = pg) => {
         img: data.user_img,
         createdAt: data.created_at,
         updatedAt: data.updated_at,
+        pushToken: data.user_push_token
       },
       ...fromDb(data),
     }))

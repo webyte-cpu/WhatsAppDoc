@@ -15,6 +15,7 @@ const user = gql`
     img: String
     createdAt: DateTime
     updatedAt: DateTime
+    pushToken: String
   }
 
   type Admin implements User {
@@ -31,6 +32,7 @@ const user = gql`
     img: String
     createdAt: DateTime
     updatedAt: DateTime
+    pushToken: String
   }
 
   extend type Query {
@@ -50,6 +52,7 @@ const user = gql`
       address: AddressInput
       img: String
       role: Role
+      pushToken: String
     ): User!
 
     deleteUser(uid: UUID!): User!
