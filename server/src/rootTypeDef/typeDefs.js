@@ -1,4 +1,5 @@
 import { typeDefs as scalarTypeDefs } from "graphql-scalars";
+import notification from "../notification/typeDef.js";
 import appointment from "../appointment/typeDef.js";
 import enums from "../helpers/enums/typeDef.js";
 import schedule from "../schedule/typeDef.js";
@@ -36,6 +37,7 @@ const typeDefs = [
   signIn,
   signUp,
   appointment,
+  notification,
 ];
 
 export default typeDefs;
