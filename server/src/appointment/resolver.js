@@ -19,7 +19,23 @@ export default {
         console.error(error);
       }
     },
+
+    patient: async (appointment, arg, { loader }) => {
+      if (__.isNull(appointment.patientUid)) {
+        return null;
+      }
+      try {
+        const response = await loader.patient.load(appointment.patientUid);
+        console.log(response)
+        return __.first(response);
+      } catch (error) {
+        console.error(error);
+      }
+    },
   },
+
+
+
 
   Query: {
     getAppointment: (obj, arg) => appointment.get(arg.uid),
