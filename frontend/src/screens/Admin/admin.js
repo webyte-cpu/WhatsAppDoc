@@ -81,17 +81,21 @@ const Admin = () => {
   const theme = useTheme();
   const [doctorDetails, setDoctorDetails] = useState({});
   const [visible, setVisible] = useState(false);
-  const { loading, error, data } = useQuery(GET_DOCTORS, { pollInterval: 500 });
+  const { loading, error, data } = useQuery(GET_DOCTORS);
 
   if (loading) {
     return <LoadingScreen />;
   }
 
   // TODO: Proper error handling
-  if (error) return `Error! ${error.message}`;
+  if (error) {
+    console.error(error)
+    return null
+  };
 
-  const doctors = data.getDoctor;
+  const doctors = data.getAllDoctor.map((doctor) => ({...doctor, verificationStatus: doctor.verificationStatus === 'DECLINED' ? 'UNVERIFIED': doctor.verificationStatus}))
 
+  console.log(doctors)
   const filterByStatus = (verificationStatus) =>
     doctors.filter(
       (doctor) => doctor.verificationStatus === verificationStatus
@@ -103,14 +107,14 @@ const Admin = () => {
     setDoctorDetails(doctor);
   };
 
-  // TODO: edit specialization rendering
   const renderItem = ({ item, index }) =>
     item !== null ? (
       <>
         <ListItem
+          key={index}
           testID="doctorDetails"
-          title={`${item.firstName}`}
-          description={`${item.specialization[0]}`}
+          title={`${item.firstName} ${item.lastName}`}
+          description={`${item.specialization.join(', ')}`}
           accessoryLeft={() => (
             <ProfileIcon firstName={item.firstName} lastName={item.lastName} />
           )}
@@ -123,21 +127,29 @@ const Admin = () => {
       <></>
     );
 
+    const EmptyListText = () => (
+      <View style={{flex: 1, justifyContent: 'center', alignItems:'center'}}>
+        <Text appearance="hint" category="s1">Nothing to Display</Text>
+      </View>
+    )
+
   const PendingScreen = () => {
-    return (
+    const data = filterByStatus(enums.verificationStatus.PENDING)
+    return data.length === 0 ? (<EmptyListText/>) : (
       <List
         testID={"pendingList"}
-        data={filterByStatus(enums.verificationStatus.PENDING)}
+        data={data}
         renderItem={renderItem}
       />
     );
   };
 
   const VerifiedScreen = () => {
-    return (
+    const data = filterByStatus(enums.verificationStatus.VERIFIED)
+    return data.length === 0 ? (<EmptyListText/>) : (
       <List
         testID={"verifiedList"}
-        data={filterByStatus(enums.verificationStatus.VERIFIED)}
+        data={data}
         ItemSeparatorComponent={Divider}
         renderItem={renderItem}
       />
@@ -145,13 +157,13 @@ const Admin = () => {
   };
 
   const UnverifiedScreen = () => {
-    return (
+    const data = filterByStatus(enums.verificationStatus.UNVERIFIED)
+    return data.length === 0 ? (<EmptyListText/>) : (
       <List
         testID={"unverifiedList"}
-        data={filterByStatus(enums.verificationStatus.UNVERIFIED)}
+        data={data}
         ItemSeparatorComponent={Divider}
         renderItem={renderItem}
-        style={customStyle.listBackground}
       />
     );
   };
