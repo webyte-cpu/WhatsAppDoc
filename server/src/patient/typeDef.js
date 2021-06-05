@@ -15,6 +15,7 @@ const patient = gql`
     createdAt: DateTime
     updatedAt: DateTime
     appointment: [Appointment]
+    pushToken: String
 
     contactNumber: PhoneNumber
     weight: PositiveFloat
