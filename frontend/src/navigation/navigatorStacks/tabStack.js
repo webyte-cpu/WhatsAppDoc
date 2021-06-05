@@ -9,6 +9,7 @@ import {
 import HomeStackScreen from "./homeStack";
 import ScheduleStackScreen from "./scheduleStack";
 import NotificationStackScreen from "./notificationStack";
+import { PropertiesFormProvider } from "../../screens/schedules/properties/formProvider";
 
 const BottomTab = createBottomTabNavigator();
 
@@ -36,7 +37,7 @@ const BottomTabBar = (
 const TabStack = () => (
   <BottomTab.Navigator tabBar={(props) => <BottomTabBar {...props} />}>
     <BottomTab.Screen name="HomeStack" component={HomeStackScreen} />
-    <BottomTab.Screen name="ScheduleStack" component={ScheduleStackScreen} />
+    <BottomTab.Screen name="ScheduleStack" component={PropertiesFormProvider} />
     <BottomTab.Screen
       name="NotificationStack"
       component={NotificationStackScreen}

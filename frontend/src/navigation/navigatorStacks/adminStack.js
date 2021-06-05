@@ -1,26 +1,33 @@
 import React from "react";
-import { View } from 'react-native';
+import { View, useWindowDimensions } from 'react-native';
 import { createDrawerNavigator } from "@react-navigation/drawer";
 import { useAuth } from "../../screens/auth/utils/authProvider";
 import { createStackNavigator } from "@react-navigation/stack";
 import { Drawer, DrawerItem, IndexPath } from "@ui-kitten/components";
+import { AppRoute } from "../app-routes";
 import DrawerMenuBtn from '../../components/drawer/drawerBtn';
 import DrawerStack from "./drawerStack";
 import Admin from "../../screens/Admin/admin";
 import Icons from "../../utils/icons";
 import ProfileHeader from "../../components/drawer/drawerHeader";
+import breakpoints from "../../utils/breakpoints";
 
 const AdminDrawer = createDrawerNavigator();
 const AdminStack = createStackNavigator();
 
 const AdminNavigator = (props) => {
+  const dimensions = useWindowDimensions();
+
   return (
     <AdminStack.Navigator>
       <AdminStack.Screen
-        name="admin"
+        name={AppRoute.ADMIN}
         component={Admin}
         options={{
-          headerLeft: () => <DrawerMenuBtn props={props} />
+          headerLeft: () => {
+            if(dimensions.width < breakpoints.lg) return <DrawerMenuBtn props={props} />
+          },
+          headerTitle: 'Verification Requests'
         }}
       />
     </AdminStack.Navigator>

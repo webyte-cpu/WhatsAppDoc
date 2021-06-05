@@ -1,9 +1,6 @@
 const seed = function (knex) {
-  // Deletes ALL existing entries
   return knex('addresses')
-    .del()
     .then(function () {
-      // Inserts seed entries
       return knex('addresses').insert([
         {
           address_uid: '0afdaddf-536e-4b67-8617-52783e64f6b5', // Iloilo Doctor;s

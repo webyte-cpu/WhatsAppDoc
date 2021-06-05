@@ -1,9 +1,6 @@
 const seed = function (knex) {
-  // Deletes ALL existing entries
   return knex('doctors')
-    .del()
     .then(function () {
-      // Inserts seed entries
       return knex('doctors').insert([
         {
           doctor_uid: '0353121f-eeed-4687-8676-f788d3e9c8e6',

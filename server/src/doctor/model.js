@@ -80,7 +80,8 @@ const get = async (uid, knex = pg) => {
     .select("*")
     .from("doctors")
     .where(objectFilter({ doctor_uid: uid }))
-    .innerJoin("users", "user_uid", "doctor_uid");
+    .innerJoin("users", "user_uid", "doctor_uid")
+    .orderBy('user_last_name');
 
   return dbResponse.map((data) => ({
     ...{

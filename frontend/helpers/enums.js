@@ -26,6 +26,7 @@ const enums = {
     PENDING: "PENDING",
     VERIFIED: "VERIFIED",
     UNVERIFIED: "UNVERIFIED",
+    DECLINED: "DECLINED"
   },
 };
 

@@ -1,9 +1,6 @@
 const seed = function (knex) {
-  // Deletes ALL existing entries
   return knex('specializations')
-    .del()
     .then(function () {
-      // Inserts seed entries
       return knex('specializations').insert([
       {
         specialization_uid: '266199f0-e342-45d2-9de3-633a80d2e4b5',

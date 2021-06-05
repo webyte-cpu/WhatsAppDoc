@@ -1,9 +1,6 @@
 const seed = function (knex) {
-  // Deletes ALL existing entries
   return knex('schedules')
-    .del()
     .then(function () {
-      // Inserts seed entries
       return knex('schedules').insert([
         // KUB- IDH
         {
