@@ -1,6 +1,8 @@
+import __ from "lodash";
+
 const objectFilter = (data) =>
   Object.keys(data).reduce((object, key) => {
-    data[key] && (object[key] = data[key]);
+    !__.isUndefined(data[key]) && (object[key] = data[key]);
     return object;
   }, {});
 
