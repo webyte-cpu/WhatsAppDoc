@@ -6,7 +6,7 @@ export default gql`
     userUid: UUID
     title: String
     description: String
-    createdAt: Date
+    createdAt: DateTime
     content: String
     type: Int
     sourceType: String
