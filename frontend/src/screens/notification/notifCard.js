@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from "react";
-import { View, ScrollView, TouchableHighlight, StyleSheet } from "react-native";
-import {
-    Text
-} from "@ui-kitten/components";
+import { View,Text, ScrollView, TouchableHighlight, StyleSheet } from "react-native";
+import { AppRoute } from "../../navigation/app-routes";
 
 
 
-const NotifCard = ({ status, name, dateTime, clinic, body }) => {
+
+const NotifCard = ({ status, name, dateTime, clinic, body, updatedAt, navigation }) => {
     const [statusText, setStatusText] = useState("")
+    let timeText = updatedAt + " min ago"
 
     const statusTextConverter = (status) => {
         if(status === "PENDING"){
@@ -27,17 +27,35 @@ const NotifCard = ({ status, name, dateTime, clinic, body }) => {
     }, [])
 
     const onPressButton = () => {
-        alert('You tapped the button!')
+
+        if(status === "PENDING"){
+            navigation.navigate(AppRoute.REQUEST)
+        }
+        else if(status === "IN_QUEUE"){
+            navigation.navigate(AppRoute.SCHEDULE)
+        }
+        else{
+            navigation.navigate(AppRoute.REQUEST)
+        }
+
+        
       }
+    
+    if(updatedAt <= 0){
+        timeText = "just now"
+    }
 
 
     return (
         <>
             <View>
                 <TouchableHighlight onPress={onPressButton} underlayColor="white">
+
                     <View style={styles.button}>
                         <Text style={styles.buttonText}>{name} {statusText} {body} at {clinic} on {dateTime}</Text>
+                        <Text style={styles.buttonText}>{timeText}</Text>
                     </View>
+
                 </TouchableHighlight>
             </View>
         </>
@@ -51,14 +69,14 @@ const styles = StyleSheet.create({
     },
     button: {
       marginBottom: 30,
-      width: 400,
-      alignItems: 'center',
-      backgroundColor: '#2196F3'
+      width: "100%",
+      alignItems: 'left',
+      backgroundColor: 'white'
     },
     buttonText: {
-      textAlign: 'center',
-      padding: 20,
-      color: 'white'
+      textAlign: 'left',
+      padding: 5,
+      color: 'black'
     }
   });
 
