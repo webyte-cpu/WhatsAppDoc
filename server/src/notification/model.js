@@ -45,7 +45,8 @@ export const get = async (userUid, knex = pg) => {
   const dbResponse = await knex
     .select("*")
     .from("notifications")
-    .where({ user_uid: userUid });
+    .where({ user_uid: userUid })
+    .orderBy("created_at", "desc");
   return dbResponse.map(fromDb);
 };
 
