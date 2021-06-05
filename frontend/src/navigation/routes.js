@@ -13,6 +13,8 @@ import UserDrawerStack from "./navigatorStacks/userDrawer";
 import enums from "../../helpers/enums";
 import LoadingScreen from "../components/loadingScreen";
 import Banner from "../components/banner";
+import { navigationRef } from './rootNavigation'
+import { useNotifications } from '../notification/notification'
 
 const linking = {
   config: {
@@ -37,6 +39,8 @@ const AppNavigator = () => {
   const [fontsLoaded] = useFonts(customFonts);
   const auth = useAuth()
 
+  useNotifications()
+  
   if (appState.isLoading) {
     return <AppLoading />;
   }
@@ -46,7 +50,7 @@ const AppNavigator = () => {
     {/* { auth.gqlError.msg !==  '' ? <Banner status='danger' message={auth.gqlError.msg}/> : <></>} */}
         
     <SafeAreaProvider>
-      <NavigationContainer linking={linking}>
+      <NavigationContainer ref={navigationRef} linking={linking}>
         {appState.user == null ? (
           <AuthNavigator />
         ) : appState.user.role === enums.role.ADMIN ? (
