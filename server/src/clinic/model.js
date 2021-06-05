@@ -218,8 +218,6 @@ const remove = async (uid, knex = pg) =>
   knex.transaction(async (trx) => {
     try {
 
-      console.log("UID: ", uid);
-
       const getClinicResponse = __.first(
         await find({ "clinics.uid": [uid] }, trx)
       );

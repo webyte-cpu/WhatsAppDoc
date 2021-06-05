@@ -39,7 +39,7 @@ describe("Queries", () => {
     const res = await query({
       query: CREATE_CLINIC,
       variables: {
-        name: "Clinic number 4",
+        name: "Test Clinic hehe",
         roomNumber: "4",
         address: {
           address: "test address",
@@ -84,7 +84,7 @@ describe("Queries", () => {
       query: UPDATE_CLINIC,
       variables: {
         uid: "027ae0ac-05d6-43bf-818e-a76607b7f976",
-        name: "Clinic number 5",
+        name: "WeByte Clinic!!",
         roomNumber: "9",
       },
     });
@@ -96,15 +96,18 @@ describe("Queries", () => {
     const res = await query({
       query: UPSERT_CLINIC,
       variables: {
-        uid: "c41e1e2f-f788-44b7-bb0b-a9fa746ece0e",
-        name: "Clinic number 4",
+        uid: "63714154-c110-483b-8e1e-2d910bdb0f2e",
+        doctorClinicUid: "0de7cd8a-6410-4ebb-8006-45bee76491ea",
+        name: "Clinic number 117",
         roomNumber: "5",
         address: {
-          address: "test2 address2",
-          city: "test2 city2",
-          province: "test2 province2",
-          zipCode: "test2 zipCode2",
-          country: "test2 country2",
+          uid:"a9d6a29a-ae61-43c8-80f3-11a584cc1270",
+          address: "PARC REGENCY",
+          city: "PAVIA",
+          province: "ILOILO",
+          zipCode: "5001",
+          country: "PHILIPPINES",
+          coordinates: "15.032, 112.096"
         },
         minimumSchedulingNoticeMins: 10,
         slotDurationInMins: 10,
