@@ -1,33 +1,36 @@
 import React, { useState } from "react";
 import { createStackNavigator } from "@react-navigation/stack";
-import { View } from 'react-native';
+import { View, useWindowDimensions } from 'react-native';
 import { useMutation } from "@apollo/client";
 import SchedulePage from "../../screens/schedules/schedulePage";
 import AppointmentProperties from "../../screens/schedules/properties/properties";
 import DrawerMenuBtn from "../../components/drawer/drawerBtn";
 import { Button, Text, useTheme } from "@ui-kitten/components";
 import { AppRoute } from "../app-routes";
-import { PropertiesFormProvider, usePropertiesForm} from "../../screens/schedules/properties/formProvider";
+import { usePropertiesForm} from "../../screens/schedules/properties/formProvider";
 import { DELETE_SCHEDULES, GET_CLINICS, SAVE_CLINIC_MUTATION, SAVE_SCHEDULE_MUTATION } from "../../screens/schedules/utils/queries";
 import { intervalsToDB } from "../../utils/convertData.js";
 import { getClinicData, handleSaveError, toUpperCase } from "../../screens/schedules/utils/saveHelpers";
 import EmptyFieldsModal from "../../screens/schedules/utils/errorModal";
 import * as R from "ramda";
 import { useAuth } from "../../screens/auth/utils/authProvider";
+import breakpoints from "../../utils/breakpoints";
 
 const ScheduleStack = createStackNavigator();
 
 const ScheduleStackScreen = (props) => {
   const theme = useTheme();
+  const dimensions = useWindowDimensions();
 
   return (
-    <PropertiesFormProvider>
       <ScheduleStack.Navigator>
         <ScheduleStack.Screen
           name={AppRoute.SCHEDULE}
           component={SchedulePage}
           options={{
-            headerLeft: () => <DrawerMenuBtn props={props} />,
+            headerLeft: () => {
+              if(dimensions.width < breakpoints.lg) return <DrawerMenuBtn props={props} />
+            },
           }}
         />
         <ScheduleStack.Screen
@@ -162,7 +165,6 @@ const ScheduleStackScreen = (props) => {
           })}
         />
       </ScheduleStack.Navigator>
-    </PropertiesFormProvider>
   );
 };
 
