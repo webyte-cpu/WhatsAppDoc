@@ -276,6 +276,7 @@ const AddressFields = ({submitForm}) => {
       <View
         style={{
           flexDirection: "row",
+          paddingBottom: 30
         }}
       >
         <Field
@@ -284,7 +285,7 @@ const AddressFields = ({submitForm}) => {
           component={CustomInput}
           name="zipCode"
           placeholder="Zip/Postal Code"
-          style={{ flex: 0.3 }}
+          style={{ flex: 0.4 }}
           submitOnChange={(values) => submitForm(values)}
 
         />
@@ -294,7 +295,7 @@ const AddressFields = ({submitForm}) => {
           placeholder="Country"
           name="country"
           component={CustomInput}
-          style={{ flex: 0.7, marginLeft: 10 }}
+          style={{ flex: 0.6, marginLeft: 10 }}
           submitOnChange={(values) => submitForm(values)}
           autoCapitalize='sentences'
         />
