@@ -123,6 +123,7 @@ export const UPSERT_CLINIC = gql`
       name
       roomNumber
       address {
+        uid
         address
         city
         province
