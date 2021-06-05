@@ -11,6 +11,7 @@ export const generateJWT = (data) => {
     uid: data.uid,
     role: data.role,
     firstName: data.firstName,
+    middleName: data.middleName,
     lastName: data.lastName,
     email: data.email,
     ...verificationStatus, // for doctors only
