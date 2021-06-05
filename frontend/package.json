@@ -59,6 +59,7 @@
     "react-native-web-maps": "^0.3.0",
     "react-native-web-webview": "^1.0.2",
     "react-star-rating-component": "^1.4.1",
+    "subscriptions-transport-ws": "^0.9.18",
     "yup": "^0.32.9"
   },
   "devDependencies": {
