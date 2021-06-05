@@ -21,7 +21,8 @@
     "migration": "knex migrate:latest",
     "migration:make": "knex migrate:make",
     "seed": "knex seed:run",
-    "seed:make": "knex seed:make"
+    "seed:make": "knex seed:make",
+    "clear:dev_db": "knex migrate:rollback"
   },
   "dependencies": {
     "apollo-datasource-rest": "^0.11.0",
