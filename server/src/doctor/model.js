@@ -97,6 +97,7 @@ const get = async (uid, knex = pg) => {
       img: data.user_img,
       createdAt: data.created_at,
       updatedAt: data.updated_at,
+      pushToken: data.user_push_token
     },
     ...fromDb(data),
   }));
