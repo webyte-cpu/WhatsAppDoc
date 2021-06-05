@@ -23,7 +23,7 @@ const enums = {
     OTHER: "OTHER",
   },
   verificationStatus: {
-    DECLINDED: "DECLINDED",
+    DECLINED: "DECLINED",
     PENDING: "PENDING",
     VERIFIED: "VERIFIED",
     UNVERIFIED: "UNVERIFIED",

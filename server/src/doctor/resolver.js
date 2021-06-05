@@ -124,7 +124,7 @@ export default {
               message =
                 "Your account has been verified and is now available for appointments.";
               break;
-            case enums.verificationStatus.DECLINDED:
+            case enums.verificationStatus.DECLINED:
               message =
                 "Sadly, the verification has been refused for some reason.";
               break;
