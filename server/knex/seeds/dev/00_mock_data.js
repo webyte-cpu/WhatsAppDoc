@@ -4,6 +4,7 @@ const seed = function (knex) {
     .del()
     .then(function () {
       // Inserts seed entries
+      // 2 admin, 5 doctor, 3 patients
       return knex("users").insert([
         {
           user_uid: 'f66e0fe0-3837-49d8-8136-a3285f45d3ce',
@@ -132,14 +133,14 @@ const seed = function (knex) {
 export { seed };
 
 /*
-Raw login: Email: Blake_Gleichner@gmail.com Pass: udHCyaQtfxpZN6r!
-Raw login: Email: Billie97@yahoo.com Pass: guG3Xxq9j4_GqQ2!
-Raw login: Email: Lupe_Predovic7@hotmail.com Pass: PH5tn3BTyAImgcJ!
-Raw login: Email: Clementine16@gmail.com Pass: 2Aibluin4HEqXvL!
-Raw login: Email: Ewell39@gmail.com Pass: 0vW1bClFkkrRB1x!
-Raw login: Email: Winston.Conn@gmail.com Pass: wd6p9gbVH3I32On!
-Raw login: Email: Taylor_Ankunding@hotmail.com Pass: UyJa8ZTEBNtOg6r!
-Raw login: Email: Krystina.Turner17@hotmail.com Pass: gT_Lyjv8iMkJBls!
-Raw login: Email: Rowland_Veum6@hotmail.com Pass: ZJw_BwW160ZUZI5!
-Raw login: Email: Ruben.Marks@hotmail.com Pass: rO15imj188_8Lke!
+Raw login: Email: Blake_Gleichner@gmail.com Pass: udHCyaQtfxpZN6r! Role: PATIENT
+Raw login: Email: Billie97@yahoo.com Pass: guG3Xxq9j4_GqQ2! Role: DOCTOR
+Raw login: Email: Lupe_Predovic7@hotmail.com Pass: PH5tn3BTyAImgcJ! Role: DOCTOR
+Raw login: Email: Clementine16@gmail.com Pass: 2Aibluin4HEqXvL! Role: PATIENT
+Raw login: Email: Ewell39@gmail.com Pass: 0vW1bClFkkrRB1x! Role: DOCTOR
+Raw login: Email: Winston.Conn@gmail.com Pass: wd6p9gbVH3I32On! Role: ADMIN
+Raw login: Email: Taylor_Ankunding@hotmail.com Pass: UyJa8ZTEBNtOg6r! Role: DOCTOR
+Raw login: Email: Krystina.Turner17@hotmail.com Pass: gT_Lyjv8iMkJBls! Role: DOCTOR
+Raw login: Email: Rowland_Veum6@hotmail.com Pass: ZJw_BwW160ZUZI5! Role: ADMIN
+Raw login: Email: Ruben.Marks@hotmail.com Pass: rO15imj188_8Lke! Role: PATIENT
 */

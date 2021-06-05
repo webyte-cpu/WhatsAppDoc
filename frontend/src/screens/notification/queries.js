@@ -6,6 +6,7 @@ query{
     uid	
     status
     dateTime
+    updatedAt
     clinic{
       address{
         address

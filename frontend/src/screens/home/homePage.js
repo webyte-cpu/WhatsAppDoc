@@ -8,7 +8,7 @@ import customStyle from "../../../themes/styles";
 import ResendForm from "./resendForm";
 import enums from "../../../helpers/enums";
 
-const HomePage = ({ navigation, route}) => {
+const HomePage = ({ navigation, route }) => {
   const { appState } = useAuth();
 
   return (
@@ -16,14 +16,18 @@ const HomePage = ({ navigation, route}) => {
       {appState.user.role === enums.role.DOCTOR &&
       appState.user.verificationStatus ===
         enums.verificationStatus.UNVERIFIED ? (
-        <ResendForm navigation={navigation}/>
+        <ResendForm navigation={navigation} />
       ) : (
         <></>
       )}
       <Text testID="welcome-header" category="h1" style={{ marginBottom: 10 }}>
         Welcome {appState.user.firstName}!
       </Text>
-      <Searchbar navigation={navigation} route={route} />
+      {appState.user.role === enums.role.PATIENT ? (
+        <Searchbar navigation={navigation} route={route} />
+      ) : (
+        <></>
+      )}
     </View>
   );
 };

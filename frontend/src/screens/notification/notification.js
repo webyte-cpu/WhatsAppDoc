@@ -7,7 +7,7 @@ import NotifCard from "./notifCard.js"
 import { useAuth } from "../auth/utils/authProvider";
 import enums from "../../../helpers/enums";
 
-const Notification = () => {
+const Notification = ( {navigation}) => {
 
     const { appState } = useAuth();
     const { loading, error, data } = useQuery(GET_APPOINTMENT, { pollInterval: 500 });
@@ -17,14 +17,14 @@ const Notification = () => {
         return <LoadingScreen />;
     }
 
-    // TODO: Proper error handling
     if (error) return `Error! ${error.message}`;
 
     let appointments = data.getAllAppointment
 
     if(user.role === enums.role.DOCTOR){
         appointments = appointments.filter((appointment) => {
-            return appointment.clinic.doctor.uid === user.uid && appointment.status === enums.status.PENDING
+            return appointment.clinic.doctor.uid === user.uid 
+            && appointment.status === enums.status.PENDING
         })
     }
 
@@ -32,6 +32,22 @@ const Notification = () => {
         appointments = appointments.filter((appointment) => {
             return appointment.patient.uid === user.uid && appointment.status !== enums.status.PENDING
         })
+    }
+
+    appointments = appointments.filter((appointment) => {
+        return appointment.status !== enums.status.ON_GOING || appointment.status !== enums.status.DONE
+    })
+
+
+    const timeElapsedCalculator = (dateTime) => {
+        const timeNow = new Date();
+        const timeUpdated = new Date(dateTime);
+
+        let timeDiff = timeNow - timeUpdated
+
+
+        return Math.round(timeDiff / 60000);
+
     }
     
 
@@ -51,7 +67,8 @@ const Notification = () => {
                         body = "your booking"
                     }
                     const date = new Date(appointment.dateTime);
-                    console.log(appointment.patient.uid === user.uid)
+
+
                     return (
                         <View>
                             <NotifCard
@@ -60,6 +77,9 @@ const Notification = () => {
                                 dateTime = {date.toUTCString()}
                                 clinic = {appointment.clinic.address.address}
                                 body = {body}
+                                updatedAt = {timeElapsedCalculator(appointment.updatedAt)}
+                                navigation ={navigation}
+
                              />
                         </View>
                     )

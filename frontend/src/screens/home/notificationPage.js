@@ -8,7 +8,7 @@ const NotificationPage = ({ navigation }) => {
   return (
     <View style={customStyle.content}>
       <Text>NOTIFICATION</Text>
-      <Notification />
+      <Notification navigation={navigation} />
     </View>
   )
 }
