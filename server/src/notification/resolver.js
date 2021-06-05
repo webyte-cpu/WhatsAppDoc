@@ -9,7 +9,6 @@ export default {
         throw new AuthenticationError("No authorization header found");
       }
       const response = await notification.get(user.uid);
-      console.log(response);
       return response;
     },
   },
@@ -44,9 +43,10 @@ export default {
   Subscription: {
     newNotification: {
       subscribe: (_, { userUid }, { pubsub, user }) => {
+        console.log(`subscription notification @${userUid || user.uid}`);
         const subscriptions = ["NOTIFICATION"];
         const triggers = subscriptions.map(
-          (subscription) => subscription + "_" + userUid || user.uid
+          (subscription) => subscription + "_" + (userUid || user.uid)
         );
         return pubsub.asyncIterator(triggers);
       },
