@@ -33,8 +33,8 @@ const openImagePickerAsync = async () => {
     if (pickerResult.cancelled) {
       return;
     }
-    console.log('uri',pickerResult.uri)
-    console.log( 'base64',pickerResult.base64)
+    // console.log('uri',pickerResult.uri)
+    // console.log( 'base64',pickerResult.base64)
 
 
     return compressImg(pickerResult.uri)
