@@ -26,6 +26,12 @@ const doctor = gql`
     educational: String
     rating: Int
   }
+
+  type VerificationMessage {
+    message: String
+    status: VerificationStatus
+  }
+
   input DoctorInput {
     licenceNum: String!
     licenceImg: String!
@@ -63,9 +69,16 @@ const doctor = gql`
       rating: Int
     ): Doctor
     deleteDoctor: Doctor
+    doctorVerification(
+      doctorUid: UUID!
+      status: VerificationStatus!
+      message: String
+    ): VerificationMessage
   }
-  # type Subcription {
-  # }
+
+  extend type Subscription {
+    doctorVerification(uid: UUID!): VerificationMessage
+  }
 `;
 
 export default doctor;

@@ -2,6 +2,7 @@ import objectFilter from "../helpers/objectFilter.js";
 import { v4 as uuidV4 } from "uuid";
 import pg from "../../db/index.js";
 import __ from "lodash";
+import findModel from "../helpers/find.js";
 
 const fromDb = (doctorData) => ({
   uid: doctorData.doctor_uid,
@@ -37,7 +38,7 @@ const create = async (doctorData, knex = pg) => {
 };
 const update = async (uid, doctorData, knex = pg) => {
   const dbResponse = await knex("doctors")
-    .where({ doctor_uid: doctorData.uid })
+    .where({ doctor_uid: uid||doctorData.uid })
     .update(
       objectFilter({
         doctor_licence_num: doctorData.licenceNum,
@@ -53,6 +54,27 @@ const update = async (uid, doctorData, knex = pg) => {
     .returning("*");
   return fromDb(__.first(dbResponse));
 };
+
+const find = findModel("doctors", (data) => ({
+  ...fromDb(data),
+    uid: data.user_uid,
+    firstName: data.user_first_name,
+    middleName: data.user_middle_name,
+    lastName: data.user_last_name,
+    email: data.user_email,
+    password: data.user_password,
+    birthdate: data.user_birthdate,
+    sex: data.user_sex,
+    role: data.user_role,
+    img: data.user_img
+}), toDb, pg, (knex) => {
+  
+  return knex.innerJoin("users", "user_uid", "doctor_uid")
+}
+
+);
+
+
 const get = async (uid, knex = pg) => {
   const dbResponse = await knex
     .select("*")
@@ -87,4 +109,4 @@ const remove = async (uid, knex = pg) => {
   return fromDb(__.first(dbResponse));
 };
 
-export default { create, update, get, remove };
+export default { create, update, get, remove, find };

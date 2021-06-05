@@ -16,6 +16,18 @@ const resolverMap = {
         console.error(error);
       }
     },
+    doctor: async (clinic, arg, { loader }) => {
+      if (__.isNull(clinic.doctorUid)) {
+        return null;
+      }
+      try {
+        const response = await loader.doctor.load(clinic.doctorUid);
+        console.log(response)
+        return __.first(response);
+      } catch (error) {
+        console.error(error);
+      }
+    },
     schedule: (clinic, arg, { loader }) => {
       if (__.isNull(clinic.doctorClinicUid)) {
         return null;
