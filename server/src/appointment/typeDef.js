@@ -7,6 +7,7 @@ export default gql`
     doctorClinicUid: UUID
     status: Status
     clinic: Clinic
+    patient: Patient
     dateTime: DateTime
     doctorRemarks: String
     createdAt: DateTime
