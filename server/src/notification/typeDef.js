@@ -32,6 +32,6 @@ export default gql`
   }
 
   extend type Subscription {
-    newNotification(userUid: UUID): Notification
+    newNotification(userUid: UUID): [Notification]
   }
 `;

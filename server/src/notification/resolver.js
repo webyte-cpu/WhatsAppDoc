@@ -18,35 +18,54 @@ export default {
         throw new AuthenticationError("No authorization header found");
       }
 
-      pubsub.publish("NOTIFICATION_" + arg.userUid, {
-        newNotification: arg,
-      });
-      const response = await notification.create(arg);
-      return response;
+      try {
+        const response = await notification.create(arg);
+        pubsub.publish("NOTIFICATION_" + arg.userUid, {
+          newNotification: await notification.get(arg.userUid),
+        });
+        return response;
+      } catch (error) {
+        console.error(error);
+      }
     },
     updateNotificationStatus: async (obj, arg, { user, pubsub }) => {
       if (__.isEmpty(user)) {
         throw new AuthenticationError("No authorization header found");
       }
-      const response = await notification.update(arg.uid, arg);
-      return response;
+      try {
+        const response = await notification.update(arg.uid, arg);
+        return response;
+      } catch (error) {
+        console.error(error);
+      }
     },
     archiveNotifications: async (obj, arg, { user, pubsub }) => {
       if (__.isEmpty(user)) {
         throw new AuthenticationError("No authorization header found");
       }
-
-      const response = await notification.archiveAll(arg);
-      return response;
+      try {
+        const response = await notification.archiveAll(arg);
+        return response;
+      } catch (error) {
+        console.error(error);
+      }
     },
   },
   Subscription: {
     newNotification: {
       subscribe: (_, { userUid }, { pubsub, user }) => {
-        console.log(`subscription notification @${userUid || user.uid}`);
+        const uid = userUid || user.uid;
+        console.log(`subscribe to notification @${uid}`);
         const subscriptions = ["NOTIFICATION"];
         const triggers = subscriptions.map(
-          (subscription) => subscription + "_" + (userUid || user.uid)
+          (subscription) => subscription + "_" + uid
+        );
+        setTimeout(
+          async () =>
+            pubsub.publish("NOTIFICATION_" + uid, {
+              newNotification: await notification.get(uid),
+            }),
+          0
         );
         return pubsub.asyncIterator(triggers);
       },

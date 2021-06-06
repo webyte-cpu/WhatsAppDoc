@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 import * as eva from "@eva-design/eva";
 import { EvaIconsPack } from "@ui-kitten/eva-icons";
 import { ApplicationProvider, IconRegistry } from "@ui-kitten/components";
@@ -9,7 +9,6 @@ import { StatusBar } from "expo-status-bar";
 import ApolloClientProvider from "./apolloClient";
 
 const App = () => {
-
   return (
     <>
       <AuthProvider>

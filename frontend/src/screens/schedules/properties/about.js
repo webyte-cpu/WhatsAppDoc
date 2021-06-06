@@ -64,11 +64,12 @@ const About = ({ route, navigation }) => {
 
   return (
     <ScrollView style={styles.container}>
-      <Formik initialValues={initialValues} validationSchema={clinicSchema}>
+      <Formik testID="formik" initialValues={initialValues} validationSchema={clinicSchema}>
         {({values: formValues}) => (
           <>
             <Text category="h6">Clinic Name</Text>
             <Field
+              testID="clinic-name"
               name="clinicName"
               component={CustomInput}
               submitOnChange={(values) => submitForm(values)}
@@ -77,6 +78,7 @@ const About = ({ route, navigation }) => {
 
             <Text category="h6">Consultation Fee</Text>
             <Field
+              testID="consultation-fee"
               name="consultationFee"
               component={CustomInput}
               accessoryLeft={() => prefix("PHP")}
@@ -87,6 +89,7 @@ const About = ({ route, navigation }) => {
 
             <Divider style={{ marginTop: 20 }} />
             <LocationMap
+              testID="location-map"
               locationCoords={initial.address.coordinates}
               submitForm={(values) => {
               const clone = R.clone(formValues)

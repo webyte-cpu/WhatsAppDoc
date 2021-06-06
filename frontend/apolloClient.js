@@ -1,5 +1,4 @@
 import { useAuth } from "./src/screens/auth/utils/authProvider";
-import { getData } from "./src/screens/auth/utils/handleData";
 import { setContext } from "@apollo/client/link/context";
 import { WebSocketLink } from "@apollo/client/link/ws";
 import { onError } from "@apollo/client/link/error";
@@ -27,6 +26,7 @@ if (!process.env.EXPO_IP_ADDRESS && Platform.OS !== "web")
 
 const ApolloClientProvider = ({ children }) => {
   const auth = useAuth();
+  let token = auth.appState.token;
 
   const httpLink = new HttpLink({
     uri: `http://${
@@ -40,6 +40,11 @@ const ApolloClientProvider = ({ children }) => {
     }:4000/subscriptions`,
     options: {
       reconnect: true,
+      timeout: 20000,
+      lazy: true,
+      connectionParams: {
+        Authorization: token ? `Bearer ${token}` : "",
+      },
     },
   });
 
@@ -76,7 +81,6 @@ const ApolloClientProvider = ({ children }) => {
   });
 
   const authLink = setContext(async (_, { headers }) => {
-    const token = await getData("token");
     return {
       headers: {
         ...headers,

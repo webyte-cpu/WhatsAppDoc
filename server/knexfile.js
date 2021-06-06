@@ -33,7 +33,7 @@ const knex = {
     connection: process.env.PG_TEST_CONNECTION_STRING,
     pool: { min: 0, max: 10, idleTimeoutMillis: 500 },
     seeds: {
-      directory: "./knex/seeds/test",
+      directory: "./knex/seeds/dev",
     },
     
   },
