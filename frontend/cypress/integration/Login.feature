@@ -6,8 +6,8 @@ Feature: Login
     Then the result is: "<result>"
 
     Examples:
-      | email                 | password     | result    |
-      | john.sm@gmail.com     | JohnSM123!   | logged in |
-      | doctorjames@gmail.com | JamesDoc123! | logged in |
-      | user@gmail.com        | user         | not found |
-      |                       |              | invalid   |
+      | email                       | password          | result    |
+      | Blake_Gleichner@gmail.com   | udHCyaQtfxpZN6r!  | logged in |
+      | Billie97@yahoo.com          | guG3Xxq9j4_GqQ2!  | logged in |
+      | testemail@hotmail.com       | user              | not found |
+      | Lupe_Predovic7@hotmail.com  | password          | invalid   |

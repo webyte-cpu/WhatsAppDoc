@@ -188,7 +188,7 @@ const ClinicPage = ({ navigation, route }) => {
                 placeholder="Enter clinic name"
                 autoCapitalize='sentences'
               />
-              <Button onPress={() => handleSubmit()}>Next</Button>
+              <Button testID="clinicNameBtn" onPress={() => handleSubmit()}>Next</Button>
             </Card>
           )}
         </Formik>

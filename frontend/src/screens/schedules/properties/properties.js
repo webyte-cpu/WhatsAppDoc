@@ -27,9 +27,9 @@ const TopTabBar = ({ navigation, state }) => {
       onSelect={(index) => navigation.navigate(state.routeNames[index])}
       style={{ backgroundColor: theme["color-primary-light"] }}
     >
-      <Tab title="About" style={customStyle.tabStyle} />
-      <Tab title="Availability" />
-      <Tab title="Limits" />
+      <Tab test-id="about-tab" title="About" style={customStyle.tabStyle} />
+      <Tab test-id="availability-tab" title="Availability" />
+      <Tab test-id="limits" title="Limits" />
     </TabBar>
   );
 };

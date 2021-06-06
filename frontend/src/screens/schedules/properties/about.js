@@ -78,7 +78,7 @@ const About = ({ route, navigation }) => {
 
             <Text category="h6">Consultation Fee</Text>
             <Field
-              textID="consultation-fee"
+              testID="consultation-fee"
               name="consultationFee"
               component={CustomInput}
               accessoryLeft={() => prefix("PHP")}

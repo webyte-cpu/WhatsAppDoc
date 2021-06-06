@@ -93,6 +93,7 @@ const ScheduleStackScreen = (props) => {
               })
               const [ saveClinic ] = useMutation(SAVE_CLINIC_MUTATION, {
                 onCompleted: async ({result}) => {
+                  console.log(result);
                   const newIntervals = intervalsToDB(values.intervals)
                   await saveSchedule({ variables: {doctorClinicUid: result.doctorClinicUid, schedList: newIntervals} })
                 },
@@ -144,6 +145,7 @@ const ScheduleStackScreen = (props) => {
               return (
                 <View>
                   <Button
+                  testID="scheduleSaveBtn"
                   appearance="filled"
                   size="small"
                     style={{ marginRight: 10, backgroundColor: "white" }}
