@@ -40,7 +40,7 @@ const enums = gql`
     PENDING
     VERIFIED
     UNVERIFIED
-    DECLINDED
+    DECLINED
   }
 
   enum DayOfTheWeek {

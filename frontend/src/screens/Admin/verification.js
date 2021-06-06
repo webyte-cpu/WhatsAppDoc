@@ -2,7 +2,7 @@ import React from "react";
 import { StyleSheet, View, Image, Platform, Linking } from "react-native";
 import { Button, Card, Modal, Text, useTheme } from "@ui-kitten/components";
 import { useMutation } from "@apollo/client";
-import { UPDATE_DOCTOR } from "./queries";
+import { GET_DOCTORS, UPDATE_DOCTOR } from "./queries";
 import enums from "../../../helpers/enums";
 
 const openLink = (url) => {
@@ -52,7 +52,7 @@ const Footer = ({ doctor, updateDoctorStatus, onHide }) => {
   };
 
   const denyBtn = () => {
-    updateDoctorStatus(doctor.uid, "UNVERIFIED");
+    updateDoctorStatus(doctor.uid, "DECLINED");
     onHide();
   };
 
@@ -74,18 +74,16 @@ const Footer = ({ doctor, updateDoctorStatus, onHide }) => {
   ) : (
     <></>
   );
-  // TODO: assess proper buttons
-  // (
-  //   <View {...props} style={styles.buttons}>
-  //     <Button onPress={() => updateDoctorStatus(doctor.uid, "PENDING")}>
-  //       Go to pending
-  //     </Button>
-  //   </View>
-  // );}
 };
 
 const DoctorDetails = ({ doctor, isShown, onHide }) => {
-  const [updateDoctor, { errorMutate }] = useMutation(UPDATE_DOCTOR);
+  const [updateDoctor] = useMutation(UPDATE_DOCTOR, {
+    onError: (err) => {
+      console.error(err);
+
+    },
+    refetchQueries: [{ query: GET_DOCTORS }]
+  });
   const updateDoctorStatus = (uidCode, verification) => {
     updateDoctor({
       variables: {
@@ -94,10 +92,6 @@ const DoctorDetails = ({ doctor, isShown, onHide }) => {
       },
     });
   };
-
-  if (errorMutate) {
-    console.log(errorMutate);
-  }
   
   return (
     <Modal
@@ -123,12 +117,12 @@ const DoctorDetails = ({ doctor, isShown, onHide }) => {
         <Image
           style={styles.image}
           source={{
-            uri: "http://newstogov.com/wp-content/uploads/2019/10/prc1.jpg",
+            uri: doctor.licenceImg,
           }}
         />
         <Text category="s1">
           Birthdate:
-          {/* <Text> {doctor.birthdate}</Text> */}
+          <Text> {doctor.birthdate}</Text>
         </Text>
         <Text category="s1">
           License Number:

@@ -1,4 +1,5 @@
 import { ApolloServer, PubSub } from "apollo-server-express";
+import { validateToken } from "./helpers/index.js";
 import resolvers from "./rootResolver/resolver.js";
 import typeDefs from "./rootTypeDef/typeDefs.js";
 import loader from "./helpers/loader.js";
@@ -21,8 +22,8 @@ app.use(
 );
 
 const pubsub = new PubSub();
-export const context = async ({ req }) => {
-  return { user: req?.user || {}, loader, pubsub };
+export const context = async ({ req, connection }) => {
+  return { user: req?.user || connection?.context.user || {}, loader, pubsub };
 };
 
 export const server = new ApolloServer({
@@ -32,8 +33,16 @@ export const server = new ApolloServer({
   subscriptions: {
     path: "/subscriptions",
     onConnect: (connectionParams, webSocket, context) => {
-      console.log("Connected!");
+      console.log("Connected!🌟");
+      if (connectionParams.Authorization) {
+        return {
+          user: validateToken(connectionParams.Authorization),
+        };
+      }
+
+      throw new Error("Missing auth token!");
     },
+
     onDisconnect: (webSocket, context) => {
       console.log("Disconnected!");
     },
@@ -58,5 +67,5 @@ export const startApolloServer = async () => {
   return { httpServer };
 };
 
-startApolloServer();
+startApolloServer()
 export { typeDefs, ApolloServer, resolvers };

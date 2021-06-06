@@ -1,6 +1,7 @@
 import React, { useContext, createContext, useState } from "react";
 import * as R from "ramda";
 import { intervalsToDB } from "../../../utils/convertData.js";
+import ScheduleStackScreen from "../../../navigation/navigatorStacks/scheduleStack.js";
 
 const initialState = {
   isLoading: false,
@@ -41,10 +42,12 @@ const useProvideForm = () => {
 
 const usePropertiesForm = () => useContext(FormContext);
 
-const PropertiesFormProvider = ({ children }) => {
+const PropertiesFormProvider = (props) => {
   const formContext = useProvideForm();
   return (
-    <FormContext.Provider value={formContext}>{children}</FormContext.Provider>
+    <FormContext.Provider value={formContext}>
+      <ScheduleStackScreen {...props} />
+    </FormContext.Provider>
   );
 };
 

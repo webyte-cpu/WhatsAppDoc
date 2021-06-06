@@ -14,6 +14,7 @@ const doctor = gql`
     img: String
     createdAt: DateTime
     updatedAt: DateTime
+    pushToken: String
     clinic: [Clinic]
 
     licenceNum: String!
@@ -59,6 +60,7 @@ const doctor = gql`
       rating: Int
     ): Doctor
     updateDoctor(
+      uid: UUID
       licenceNum: String
       licenceImg: String
       licenceExp: Date

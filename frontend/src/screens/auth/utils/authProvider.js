@@ -7,6 +7,7 @@ const initial = {
   appState: {
     isLoading: true,
     user: null,
+    token: null,
   },
   gqlError: { msg: "" },
 };
@@ -21,6 +22,7 @@ const reducer = (initial, action) => {
         appState: {
           ...initial.appState,
           user: action.payload.user,
+          token: action.payload.token,
         },
       };
     case ACTIONS.LOGOUT:
@@ -37,6 +39,7 @@ const reducer = (initial, action) => {
         appState: {
           isLoading: false,
           user: action.payload.user,
+          token: action.payload.token,
         },
       };
     case ACTIONS.SET_GQL_ERR:
@@ -61,13 +64,14 @@ const useProvideAuth = () => {
       if (token) {
         user = jwt_decode(token);
       }
-      const expiry = new Date(user?.exp * 1000)
-      const issuedAt = new Date(user?.iat * 1000)
-      if(Date.now() >= expiry) { // TODO: add refresh token
-        alert('Session expired, please login again.')
-        logout()
+      const expiry = new Date(user?.exp * 1000);
+      const issuedAt = new Date(user?.iat * 1000);
+      if (Date.now() >= expiry) {
+        // TODO: add refresh token
+        alert("Session expired, please login again.");
+        logout();
       }
-      dispatch({ type: ACTIONS.RETRIEVE, payload: { user } });
+      dispatch({ type: ACTIONS.RETRIEVE, payload: { user, token } });
     };
 
     retrieveToken();
@@ -76,7 +80,7 @@ const useProvideAuth = () => {
   const login = async (token) => {
     await storeData("token", token);
     const user = jwt_decode(token);
-    dispatch({ type: ACTIONS.LOGIN, payload: { user } });
+    dispatch({ type: ACTIONS.LOGIN, payload: { user, token } });
   };
 
   const logout = async () => {

@@ -18,6 +18,7 @@ const fromDb = (userData) => ({
   img: userData.user_img,
   createdAt: userData.created_at,
   updatedAt: userData.updated_at,
+  pushToken: userData.user_push_token
 });
 
 const toDb = (userData) => ({
@@ -34,6 +35,7 @@ const toDb = (userData) => ({
   user_img: userData.img,
   created_at: userData.createdAt,
   updated_at: userData.updatedAt,
+  user_push_token: userData.pushToken
 });
 
 const find = async (object, knex = pg) =>
@@ -95,11 +97,12 @@ const update = async (userData, knex = pg) => {
         user_email: userData.email,
         user_password: userData.password,
         user_role: userData.role,
+        user_push_token: userData.pushToken,
         updated_at: new Date(Date.now()),
       })
     )
     .returning("*");
-
+  console.log(dbResponse)
   return fromDb(__.first(dbResponse));
 };
 
