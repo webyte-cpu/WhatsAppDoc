@@ -93,13 +93,9 @@ const About = ({ route, navigation }) => {
               const data = R.mergeDeepRight(clone, {coordinates: values})
               console.log(data)
               console.log(formValues, "FORM")
-              // return submitForm(data)
               form.setValues({address: {coordinates: values}})
-
-              
               }} />
-            {/* <LocationMap setLocationCoords={(values) => console.log({...formValues, coordinates: values}, 'mappVal')}/> */}
-
+              
             <View>
               <Field
                 submitOnChange={(values) => submitForm(values)}
