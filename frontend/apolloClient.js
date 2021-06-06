@@ -14,6 +14,13 @@ import {
   split,
 } from "@apollo/client";
 import { getMainDefinition } from "@apollo/client/utilities";
+import * as Location from 'expo-location';
+
+if (!process.env.GOOGLE_API_KEY) {
+  throw new Error("No GOOGLE_API_KEY provided") 
+} else {
+  Location.setGoogleApiKey(process.env.GOOGLE_API_KEY)
+}
 
 if (!process.env.EXPO_IP_ADDRESS && Platform.OS !== "web")
   throw new Error("No expo ip provided");
