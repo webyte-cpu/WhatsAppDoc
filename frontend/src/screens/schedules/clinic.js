@@ -22,18 +22,22 @@ import { DELETE_CLINIC, GET_CLINICS } from "./utils/queries";
 import LoadingScreen from "../../components/loadingScreen";
 import { clinicDataFromDB, intervalsFromDB } from "../../utils/convertData";
 import { useAuth } from "../auth/utils/authProvider";
-import * as R from 'ramda';
+import * as R from "ramda";
+import NoticeMsg from "./utils/noticeMsg";
+import enums from "../../../helpers/enums";
 
 const DeleteIcon = (props) => {
   const { appState } = useAuth();
   const [deleteClinic] = useMutation(DELETE_CLINIC, {
-    refetchQueries: [{
-      query: GET_CLINICS, 
-      variables: {
-        doctorUid: appState.user.uid
-      }
-    }]
-  })
+    refetchQueries: [
+      {
+        query: GET_CLINICS,
+        variables: {
+          doctorUid: appState.user.uid,
+        },
+      },
+    ],
+  });
 
   const [visible, setVisible] = useState(false);
   const FooterBtns = () => {
@@ -54,7 +58,9 @@ const DeleteIcon = (props) => {
         </Button>
         <Button
           testID="deleteBtn"
-          onPress={async () => await deleteClinic({ variables: {uid: props.uid }})}
+          onPress={async () =>
+            await deleteClinic({ variables: { uid: props.uid } })
+          }
           style={{ marginLeft: 5 }}
         >
           Delete
@@ -131,7 +137,7 @@ const goToProperties = (navigation, initialValues, form) => {
 const ClinicPage = ({ navigation, route }) => {
   const { appState } = useAuth();
   const { loading, error, data } = useQuery(GET_CLINICS, {
-    variables: { doctorUid: appState.user.uid }
+    variables: { doctorUid: appState.user.uid },
   });
   const form = usePropertiesForm();
   const [openModal, setOpenModal] = useState(false);
@@ -183,7 +189,7 @@ const ClinicPage = ({ navigation, route }) => {
                 name="clinicName"
                 label="Clinic Name"
                 placeholder="Enter clinic name"
-                autoCapitalize='sentences'
+                autoCapitalize="sentences"
               />
               <Button onPress={() => handleSubmit()}>Next</Button>
             </Card>
@@ -199,11 +205,10 @@ const ClinicPage = ({ navigation, route }) => {
 
   if (error) {
     console.error(error);
-    return null
+    return null;
   }
 
   if (data) {
-    
     const RenderClinic = ({ item, index }) => {
       if (error) {
         console.log(error);
@@ -215,10 +220,10 @@ const ClinicPage = ({ navigation, route }) => {
       }
 
       let intervals = item.schedule;
-      if(item.schedule != null) {
+      if (item.schedule != null) {
         intervals = intervalsFromDB(item.schedule);
       }
-      const clinicData = { ...(R.omit(['schedule'], item)), intervals};
+      const clinicData = { ...R.omit(["schedule"], item), intervals };
       const formattedData = clinicDataFromDB(clinicData); // final data for frontend
       return clinicData !== null ? (
         <>
@@ -227,7 +232,11 @@ const ClinicPage = ({ navigation, route }) => {
             testID={`clinic-${index}`}
             title={`${formattedData.clinicName}`}
             accessoryRight={(props) => (
-              <DeleteIcon {...props} clinic={formattedData.clinicName} uid={formattedData.uid} />
+              <DeleteIcon
+                {...props}
+                clinic={formattedData.clinicName}
+                uid={formattedData.uid}
+              />
             )}
             onPress={() => {
               goToProperties(navigation, formattedData, form);
@@ -242,6 +251,12 @@ const ClinicPage = ({ navigation, route }) => {
 
     return (
       <ScrollView style={customStyle.listBackground}>
+        {appState.user.verificationStatus !==
+        enums.verificationStatus.VERIFIED ? (
+          <NoticeMsg navigation={navigation} />
+        ) : (
+          <></>
+        )}
         <View>
           <List
             testID="clinicList"
