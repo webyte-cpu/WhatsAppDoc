@@ -66,6 +66,7 @@ const DeleteIcon = (props) => {
   const DeleteModal = () => {
     return (
       <Modal
+        testID="delete-clinic-modal"
         visible={visible}
         style={customStyle.modalContainer}
         backdropStyle={customStyle.backdrop}
@@ -165,12 +166,14 @@ const ClinicPage = ({ navigation, route }) => {
   const NewClinicModal = () => {
     return (
       <Modal
+        testID="new-clinic-modal"
         visible={openModal}
         style={customStyle.modalContainer}
         backdropStyle={customStyle.backdrop}
         onBackdropPress={() => setOpenModal(false)}
       >
         <Formik
+          testID="formik"
           initialValues={clinicDetails}
           validationSchema={clinicNameSchema}
           onSubmit={(values) => sendData(values)}

@@ -12,7 +12,7 @@ const seed = function (knex) {
         
         },
         {
-          doctor_specialization_uid: '397a53af-2f17-4c01-b180-a2a135399e8',
+          doctor_specialization_uid: '87124197-fda4-4d70-b19d-7f5b6982bc37',
           specialization_uid: 'ea0d0824-0f36-492d-a954-04a4f1a700a1',
           doctor_uid: '3a238cae-f2af-4d4b-bb34-252215b5272e',
          

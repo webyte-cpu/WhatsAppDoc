@@ -134,6 +134,7 @@ const Availability = ({ navigation, route }) => {
       {intervals.map((interval, intervalIndex) => {
         return (
           <IntervalForm
+            testID="interval-form"
             key={`interval-${intervalIndex}`}
             interval={interval}
             intervalIndex={intervalIndex}

@@ -8,7 +8,8 @@
     "eject": "expo eject",
     "cypress": "npx cypress open",
     "test": "jest",
-    "postinstall": "patch-package"
+    "postinstall": "patch-package",
+    "migration": "cd .. && cd server && npm run migration"
   },
   "dependencies": {
     "@apollo/client": "^3.3.13",
