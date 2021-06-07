@@ -29,7 +29,8 @@ const linking = {
       Notification: "/notif",
       Profile: "/profile",
       DoctorForm: "/resendform",
-      AppointmentProperties: '/properties'
+      AppointmentProperties: '/properties',
+      Request: '/requests',
     },
   },
 };

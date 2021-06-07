@@ -80,7 +80,15 @@ const customStyle = StyleSheet.create({
     paddingVertical: 3,
     borderRadius: 5, 
     marginRight: 10
-  }
+  },
+  daysCard: {
+    flex: 1,
+    justifyContent: 'center',
+    width: 1,
+    height: 3,
+    background: '#4A40D5',
+    borderRadius: 1,
+  },
 });
 
 export default customStyle;
