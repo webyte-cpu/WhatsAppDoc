@@ -19,6 +19,7 @@ import customStyle from "../../../themes/styles";
 import enums from "../../../helpers/enums";
 import LoadingScreen from "../../components/loadingScreen";
 import ProfileIcon from "../../components/profileIcon";
+import EmptyListText from "../../components/emptyListText";
 
 const { Navigator, Screen } = createMaterialTopTabNavigator();
 
@@ -127,11 +128,11 @@ const Admin = () => {
       <></>
     );
 
-    const EmptyListText = () => (
-      <View style={{flex: 1, justifyContent: 'center', alignItems:'center'}}>
-        <Text appearance="hint" category="s1">Nothing to Display</Text>
-      </View>
-    )
+    // const EmptyListText = () => (
+    //   <View style={{flex: 1, justifyContent: 'center', alignItems:'center'}}>
+    //     <Text appearance="hint" category="s1">Nothing to Display</Text>
+    //   </View>
+    // )
 
   const PendingScreen = () => {
     const data = filterByStatus(enums.verificationStatus.PENDING)
