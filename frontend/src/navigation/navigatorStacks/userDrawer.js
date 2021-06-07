@@ -8,10 +8,11 @@ import Icons from "../../utils/icons";
 import DrawerStack from "./drawerStack";
 import ProfileStackScreen from "./profileStack";
 import TabStack from "./tabStack";
+import RequestStackScreen from "./requestStack"
 
 const UserDrawer = createDrawerNavigator();
 
-const ClickableProfileHeader = ({navigation}) => (
+const ClickableProfileHeader = ({ navigation }) => (
   <TouchableOpacity
     activeOpacity={0.5}
     onPress={() => navigation.navigate("ProfileStack")}
@@ -34,7 +35,8 @@ const DrawerContent = (props) => {
       footer={() => <DrawerItem title="Logout" onPress={() => auth.logout()} accessoryLeft={Icons.LOGOUT} />}
     >
       <DrawerItem title="Home" accessoryLeft={Icons.HOME} />
-      <DrawerItem title="Profile" accessoryLeft={Icons.PROFILE}/>
+      <DrawerItem title="Profile" accessoryLeft={Icons.PROFILE} />
+      <DrawerItem title="Request" accessoryLeft={Icons.REQUEST} />
     </Drawer>
   );
 };
@@ -51,6 +53,11 @@ const UserDrawerStack = () => {
         name="ProfileStack"
         component={ProfileStackScreen}
         options={{ title: "Profile" }}
+      />
+      <UserDrawer.Screen
+        name="RequestPage"
+        component={RequestStackScreen}
+        options={{ title: "Request" }}
       />
     </>
   );

@@ -74,6 +74,14 @@ const customStyle = StyleSheet.create({
     marginHorizontal:25, 
     paddingVertical:10
   },
+  daysCard: {
+    flex: 1,
+    justifyContent: 'center',
+    width: 1,
+    height: 3,
+    background: '#4A40D5',
+    borderRadius: 1,
+  },
 });
 
 export default customStyle;
