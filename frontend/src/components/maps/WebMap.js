@@ -5,50 +5,38 @@ import * as Location from "expo-location";
 import { WebView } from "react-native-web-webview";
 import { Field } from 'formik';
 import { CustomInput } from "../customInput";
+import { fetchLocation } from "./mapUtils";
 
-const GOOGLE_API_KEY = 'AIzaSyD6jR5RvAaq4VaRSDCd9jrdh9U8j6ErKkg';
 const defaultLocation = "CPU Iloilo";
 
 export default function WebMap({isViewMode = false, locationCoords, setLocationCoords}) {
   const [location, setLocation] = useState({ lat: 0, lng: 0 });
-  // const [queryLocation, setQueryLocation] = useState({ lang: 0, lat: 0 });
-  // const [errorMsg, setErrorMsg] = useState(null);
   const [query, setQuery] = useState("");
-  // const [placeId, setPlaceId] = useState("");
-  const geoDecode = async (query) => {
-    const response = await fetch(
-      `https://maps.googleapis.com/maps/api/geocode/json?${query.replace(" ","+")}&key=${GOOGLE_API_KEY}`
-    );
-    const parseRes = await response.json();
-    return parseRes
-  }
-  
+
   const setCoordinates = (locationCoords) => {
     const [lat, lng] = locationCoords.split(',').map((e) => Number(e))
     return setLocation({lat, lng});
   }
 
-
-  const fetchLocation = async () => {
-    let { status } = await Location.requestPermissionsAsync();
-    if (status !== "granted") {
-      fetchPlaceId(defaultLocation)
-      return
-    }
-
-    let {coords} = await Location.getCurrentPositionAsync({ accuracy: 6 });
-    setLocation({lat: coords.latitude, lng: coords.longitude});
-  };
-
   const fetchPlaceId = async (query) => {
-    const placeID = await geoDecode(`address=${query}`)
-    setLocation(placeID.results[0].geometry.location);
+    const [latLng] = await Location.geocodeAsync(query.replace(" ","+"), { useGoogleMaps: true })
+    setLocation({lat: latLng.latitude, lng: latLng.longitude});
   };
+
+  const getLocation = async () => {
+    if(!isViewMode && !locationCoords) { // if edit mode and no provided location
+      const location = await fetchLocation()
+      if(!location) {
+        return fetchPlaceId(defaultLocation)
+      }
+
+      const {coords} = location
+      return setLocation({lat: coords.latitude, lng: coords.longitude});
+    }
+  }
 
   useEffect(() => {
-    if(!isViewMode && !locationCoords) { // if edit mode and no provided lcato
-      fetchLocation()
-    }
+    getLocation()
 
     if(locationCoords) {
       setCoordinates(locationCoords)
@@ -56,7 +44,9 @@ export default function WebMap({isViewMode = false, locationCoords, setLocationC
   }, []);
 
   useEffect(() => {
-    setLocationCoords(`${location.lat},${location.lng}`)
+    if(setLocationCoords) {
+      setLocationCoords(`${location.lat},${location.lng}`)
+    }
   }, [location])
 
   console.log(location, 'Location')
@@ -103,19 +93,19 @@ export default function WebMap({isViewMode = false, locationCoords, setLocationC
           <GmapsLink />
         </>
       )}
-      <View>
+      <View style={{border: '1px solid #d8d8d8', width: 450, height: 322}}>
         <WebView
-          style={{width: 450, height: 350}}
+          style={{width: '100%', height: '100%'}}
           originWhitelist={["*"]}
           source={{
             html: `
               <iframe
-              width="400"
+              width="100%"
               height="300"
               style="border:0"
               loading="lazy"
               allowfullscreen
-              src="https://www.google.com/maps/embed/v1/view?key=${GOOGLE_API_KEY}&center=${location.lat},${location.lng}&zoom=16 ">
+              src="https://www.google.com/maps/embed/v1/view?key=${process.env.GOOGLE_API_KEY}&center=${location.lat},${location.lng}&zoom=16 ">
           </iframe>
               `,
           }}

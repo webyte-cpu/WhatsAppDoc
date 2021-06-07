@@ -3,43 +3,37 @@ import React, { useState, useEffect } from 'react';
 import { StyleSheet, View, Dimensions } from 'react-native';
 import MapView from 'react-native-maps';
 import * as Location from 'expo-location';
+import { fetchLocation } from './mapUtils';
 
 export default function AndroidMap({ isViewMode = false, locationCoords, setLocationCoords }) {
 
-  const [location, setLocation] = useState({ latitude: 10.7184083, longitude: 122.5485867 });
-
-  const fetchLocation = async () => {
-    let { status } = await Location.requestPermissionsAsync();
-    if (status !== 'granted') {
-      setErrorMsg('Permission to access location was denied');
-      return;
-    }
-
-
-    let location = await Location.getCurrentPositionAsync({ accuracy: 6 });
-    console.log(location["latitude"])
-    console.log(location["longitude"])
-    setLocation(location);
-  }
-
+  const [location, setLocation] = useState({ latitude: 10.731395, longitude: 122.5469074 });
 
   const setCoordinates = (locationCoords) => {
     const [latitude, longitude] = locationCoords.split(',').map((e) => Number(e))
     return setLocation({latitude, longitude});
   }
 
-  useEffect(() => {
-    if(!isViewMode && !locationCoords) { // if edit mode and no provided lcato
-      fetchLocation()
-    }
+  const getLocation = async () => {
+    if(!isViewMode && !locationCoords) { // if edit mode and no provided location
+      const location = await fetchLocation()
+  
+      if(location) {
+        const {coords} = location
+        setLocation({ latitude: coords.latitude, longitude: coords.longitude })
+      }
+    }  
+  }
 
+  useEffect( () => {
+    getLocation()
+    
     if(locationCoords) {
       setCoordinates(locationCoords)
     }
   },[]);
 
   useEffect(() => {
-    console.log(location, 'LOCATION')
     setLocationCoords(`${location.latitude},${location.longitude}`)
   }, [location])
 
