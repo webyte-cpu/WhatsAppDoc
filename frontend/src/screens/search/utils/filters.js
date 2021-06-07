@@ -5,4 +5,4 @@ const FILTER_BY = {
 
 const searchFilters = Object.keys(FILTER_BY);
 
-export {FILTER_BY, searchFilters};
+export {FILTER_BY, searchFilters };

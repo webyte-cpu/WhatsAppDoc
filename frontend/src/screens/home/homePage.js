@@ -31,11 +31,12 @@ const HomePage = ({ navigation, route }) => {
       <Text testID="welcome-header" category="h1" style={{ marginBottom: 10 }}>
         Welcome {appState.user.firstName}!
       </Text>
-      {appState.user.role === enums.role.PATIENT ? (
+      {/* {appState.user.role === enums.role.PATIENT ? (
         <Searchbar navigation={navigation} route={route} />
       ) : (
         <></>
-      )}
+      )} */}
+       <Searchbar navigation={navigation} route={route} />
       <Button onPress={() => 
         pushNotification('Ayesha',expoPushToken,'Hospital','June 5, 2020 21:00:00', 'denyLicense')} >
           Notify
