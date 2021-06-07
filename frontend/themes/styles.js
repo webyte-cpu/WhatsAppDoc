@@ -13,7 +13,7 @@ const customStyle = StyleSheet.create({
   },
   contentFill: {
     paddingTop: 10,
-    paddingHorizontal: 10,
+    paddingHorizontal: 20,
     backgroundColor: '#fff',
     flex: 1,
   },
@@ -74,6 +74,13 @@ const customStyle = StyleSheet.create({
     marginHorizontal:25, 
     paddingVertical:10
   },
+  clinicBtn: {
+    backgroundColor: '#edf1fa', 
+    paddingHorizontal: 8, 
+    paddingVertical: 3,
+    borderRadius: 5, 
+    marginRight: 10
+  }
 });
 
 export default customStyle;
