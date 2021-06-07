@@ -4,7 +4,7 @@ import { ImageBackground, StyleSheet } from "react-native";
 import { useAuth } from "../screens/auth/utils/authProvider";
 
 //TODO: handle profile image
-const ProfileIcon = ({ profileImg, firstName, lastName, dimensions = {width: 56, height: 56}}) => {
+const ProfileIcon = ({ profileImg, firstName, lastName, shape = 'round', dimensions = {width: 56, height: 56}}) => {
   const theme = useTheme();
 
   const styles = StyleSheet.create({
@@ -25,7 +25,7 @@ const ProfileIcon = ({ profileImg, firstName, lastName, dimensions = {width: 56,
   return (
     <Avatar
       ImageComponent={ImageBackground}
-      shape="round"
+      shape={shape}
       style={styles.avatar}
     >
       <Text style={styles.text}>
