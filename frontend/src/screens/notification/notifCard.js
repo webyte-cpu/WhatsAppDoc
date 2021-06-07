@@ -70,7 +70,7 @@ const styles = StyleSheet.create({
     button: {
       marginBottom: 30,
       width: "100%",
-      alignItems: 'left',
+      alignItems: 'flex-start',
       backgroundColor: 'white'
     },
     buttonText: {
