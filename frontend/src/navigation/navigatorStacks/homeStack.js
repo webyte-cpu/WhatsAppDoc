@@ -8,6 +8,8 @@ import HomePage from '../../screens/home/homePage';
 import DoctorForm from '../../screens/home/doctorForm'
 import SearchPage from '../../screens/search/searchPage';
 import breakpoints from '../../utils/breakpoints';
+import BookingScreen from '../../screens/booking/bookAppointment';
+import DoctorInfo from '../../screens/booking/doctorInfo';
 
 const HomeStack = createStackNavigator();
 
@@ -32,6 +34,14 @@ const HomeStackScreen = (props) => {
       <HomeStack.Screen
         name={AppRoute.SEARCH}
         component={SearchPage}
+      />
+       <HomeStack.Screen
+        name={AppRoute.DOCTOR_INFO}
+        component={DoctorInfo}
+      />
+      <HomeStack.Screen
+        name={AppRoute.BOOKING}
+        component={BookingScreen}
       />
     </HomeStack.Navigator>
   );
