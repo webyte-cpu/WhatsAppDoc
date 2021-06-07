@@ -2,10 +2,10 @@ import React from "react";
 import { Spinner } from "@ui-kitten/components";
 import { View } from "react-native";
 
-const LoadingScreen = () => {
+const LoadingScreen = ({size = 'giant'}) => {
   return (
     <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
-      <Spinner testID="loading" status="primary" size="giant"></Spinner>
+      <Spinner testID="loading" status="primary" size={size}></Spinner>
     </View>
   );
 };
