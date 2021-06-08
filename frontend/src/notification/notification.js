@@ -1,8 +1,9 @@
 import React, { useState, useEffect, useRef } from "react";
 import * as Notifications from 'expo-notifications';
-import getTrigger from './trigger';
 import { navigate } from '../navigation/rootNavigation'
 import {AppRoute} from '../navigation/app-routes'
+import getTrigger from './trigger';
+import getSchedule from './getSchedule'
 
 //using this function you can set a callback that will decide whether the notification should be shown to the user or not
 //set the handler that will cause the notification to show the alert
@@ -15,21 +16,16 @@ Notifications.setNotificationHandler({
 });
 
 function useNotifications(){
-  const [notification, setNotification] = useState(false);
   const notificationListener = useRef();
   const responseListener = useRef();
-  // const [expoPushToken, setExpoPushToken] = useState('');
 
   useEffect(() => {
-
-    // registerForPushNotificationsAsync()
-    // .then(token => setExpoPushToken(token)) //add mutation here to add pushtoken to users table
-    // .catch(err => console.log('err',err));
-
     //Listeners registered by this method will be called whenever a notification is received while the app is running.
     notificationListener.current = Notifications.addNotificationReceivedListener( notification => {
-      console.log(notification.request.content) 
-      // setNotification(notification);
+      const data = notification.request.content.data
+        if(notification.request.content.title === 'Confirmed Booking Appointment'){
+          schedulePushNotification(data.user, data.schedule, data.clinic, data.navigate)
+        }
     });
     
     //Listeners registered by this method will be called whenever a user interacts with a notification (eg. taps on it).
@@ -47,8 +43,11 @@ function useNotifications(){
   }, []);
 }
 
-function pushNotification(user, pushToken, clinic,schedule,type){
-  let content = { recipient:pushToken };
+function pushNotification( user, pushToken, clinic, date, time, type ){
+  const doctor = user.doctor
+  const patient = user.patient
+  const schedule = getSchedule(date,time)
+  let content = { recipient:pushToken, clinic:clinic, schedule:schedule };
 
   switch(type){
     case 'verifyLicense' : 
@@ -62,20 +61,20 @@ function pushNotification(user, pushToken, clinic,schedule,type){
       break;
     case 'confirmAppointment':
       content.title = 'Confirmed Booking Appointment'
-      content.body = `${user} confirmed your booking at ${clinic} on ${schedule}.`
+      content.body = `${doctor} confirmed your booking at ${clinic} on ${schedule}.`
+      content.user = doctor
       content.screen = AppRoute.SCHEDULE
-      schedulePushNotification(user,clinic,schedule,screen)
+      schedulePushNotification(patient,clinic,schedule,AppRoute.SCHEDULE)
       break;
     case 'cancelAppointment':
       content.title = 'Cancelled Booking Appointment'
-      content.body = `${user} cancelled your booking at ${clinic} on ${schedule}.`
-      // content.screen = AppRoute.REQUEST
+      content.body = `${doctor} cancelled your booking at ${clinic} on ${schedule}.`
+      content.screen = AppRoute.REQUEST
       break;
     case 'requestAppointment':
       content.title = 'Requesting Booking Appointment'
-      content.body = `${user} requested an appointment at ${clinic} on ${schedule}`
-     // content.screen = AppRoute.REQUEST
- 
+      content.body = `${patient} requested an appointment at ${clinic} on ${schedule}`
+     content.screen = AppRoute.REQUEST
       break;
   }
   return sendPushNotification(content)
@@ -87,13 +86,17 @@ async function sendPushNotification(content) {
   const title = content.title
   const body = content.body
   const screen = content.screen
+  const user = content.user
+  const clinic = content.clinic
+  const schedule = content.schedule
 
   const message = {
     to: recipient,
     sound: 'default',
     title: title,
     body: body,
-    data: {navigate:screen}
+    data: { user:user, clinic:clinic, schedule:schedule, navigate:screen },
+    priority:'high'
   };
 
   await fetch('https://exp.host/--/api/v2/push/send', {
@@ -108,11 +111,11 @@ async function sendPushNotification(content) {
 }
 
 //booking → notify self/reminder
-async function schedulePushNotification( doctor, clinic, schedule, screen ) {
+async function schedulePushNotification( user, clinic, schedule, screen ) {
   await Notifications.scheduleNotificationAsync({
     content: {
       title: 'Appointment in an hour!',
-      body: `You have an appointment with Doctor ${doctor} at ${clinic} on ${schedule}`,
+      body: `You have an appointment with ${user} at ${clinic} on ${schedule}`,
       data: {navigate:screen}
     },
     trigger: {seconds:5}, 
@@ -134,17 +137,16 @@ async function registerForPushNotificationsAsync() {
       finalStatus = status;
     }
 
-    //if no permission, exit function
+    //if no permission, return null
     if (finalStatus !== 'granted') {
-      alert('Failed to get push token for push notification!');
-      return;
+      token = null
+    }else{
+      token = (await Notifications.getExpoPushTokenAsync()).data;
     }
 
-    //getExpoPushTokenAsync is used with Expo's push notification service, for other push services like APNS and FCM, use getDevicePushTokenAsync()
-    token = (await Notifications.getExpoPushTokenAsync()).data;
     console.log(token);
-    // POST the token to your backend server from where you can retrieve it to send push notifications.
     return token;
 }
+
 
 export {useNotifications, pushNotification, registerForPushNotificationsAsync}

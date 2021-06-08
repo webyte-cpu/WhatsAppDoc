@@ -8,16 +8,30 @@ import customStyle from "../../../themes/styles";
 import ResendForm from "./resendForm";
 import enums from "../../../helpers/enums";
 import {pushNotification, registerForPushNotificationsAsync} from '../../notification/notification'
+import { useMutation } from "@apollo/client";
+import { UPDATE_USER } from './queries'
 
 const HomePage = ({ navigation, route }) => {
   const { appState } = useAuth();
-  const [expoPushToken, setExpoPushToken] = useState('');
-  
-  useEffect(() => {
-    registerForPushNotificationsAsync()
-    .then(token => setExpoPushToken(token)) //add mutation here to add pushtoken to users table
-    .catch(err => console.log('err',err));
-  }, []);
+    const [expoPushToken, setExpoPushToken] = useState('');
+  // const [ updateUser, { errorMutate }] = useMutation(UPDATE_USER);
+  // const updateUserPushToken = (uid, pushToken) => {
+  //   updateUser({
+  //     variables: {
+  //       uid: uid,
+  //       pushToken: pushToken,
+  //     },
+  //   });
+  // };
+
+  // if (errorMutate) {
+  //   console.log(errorMutate);
+  // }
+
+  registerForPushNotificationsAsync()
+  .then(token => setExpoPushToken(token)) 
+  .catch(err => console.log('err',err));
+
 
   return (
     <View style={customStyle.contentFill}>
@@ -38,7 +52,7 @@ const HomePage = ({ navigation, route }) => {
       )} */}
        <Searchbar navigation={navigation} route={route} />
       <Button onPress={() => 
-        pushNotification('Ayesha',expoPushToken,'Hospital','June 5, 2020 21:00:00', 'denyLicense')} >
+        pushNotification({doctor:'ayesha', patient:'wex'},expoPushToken,'Hospital','June 5, 2020', '7:30 - 8:00 pm', 'confirmAppointment')} >
           Notify
       </Button>
     </View>
