@@ -113,3 +113,27 @@ export const DELETE_CLINIC = gql`
     }
   }
 `
+
+export const GET_ALL_APPOINTMENT = gql`
+  query{
+    getAllAppointment{
+      uid	
+      status
+      dateTime
+      updatedAt
+      clinic{
+        name
+        address{
+          address
+        }
+        doctor{
+          firstName
+        }
+      }
+      patient{
+        uid
+        firstName
+      }
+    }
+  }
+`
