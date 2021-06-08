@@ -18,7 +18,6 @@ import {
 } from "@ui-kitten/components";
 import { useQuery } from '@apollo/client';
 import customStyle from "../../../themes/styles";
-import { GET_DOCTORS } from '../search/doctors/queries'
 import enums from "../../../helpers/enums";
 import TimeAgo from 'javascript-time-ago'       //https://github.com/catamphetamine/javascript-time-ago
 import en from 'javascript-time-ago/locale/en'
@@ -27,30 +26,8 @@ import en from 'javascript-time-ago/locale/en'
 
 const RequestPatientPage = ({ navigation }) => {
     const { appState } = useAuth();
-    TimeAgo.addDefaultLocale(en)
+    TimeAgo.addLocale(en)
 
-    // const { loading, error, data } = useQuery(GET_DOCTORS, { pollInterval: 500 });
-    // const [ doctors, setDoctors] = useState([{hello:"hello"}])
-
-    // if (loading) return 'Loading...';
-    // if (error) return `Error! ${error.message}`;
-
-    // const dataDoctors = data.getDoctor
-    // console.log(dataDoctors)
-    // console.log(typeof(Doctors))
-
-    // return (
-    //     <View>
-    //       <Text>Test Component</Text>
-
-    //       {
-    //         doctors.map( (doctor) => {
-    //           <Text>Helllllllo</Text>
-    //         })
-    //       }
-    //     </View>
-
-    // );
     const theme = useTheme();
 
     const docData = [
@@ -60,8 +37,8 @@ const RequestPatientPage = ({ navigation }) => {
         { firstName: 'Snow', lastName: 'Bhie', clinic: 'Clinic Nila', createdAt: '2021-3-24', appointmentDateTime: '2021-3-28 08:32:00', status: 'Accepted' },
     ]
 
-    const LocationIcon = (...props) => <Icon {...props} style={[props.style, { width: 15, height: 15 }]} fill='#000045' name='navigation-2-outline' />
-    const TimeIcon = (...props) => <Icon {...props} style={[props.style, { width: 15, height: 15 }]} fill='#000045' name='clock-outline' />
+    const LocationIcon = (...props) => <Icon {...props} style={[props.style, { width: 15, height: 15, padding: 5 }]} fill='#000045' name='navigation-2-outline' />
+    const TimeIcon = (...props) => <Icon {...props} style={[props.style, { width: 15, height: 15, padding: 5 }]} fill='#000045' name='clock-outline' />
     const Time = (item) => { return (<View><TimeIcon />{item.time}</View>) }
 
     const GetWeekDays = ({ date }) => {
@@ -157,9 +134,6 @@ const RequestPatientPage = ({ navigation }) => {
 
 
     const RenderAccessoryRight = ({ item }) => {
-        const acceptBtn = () => {
-            onHide();
-        };
 
         return (
             <View style={{ padding: 2 }}>
@@ -191,7 +165,7 @@ const RequestPatientPage = ({ navigation }) => {
         const getTime = `${hours}:${minutes} ${am_pm}`
         return (
             <View>
-                <Text>{getTime}</Text>
+                <Text style={{ fontSize: 15}}>{getTime}</Text>
             </View>
         )
     }
@@ -201,7 +175,7 @@ const RequestPatientPage = ({ navigation }) => {
         return (
             <View style={{ flexDirection: 'col' }}>
 
-                <View style={{ flexDirection: 'row', color: '#000045' }}>
+                <View style={{ flexDirection: 'row', color: '#000045'}}>
                     <LocationIcon />
                     <Text>{item.clinic}</Text>
                 </View>
@@ -219,7 +193,7 @@ const RequestPatientPage = ({ navigation }) => {
                     key={index}
                     testID={`doctor-${index}`}
                     title={`${item.firstName} ${item.lastName}`}
-                    accessoryLeft={() => <GetWeekDays date={item.appointmentDate} />}
+                    accessoryLeft={() => <GetWeekDays date={item.appointmentDateTime} />}
                     accessoryRight={() => <RenderAccessoryRight item={item} />}
                     description={<RenderDescription item={item} />}
                 />
@@ -233,7 +207,7 @@ const RequestPatientPage = ({ navigation }) => {
     return (
         <ScrollView style={customStyle.listBackground}>
             <View>
-                <List testID="doctorList" data={patientData} renderItem={renderDoctor} />
+                <List testID="doctorList" data={docData} renderItem={renderDoctor} />
             </View>
         </ScrollView>
     );
