@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { AppRoute } from "../../navigation/app-routes";
 import { useAuth } from "../auth/utils/authProvider";
-import { ScrollView, View, TouchableWithoutFeedback, StyleSheet } from "react-native";
+import { ScrollView, View, TouchableWithoutFeedback, StyleSheet, Alert } from "react-native";
 import {
     Text,
     Button,
@@ -24,33 +24,10 @@ import TimeAgo from 'javascript-time-ago'       //https://github.com/catamphetam
 import en from 'javascript-time-ago/locale/en'
 
 
-
 const RequestPage = ({ navigation }) => {
     const { appState } = useAuth();
-    TimeAgo.addDefaultLocale(en)
+    TimeAgo.addLocale(en)
 
-    // const { loading, error, data } = useQuery(GET_DOCTORS, { pollInterval: 500 });
-    // const [ doctors, setDoctors] = useState()
-
-    // if (loading) return 'Loading...';
-    // if (error) return `Error! ${error.message}`;
-
-    // const dataDoctors = data.getDoctor
-    // console.log(dataDoctors)
-    // console.log(typeof(Doctors))
-
-    // return (
-    //     <View>
-    //       <Text>Test Component</Text>
-
-    //       {
-    //         doctors.map( (doctor) => {
-    //           <Text>Helllllllo</Text>
-    //         })
-    //       }
-    //     </View>
-
-    // );
     const theme = useTheme();
 
     const patientData = [
@@ -60,8 +37,8 @@ const RequestPage = ({ navigation }) => {
         { firstName: 'Snow', lastName: 'Bhie', clinic: 'Clinic Nila', createdAt: '2021-3-24', appointmentDateTime: '2021-3-28 08:32:00', status: 'Accepted' },
     ]
 
-    const LocationIcon = (...props) => <Icon {...props} style={[props.style, { width: 15, height: 15 }]} fill='#000045' name='navigation-2-outline' />
-    const TimeIcon = (...props) => <Icon {...props} style={[props.style, { width: 15, height: 15 }]} fill='#000045' name='clock-outline' />
+    const LocationIcon = (...props) => <Icon {...props} style={[props.style, {width: 15, height: 15, padding: 5 }]} fill='#000045' name='navigation-2-outline' />
+    const TimeIcon = (...props) => <Icon {...props} style={[props.style, {width: 15, height: 15, padding: 5  }]} fill='#000045' name='clock-outline' />
     const Time = (item) => { return (<View><TimeIcon />{item.time}</View>) }
 
     const GetWeekDays = ({ date }) => {
@@ -134,32 +111,8 @@ const RequestPage = ({ navigation }) => {
 
     }
 
-    // const Difference = (dateTime) => {
-    //     const appointmentTime = new Date(dateTime);
-    //     const now = new Date();
-    //     const diff = (appointmentTime.getTime() - now.getTime()) / 1000;
-    //     const x = diff / (60 * 60);
-    //     const getDiffinHrs = (Math.round(x));
-    //     return getDiffinHrs
-    // }
-
-    // const cancelingHandler = (item) => {
-    //     const minimum = 3
-    //     const getDiffinHrs = Difference(item.appointmentDateTime)
-
-    //     if (getDiffinHrs < minimum) {
-    //         return true
-    //     } else {
-    //         return false
-    //     }
-
-    // }
-
 
     const RenderAccessoryRight = ({ item }) => {
-        const btn = () => {
-            onHide();
-        };
 
         return (
             <View style={{ padding: 2 }}>
@@ -173,7 +126,7 @@ const RequestPage = ({ navigation }) => {
                         style={styles.button}
                         status="success"
                         appearance="outline"
-                        onPress={()=>btn}
+                        onPress={()=>alert('accepted')}
                     >
                         Accept
                       </Button>
@@ -182,7 +135,7 @@ const RequestPage = ({ navigation }) => {
                         style={styles.button}
                         status="danger"
                         appearance="outline"
-                        onPress={()=>btn}
+                        onPress={()=>alert('cancelled')}
                     >
                         Cancel
                       </Button>
@@ -221,7 +174,7 @@ const RequestPage = ({ navigation }) => {
         );
     };
 
-    const renderDoctor = ({ item, index }) => {
+    const renderPatient = ({ item, index }) => {
         return item !== null ? (
             <>
                 <ListItem
@@ -242,7 +195,7 @@ const RequestPage = ({ navigation }) => {
     return (
         <ScrollView style={customStyle.listBackground}>
             <View>
-                <List testID="doctorList" data={patientData} renderItem={renderDoctor} />
+                <List testID="patientList" data={patientData} renderItem={renderPatient} />
             </View>
         </ScrollView>
     );
