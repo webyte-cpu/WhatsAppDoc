@@ -13,6 +13,7 @@ export const GET_DOCTORS = gql`
       licenceImg
       verificationStatus
       specialization
+      pushToken
     }
   }
 `;
