@@ -66,7 +66,7 @@ export default {
         console.error(error);
       }
     },
-    updateDoctor: (obj, doctorData, { user }) => {
+    updateDoctor: async (obj, doctorData, { user, loader }) => {
       if (__.isEmpty(user)) {
         throw new AuthenticationError("No authorization header found");
       }
@@ -76,7 +76,13 @@ export default {
       }
 
       try {
-        return doctor.update(user.uid, doctorData);
+        const response = await doctor.update(user.uid, doctorData);
+
+        if (!__.isUndefined(doctorData.specialization)) {
+          loader.specialization.clear(user.uid);
+        }
+
+        return response;
       } catch (error) {
         console.error(error);
       }

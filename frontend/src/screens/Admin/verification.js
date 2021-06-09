@@ -49,13 +49,13 @@ const Header = ({ doctor }) => {
 const Footer = ({ doctor, updateDoctorStatus, onHide }) => {
   const verifyBtn = () => {
     updateDoctorStatus(doctor.uid, "VERIFIED");
-    pushNotification('',doctor.pushToken,'','','','verifyLicense')
+    pushNotification({doctor:doctor.firstName},doctor.pushToken,'','','verifyLicense');
     onHide();
   };
 
   const denyBtn = () => {
     updateDoctorStatus(doctor.uid, "DECLINED");
-    pushNotification('',doctor.pushToken,'','','','denyLicense')
+    pushNotification({doctor:doctor.firstName},doctor.pushToken,'','','denyLicense');
     onHide();
   };
 

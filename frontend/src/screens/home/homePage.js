@@ -7,7 +7,7 @@ import Searchbar from "../search/search";
 import customStyle from "../../../themes/styles";
 import ResendForm from "./resendForm";
 import enums from "../../../helpers/enums";
-import {pushNotification, registerForPushNotificationsAsync} from '../../notification/notification'
+import { registerForPushNotificationsAsync } from '../../notification/notification'
 import { useMutation } from "@apollo/client";
 import { UPDATE_USER } from './utils/queries'
 
@@ -51,10 +51,6 @@ const HomePage = ({ navigation, route }) => {
         <></>
       )} */}
        <Searchbar navigation={navigation} route={route} />
-      <Button onPress={() => 
-        pushNotification({doctor:'ayesha', patient:'wex'},expoPushToken,'Hospital','June 5, 2020', '7:30 - 8:00 pm', 'confirmAppointment')} >
-          Notify
-      </Button>
     </View>
   );
 };
