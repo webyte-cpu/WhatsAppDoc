@@ -36,10 +36,6 @@ const AppointmentList = ({ dataFromQuery, navigation }) => {
     }
 
 
-
-
-
-
     if (user.role === enums.role.DOCTOR) {
         let dataRetrieved = []
 
@@ -73,6 +69,12 @@ const AppointmentList = ({ dataFromQuery, navigation }) => {
           }
         }
       `;
+
+
+
+
+
+
 
 
 
