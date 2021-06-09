@@ -16,29 +16,87 @@ import {
     Modal,
     Card,
 } from "@ui-kitten/components";
-import { useQuery } from '@apollo/client';
 import customStyle from "../../../themes/styles";
-import { GET_ALL_DOCTORS } from '../search/utils/queries'
 import enums from "../../../helpers/enums";
 import TimeAgo from 'javascript-time-ago'       //https://github.com/catamphetamine/javascript-time-ago
 import en from 'javascript-time-ago/locale/en'
+import { GET_ALL_APPOINTMENT, UPDATE_APPOINTMENT_MUTATION } from "./queries"
+import { useQuery, useMutation } from "@apollo/client";
 
 
 const RequestPage = ({ navigation }) => {
     const { appState } = useAuth();
+    const user = appState.user
+
+  const [updateAppointment, { errorMutate }] = useMutation(UPDATE_APPOINTMENT_MUTATION)
+    const { loading, error, data } = useQuery(GET_ALL_APPOINTMENT);
+    if (loading) return <p>Loading...</p>
+    if (error) {
+        console.log(error)
+        return (null)
+    } 
+
+    const handleAppointmentReject = (uid) => {
+
+        updateAppointment({
+            variables: {
+                uid: uid, status: enums.status.CANCELLED
+            }
+        });
+
+        if (errorMutate) {
+            console.log(errorMutate)
+        }
+    }
+
+    const handleAppointmentAccept = (uid) => {
+
+        updateAppointment({
+            variables: {
+                uid: uid, status: enums.status.IN_QUEUE
+            }
+        });
+
+        if (errorMutate) {
+            console.log(errorMutate)
+        }
+    }
+
+   
+
+    let items = data.getAllAppointment
+
+    console.log(user.role)
+
+
+
+    if (user.role === enums.role.DOCTOR) {
+        items = items.filter((appointment) => {
+            return appointment.clinic.doctor.uid === user.uid
+        })
+
+    }
+    else {
+
+        items = items.filter((appointment) => {
+            return appointment.patient.uid === user.uid && appointment.status
+        })
+
+    }
+
     TimeAgo.addLocale(en)
 
     const theme = useTheme();
 
-    const patientData = [
-        { firstName: 'Alexis', lastName: 'Dalisay', clinic: 'Med Hospital',  createdAt: '2021-6-05', appointmentDateTime: '2021-6-07 21:32:00', status: 'Pending' },
-        { firstName: 'Uchimaru', lastName: 'Sho', clinic: 'Romblon',createdAt: '2021-3-26', appointmentDateTime: '2021-3-27 16:32:00', status: 'Accepted' },
-        { firstName: 'Reki', lastName: 'Rawr', clinic: 'Gen Clinic',  createdAt: '2021-3-27', appointmentDateTime: '2021-3-29 07:32:00', status: 'Pending' },
-        { firstName: 'Snow', lastName: 'Bhie', clinic: 'Clinic Nila', createdAt: '2021-3-24', appointmentDateTime: '2021-3-28 08:32:00', status: 'Accepted' },
-    ]
+    // const patientData = [
+    //     { firstName: 'Alexis', lastName: 'Dalisay', clinic: 'Med Hospital', createdAt: '2021-6-05', appointmentDateTime: '2021-6-07 21:32:00', status: 'Pending' },
+    //     { firstName: 'Uchimaru', lastName: 'Sho', clinic: 'Romblon', createdAt: '2021-3-26', appointmentDateTime: '2021-3-27 16:32:00', status: 'Accepted' },
+    //     { firstName: 'Reki', lastName: 'Rawr', clinic: 'Gen Clinic', createdAt: '2021-3-27', appointmentDateTime: '2021-3-29 07:32:00', status: 'Pending' },
+    //     { firstName: 'Snow', lastName: 'Bhie', clinic: 'Clinic Nila', createdAt: '2021-3-24', appointmentDateTime: '2021-3-28 08:32:00', status: 'Accepted' },
+    // ]
 
-    const LocationIcon = (...props) => <Icon {...props} style={[props.style, {width: 15, height: 15, padding: 5 }]} fill='#000045' name='navigation-2-outline' />
-    const TimeIcon = (...props) => <Icon {...props} style={[props.style, {width: 15, height: 15, padding: 5  }]} fill='#000045' name='clock-outline' />
+    const LocationIcon = (...props) => <Icon {...props} style={[props.style, { width: 15, height: 15, padding: 5 }]} fill='#000045' name='navigation-2-outline' />
+    const TimeIcon = (...props) => <Icon {...props} style={[props.style, { width: 15, height: 15, padding: 5 }]} fill='#000045' name='clock-outline' />
     const Time = (item) => { return (<View><TimeIcon />{item.time}</View>) }
 
     const GetWeekDays = ({ date }) => {
@@ -113,12 +171,15 @@ const RequestPage = ({ navigation }) => {
 
 
     const RenderAccessoryRight = ({ item }) => {
+        const isDisabled = item.status !== "PENDING"
+        console.log(item.status)
+        console.log(isDisabled)
 
         return (
             <View style={{ padding: 2 }}>
                 <View style={{ flexDirection: 'row', padding: 5 }}>
                     <Status title={item.status}></Status>
-                    <GetTimeAgo dateTime={item.appointmentDateTime}/>
+                    <GetTimeAgo dateTime={item.dateTime} />
                 </View>
                 <View style={styles.buttons}>
                     <Button
@@ -126,7 +187,9 @@ const RequestPage = ({ navigation }) => {
                         style={styles.button}
                         status="success"
                         appearance="outline"
-                        onPress={()=>alert('accepted')}
+                        // disabled={item.status!=="PENDING"}
+                        disabled={isDisabled}
+                        onPress={handleAppointmentAccept(item.uid)}
                     >
                         Accept
                       </Button>
@@ -135,7 +198,8 @@ const RequestPage = ({ navigation }) => {
                         style={styles.button}
                         status="danger"
                         appearance="outline"
-                        onPress={()=>alert('cancelled')}
+                        disabled={isDisabled}
+                        onPress={handleAppointmentReject(item.uid)}
                     >
                         Cancel
                       </Button>
@@ -159,29 +223,33 @@ const RequestPage = ({ navigation }) => {
     }
 
     const RenderDescription = ({ item }) => {
+        console.log("clinic: "+item.clinic.name) 
 
         return (
             <View style={{ flexDirection: 'col' }}>
 
                 <View style={{ flexDirection: 'row', color: '#000045' }}>
                     <LocationIcon />
-                    <Text>{item.clinic}</Text>
+                    <Text>{item.clinic.name}</Text>
                 </View>
                 <View style={{ flexDirection: 'row', color: '#000045' }}>
-                    <TimeIcon /><GetTime dateTime={item.appointmentDateTime} />
+                    <TimeIcon /><GetTime dateTime={item.dateTime} />
                 </View>
             </View>
         );
     };
 
     const renderPatient = ({ item, index }) => {
+        console.log(item)
+    console.log("first name: "+item.patient.firstName) 
+
         return item !== null ? (
             <>
                 <ListItem
                     key={index}
-                    testID={`doctor-${index}`}
-                    title={`${item.firstName} ${item.lastName}`}
-                    accessoryLeft={() => <GetWeekDays date={item.appointmentDateTime} />}
+                    testID={`patient-${index}`}
+                    title={`${item.patient.firstName} ${item.patient.lastName}`}
+                    accessoryLeft={() => <GetWeekDays date={item.dateTime} />}
                     accessoryRight={() => <RenderAccessoryRight item={item} />}
                     description={<RenderDescription item={item} />}
                 />
@@ -195,7 +263,7 @@ const RequestPage = ({ navigation }) => {
     return (
         <ScrollView style={customStyle.listBackground}>
             <View>
-                <List testID="patientList" data={patientData} renderItem={renderPatient} />
+                <List testID="patientList" data={items} renderItem={renderPatient} />
             </View>
         </ScrollView>
     );
