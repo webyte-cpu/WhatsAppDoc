@@ -3,7 +3,6 @@ import * as Notifications from 'expo-notifications';
 import { navigate } from '../navigation/rootNavigation'
 import {AppRoute} from '../navigation/app-routes'
 import getTrigger from './trigger';
-import getSchedule from './getSchedule'
 
 //using this function you can set a callback that will decide whether the notification should be shown to the user or not
 //set the handler that will cause the notification to show the alert
@@ -43,10 +42,9 @@ function useNotifications(){
   }, []);
 }
 
-function pushNotification( user, pushToken, clinic, date, time, type ){
+function pushNotification( user, pushToken, clinic, schedule, type ){
   const doctor = user.doctor
   const patient = user.patient
-  const schedule = getSchedule(date,time)
   let content = { recipient:pushToken, clinic:clinic, schedule:schedule };
 
   switch(type){
