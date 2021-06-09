@@ -66,7 +66,7 @@ function pushNotification( user, pushToken, clinic, schedule, type ){
       break;
     case 'cancelAppointment':
       content.title = 'Cancelled Booking Appointment'
-      content.body = `${doctor} cancelled your booking at ${clinic} on ${schedule}.`
+      content.body = `${doctor?doctor:patient} cancelled the appointment at ${clinic} on ${schedule}.`
       content.screen = AppRoute.REQUEST
       break;
     case 'requestAppointment':

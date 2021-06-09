@@ -65,14 +65,15 @@ const RequestPage = ({ navigation }) => {
     const confirmAppointment = (item) => {
         handleAppointmentAccept(item.uid);
         pushNotification(
-            {patient:user.firstName, doctor:item.clinic.doctor.firstName},
-            item.clinic.doctor.pushToken,item.clinic.name,item.dateTime,'cancelAppointment'
-            );
+            {patient:item.patient.firstName, doctor:user.firstName},
+            item.patient.pushToken,item.clinic.name,item.dateTime,'confirmAppointment');
     }
 
     const cancelAppointment = (item) => {
         handleAppointmentReject(item.uid);
-        pushNotification({patient:user.firstName},item.clinic.doctor.pushToken,item.clinic.name,item.dateTime,'cancelAppointment');
+        pushNotification(
+            {patient:item.patient.firstName, doctor:user.firstName},
+            item.patient.pushToken,item.clinic.name,item.dateTime,'cancelAppointment');
     }
 
     let items = data.getAllAppointment
