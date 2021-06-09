@@ -23,7 +23,7 @@ function useNotifications(){
     notificationListener.current = Notifications.addNotificationReceivedListener( notification => {
       const data = notification.request.content.data
         if(notification.request.content.title === 'Confirmed Booking Appointment'){
-          schedulePushNotification(data.user, data.schedule, data.clinic, data.navigate)
+          scheduleNotification(data.user, data.schedule, data.clinic, data.navigate)
         }
     });
     
@@ -62,11 +62,11 @@ function pushNotification( user, pushToken, clinic, schedule, type ){
       content.body = `${doctor} confirmed your booking at ${clinic} on ${schedule}.`
       content.user = doctor
       content.screen = AppRoute.SCHEDULE
-      schedulePushNotification(patient,clinic,schedule,AppRoute.SCHEDULE)
+      scheduleNotification(patient,clinic,schedule,AppRoute.SCHEDULE)
       break;
     case 'cancelAppointment':
       content.title = 'Cancelled Booking Appointment'
-      content.body = `${doctor} cancelled your booking at ${clinic} on ${schedule}.`
+      content.body = `${doctor?doctor:patient} cancelled the appointment at ${clinic} on ${schedule}.`
       content.screen = AppRoute.REQUEST
       break;
     case 'requestAppointment':
@@ -109,7 +109,7 @@ async function sendPushNotification(content) {
 }
 
 //booking → notify self/reminder
-async function schedulePushNotification( user, clinic, schedule, screen ) {
+async function scheduleNotification( user, clinic, schedule, screen ) {
   await Notifications.scheduleNotificationAsync({
     content: {
       title: 'Appointment in an hour!',

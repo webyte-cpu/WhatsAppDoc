@@ -86,7 +86,7 @@ const customStyle = StyleSheet.create({
     justifyContent: 'center',
     width: 1,
     height: 3,
-    background: '#4A40D5',
+    backgroundColor: '#4A40D5',
     borderRadius: 1,
   },
 });
