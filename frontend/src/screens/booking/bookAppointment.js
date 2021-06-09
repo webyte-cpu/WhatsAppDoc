@@ -20,6 +20,9 @@ import {
 import SuccessModal from "./successModal";
 import { getAvailableTime, timeToString } from "../../utils/getAvailableTime";
 import * as R from "ramda";
+import getStartTime from './utils/getStartTime'
+import { useAuth } from "../auth/utils/authProvider";
+import { pushNotification } from '../../notification/notification'
 
 const ClinicInfo = ({ consultationFee, clinicName }) => {
   const prefix = (prefix) => (
@@ -65,7 +68,7 @@ const BookingScreen = ({ route, navigation, clinic }) => {
 
   //     return unsubscribe;
   //     }, [navigation]);
-
+  const { appState } = useAuth();
   const [timeData, setTimeData] = useState([]);
   const [selectedTime, setSelectedTime] = useState();
   const [selectedDate, setSelectedDate] = useState(new Date());
@@ -144,8 +147,12 @@ const BookingScreen = ({ route, navigation, clinic }) => {
 
   const handleClose = () => setVisible(false);
   const handleShow = () => { // attach send to db
+    const startTime = getStartingTime(selectedTime)
+    const date = selectedDate.toLocaleDateString()
+    const schedule = `${date} ${startTime}`
+    pushNotification({patient: appState.user.firstName},'ExponentPushToken[]','Clinic Name',schedule,'requestAppointment') // add doctor pushtoken and clinic name
     setVisible(true);
-    console.log("data:", selectedTime, selectedDate.toLocaleDateString());
+    console.log("data:", schedule);
   };
 
   return (
