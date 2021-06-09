@@ -19,10 +19,10 @@ const ROLE = enums.role;
 
 const UPDATE_DOCTOR = gql`
     mutation updateDoctor(
-      $uid:UUID!, 
+      $uid:UUID, 
       $licenceNum: String, 
       $licenceImg: String, 
-      $about: String,
+      $specialization: String,
       $licenceExp: Date,
       $verificationStatus: VerificationStatus )
       {
@@ -73,7 +73,7 @@ const DoctorForm = ({ navigation }) => {
 }
 
   const ResendForm = () => (
-    <View style={{ ...customStyle.content}}>
+    <View style={customStyle.content}>
       <Formik
         initialValues={doctorDetails}
         validationSchema={doctorSignUpSchema}
@@ -81,7 +81,6 @@ const DoctorForm = ({ navigation }) => {
       >
         {(props) => (
           <>
-
             <SignUpDoctor {...props} />
             <Button
               testID="resendFormBtn"
@@ -97,7 +96,7 @@ const DoctorForm = ({ navigation }) => {
   )
   
   return (
-    <KeyboardAwareScrollView>
+    <KeyboardAwareScrollView contentContainerStyle={customStyle.contentFill}>
       <ResendForm />
     </KeyboardAwareScrollView>
   );
