@@ -14,9 +14,10 @@
   "type": "module",
   "scripts": {
     "test": "cross-env NODE_OPTIONS=--experimental-vm-modules npx jest --detectOpenHandles",
-    "test:migrate:up": "knex migrate:latest --env test",
-    "test:seed:run": "knex seed:run --env test",
+    "test:migration": "knex migrate:latest --env test",
+    "test:seed": "knex seed:run --env test",
     "test:seed:make": "knex seed:make --env test",
+    "test:clear_db": "knex migrate:rollback --env test",
     "server": "nodemon src/app.js",
     "migration": "knex migrate:latest",
     "migration:make": "knex migrate:make",
