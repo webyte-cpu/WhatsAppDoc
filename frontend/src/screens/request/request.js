@@ -22,14 +22,14 @@ import TimeAgo from 'javascript-time-ago'       //https://github.com/catamphetam
 import en from 'javascript-time-ago/locale/en'
 import { GET_ALL_APPOINTMENT, UPDATE_APPOINTMENT_MUTATION } from "./queries"
 import { useQuery, useMutation } from "@apollo/client";
-
+import {pushNotification} from '../../notification/notification'
 
 const RequestPage = ({ navigation }) => {
     const { appState } = useAuth();
     const user = appState.user
 
   const [updateAppointment, { errorMutate }] = useMutation(UPDATE_APPOINTMENT_MUTATION)
-    const { loading, error, data } = useQuery(GET_ALL_APPOINTMENT);
+    const { loading, error, data } = useQuery(GET_ALL_APPOINTMENT, {pollInterval: 500});
     if (loading) return <p>Loading...</p>
     if (error) {
         console.log(error)
@@ -62,38 +62,34 @@ const RequestPage = ({ navigation }) => {
         }
     }
 
-   
+    const confirmAppointment = (item) => {
+        handleAppointmentAccept(item.uid);
+        pushNotification(
+            {patient:user.firstName, doctor:item.clinic.doctor.firstName},
+            item.clinic.doctor.pushToken,item.clinic.name,item.dateTime,'cancelAppointment'
+            );
+    }
+
+    const cancelAppointment = (item) => {
+        handleAppointmentReject(item.uid);
+        pushNotification({patient:user.firstName},item.clinic.doctor.pushToken,item.clinic.name,item.dateTime,'cancelAppointment');
+    }
 
     let items = data.getAllAppointment
-
-    console.log(user.role)
-
-
-
     if (user.role === enums.role.DOCTOR) {
         items = items.filter((appointment) => {
             return appointment.clinic.doctor.uid === user.uid
         })
-
     }
     else {
-
         items = items.filter((appointment) => {
             return appointment.patient.uid === user.uid && appointment.status
         })
-
     }
 
     TimeAgo.addLocale(en)
 
     const theme = useTheme();
-
-    // const patientData = [
-    //     { firstName: 'Alexis', lastName: 'Dalisay', clinic: 'Med Hospital', createdAt: '2021-6-05', appointmentDateTime: '2021-6-07 21:32:00', status: 'Pending' },
-    //     { firstName: 'Uchimaru', lastName: 'Sho', clinic: 'Romblon', createdAt: '2021-3-26', appointmentDateTime: '2021-3-27 16:32:00', status: 'Accepted' },
-    //     { firstName: 'Reki', lastName: 'Rawr', clinic: 'Gen Clinic', createdAt: '2021-3-27', appointmentDateTime: '2021-3-29 07:32:00', status: 'Pending' },
-    //     { firstName: 'Snow', lastName: 'Bhie', clinic: 'Clinic Nila', createdAt: '2021-3-24', appointmentDateTime: '2021-3-28 08:32:00', status: 'Accepted' },
-    // ]
 
     const LocationIcon = (...props) => <Icon {...props} style={[props.style, { width: 15, height: 15, padding: 5 }]} fill='#000045' name='navigation-2-outline' />
     const TimeIcon = (...props) => <Icon {...props} style={[props.style, { width: 15, height: 15, padding: 5 }]} fill='#000045' name='clock-outline' />
@@ -146,7 +142,6 @@ const RequestPage = ({ navigation }) => {
                 >
                 </Tab>
             </View>
-
         )
     }
 
@@ -172,8 +167,6 @@ const RequestPage = ({ navigation }) => {
 
     const RenderAccessoryRight = ({ item }) => {
         const isDisabled = item.status !== "PENDING"
-        console.log(item.status)
-        console.log(isDisabled)
 
         return (
             <View style={{ padding: 2 }}>
@@ -187,9 +180,8 @@ const RequestPage = ({ navigation }) => {
                         style={styles.button}
                         status="success"
                         appearance="outline"
-                        // disabled={item.status!=="PENDING"}
                         disabled={isDisabled}
-                        onPress={handleAppointmentAccept(item.uid)}
+                        onPress={() => confirmAppointment(item)}
                     >
                         Accept
                       </Button>
@@ -199,12 +191,11 @@ const RequestPage = ({ navigation }) => {
                         status="danger"
                         appearance="outline"
                         disabled={isDisabled}
-                        onPress={handleAppointmentReject(item.uid)}
+                        onPress={() => cancelAppointment(item)}
                     >
                         Cancel
                       </Button>
                 </View>
-
             </View>
         )
     }
@@ -240,9 +231,6 @@ const RequestPage = ({ navigation }) => {
     };
 
     const renderPatient = ({ item, index }) => {
-        console.log(item)
-    console.log("first name: "+item.patient.firstName) 
-
         return item !== null ? (
             <>
                 <ListItem
@@ -256,8 +244,8 @@ const RequestPage = ({ navigation }) => {
                 <Divider />
             </>
         ) : (
-                <> </>
-            );
+            <> </>
+        );
     };
 
     return (

@@ -16,21 +16,20 @@ import {
     Modal,
     Card,
 } from "@ui-kitten/components";
-import { useQuery } from '@apollo/client';
 import customStyle from "../../../themes/styles";
 import enums from "../../../helpers/enums";
 import TimeAgo from 'javascript-time-ago'       //https://github.com/catamphetamine/javascript-time-ago
 import en from 'javascript-time-ago/locale/en'
 import { GET_ALL_APPOINTMENT, UPDATE_APPOINTMENT_MUTATION } from "./queries"
 import { useQuery, useMutation } from "@apollo/client";
-
+import {pushNotification} from '../../notification/notification'
 
 const RequestPatientPage = ({ navigation }) => {
     const { appState } = useAuth();
     const user = appState.user
 
-  const [updateAppointment, { errorMutate }] = useMutation(UPDATE_APPOINTMENT_MUTATION)
-    const { loading, error, data } = useQuery(GET_ALL_APPOINTMENT);
+    const [updateAppointment, { errorMutate }] = useMutation(UPDATE_APPOINTMENT_MUTATION)
+    const { loading, error, data } = useQuery(GET_ALL_APPOINTMENT, {pollInterval: 500});
     if (loading) return <p>Loading...</p>
     if (error) {
         console.log(error)
@@ -38,7 +37,6 @@ const RequestPatientPage = ({ navigation }) => {
     } 
 
     const handleAppointmentReject = (uid) => {
-
         updateAppointment({
             variables: {
                 uid: uid, status: enums.status.CANCELLED
@@ -50,36 +48,25 @@ const RequestPatientPage = ({ navigation }) => {
         }
     }
 
-   
+    const cancelAppointment = (item) => {
+        handleAppointmentReject(item.uid);
+        pushNotification({patient:user.firstName},item.clinic.doctor.pushToken,item.clinic.name,item.dateTime,'cancelAppointment');
+    }
 
     let items = data.getAllAppointment
-
-    console.log(user.role)
-
     if (user.role === enums.role.DOCTOR) {
         items = items.filter((appointment) => {
             return appointment.clinic.doctor.uid === user.uid
         })
-
     }
     else {
-
         items = items.filter((appointment) => {
             return appointment.patient.uid === user.uid && appointment.status
         })
-
     }
     TimeAgo.addLocale(en)
 
     const theme = useTheme();
-
-    // const docData = [
-    //     { firstName: 'Alexis', lastName: 'Dalisay', clinic: 'Med Hospital',  createdAt: '2021-6-05', appointmentDateTime: '2021-6-07 21:32:00', status: 'Pending' },
-    //     { firstName: 'Uchimaru', lastName: 'Sho', clinic: 'Romblon',createdAt: '2021-3-26', appointmentDateTime: '2021-3-27 16:32:00', status: 'Accepted' },
-    //     { firstName: 'Reki', lastName: 'Rawr', clinic: 'Gen Clinic',  createdAt: '2021-3-27', appointmentDateTime: '2021-3-29 07:32:00', status: 'Pending' },
-    //     { firstName: 'Snow', lastName: 'Bhie', clinic: 'Clinic Nila', createdAt: '2021-3-24', appointmentDateTime: '2021-3-28 08:32:00', status: 'Accepted' },
-    // ]
-
     const LocationIcon = (...props) => <Icon {...props} style={[props.style, { width: 15, height: 15, padding: 5 }]} fill='#000045' name='navigation-2-outline' />
     const TimeIcon = (...props) => <Icon {...props} style={[props.style, { width: 15, height: 15, padding: 5 }]} fill='#000045' name='clock-outline' />
 
@@ -171,12 +158,10 @@ const RequestPatientPage = ({ navigation }) => {
         } else {
             return false
         }
-
     }
 
 
     const RenderAccessoryRight = ({ item }) => {
-
         return (
             <View style={{ padding: 2 }}>
                 <View style={{ flexDirection: 'row', padding: 5 }}>
@@ -190,12 +175,11 @@ const RequestPatientPage = ({ navigation }) => {
                         status="danger"
                         appearance="outline"
                         disabled={cancelingHandler(item)}
-                        onPress={handleAppointmentReject(item.uid)}
+                        onPress={() => cancelAppointment(item)}
                     >
                         Cancel
                       </Button>
                 </View>
-
             </View>
         )
     }
@@ -214,10 +198,8 @@ const RequestPatientPage = ({ navigation }) => {
     }
 
     const RenderDescription = ({ item }) => {
-
         return (
             <View style={{ flexDirection: 'col' }}>
-
                 <View style={{ flexDirection: 'row', color: '#000045'}}>
                     <LocationIcon />
                     <Text>{item.clinic.name}</Text>
@@ -243,8 +225,8 @@ const RequestPatientPage = ({ navigation }) => {
                 <Divider />
             </>
         ) : (
-                <> </>
-            );
+            <> </>
+        );
     };
 
     return (
