@@ -116,7 +116,7 @@ export const DELETE_CLINIC = gql`
 
 export const GET_ALL_APPOINTMENT = gql`
   query{
-    getAllAppointment{
+    getAllAppointment{  
       uid	
       status
       dateTime
@@ -127,6 +127,7 @@ export const GET_ALL_APPOINTMENT = gql`
           address
         }
         doctor{
+          uid
           firstName
         }
       }
@@ -136,4 +137,15 @@ export const GET_ALL_APPOINTMENT = gql`
       }
     }
   }
+`
+
+export const UPDATE_APPOINTMENT_MUTATION = gql`
+mutation updateAppointment($uid: UUID, $status: Status,){
+    updateAppointment(uid: $uid, status: $status){
+    uid
+    status
+    doctorRemarks
+  }
+}
+
 `
