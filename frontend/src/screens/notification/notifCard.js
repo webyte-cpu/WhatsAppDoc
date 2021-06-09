@@ -53,7 +53,7 @@ const NotifCard = ({ status, name, dateTime, clinic, body, updatedAt, navigation
 
                     <View style={styles.button}>
                         <Text style={styles.buttonText}>{name} {statusText} {body} at {clinic} on {dateTime}</Text>
-                        <Text style={styles.buttonText}>{timeText}</Text>
+                  
                     </View>
 
                 </TouchableHighlight>
