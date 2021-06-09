@@ -1,12 +1,13 @@
 import React, { useState, useRef, useEffect } from "react";
-import { ScrollView, TouchableOpacity, View, StyleSheet } from "react-native";
+import { ScrollView, TouchableOpacity, View, StyleSheet, Button } from "react-native";
 import { Text, Card, Icon, useTheme } from "@ui-kitten/components";
 import customStyle from "../../../themes/styles";
 import { Agenda } from 'react-native-calendars';
 import { useQuery } from "@apollo/client";
-import { GET_ALL_APPOINTMENT } from "./utils/queries"
+import { GET_ALL_APPOINTMENT, UPDATE_APPOINTMENT_MUTATION } from "./utils/queries"
 import { useAuth } from "../auth/utils/authProvider";
 import enums from "../../../helpers/enums";
+import { useMutation } from '@apollo/client';
 
 
 
@@ -52,29 +53,7 @@ const Header = ({ name, status }) => {
   )
 }
 
-const renderItem = (item) => {
-  return (
-    <TouchableOpacity style={{ marginRight: 10, marginTop: 17 }} activeOpacity={0.6}>
-      <Card
-        disabled={true}
-        header={(props) => <Header {...props} name={item.patient.firstName} status={item.status.replace("_", " ")} />}
-        style={customStyle.agendaContainer}
-      >
-        <View>
-          <View style={{ flexDirection: "row", alignItems: 'center', marginBottom: 5 }}>
-            <LocationIcon />
-            <Text category='s1'>{item.clinic.name}</Text>
-          </View>
-          <View style={{ flexDirection: "row", alignItems: 'center' }}>
-            <TimeIcon />
-            <Text category='s1'> {item.dateTime.split("T")[1].split(".")[0]}</Text>
-          </View>
 
-        </View>
-      </Card>
-    </TouchableOpacity>
-  )
-}
 
 const openCalendar = (refAgenda) => {
   // let initPos = refAgenda.current.initialScrollPadPosition()
@@ -129,28 +108,118 @@ const AgendaScreen = () => {
 
 
   const { appState } = useAuth();
+  const user = appState.user
 
   const refAgenda = useRef(null);
 
-  const { loading, error, data } = useQuery(GET_ALL_APPOINTMENT, { pollInterval: 500 });
-  const user = appState.user
+  const [updateAppointment, { errorMutate }] = useMutation(UPDATE_APPOINTMENT_MUTATION)
 
+  const { loading, error, data } = useQuery(GET_ALL_APPOINTMENT, { pollInterval: 500 });
   if (loading) return <p>Loading...</p>
   if (error) return <p>Error :</p>
 
 
 
+  const handleAppointmentReject = (uid) => {
+
+    updateAppointment({
+      variables: {
+
+        uid: uid, status: enums.status.CANCELLED
+      }
+    });
+
+    if (errorMutate) {
+      console.log(errorMutate)
+    }
+  }
+
+  const handleAppointmentAccept = (uid) => {
+
+    updateAppointment({
+      variables: {
+
+        uid: uid, status: enums.status.IN_QUEUE
+      }
+    });
+
+    if (errorMutate) {
+      console.log(errorMutate)
+    }
+  }
+
+
   let items = data.getAllAppointment
-  items = items.filter((appointment) => {
-    return appointment.patient.uid === user.uid && appointment.status !== enums.status.PENDING
-  })
+
+  console.log(user.role)
+
+  if (user.role === enums.role.DOCTOR) {
+    items = items.filter((appointment) => {
+      return appointment.clinic.doctor.uid === user.uid
+    })
+
+  }
+  else {
+
+    items = items.filter((appointment) => {
+      return appointment.patient.uid === user.uid && appointment.status !== enums.status.PENDING
+    })
+
+  }
+
 
   items = agendaDataMapper(items)
 
 
+  const renderItem = (item) => {
+
+    return (
+      <TouchableOpacity style={{ marginRight: 10, marginTop: 17 }} activeOpacity={0.6}>
+        <Card
+          disabled={true}
+          header={(props) => <Header {...props} name={item.patient.firstName} status={item.status.replace("_", " ")} />}
+          style={customStyle.agendaContainer}
+        >
+          <View>
+            <View style={{ flexDirection: "row", alignItems: 'center', marginBottom: 5 }}>
+              <LocationIcon />
+              <Text category='s1'>{item.clinic.name}</Text>
+            </View>
+            <View style={{ flexDirection: "row", alignItems: 'center' }}>
+              <TimeIcon />
+              <Text category='s1'> {item.dateTime.split("T")[1].split(".")[0]}</Text>
+            </View>
+
+        
+              {user.role === enums.role.DOCTOR && item.status === enums.status.PENDING ? (
+                <View>
+
+                  <Text>
+                    <Button
+                      title="Accept"
+                      onPress={() => { handleAppointmentAccept(item.uid) }}
+                    />
+                    <Button
+                      onPress={() => { handleAppointmentReject(item.uid) }}
+                      title="Reject"
+                    />
+                  </Text>
+
+                </View>
+              ) : ('')}
 
 
-  // console.log(mapper(data.getAllAppointment))
+           
+
+          </View>
+        </Card>
+      </TouchableOpacity>
+    )
+  }
+
+
+
+
 
 
   return (
