@@ -13,6 +13,8 @@ import LoadingScreen from '../../components/loadingScreen';
 import { doctorSignUpSchema } from '../../../helpers/validationType';
 import { gql, useMutation } from '@apollo/client';
 
+
+
 const ROLE = enums.role;
 
 const UPDATE_DOCTOR = gql`
@@ -37,8 +39,10 @@ const UPDATE_DOCTOR = gql`
 `
 
 const DoctorForm = ({ navigation }) => {
-  const auth = useAuth();
-  const theme = useTheme();
+;
+
+  const { appState } = useAuth();
+  const user = appState.user
 
   const doctorDetails = {
     specialization: '',
@@ -51,12 +55,12 @@ const DoctorForm = ({ navigation }) => {
   const [updateDoctor, { errorMutate }] = useMutation(UPDATE_DOCTOR)
 
   const resend = (values) => {
-    console.log(formatDate(values.expirationDate))
+    console.log(values)
     updateDoctor({
         variables: {
-            uid: "b429f877-069c-42fb-9e48-088f351b5328",
+            uid: user.uid,
             licenceNum: values.licenseNum,
-            licenceImg: "test",
+            licenceImg: values.licenceImg,
             about: values.specialization,
             licenceEXP: formatDate(values.expirationDate),
             verificationStatus: "PENDING"
