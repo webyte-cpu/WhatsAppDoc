@@ -1,5 +1,5 @@
 import * as R from 'ramda';
-import { getTimeForDisplay } from "./generateTimeSlot.js";
+import { getTimeForDisplay, formatNum } from "./generateTimeSlot.js";
 const doctorClinicData = {
   slotDuration: 30,
   intervals: [
@@ -96,16 +96,44 @@ const formatDate = (date) => {
   return `${year}-${month}-${day}`
 }
 
-export const getAvailableTime = (intervals, slotDuration, appointments, chosenDate) => {
-  const appointmentList = convertAppointment(appointments)
-  const scheduleTimeSlots = getTimeForDisplay(intervals, slotDuration)
-  const chosenDateString = formatDate(chosenDate)
+export const timeToString = (timeObj) => {
+  const formattedHours = formatNum(timeObj.hours)
+  const formattedMins = formatNum(timeObj.minutes)
+  const formattedPeriod = timeObj.ampm.toUpperCase()
+
+  return (`${formattedHours}:${formattedMins} ${formattedPeriod}`)
+}
+
+export const getMatchingInterval = (intervals, slotDuration, chosenDate) => {
   const chosenDay = chosenDate.getDay()
-  const [matchingInterval] = scheduleTimeSlots.filter((interval) => interval.days.includes(chosenDay))
-  const occupiedTimes = appointmentList.filter((appointment) => appointment.date === chosenDateString && appointment.status !== 'CANCELLED') 
-  const byStartTime = (schedule, appointment) => R.equals(schedule.from, appointment.from)
+  const scheduleTimeSlots = getTimeForDisplay(intervals, slotDuration)
+  const matchingInterval = scheduleTimeSlots.filter((interval) => interval.days.includes(chosenDay))
   
-  return R.differenceWith(byStartTime, matchingInterval.time, occupiedTimes)
+  if(matchingInterval.length === 0) {
+    return null
+  }
+  return matchingInterval[0]
+}
+
+export const getAvailableTime = (intervals, slotDuration, appointments, chosenDate) => {
+  let results = null;
+
+  const chosenDateString = formatDate(chosenDate)
+  const matchingInterval = getMatchingInterval(intervals, slotDuration, chosenDate)
+  
+  if(matchingInterval) {
+    results = matchingInterval.time
+  
+    if(appointments) {
+      const appointmentList = convertAppointment(appointments)
+      const occupiedTimes = appointmentList.filter((appointment) => appointment.date === chosenDateString && appointment.status !== 'CANCELLED') 
+      const byStartTime = (schedule, appointment) => R.equals(schedule.from, appointment.from)
+      
+      results = R.differenceWith(byStartTime, matchingInterval.time, occupiedTimes)
+    }
+  }
+
+  return results;
 }
 
 // console.log(getAvailableTime(doctorClinicData.intervals, doctorClinicData.slotDuration, appointmentsSameDay, new Date('2021-05-18')))
