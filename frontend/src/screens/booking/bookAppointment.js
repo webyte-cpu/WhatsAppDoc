@@ -20,9 +20,13 @@ import {
 import SuccessModal from "./successModal";
 import { getAvailableTime, timeToString } from "../../utils/getAvailableTime";
 import * as R from "ramda";
-import getStartTime from './utils/getStartTime'
+import getStartTime from "./utils/getStartTime";
 import { useAuth } from "../auth/utils/authProvider";
-import { pushNotification } from '../../notification/notification'
+import { pushNotification } from "../../notification/notification";
+import { useMutation } from "@apollo/client";
+import { CREATE_APPOINTMENT } from "./utils/queries";
+import { GET_ALL_DOCTORS } from "../search/utils/queries";
+import { AppRoute } from "../../navigation/app-routes";
 
 const ClinicInfo = ({ consultationFee, clinicName }) => {
   const prefix = (prefix) => (
@@ -70,13 +74,29 @@ const BookingScreen = ({ route, navigation, clinic }) => {
   //     }, [navigation]);
   const { appState } = useAuth();
   const [timeData, setTimeData] = useState([]);
-  const [selectedTime, setSelectedTime] = useState();
+  const [selectedTime, setSelectedTime] = useState(null); // string
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [visible, setVisible] = useState(false);
+  const [selectedIndex, setSelectedIndex] = useState();
+  const [errMsg, setErrMsg] = useState(null);
   const availableDays = R.uniqBy(
     (x) => x.daysOfTheWeek,
     clinic.schedule
   ).flatMap((x) => x.daysOfTheWeek);
+
+  const handleClose = () => {
+    setVisible(false);
+    return navigation.navigate(AppRoute.HOME); //! temporary fix
+  };
+
+  const handleShow = () => {
+    setVisible(true);
+  };
+
+  const [createAppointment] = useMutation(CREATE_APPOINTMENT, {
+    onCompleted: () => handleShow(),
+    refetchQueries:[{query: GET_ALL_DOCTORS}]
+  });
 
   useEffect(() => {
     if (selectedDate) {
@@ -90,27 +110,25 @@ const BookingScreen = ({ route, navigation, clinic }) => {
         availableTime = [];
       }
 
+      // RESET STATE
+      setSelectedTime(null);
+      setSelectedIndex();
+      setErrMsg(null);
       return setTimeData(availableTime);
     }
-  }, [selectedDate]);
+  }, [selectedDate, clinic]);
 
   const SelectTime = ({ timeData }) => {
-    const [selectedIndex, setSelectedIndex] = useState(new IndexPath(0));
-    const value = timeData[selectedIndex.row];
+    const value = selectedIndex ? timeData[selectedIndex.row] : null; // {from: {}, to: {}}
     const displayValue = value
       ? `${timeToString(value?.from)} - ${timeToString(value?.to)}`
       : null;
-    console.log(value);
     const renderOption = ({ from, to }, index) => (
       <SelectItem
         key={index}
         title={`${timeToString(from)} - ${timeToString(to)}`}
       />
     );
-
-    useEffect(() => {
-      setSelectedTime(value);
-    }, [])
 
     return (
       <View style={{ marginVertical: 10 }}>
@@ -121,13 +139,18 @@ const BookingScreen = ({ route, navigation, clinic }) => {
           selectedIndex={selectedIndex}
           onSelect={(index) => {
             setSelectedIndex(index);
-          }}
-          onBlur={() => {
-            setSelectedTime(value);
+            setSelectedTime(timeToString(timeData[index.row].from));
           }}
         >
           {timeData.map(renderOption)}
         </Select>
+        {errMsg ? (
+          <Text testID="errText" status="danger" category="label">
+            {errMsg}
+          </Text>
+        ) : (
+          <></>
+        )}
       </View>
     );
   };
@@ -145,14 +168,30 @@ const BookingScreen = ({ route, navigation, clinic }) => {
     );
   };
 
-  const handleClose = () => setVisible(false);
-  const handleShow = () => { // attach send to db
-    const startTime = getStartingTime(selectedTime)
-    const date = selectedDate.toLocaleDateString()
-    const schedule = `${date} ${startTime}`
-    pushNotification({patient: appState.user.firstName},'ExponentPushToken[]','Clinic Name',schedule,'requestAppointment') // add doctor pushtoken and clinic name
-    setVisible(true);
-    console.log("data:", schedule);
+  const bookAppointment = () => {
+    if (!selectedTime) {
+      return setErrMsg("Please select a time.");
+    }
+
+    const date = selectedDate.toLocaleDateString();
+    const schedule = `${date} ${selectedTime}`;
+
+    createAppointment({
+      variables: {
+        doctorClinicUid: clinic.doctorClinicUid,
+        schedule: new Date(schedule),
+      }
+    });
+
+    if (Platform.OS !== "web") {
+      pushNotification(
+        { patient: appState.user.firstName },
+        "ExponentPushToken[]",
+        "Clinic Name",
+        schedule,
+        "requestAppointment"
+      ); // add doctor pushtoken and clinic name
+    }
   };
 
   return (
@@ -163,7 +202,7 @@ const BookingScreen = ({ route, navigation, clinic }) => {
       />
       <SelectTime timeData={timeData} />
       <SelectDayAppointment />
-      <Button style={{ marginVertical: 15 }} onPress={handleShow}>
+      <Button style={{ marginVertical: 15 }} onPress={bookAppointment}>
         Book Appointment
       </Button>
       <SuccessModal isShown={visible} onHide={handleClose} />

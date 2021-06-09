@@ -8,7 +8,12 @@ export const CREATE_APPOINTMENT = gql`
     createAppointment(
       doctorClinicUid: $doctorClinicUid, 
       dateTime: $schedule) {
-      uid
+        uid
+        doctorClinicUid
+        status
+        dateTime
+        createdAt
+        updatedAt
     }
   }
 `
