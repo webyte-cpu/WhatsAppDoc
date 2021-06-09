@@ -34,18 +34,18 @@ export const checkDoctorStatus = (status) => {
   }
 }
 
-export const checkChangedStatus = (name, changeStatus) => {
-  let tabSelector;
-  let listSelector;
+// export const checkChangedStatus = (name, changeStatus) => {
+//   let tabSelector;
+//   let listSelector;
 
-  if (changeStatus === 'verify') {
-    tabSelector = '[data-testid=verifiedTab]'
-    listSelector = '[data-testid=verifiedList]'
-  } else if (changeStatus === 'deny') {
-    tabSelector = '[data-testid=unverifiedTab]'
-    listSelector = '[data-testid=unverifiedList]'
-  }
+//   if (changeStatus === 'verify') {
+//     tabSelector = '[data-testid=verifiedTab]'
+//     listSelector = '[data-testid=verifiedList]'
+//   } else if (changeStatus === 'deny') {
+//     tabSelector = '[data-testid=unverifiedTab]'
+//     listSelector = '[data-testid=unverifiedList]'
+//   }
 
-  cy.get(tabSelector).click();
-  cy.get(listSelector).contains(name);
-}
+//   cy.get(tabSelector).click();
+//   cy.get(listSelector).contains(name);
+// }

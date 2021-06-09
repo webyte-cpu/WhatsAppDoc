@@ -8,12 +8,11 @@ import {
 } from 'cypress-cucumber-preprocessor/steps';
 
 import { checkDoctorStatus, getTabSelector, checkChangedStatus } from './common';
+import { loginUser, runSeed } from '../common'
 
 Before(() => {
-  cy.visit('/signin');
-  cy.get('[data-testid=email]').type('Rowland_Veum6@hotmail.com')
-  cy.get('[data-testid=password]').type('ZJw_BwW160ZUZI5!')
-  cy.get('[data-testid=loginBtn]').click();
+  runSeed();
+  loginUser('Rowland_Veum6@hotmail.com', 'ZJw_BwW160ZUZI5!');
   // cy.url().should('eq', Cypress.config().baseUrl + "/admin/admin");
 })
 
@@ -26,39 +25,25 @@ Then('I will see all {string} doctors', (status) => {
   checkDoctorStatus(status);
 });
 
-Given('I am on pending tab', () => {
-  cy.get('[data-testid=pendingTab]').click()
-  cy.get('[data-testid=pendingList]').should('not.exist')
-  // cy.get('body').find('[data-testid=pendingList]').length
-
+Given('I am already on {string} tab', (status) => {
+  cy.get(getTabSelector(status)).click()
 })
 
-// When('I click doctor {string}', (name) => {
-//   cy.get("body").then($body => {
-//     if ($body.find('[data-testid=pendingList]').length > 0) {
-//       cy.get('[data-testid=pendingList]').within(() => {
-//         cy.get('[data-testid=doctorDetails]').contains(name).click()
-//       })
-//     } else {
-//       cy.get(checkDoctorStatus(status)).should('not.exist');
-//     }
-//   });
-// })
+When('I click the user details with {string} status', (status) => {
+  switch (status) {
+    case 'VERIFIED':
+      cy.get('[data-testid=verifiedList] > :nth-child(1) > :nth-child(1) > [data-testid=doctorDetails]').click(); 
+      break;
+    
+    default:
+      cy.get('[data-testid=unverifiedList] > :nth-child(1) > :nth-child(1) > [data-testid=doctorDetails]').click();
+      break;
+  }
+})
 
-// Then(`I will see the doctor's license card information`, () => {
-//   cy.get('[data-testid=doctorInformation]').should('be.visible')
-//   cy.get('[data-testid=linkPRCBtn]').should('be.visible')
-//   cy.get('[data-testid=verifyBtn]').should('be.visible')
-//   cy.get('[data-testid=denyBtn]').should('be.visible')
-// })
-
-// And('I click {string} button', (changeStatus) => {
-//   let button;
-//   changeStatus == 'verify' ? button = '[data-testid=verifyBtn]' : button = '[data-testid=denyBtn]'
-//   cy.get(button).click();
-// })
-
-
-// Then('I will see {string} on {string} tabs', (name, changeStatus) => {
-//   checkChangedStatus(name, changeStatus)
-// })
+Then("I will see the doctor's license card information", () => {
+  cy.get('[data-testId=licenseImg]').should('be.visible');
+  cy.get('[data-testId=birthdate]').should('be.visible');
+  cy.get('[data-testId=licenseNum]').should('be.visible');
+  cy.get('[data-testId=licenseExpiry]').should('be.visible');
+})

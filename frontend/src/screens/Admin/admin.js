@@ -112,8 +112,8 @@ const Admin = () => {
     item !== null ? (
       <>
         <ListItem
-          key={index}
           testID="doctorDetails"
+          key={index}
           title={`${item.firstName} ${item.lastName}`}
           description={`${item.specialization.join(', ')}`}
           accessoryLeft={() => (

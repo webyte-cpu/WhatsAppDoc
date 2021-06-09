@@ -10,7 +10,7 @@ import {
 import { fillFormFields } from '../common.js'
 
 Given('I log in as DOCTOR', () => {
-  cy.visit('/signin');
+  cy.visit('/login');
     cy.get('[data-testid=email]').type('Billie97@yahoo.com')
     cy.get('[data-testid=password]').type('guG3Xxq9j4_GqQ2!')
     cy.get('[data-testid=loginBtn]').click();
