@@ -18,10 +18,10 @@ import {
 } from "@ui-kitten/components";
 import { useQuery } from '@apollo/client';
 import customStyle from "../../../themes/styles";
-import { GET_DOCTORS } from '../search/doctors/queries'
+// import { GET_DOCTORS } from '../search/doctors/queries'
 import enums from "../../../helpers/enums";
-import TimeAgo from 'javascript-time-ago'       //https://github.com/catamphetamine/javascript-time-ago
-import en from 'javascript-time-ago/locale/en'
+// import TimeAgo from 'javascript-time-ago'       //https://github.com/catamphetamine/javascript-time-ago
+// import en from 'javascript-time-ago/locale/en'
 
 
 const RequestPage = ({ navigation }) => {

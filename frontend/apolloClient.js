@@ -15,6 +15,8 @@ import {
 import { getMainDefinition } from "@apollo/client/utilities";
 import * as Location from 'expo-location';
 
+// console.log(process.env.GOOGLE_API_KEY);
+
 if (!process.env.GOOGLE_API_KEY) {
   throw new Error("No GOOGLE_API_KEY provided") 
 } else {

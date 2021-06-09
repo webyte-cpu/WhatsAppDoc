@@ -136,7 +136,7 @@ const Admin = () => {
 
   const PendingScreen = () => {
     const data = filterByStatus(enums.verificationStatus.PENDING)
-    return data.length === 0 ? (<EmptyListText/>) : (
+    return data.length === 0 ? (<EmptyListText />) : (
       <List
         testID={"pendingList"}
         data={data}
@@ -175,9 +175,9 @@ const Admin = () => {
         tabBar={(props) => <TopTabBar {...props} />}
         style={{ backgroundColor: theme["color-primary-light-600"] }}
       >
-        <Screen name="Pending" component={PendingScreen} />
-        <Screen name="Verified" component={VerifiedScreen} />
-        <Screen name="Unverified" component={UnverifiedScreen} />
+        <Screen name="Pending" data-testid="pendingScreen" component={PendingScreen} />
+        <Screen name="Verified" data-testid="verifiedScreen" component={VerifiedScreen} />
+        <Screen name="Unverified" data-testid="unverifiedScreen" component={UnverifiedScreen} />
       </Navigator>
       <DoctorDetails
         doctor={doctorDetails}

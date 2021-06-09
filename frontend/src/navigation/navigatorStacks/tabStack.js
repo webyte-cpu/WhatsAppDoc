@@ -14,7 +14,7 @@ import { PropertiesFormProvider } from "../../screens/schedules/properties/formP
 const BottomTab = createBottomTabNavigator();
 
 const HomeIcon = (props) => <Icon {...props} name="home" />;
-const CalendarIcon = (props) => <Icon {...props} name="calendar" />;
+const CalendarIcon = (props) => <Icon {...props} testID="calendar" name="calendar" />;
 const NotificationIcon = (props) => <Icon {...props} name="bell" />;
 
 const BottomTabBar = (

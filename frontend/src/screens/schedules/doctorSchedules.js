@@ -18,7 +18,7 @@ const TopTabBar = ({ navigation, state }) => {
       style={{ backgroundColor: theme["color-primary-light"] }}
     >
       <Tab title="Appointments" style={customStyle.tabStyle} />
-      <Tab title="Clinics" />
+      <Tab title="Clinics" testID="clinic-page" />
     </TabBar>
   );
 };

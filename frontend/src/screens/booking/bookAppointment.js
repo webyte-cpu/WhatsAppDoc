@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { View, ScrollView, StyleSheet, Platform } from 'react-native'
 import { Calendar, Select, IndexPath, SelectItem, Divider, Button, Input, Text} from '@ui-kitten/components'
 import SuccessModal from './successModal'
-import { RenderDoctor } from  '../search/doctors/nearbyDoctors'
+// import { RenderDoctor } from  '../search/doctors/nearbyDoctors'
 
 const AppointmentInfo = ({doctor}) => {
     const prefix = (prefix) => <Text category="s2" style={{ color: 'gray' }}>{prefix}</Text>;

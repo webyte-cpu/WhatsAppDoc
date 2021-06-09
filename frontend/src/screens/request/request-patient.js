@@ -19,8 +19,8 @@ import {
 import { useQuery } from '@apollo/client';
 import customStyle from "../../../themes/styles";
 import enums from "../../../helpers/enums";
-import TimeAgo from 'javascript-time-ago'       //https://github.com/catamphetamine/javascript-time-ago
-import en from 'javascript-time-ago/locale/en'
+// import TimeAgo from 'javascript-time-ago'       //https://github.com/catamphetamine/javascript-time-ago
+// import en from 'javascript-time-ago/locale/en'
 
 
 
