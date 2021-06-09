@@ -1,9 +1,9 @@
 
-export default function getSchedule(date,time) {
+export default function getStartTime(time) {
     const splitTime = time.split(' ')
     const startTime = splitTime[0]
     const ampm = splitTime[splitTime.length-1]
-    const schedule = `${date} ${startTime} ${ampm}`
+    const scheduleTime = `${startTime} ${ampm}`
 
-    return schedule
+    return scheduleTime
 }

@@ -49,12 +49,48 @@ const update = async (data, knex = pg) => {
   return fromDb(__.first(dbResponse));
 };
 
-const get = async (uid, knex = pg) => {
-  const dbResponse = await knex
-    .select("*")
-    .from("appointments")
-    .where(objectFilter({ appointments_uid: uid }));
-  return fromDb(__.first(dbResponse));
+const get = async (userUid, knex = pg) => {
+  return knex.transaction(async (trx) => {
+    const usersResponse = await trx
+      .select("*")
+      .from("users")
+      .where({ user_uid: userUid });
+
+    const user = __.first(usersResponse);
+
+    if (user.user_role === enums.role.PATIENT) {
+      const appResponse = await trx
+        .select("*")
+        .from("appointments")
+        .where({ patient_uid: userUid });
+      return appResponse.map(fromDb);
+    }
+
+    if (user.user_role === enums.role.DOCTOR) {
+      const appResponse = await trx
+        .select([
+          "appointments_uid",
+          "patient_uid",
+          "doctor_clinics.doctor_clinic_uid",
+          "appointment_status",
+          "appointment_timestamp",
+          "appointment_doctor_remarks",
+        ])
+        .from("doctors")
+        .where({ "doctors.doctor_uid": userUid })
+        .innerJoin(
+          "doctor_clinics",
+          "doctor_clinics.doctor_uid",
+          "doctors.doctor_uid"
+        )
+        .innerJoin(
+          "appointments",
+          "appointments.doctor_clinic_uid",
+          "doctor_clinics.doctor_clinic_uid"
+        );
+      return appResponse.map(fromDb);
+    }
+  });
 };
 
 const getAll = async (knex = pg) => {

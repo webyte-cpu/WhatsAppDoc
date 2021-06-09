@@ -9,8 +9,8 @@ import {
 import customStyle from "../../../../themes/styles";
 import ProfileIcon from "../../../components/profileIcon";
 import EmptyListText from "../../../components/emptyListText";
-import BookingScreen from "../../booking/bookAppointment";
 import { AppRoute } from "../../../navigation/app-routes";
+// import BookingScreen from "../../booking/bookAppointment";
 // import StarRatingComponent from "react-star-rating-component";
 // import Ratings from './doctorRatings'
 
@@ -64,9 +64,10 @@ const RenderDoctor = ({ item: doctor, navigation, disable = false}) => {
         <ProfileIcon firstName={doctor.firstName} lastName={doctor.lastName} dimensions={{width: 80, height: 80}} shape='rounded'/>
       )}
       description={<RenderDescription experience={doctor.experience} specialization={doctor.specialization} />}
+      disabled={disable}
       onPress={() => {
         if(!disable) {
-          navigation.navigate(AppRoute.DOCTOR_INFO, {doctorData: doctor})
+          navigation.navigate(AppRoute.DOCTOR_INFO, {doctorData: doctor, navigation})
         }
       }}
       // accessoryRight={bookmarkIcon}

@@ -30,6 +30,14 @@ export const GET_ALL_DOCTORS = gql`
           endTime
           daysOfTheWeek
         }
+        appointment {
+          uid
+          status
+          dateTime
+          createdAt
+          updatedAt
+          doctorClinicUid
+        }
       }
       about
       educational

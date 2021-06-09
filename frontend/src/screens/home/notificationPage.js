@@ -5,6 +5,7 @@ import { View, StyleSheet } from "react-native";
 import { useSubscription } from "@apollo/client";
 import moment from "moment";
 import React from "react";
+import Notification from "../notification/notification.js"
 
 const styles = StyleSheet.create({
   container: { flex: 1, flexDirection: "column" },
@@ -34,7 +35,7 @@ const NotificationPage = ({ navigation }) => {
   return (
     <View style={customStyle.content}>
       <Text>NOTIFICATIONS</Text>
-      {loading ? (
+      {/* {loading ? (
         <Layout style={styles.layout}>
           <Spinner size="giant" />
         </Layout>
@@ -42,7 +43,9 @@ const NotificationPage = ({ navigation }) => {
         data.newNotification.map((data, key) => (
           <NotificationList key={key} data={data} />
         ))
-      )}
+      )} */}
+
+      <Notification navigation={navigation} />
     </View>
   );
 };

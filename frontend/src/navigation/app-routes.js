@@ -21,7 +21,7 @@ const AppRoute = {
   APPOINTMENT_PROPERTIES: 'AppointmentProperties',
   DOCTOR_INFO: 'DoctorInfo',
   BOOKING: 'Booking',
-  REQUEST: 'Request',
+  REQUEST: 'Requests',
 }
 
 export { AppRoute };
