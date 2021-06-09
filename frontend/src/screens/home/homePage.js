@@ -9,29 +9,29 @@ import ResendForm from "./resendForm";
 import enums from "../../../helpers/enums";
 import {pushNotification, registerForPushNotificationsAsync} from '../../notification/notification'
 import { useMutation } from "@apollo/client";
-import { UPDATE_USER } from './queries'
+import { UPDATE_USER } from './utils/queries'
 
 const HomePage = ({ navigation, route }) => {
   const { appState } = useAuth();
-    const [expoPushToken, setExpoPushToken] = useState('');
-  // const [ updateUser, { errorMutate }] = useMutation(UPDATE_USER);
-  // const updateUserPushToken = (uid, pushToken) => {
-  //   updateUser({
-  //     variables: {
-  //       uid: uid,
-  //       pushToken: pushToken,
-  //     },
-  //   });
-  // };
+  const [ updateUser, { errorMutate }] = useMutation(UPDATE_USER);
+  const updateUserPushToken = (uid, pushToken) => {
+    updateUser({
+      variables: {
+        uid: uid,
+        pushToken: pushToken,
+      },
+    });
+  };
 
-  // if (errorMutate) {
-  //   console.log(errorMutate);
-  // }
+  if (errorMutate) {
+    console.log(errorMutate);
+  }
 
-  registerForPushNotificationsAsync()
-  .then(token => setExpoPushToken(token)) 
-  .catch(err => console.log('err',err));
-
+  useEffect(() => {
+    registerForPushNotificationsAsync()
+    .then(token => updateUserPushToken(appState.user.uid,token)) 
+    .catch(err => console.log('err',err));
+  }, []);
 
   return (
     <View style={customStyle.contentFill}>
