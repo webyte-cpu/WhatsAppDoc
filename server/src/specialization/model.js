@@ -101,4 +101,26 @@ const assign = ({ titles, userUid }, knex = pg) =>
     );
   });
 
-export default { assign, assignedTo, find, create };
+const unassign = ({ title, userUid }, knex = pg) => {
+  return knex.transaction(async (trx) => {
+    const response = {};
+
+    response.specialization = await trx
+      .select("specialization_uid")
+      .from("specializations")
+      .where("specialization_title", c.sentence(title))
+      .first();
+
+    response.deleted = await trx("doctor_specializations")
+      .where({
+        doctor_uid: userUid,
+        specialization_uid: response.specialization.specialization_uid,
+      })
+      .del("*");
+
+    console.log("unsigned", response);
+    return title;
+  });
+};
+
+export default { assign, assignedTo, find, create, unassign };

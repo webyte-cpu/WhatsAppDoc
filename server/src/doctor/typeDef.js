@@ -44,6 +44,7 @@ const doctor = gql`
     educational: String
     rating: Int
   }
+
   extend type Query {
     getDoctor: Doctor!
     getAllDoctor: [Doctor]
@@ -69,6 +70,7 @@ const doctor = gql`
       about: String
       educational: String
       rating: Int
+      specialization: [String]
     ): Doctor
     deleteDoctor: Doctor
     doctorVerification(
