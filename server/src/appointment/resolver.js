@@ -71,12 +71,13 @@ export default {
   Subscription: {
     newAppointment: {
       subscribe: (_, { doctorClinicUids }, { pubsub, user }) => {
-
-        console.log(`subscribed to appointment @${uid}`);
-        const triggers = doctorClinicUids.map((uid) => "APPOINTMENT" + "_" + uid);
+        console.log(`subscribed to appointment @${doctorClinicUids}`);
+        const triggers = doctorClinicUids.map(
+          (uid) => "APPOINTMENT" + "_" + uid
+        );
         setTimeout(
           async () =>
-            pubsub.publish("APPOINTMENT_" + uid, {
+            pubsub.publish("APPOINTMENT_" + doctorClinicUids[0], {
               newAppointment: await appointment.get(user.uid),
             }),
           0
