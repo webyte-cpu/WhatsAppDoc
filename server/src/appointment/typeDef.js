@@ -15,7 +15,7 @@ export default gql`
   }
 
   extend type Query {
-    getAppointment(uid: UUID): Appointment
+    getAppointment(uid: UUID): [Appointment]
     getAllAppointment: [Appointment]
   }
 
@@ -28,5 +28,9 @@ export default gql`
       doctorRemarks: String
     ): Appointment
     deleteAppointment(uid: UUID): Appointment
+  }
+
+  extend type Subscription {
+    newAppointment(doctorClinicUids: [UUID!]): [Appointment]
   }
 `;

@@ -55,7 +55,7 @@ export default {
     newNotification: {
       subscribe: (_, { userUid }, { pubsub, user }) => {
         const uid = userUid || user.uid;
-        console.log(`subscribe to notification @${uid}`);
+        console.log(`subscribed to notification @${uid}`);
         const subscriptions = ["NOTIFICATION"];
         const triggers = subscriptions.map(
           (subscription) => subscription + "_" + uid

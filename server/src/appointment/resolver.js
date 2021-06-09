@@ -26,7 +26,6 @@ export default {
       }
       try {
         const response = await loader.patient.load(appointment.patientUid);
-        console.log(response)
         return __.first(response);
       } catch (error) {
         console.error(error);
@@ -34,16 +33,13 @@ export default {
     },
   },
 
-
-
-
   Query: {
-    getAppointment: (obj, arg) => appointment.get(arg.uid),
+    getAppointment: (obj, arg, { user }) => appointment.get(user.uid),
     getAllAppointment: (obj, arg) => appointment.getAll(),
   },
 
   Mutation: {
-    createAppointment: async (obj, arg, { user }) => {
+    createAppointment: async (obj, arg, { pubsub, user }) => {
       if (user.role !== enums.role.PATIENT) {
         throw new ApolloError("Not authorize to create an appointment!");
       }
@@ -53,6 +49,10 @@ export default {
         patientUid: user.uid,
       });
 
+      pubsub.publish(`APPOINTMENT_${arg.doctorClinicUid}`, {
+        newAppointment: await appointment.get(user.uid),
+      });
+      console.log("published");
       return response;
     },
     updateAppointment: async (obj, arg) => {
@@ -65,6 +65,24 @@ export default {
       }
       const response = await appointment.remove(arg.uid);
       return response;
+    },
+  },
+
+  Subscription: {
+    newAppointment: {
+      subscribe: (_, { doctorClinicUids }, { pubsub, user }) => {
+
+        console.log(`subscribed to appointment @${uid}`);
+        const triggers = doctorClinicUids.map((uid) => "APPOINTMENT" + "_" + uid);
+        setTimeout(
+          async () =>
+            pubsub.publish("APPOINTMENT_" + uid, {
+              newAppointment: await appointment.get(user.uid),
+            }),
+          0
+        );
+        return pubsub.asyncIterator(triggers);
+      },
     },
   },
 };
