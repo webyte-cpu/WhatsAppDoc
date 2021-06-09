@@ -1,5 +1,4 @@
-import {MockedProvider } from '@apollo/client/testing'
-import { getAvailableTime } from './getAvailableTime.js'
+import { getAvailableTime, getMatchingInterval } from './getAvailableTime.js'
 
 describe("get selected doctor's clinic available time", () => {
 
@@ -135,4 +134,141 @@ describe("get selected doctor's clinic available time", () => {
 
     expect(getAvailableTime(rawClinicData.intervals, rawClinicData.slotDurationInMins, appointments, selectedDate)).toEqual(expectedResult)
   })
+
+  it('returns the available time, on user selected date: "2021-05-17 and duration >= 60 mins"', () => {
+  const selectedDate = new Date("2021-05-17")
+  const sameDayAppointments = [ 
+    {
+      appointmentUID: "ea6e4474-709f-439c-b6e2-2bb1113b45cc",
+      doctorClinicUid: "0de7cd8a-6410-4ebb-8006-45bee76491ea",
+      patientUid: "79c1c7f3-2267-42cf-b505-cc2bf43924a3",
+      createdAt: new Date("2021-05-15T04:00"),
+      dateTime: new Date('2021-05-17T06:00'),
+      status: "DONE"
+    }, 
+    {
+      appointmentUID: "ea6e4474-709f-439c-b6e2-2bb1113b45cc",
+      doctorClinicUid: "0de7cd8a-6410-4ebb-8006-45bee76491ea",
+      patientUid: "79c1c7f3-2267-42cf-b505-cc2bf43924a3",
+      createdAt: new Date("2021-05-15T04:00"),
+      dateTime: new Date('2021-05-17T07:00'),
+      status: "ON_GOING"
+    }, {
+      appointmentUID: "7cadcee6-2b38-49d7-b138-8789dd1ed686",
+      doctorClinicUid: "0de7cd8a-6410-4ebb-8006-45bee76491ea",
+      patientUid: "1543ea94-b0fa-436d-88c3-e8849246dd95",
+      createdAt: new Date("2021-05-16T13:30"),
+      dateTime: new Date('2021-05-17T13:00'),
+      status: "PENDING"
+    }, {
+      appointmentUID: "b396b7e6-c972-4714-89a0-4bc6fdc887da",
+      doctorClinicUid: "0de7cd8a-6410-4ebb-8006-45bee76491ea",
+      patientUid: "69d0c3d3-7cc2-4d3e-a58d-60033a1db51b",
+      createdAt: new Date("2021-05-14T14:00"),
+      dateTime: new Date('2021-05-17T14:00'),
+      status: "IN_QUEUE"
+    }, {
+      appointmentUID: "fb7852f5-2040-4b86-8163-1a56f0aa7c77",
+      doctorClinicUid: "0de7cd8a-6410-4ebb-8006-45bee76491ea",
+      patientUid: "69d0c3d3-7cc2-4d3e-a58d-60033a1db51b",
+      createdAt: new Date("2021-05-16T11:00"),
+      dateTime: new Date('2021-05-17T11:00'),
+      status: "CANCELLED"
+    },
+    { // Wednesday 7:00 am
+      appointmentUID: "ea6e4474-709f-439c-b6e2-2bb1113b45cc",
+      doctorClinicUid: "0de7cd8a-6410-4ebb-8006-45bee76491ea",
+      patientUid: "79c1c7f3-2267-42cf-b505-cc2bf43924a3",
+      createdAt: new Date("2021-05-15T04:00"),
+      dateTime: new Date('2021-05-17T08:00'),
+      status: "IN_QUEUE"
+    }
+  ]
+
+  const expectedResult =   [
+    {
+      from: { hours: 9, minutes: 0, ampm: 'am' },
+      to: { hours: 10, minutes: 0, ampm: 'am' }
+    },
+    {
+      from: { hours: 10, minutes: 0, ampm: 'am' },
+      to: { hours: 11, minutes: 0, ampm: 'am' }
+    },
+    {
+      from: { hours: 11, minutes: 0, ampm: 'am' },
+      to: { hours: 12, minutes: 0, ampm: 'pm' }
+    }
+  ]
+
+    expect(getAvailableTime(rawClinicData.intervals, 60, sameDayAppointments, selectedDate)).toEqual(expectedResult)
+  })
+
+  it('returns the available time, on user selected date: "2021-05-17 and duration === 60 mins"', () => {
+    const selectedDate = new Date("2021-05-17")
+    const sameDayAppointments = [ 
+      {
+        appointmentUID: "ea6e4474-709f-439c-b6e2-2bb1113b45cc",
+        doctorClinicUid: "0de7cd8a-6410-4ebb-8006-45bee76491ea",
+        patientUid: "79c1c7f3-2267-42cf-b505-cc2bf43924a3",
+        createdAt: new Date("2021-05-15T04:00"),
+        dateTime: new Date('2021-05-17T06:00'),
+        status: "DONE"
+      }, 
+      {
+        appointmentUID: "ea6e4474-709f-439c-b6e2-2bb1113b45cc",
+        doctorClinicUid: "0de7cd8a-6410-4ebb-8006-45bee76491ea",
+        patientUid: "79c1c7f3-2267-42cf-b505-cc2bf43924a3",
+        createdAt: new Date("2021-05-15T04:00"),
+        dateTime: new Date('2021-05-17T08:30'),
+        status: "ON_GOING"
+      }, {
+        appointmentUID: "7cadcee6-2b38-49d7-b138-8789dd1ed686",
+        doctorClinicUid: "0de7cd8a-6410-4ebb-8006-45bee76491ea",
+        patientUid: "1543ea94-b0fa-436d-88c3-e8849246dd95",
+        createdAt: new Date("2021-05-16T13:30"),
+        dateTime: new Date('2021-05-17T13:00'),
+        status: "PENDING"
+      }, {
+        appointmentUID: "fb7852f5-2040-4b86-8163-1a56f0aa7c77",
+        doctorClinicUid: "0de7cd8a-6410-4ebb-8006-45bee76491ea",
+        patientUid: "69d0c3d3-7cc2-4d3e-a58d-60033a1db51b",
+        createdAt: new Date("2021-05-16T11:00"),
+        dateTime: new Date('2021-05-17T10:30'),
+        status: "CANCELLED"
+      },
+      { // Wednesday 7:00 am
+        appointmentUID: "ea6e4474-709f-439c-b6e2-2bb1113b45cc",
+        doctorClinicUid: "0de7cd8a-6410-4ebb-8006-45bee76491ea",
+        patientUid: "79c1c7f3-2267-42cf-b505-cc2bf43924a3",
+        createdAt: new Date("2021-05-15T04:00"),
+        dateTime: new Date('2021-05-17T08:30'),
+        status: "IN_QUEUE"
+      }
+    ]
+  
+    const expectedResult =   [
+      {
+        from: { hours: 7, minutes: 30, ampm: 'am' },
+        to: { hours: 9, minutes: 0, ampm: 'am' }
+      },
+      {
+        from: { hours: 9, minutes: 0, ampm: 'am' },
+        to: { hours: 10, minutes: 30, ampm: 'am' }
+      },
+      {
+        from: { hours: 10, minutes: 30, ampm: 'am' },
+        to: { hours: 12, minutes: 0, ampm: 'pm' }
+      }
+    ]
+
+      expect(getAvailableTime(rawClinicData.intervals, 90, sameDayAppointments, selectedDate)).toEqual(expectedResult)
+    })
+
+  it('returns the available time, on user selected date: "2021-05-17 and duration = 30 mins, and NULL appointments"', () => {
+    const selectedDate = new Date("2021-05-17")
+    const expectedResult = getMatchingInterval(rawClinicData.intervals, rawClinicData.slotDurationInMins, selectedDate).time
+
+    expect(getAvailableTime(rawClinicData.intervals, rawClinicData.slotDurationInMins, null, selectedDate)).toEqual(expectedResult)
+  })
 })
+
