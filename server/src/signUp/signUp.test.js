@@ -91,7 +91,18 @@ describe("Sign Up", () => {
       variables,
     });
 
-    await expect(response).toMatchSnapshot();
+    const { email, firstName, lastName, role, sex, img, birthdate } =
+      jwt.verify(response.data?.signUp, process.env.JWT_SECRET_KEY);
+
+    await expect({
+      email,
+      firstName,
+      lastName,
+      role,
+      sex,
+      img,
+      birthdate,
+    }).toMatchSnapshot();
   });
 
   it("Should sign up a Doctor", async () => {
@@ -118,7 +129,7 @@ describe("Sign Up", () => {
       variables,
     });
 
-    const { email, firstName, lastName, role, uid, sex, img, birthdate } =
+    const { email, firstName, lastName, role, sex, img, birthdate } =
       jwt.verify(response.data.signUp, process.env.JWT_SECRET_KEY);
 
     await expect({
@@ -126,7 +137,6 @@ describe("Sign Up", () => {
       firstName,
       lastName,
       role,
-      uid,
       sex,
       img,
       birthdate,
@@ -153,7 +163,7 @@ describe("Sign Up", () => {
 
     console.log(response);
 
-    const { email, firstName, lastName, role, uid, sex, img, birthdate } =
+    const { email, firstName, lastName, role, sex, img, birthdate } =
       jwt.verify(response.data.signUp, process.env.JWT_SECRET_KEY);
 
     await expect({
@@ -161,7 +171,6 @@ describe("Sign Up", () => {
       firstName,
       lastName,
       role,
-      uid,
       sex,
       img,
       birthdate,

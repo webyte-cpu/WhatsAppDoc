@@ -1,4 +1,4 @@
-import { ApolloServer, context as defaultContext, server, typeDefs, resolvers } from "../app.js";
+import { ApolloServer, typeDefs, resolvers } from "../app.js";
 // import faker from "faker";
 import pg from "../../db/index.js";
 import knexCleaner from "knex-cleaner";
@@ -19,9 +19,9 @@ const constructTestServer = ({ context } = {}) => {
     resolvers,
     // mocks: { ...mocks, ...defaultMocks },
     // mockEntireSchema: false,
-    context: async () => ({ ...await defaultContext(), ...context() }),
+    context,
   });
-  
+
   return { server };
 };
 
