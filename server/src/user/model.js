@@ -18,7 +18,7 @@ const fromDb = (userData) => ({
   img: userData.user_img,
   createdAt: userData.created_at,
   updatedAt: userData.updated_at,
-  pushToken: userData.user_push_token
+  pushToken: userData.user_push_token,
 });
 
 const toDb = (userData) => ({
@@ -35,7 +35,7 @@ const toDb = (userData) => ({
   user_img: userData.img,
   created_at: userData.createdAt,
   updated_at: userData.updatedAt,
-  user_push_token: userData.pushToken
+  user_push_token: userData.pushToken,
 });
 
 const find = async (object, knex = pg) =>
@@ -80,10 +80,10 @@ const create = async (userData, knex = pg) => {
       .insert(objectFilter(toDb(userData)))
       .into("users")
       .returning("*");
-      
+
     return fromDb(__.first(dbResponse));
   } catch (error) {
-    throw new ApolloError('Email not unique', 'ALREADY_EXIST_EMAIL')
+    throw new ApolloError("Email not unique", "ALREADY_EXIST_EMAIL");
   }
 };
 
@@ -102,7 +102,6 @@ const update = async (userData, knex = pg) => {
       })
     )
     .returning("*");
-  console.log(dbResponse)
   return fromDb(__.first(dbResponse));
 };
 
