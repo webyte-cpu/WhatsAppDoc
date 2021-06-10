@@ -78,7 +78,7 @@ const get = async (uid, knex = pg) => {
     .from("schedules")
     .where({ schedule_uid: uid });
 
-  return dbResponse.map(fromDb);
+  return fromDb(__.first(dbResponse));
 };
 
 const getAll = async (knex = pg) => {

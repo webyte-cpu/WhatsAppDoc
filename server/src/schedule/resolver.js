@@ -9,7 +9,6 @@ const resolverMap = {
   Mutation: {
     upsertSchedule: async (obj, arg, { loader }) => {
       const response = await schedule.upsert(arg);
-      console.log(loader);
       loader?.schedule?.clear(arg.doctorClinicUid);
       return response;
     },
@@ -24,12 +23,16 @@ const resolverMap = {
       return response;
     },
     deleteSchedules: async (obj, arg, { loader }) => {
-      const response = await schedule.remove(arg.uids);
-      response.forEach((sched) =>
-        loader?.schedule?.clear(sched.doctorClinicUid)
-      );
+      try {
+        const response = await schedule.remove(arg.uids);
 
-      return response;
+        response?.forEach((sched) =>
+          loader?.schedule?.clear(sched.doctorClinicUid)
+        );
+        return response;
+      } catch (error) {
+        console.error(error);
+      }
     },
   },
 };

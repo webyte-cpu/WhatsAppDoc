@@ -22,7 +22,7 @@ const schedule = gql`
   }
 
   extend type Query {
-    getSchedule(uid: UUID): Schedule
+    getSchedule(uid: UUID!): Schedule
     getAllSchedule: [Schedule]
   }
 
@@ -31,7 +31,9 @@ const schedule = gql`
       doctorClinicUid: UUID!
       schedList: [SchedUpsertInput!]
     ): [Schedule]
+    
     createSchedule(doctorClinicUid: UUID!, schedList: [SchedInput!]): [Schedule]
+    
     updateSchedule(
       uid: UUID!
       startTime: LocalTime
