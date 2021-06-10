@@ -1,4 +1,5 @@
 import React from "react";
+import { LogBox } from 'react-native';
 import * as eva from "@eva-design/eva";
 import { EvaIconsPack } from "@ui-kitten/eva-icons";
 import { ApplicationProvider, IconRegistry } from "@ui-kitten/components";
@@ -7,6 +8,8 @@ import AppNavigator from "./src/navigation/routes";
 import { AuthProvider } from "./src/screens/auth/utils/authProvider";
 import { StatusBar } from "expo-status-bar";
 import ApolloClientProvider from "./apolloClient";
+
+LogBox.ignoreAllLogs()
 
 const App = () => {
   return (
