@@ -75,7 +75,7 @@ describe("Sign Up", () => {
 
   it("Trys to sign up with existing user", async () => {
     const variables = {
-      email: "kent@webyte.org",
+      email: "Billie97@yahoo.com",
       password: "L3tM3!N!!",
       firstName: "Kent",
       middleName: null,
@@ -117,7 +117,7 @@ describe("Sign Up", () => {
       variables,
     });
 
-    const { email, firstName, lastName, role, uid, sex, img, birthdate } =
+    const { email, firstName, lastName, role, sex, img, birthdate } =
       jwt.verify(response.data.signUp, process.env.JWT_SECRET_KEY);
 
     await expect({
@@ -125,7 +125,6 @@ describe("Sign Up", () => {
       firstName,
       lastName,
       role,
-      uid,
       sex,
       img,
       birthdate,
@@ -152,7 +151,7 @@ describe("Sign Up", () => {
 
     console.log(response);
 
-    const { email, firstName, lastName, role, uid, sex, img, birthdate } =
+    const { email, firstName, lastName, role, sex, img, birthdate } =
       jwt.verify(response.data.signUp, process.env.JWT_SECRET_KEY);
 
     await expect({
@@ -160,7 +159,6 @@ describe("Sign Up", () => {
       firstName,
       lastName,
       role,
-      uid,
       sex,
       img,
       birthdate,
