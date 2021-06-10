@@ -14,13 +14,13 @@ import knexCleaner from "knex-cleaner";
 //   EmailAddress: () => faker.internet.email(),
 // };
 
-const constructTestServer = ({ context } = {}) => {
+const constructTestServer = ({ context = () => {} } = {}) => {
   const server = new ApolloServer({
     typeDefs,
     resolvers,
     // mocks: { ...mocks, ...defaultMocks },
     // mockEntireSchema: false,
-    context: () => ({ loader, ...context() }),
+    context: () => ({ loader, ...(context() || {}) }),
   });
 
   return { server };
