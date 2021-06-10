@@ -27,9 +27,9 @@ const TopTabBar = ({ navigation, state }) => {
       onSelect={(index) => navigation.navigate(state.routeNames[index])}
       style={{ backgroundColor: theme["color-primary-light"] }}
     >
-      <Tab test-id="about-tab" title="About" style={customStyle.tabStyle} />
-      <Tab test-id="availability-tab" title="Availability" />
-      <Tab test-id="limits" title="Limits" />
+      <Tab  title="About" style={customStyle.tabStyle} />
+      <Tab  title="Availability" />
+      <Tab  title="Limits" />
     </TabBar>
   );
 };
@@ -71,9 +71,9 @@ const AppointmentProperties = ({ navigation, route }) => {
         tabBar={(props) => <TopTabBar {...props} />}
         style={{ backgroundColor: theme["color-primary-light-600"] }}
       >
-        <Screen name="About" component={About} />
-        <Screen name="Availability" component={Availability} />
-        <Screen name="Limits" component={Limits} />
+        <Screen testID="about-tab" name="About" component={About} />
+        <Screen testID="availability-tab" name="Availability" component={Availability} />
+        <Screen testID="limits" name="Limits" component={Limits} />
       </Navigator>
     </View>
   );

@@ -7,7 +7,7 @@ const EmptyFieldsModal = ({fields, showErr, setShowErr}) => {
   const closeModal = () => setShowErr({status: false, fields: []})
   const header = (props) => (
     <View {...props}>
-      <Text category='h6'>Required Fields</Text>
+      <Text testID="errorFields" category='h6'>Required Fields</Text>
     </View>
   )
   const footer = (props) => (
