@@ -88,9 +88,19 @@ const DoctorDetails = ({ doctor, isShown, onHide }) => {
     refetchQueries: [{ query: GET_DOCTORS }]
   });
   const updateDoctorStatus = (uidCode, verification) => {
+    let message = ""
+
+    if(verification === enums.verificationStatus.VERIFIED){
+      message = "Your request has been accepted"
+    }
+    else if (verificationStatus === enums.verificationStatus.DECLINED){
+      message = "Your request has been rejected"
+    }
+    
     updateDoctor({
       variables: {
         uid: uidCode,
+        description: description,
         verificationStatus: verification,
       },
     });
