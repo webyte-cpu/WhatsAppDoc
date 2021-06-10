@@ -18,37 +18,37 @@ import { gql, useMutation } from '@apollo/client';
 const ROLE = enums.role;
 
 const UPDATE_DOCTOR = gql`
-    mutation updateDoctor(
-      $uid:UUID, 
-      $licenceNum: String, 
-      $licenceImg: String, 
-      $specialization: String,
-      $licenceExp: Date,
-      $verificationStatus: VerificationStatus )
-      {
-        updateDoctor(
-          uid: $uid , 
-          licenceNum: $licenceNum, 
-          licenceImg: $licenceImg, 
-          about: $about, 
-          licenceExp: $licenceExp,
-          verificationStatus: $verificationStatus){
-            uid
-        }
+  mutation updateDoctor(
+    $uid: UUID
+    $licenceNum: String
+    $licenceImg: String
+    $licenceExp: Date
+    $verificationStatus: VerificationStatus
+    $specialization:[String]
+  ) {
+    updateDoctor(
+      uid: $uid
+      licenceNum: $licenceNum
+      licenceImg: $licenceImg
+      licenceExp: $licenceExp
+      verificationStatus: $verificationStatus
+      specialization:$specialization
+    ) {
+      uid
+      verificationStatus
     }
+  }
 `
 
 const DoctorForm = ({ navigation }) => {
-;
-
   const { appState } = useAuth();
   const user = appState.user
 
   const doctorDetails = {
     specialization: '',
-    licenseNum: '',
-    licenseImg: '',
-    expirationDate: '',
+    licenceNum: '',
+    licenceImg: '',
+    licenceExp: '',
     verificationStatus: enums.verificationStatus.PENDING, //default
   };
 
@@ -59,16 +59,16 @@ const DoctorForm = ({ navigation }) => {
     updateDoctor({
         variables: {
             uid: user.uid,
-            licenceNum: values.licenseNum,
+            licenceNum: values.licenceNum,
             licenceImg: values.licenceImg,
-            about: values.specialization,
-            licenceEXP: formatDate(values.expirationDate),
-            verificationStatus: "PENDING"
+            licenceExp: formatDate(values.expirationDate),
+            specialization: values.specialization,
+            verificationStatus: enums.verificationStatus.PENDING
         }
     });
 
     if (errorMutate) {
-        console.log(errorMutate)
+        console.error(errorMutate)
     }
 }
 
