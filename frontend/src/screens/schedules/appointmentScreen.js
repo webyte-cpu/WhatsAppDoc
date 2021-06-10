@@ -17,6 +17,8 @@ import { useAuth } from "../auth/utils/authProvider";
 import enums from "../../../helpers/enums";
 import { useMutation } from "@apollo/client";
 import LoadingScreen from "../../components/loadingScreen";
+import StatusModal from "./statusModal";
+import { AppRoute } from "../../navigation/app-routes";
 
 const TimeIcon = (props) => {
   const theme = useTheme();
@@ -135,6 +137,13 @@ const agendaDataMapper = (data) => {
 };
 
 const AgendaScreen = () => {
+  const [visible, setVisible] = useState(false);
+
+  const handleClose = () => {
+    setVisible(false);
+    return navigation.navigate(AppRoute.APPOINTMENTS); //! temporary fix
+  };
+
   const { appState } = useAuth();
   const user = appState.user;
 
@@ -202,6 +211,7 @@ const AgendaScreen = () => {
                 {new Date(item.dateTime).toLocaleTimeString()}
               </Text>
             </View>
+            <StatusModal isShown={visible} onHide={handleClose}/>
           </View>
         </Card>
       </TouchableOpacity>

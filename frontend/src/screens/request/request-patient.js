@@ -152,7 +152,7 @@ const RequestPatientPage = ({ navigation }) => {
     }
 
     const cancelingHandler = (item) => {
-        const minimum = 3
+        const minimum = item.minimumSchedulingNoticeMins/60
         const getDiffinHrs = Difference(item.dateTime)
 
         if (getDiffinHrs < minimum || [enums.status.IN_QUEUE, enums.status.DONE].includes(item.status)) {
