@@ -83,7 +83,6 @@ const DoctorDetails = ({ doctor, isShown, onHide }) => {
   const [updateDoctor] = useMutation(UPDATE_DOCTOR, {
     onError: (err) => {
       console.error(err);
-
     },
     refetchQueries: [{ query: GET_DOCTORS }]
   });
@@ -100,7 +99,6 @@ const DoctorDetails = ({ doctor, isShown, onHide }) => {
     updateDoctor({
       variables: {
         uid: uidCode,
-        description: description,
         verificationStatus: verification,
       },
     });
