@@ -1,32 +1,59 @@
-import React from "react";
+import React, {useState} from "react";
 import { View, StyleSheet } from 'react-native'
 import { Modal, Button, Card, Icon, Text, useTheme, SelectItem, Select } from '@ui-kitten/components'
+import {UPDATE_APPOINTMENT_MUTATION} from "./utils/queries"
+import { useMutation } from "@apollo/client";
 
 const CloseIcon = (props) => { return <Icon {...props} style={[props.style, styles.closeIcon], { alignItems: "right" }} name='close-outline' /> }
 
 
-const Footer = ({ onHide }) => {
+
+
+
+
+const onSave = (updateAppointment,uid,value) => {
+
+    console.log(value)
+    updateAppointment(uid, value.replace(" ", "_"))
+
+}
+const Footer = ({ onHide, value, updateAppointment, uid }) => {
     return (
         <View style={{ flexDirection: 'row' }}>
             <Button onPress={onHide}>Cancel</Button>
-            <Button status="success" onPress={onHide}>Save</Button>
+            <Button status="success" onPress={() => {
+                onSave(updateAppointment, uid, value)
+                onHide()
+            }}>Save</Button>
         </View>
 
 
     )
 }
 
-const StatusModal = ({ isShown, onHide }) => {
-    const [status, setStatusData] = useState([]);
+const StatusModal = ({ isShown, onHide, statusPreValue, uid }) => {
+  
+    const status = ['IN QUEUE' , 'PENDING', 'CANCELLED', 'DONE']
+    const [updateAppointment] = useMutation(UPDATE_APPOINTMENT_MUTATION);
 
-    const [selectedStatus, setSelectedStatus] = useState(null); // string
+    const updateAppointmentStatus = (uidCode, status) => {
+        
+        updateAppointment({
+        variables: {
+            uid: uidCode,
+            status: status,
+        },
+        });
+    };
+
+    const [selectedStatus, setSelectedStatus] = useState(statusPreValue); // string
     const [selectedIndex, setSelectedIndex] = useState();
 
-    const SelectStatus = ({ status }) => {
+    const SelectStatus = () => {
         const value = selectedIndex
         const displayValue = value
 
-        const status = `${selectedStatus}`
+     
         const renderOption = (status, index) => (
             <SelectItem
                 key={index}
@@ -38,12 +65,13 @@ const StatusModal = ({ isShown, onHide }) => {
             <View style={{ marginVertical: 10 }}>
                 <Select
                     label="STATUS"
-                    placeholder={status}
+                    placeholder={selectedStatus}
                     value={displayValue}
                     selectedIndex={selectedIndex}
                     onSelect={(index) => {
-                        setSelectedIndex(index);
-                        setSelectedStatus(displayValue);
+                        
+                        {console.log(index)}
+                        setSelectedStatus(status[index - 1])
                     }}
                 >
                     {status.map(renderOption)}
@@ -61,13 +89,13 @@ const StatusModal = ({ isShown, onHide }) => {
                 onBackdropPress={onHide}>
                 <Card
                     disabled={true}
-                    footer={() => <Footer onHide={onHide} />}
+                    footer={() => <Footer onHide={onHide} value={selectedStatus} uid = {uid} updateAppointment={updateAppointmentStatus} />}
                 >
                     <View style={styles.container}>
                         <CloseIcon/>
                         <Text style={styles.text} category='h5'>Status</Text>
 
-                        <SelectStatus status={status} />
+                        <SelectStatus />
 
                     </View>
                 </Card>

@@ -52,7 +52,7 @@ const KnobIcon = (props) => {
   );
 };
 
-const Header = ({ name, status }) => {
+const Header = ({ name, status, button }) => {
   const theme = useTheme();
   let statusBgColor;
   let statusTextColor;
@@ -79,21 +79,10 @@ const Header = ({ name, status }) => {
   return (
     <View style={customStyle.agendaCardHeader}>
       <Text category="h6">{name}</Text>
-      <Button status={statusColor} onPress={() => {alert('modal')}}>
+      <Button status={statusColor} onPress={button}>
         {status}
       </Button>
 
-      {/* <Text
-        style={{
-          color: statusTextColor,
-          backgroundColor: statusBgColor,
-          paddingVertical: 5,
-          paddingHorizontal: 20,
-          borderRadius: 10,
-        }}
-      >
-        {status}
-      </Text> */}
     </View>
   );
 };
@@ -139,19 +128,28 @@ const agendaDataMapper = (data) => {
 const AgendaScreen = () => {
   const [visible, setVisible] = useState(false);
 
-  const handleClose = () => {
-    setVisible(false);
-    return navigation.navigate(AppRoute.APPOINTMENTS); //! temporary fix
-  };
-
   const { appState } = useAuth();
   const user = appState.user;
 
+  const handleClose = () => {
+
+    setVisible(false);
+  
+     //! temporary fix
+  };
+
+
+  const handlOpen = () => {
+    if(user.role === enums.role.DOCTOR){
+      setVisible(true)
+    }
+    
+  }
+
+
   const refAgenda = useRef(null);
 
-  const [updateAppointment, { errorMutate }] = useMutation(
-    UPDATE_APPOINTMENT_MUTATION
-  );
+
 
   const { loading, error, data } = useQuery(GET_ALL_APPOINTMENT, {
     pollInterval: 500,
@@ -189,6 +187,7 @@ const AgendaScreen = () => {
             <Header
               {...props}
               name={item.patient.firstName}
+              button={handlOpen}
               status={item.status.replace("_", " ")}
             />
           )}
@@ -210,8 +209,13 @@ const AgendaScreen = () => {
               <Text category="s1">
                 {new Date(item.dateTime).toLocaleTimeString()}
               </Text>
+              
             </View>
-            <StatusModal isShown={visible} onHide={handleClose}/>
+            <StatusModal 
+            isShown={visible} 
+            onHide={handleClose} 
+            statusPreValue={item.status.replace("_", " ")}
+            uid={item.uid}/>
           </View>
         </Card>
       </TouchableOpacity>
