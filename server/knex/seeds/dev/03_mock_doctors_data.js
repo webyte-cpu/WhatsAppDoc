@@ -7,13 +7,13 @@ const seed = function (knex) {
           doctor_licence_num: '1234567',
           doctor_verification_status: 'PENDING',
           doctor_licence_img:
-            'http://newstogov.com/wp-content/uploads/2019/10/prc1.jpg',
+            'https://optimized-blogassets.moneymax.ph/blog/ph_PH/wp-content/uploads/2020/09/24203927/Valid_IDs_Philippines1.png',
           doctor_licence_exp: '2022-10-28',
         },
         {
           doctor_uid: '3a238cae-f2af-4d4b-bb34-252215b5272e',
           doctor_licence_num: '0483958',
-          doctor_verification_status: 'UNVERIFIED',
+          doctor_verification_status: 'VERIFIED',
           doctor_licence_img:
             'http://newstogov.com/wp-content/uploads/2019/10/prc1.jpg',
           doctor_licence_exp: '2021-12-12',
@@ -31,7 +31,7 @@ const seed = function (knex) {
           doctor_licence_num: '1206496',
           doctor_verification_status: 'DECLINED',
           doctor_licence_img:
-            'http://newstogov.com/wp-content/uploads/2019/10/prc1.jpg',
+            'https://mma.prnewswire.com/media/550402/Philippines_Biometric_Driver_License.jpg?w=950',
           doctor_licence_exp: '2025-01-09',
         },
         {
