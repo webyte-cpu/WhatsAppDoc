@@ -23,6 +23,7 @@ import en from 'javascript-time-ago/locale/en'
 import { GET_ALL_APPOINTMENT, UPDATE_APPOINTMENT_MUTATION } from "./queries"
 import { useQuery, useMutation } from "@apollo/client";
 import {pushNotification} from '../../notification/notification'
+import LoadingScreen from "../../components/loadingScreen";
 
 const RequestPatientPage = ({ navigation }) => {
     const { appState } = useAuth();
@@ -30,7 +31,7 @@ const RequestPatientPage = ({ navigation }) => {
 
     const [updateAppointment, { errorMutate }] = useMutation(UPDATE_APPOINTMENT_MUTATION)
     const { loading, error, data } = useQuery(GET_ALL_APPOINTMENT, {pollInterval: 500});
-    if (loading) return <p>Loading...</p>
+    if (loading) return <LoadingScreen/>
     if (error) {
         console.log(error)
         return (null)
@@ -61,9 +62,10 @@ const RequestPatientPage = ({ navigation }) => {
     }
     else {
         items = items.filter((appointment) => {
-            return appointment.patient.uid === user.uid && appointment.status
+            return appointment.patient.uid === user.uid && appointment.status === enums.status.PENDING
         })
     }
+    
     TimeAgo.addLocale(en)
 
     const theme = useTheme();
@@ -153,7 +155,7 @@ const RequestPatientPage = ({ navigation }) => {
         const minimum = 3
         const getDiffinHrs = Difference(item.dateTime)
 
-        if (getDiffinHrs < minimum) {
+        if (getDiffinHrs < minimum || [enums.status.IN_QUEUE, enums.status.DONE].includes(item.status)) {
             return true
         } else {
             return false
@@ -166,7 +168,7 @@ const RequestPatientPage = ({ navigation }) => {
             <View style={{ padding: 2 }}>
                 <View style={{ flexDirection: 'row', padding: 5 }}>
                     <Status title={item.status}></Status>
-                    <GetTimeAgo dateTime={item.dateTime}/>
+                    {/* <GetTimeAgo dateTime={item.dateTime}/> */}
                 </View>
                 <View style={styles.buttons}>
                     <Button
