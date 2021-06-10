@@ -40,7 +40,6 @@ Object {
   "lastName": "Osunero",
   "role": "DOCTOR",
   "sex": undefined,
-  "uid": "20cafda8-70ef-4ecc-b14d-b6c9e42e4888",
 }
 `;
 
@@ -53,21 +52,17 @@ Object {
   "lastName": "Osunero",
   "role": "PATIENT",
   "sex": undefined,
-  "uid": "b17f488c-e7b6-42ed-8871-1ef46f34fb00",
 }
 `;
 
 exports[`Sign Up Trys to sign up with existing user 1`] = `
 Object {
-  "data": null,
-  "errors": Array [
-    [GraphQLError: Email not unique],
-  ],
-  "extensions": undefined,
-  "http": Object {
-    "headers": Headers {
-      Symbol(map): Object {},
-    },
-  },
+  "birthdate": undefined,
+  "email": "kent@webyte.org",
+  "firstName": "Kent",
+  "img": undefined,
+  "lastName": "Handumon",
+  "role": "PATIENT",
+  "sex": undefined,
 }
 `;

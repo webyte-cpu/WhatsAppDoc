@@ -38,13 +38,12 @@ const resolverMap = {
         console.error(error);
       }
     },
-    appointment: async (clinic, arg, { loader }, info) => {
+    appointment: (clinic, arg, { loader }, info) => {
       if (__.isNull(clinic.doctorClinicUid)) {
         return null;
       }
       try {
-        const response = await loader.appointment.load(clinic.doctorClinicUid);
-        console.log(response)
+        const response = loader.appointment.load(clinic.doctorClinicUid);
         return response;
       } catch (error) {
         console.error(error);

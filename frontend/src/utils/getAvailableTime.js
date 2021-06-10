@@ -79,13 +79,16 @@ const appointmentsSameDay = [ // days = 1
 ]
 
 const convertAppointment = (appointments) => appointments.map((appointment) => {
-  const time = new Date(appointment.dateTime)
-    .toLocaleTimeString(undefined, {timeStyle:'short'})
+  const [date, time] = new Date(appointment.dateTime)
+    .toLocaleString(undefined, {timeStyle:'short', dateStyle: 'short'})
+    .split(',')
+    .map((e) => e.trim())
     
+    const [day, month, year] = date.split('/')
     const [hours, min] = time.split(':')
     const [minutes, ampm] = min.split(' ')
 
-  return {...appointment, from: { hours: Number(hours), minutes: Number(minutes), ampm: ampm.toLowerCase() }}
+  return {...appointment, date: `${year}-${month}-${day}`, from: { hours: Number(hours), minutes: Number(minutes), ampm: ampm.toLowerCase() }}
 })
 
 const formatDate = (date) => {
@@ -122,16 +125,11 @@ export const getAvailableTime = (intervals, slotDuration, appointments, chosenDa
     results = matchingInterval.time
   
     if(appointments) {
-      console.log(chosenDate, 'CHOSE')
       const appointmentList = convertAppointment(appointments)
-      console.log(appointmentList,'LIS')
-      const occupiedTimes = appointmentList.filter((appointment) => new Date(appointment.dateTime).toLocaleDateString() === new Date(chosenDate).toLocaleDateString() && appointment.status !== 'CANCELLED') 
+      const occupiedTimes = appointmentList.filter((appointment) => appointment.date === chosenDateString && appointment.status !== 'CANCELLED') 
       const byStartTime = (schedule, appointment) => R.equals(schedule.from, appointment.from)
       
-      results = R.differenceWith((a,b) => byStartTime(a,b), matchingInterval.time, occupiedTimes)
-      console.log(matchingInterval.time, 'matchingInterval.time')
-
-      console.log(occupiedTimes, 'RES')
+      results = R.differenceWith(byStartTime, matchingInterval.time, occupiedTimes)
     }
   }
 

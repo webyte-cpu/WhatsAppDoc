@@ -9,7 +9,6 @@ import DrawerStack from "./drawerStack";
 import ProfileStackScreen from "./profileStack";
 import TabStack from "./tabStack";
 import RequestStackScreen from "./requestStack"
-import { AppRoute } from "../app-routes";
 
 const UserDrawer = createDrawerNavigator();
 
@@ -56,9 +55,9 @@ const UserDrawerStack = () => {
         options={{ title: "Profile" }}
       />
       <UserDrawer.Screen
-        name={AppRoute.REQUEST}
+        name="RequestPage"
         component={RequestStackScreen}
-        options={{ title: "Requests" }}
+        options={{ title: "Request" }}
       />
     </>
   );

@@ -112,7 +112,7 @@ const DoctorInfo = ({ route, navigation }) => {
       </Text>
       <RenderClinics clinics={doctor.clinic} />
       <RenderMap />
-      <BookingScreen clinic={selectedClinic} navigation={navigation} />
+      <BookingScreen clinic={selectedClinic} />
       {/* <Button
         appearance="filled"
         style={{ marginVertical: 10 }}

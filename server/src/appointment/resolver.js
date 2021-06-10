@@ -39,7 +39,7 @@ export default {
   },
 
   Mutation: {
-    createAppointment: async (obj, arg, { pubsub, user, loader }) => {
+    createAppointment: async (obj, arg, { pubsub, user }) => {
       if (user.role !== enums.role.PATIENT) {
         throw new ApolloError("Not authorize to create an appointment!");
       }
@@ -53,7 +53,6 @@ export default {
         newAppointment: await appointment.get(user.uid),
       });
       console.log("published");
-      loader.appointment.clear(arg.doctorClinicUid)
       return response;
     },
     updateAppointment: async (obj, arg) => {
