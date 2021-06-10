@@ -89,7 +89,6 @@ const About = ({ route, navigation }) => {
 
             <Divider style={{ marginTop: 20 }} />
             <LocationMap
-              testID="location-map"
               locationCoords={initial.address.coordinates}
               submitForm={(values) => {
               const clone = R.clone(formValues)

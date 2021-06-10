@@ -18,9 +18,11 @@ import {
 } from "@ui-kitten/components";
 import customStyle from "../../../themes/styles";
 import enums from "../../../helpers/enums";
-// import TimeAgo from 'javascript-time-ago'       //https://github.com/catamphetamine/javascript-time-ago
-// import en from 'javascript-time-ago/locale/en'
-
+import TimeAgo from 'javascript-time-ago'       //https://github.com/catamphetamine/javascript-time-ago
+import en from 'javascript-time-ago/locale/en'
+import { GET_ALL_APPOINTMENT, UPDATE_APPOINTMENT_MUTATION } from "./queries"
+import { useQuery, useMutation } from "@apollo/client";
+import {pushNotification} from '../../notification/notification'
 
 const RequestPage = ({ navigation }) => {
     const { appState } = useAuth();
