@@ -3,18 +3,11 @@
 exports[`Queries and Mutations Testing create an appointment 1`] = `
 Object {
   "data": Object {
-    "createAppointment": Object {
-      "createdAt": 1995-06-12T15:25:42.400Z,
-      "dateTime": 2032-11-10T19:43:16.194Z,
-      "doctorClinicUid": "0353121f-eeed-4687-8676-f788d3e9c8e6",
-      "doctorRemarks": null,
-      "patientUid": "7c03f38f-ab4f-4605-a274-706e4d8c8d6a",
-      "status": "PENDING",
-      "uid": "1a8ca8be-f62c-42da-9e14-4059f1c23cae",
-      "updatedAt": null,
-    },
+    "createAppointment": null,
   },
-  "errors": undefined,
+  "errors": Array [
+    [GraphQLError: Cannot read property 'appointment' of undefined],
+  ],
   "extensions": undefined,
   "http": Object {
     "headers": Headers {
@@ -30,20 +23,20 @@ Object {
     "getAllAppointment": Array [
       Object {
         "createdAt": null,
-        "dateTime": 2098-06-29T06:58:53.549Z,
-        "doctorClinicUid": "0afdaddf-536e-4b67-8617-52783e64f6b5",
+        "dateTime": 2021-05-26T11:30:10.000Z,
+        "doctorClinicUid": "740424a7-4e39-426f-aa53-65cf3e31609d",
         "doctorRemarks": "test remarks",
-        "patientUid": "7c03f38f-ab4f-4605-a274-706e4d8c8d6a",
+        "patientUid": "31e7e881-4b37-4cee-80f9-4ab32a25773d",
         "status": "PENDING",
         "uid": "1239e82b-b4ea-4e73-8861-df2ff69fac82",
         "updatedAt": null,
       },
       Object {
         "createdAt": null,
-        "dateTime": 2056-12-17T18:40:12.071Z,
-        "doctorClinicUid": "0353121f-eeed-4687-8676-f788d3e9c8e6",
+        "dateTime": 2021-11-21T18:00:00.000Z,
+        "doctorClinicUid": "6ecaae63-1196-4e48-818d-0266dbed39e2",
         "doctorRemarks": "test remarks",
-        "patientUid": "7c03f38f-ab4f-4605-a274-706e4d8c8d6a",
+        "patientUid": "7fc392c3-cd94-40ec-bd53-81de4aa8f8cf",
         "status": "PENDING",
         "uid": "f621fddb-8b13-4c58-93d7-3159a99c06bc",
         "updatedAt": null,
@@ -63,16 +56,18 @@ Object {
 exports[`Queries and Mutations Testing fetches an appointment 1`] = `
 Object {
   "data": Object {
-    "getAppointment": Object {
-      "createdAt": null,
-      "dateTime": 2067-06-11T07:49:49.025Z,
-      "doctorClinicUid": "0353121f-eeed-4687-8676-f788d3e9c8e6",
-      "doctorRemarks": "test remarks",
-      "patientUid": "7c03f38f-ab4f-4605-a274-706e4d8c8d6a",
-      "status": "PENDING",
-      "uid": "f621fddb-8b13-4c58-93d7-3159a99c06bc",
-      "updatedAt": null,
-    },
+    "getAppointment": Array [
+      Object {
+        "createdAt": null,
+        "dateTime": 2021-11-21T18:00:00.000Z,
+        "doctorClinicUid": "6ecaae63-1196-4e48-818d-0266dbed39e2",
+        "doctorRemarks": "test remarks",
+        "patientUid": "7fc392c3-cd94-40ec-bd53-81de4aa8f8cf",
+        "status": "PENDING",
+        "uid": "f621fddb-8b13-4c58-93d7-3159a99c06bc",
+        "updatedAt": null,
+      },
+    ],
   },
   "errors": undefined,
   "extensions": undefined,
@@ -88,14 +83,12 @@ exports[`Queries and Mutations Testing updates an appointment 1`] = `
 Object {
   "data": Object {
     "updateAppointment": Object {
-      "createdAt": null,
-      "dateTime": 2002-10-26T01:11:11.152Z,
-      "doctorClinicUid": "0353121f-eeed-4687-8676-f788d3e9c8e6",
+      "dateTime": 2021-05-26T16:00:00.000Z,
+      "doctorClinicUid": "6ecaae63-1196-4e48-818d-0266dbed39e2",
       "doctorRemarks": "test test test",
-      "patientUid": "7c03f38f-ab4f-4605-a274-706e4d8c8d6a",
+      "patientUid": "7fc392c3-cd94-40ec-bd53-81de4aa8f8cf",
       "status": "ON_GOING",
       "uid": "f621fddb-8b13-4c58-93d7-3159a99c06bc",
-      "updatedAt": 1993-02-27T12:44:45.743Z,
     },
   },
   "errors": undefined,

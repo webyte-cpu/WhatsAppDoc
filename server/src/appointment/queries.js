@@ -69,8 +69,6 @@ export const UPDATE_APPOINTMENT = gql`
       status
       dateTime
       doctorRemarks
-      createdAt
-      updatedAt
     }
   }
 `

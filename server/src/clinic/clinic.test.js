@@ -6,30 +6,30 @@ import {
   CREATE_CLINIC,
   UPDATE_CLINIC,
   DELETE_CLINIC,
-  UPSERT_CLINIC
+  UPSERT_CLINIC,
 } from "./queries.js";
 
 describe("Queries", () => {
-  // beforeAll(async () => {
-  //   try {
-  //     await cleanDb();
-  //     await pg.seed.run();
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
-  // });
+  beforeAll(async () => {
+    try {
+      await cleanDb();
+      await pg.seed.run();
+    } catch (error) {
+      console.log(error);
+    }
+  });
 
-  // afterAll(async () => {
-  //   try {
-  //     await cleanDb();
-  //     await pg.destroy();
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
-  // });
+  afterAll(async () => {
+    try {
+      await cleanDb();
+      await pg.destroy();
+    } catch (error) {
+      console.log(error);
+    }
+  });
 
   const context = () => ({
-    user: { uid: "0353121f-eeed-4687-8676-f788d3e9c8e6"},
+    user: { uid: "0e890190-1559-4edd-a0f5-3c61073fe576", role: "DOCTOR" },
   });
 
   const { server } = constructTestServer({ context });
@@ -72,7 +72,7 @@ describe("Queries", () => {
     const res = await query({
       query: GET_CLINIC,
       variables: {
-        uid: "027ae0ac-05d6-43bf-818e-a76607b7f976",
+        uid: "f9609c66-d0a1-48c6-b8bd-3a1a975986d4",
       },
     });
 
@@ -83,7 +83,7 @@ describe("Queries", () => {
     const res = await query({
       query: UPDATE_CLINIC,
       variables: {
-        uid: "027ae0ac-05d6-43bf-818e-a76607b7f976",
+        uid: "9a7c8d91-f9d8-4274-a8b9-f2e56ce591f7",
         name: "WeByte Clinic!!",
         roomNumber: "9",
       },
@@ -96,31 +96,31 @@ describe("Queries", () => {
     const res = await query({
       query: UPSERT_CLINIC,
       variables: {
-        uid: "63714154-c110-483b-8e1e-2d910bdb0f2e",
-        doctorClinicUid: "0de7cd8a-6410-4ebb-8006-45bee76491ea",
+        uid: "c27efa99-f36d-4c6f-a329-d8b4812eebf5",
+        doctorClinicUid: "7170c9e9-0296-400c-9d15-122c01992c8c",
         name: "Clinic number 117",
         roomNumber: "5",
         address: {
-          uid:"a9d6a29a-ae61-43c8-80f3-11a584cc1270",
+          uid: "9d204c76-6a1e-4527-adc7-dfe5f064ecd0",
           address: "PARC REGENCY",
           city: "PAVIA",
           province: "ILOILO",
           zipCode: "5001",
           country: "PHILIPPINES",
-          coordinates: "15.032, 112.096"
+          coordinates: "15.032, 112.096",
         },
         minimumSchedulingNoticeMins: 10,
         slotDurationInMins: 10,
-        consultationFee: 5000
-      }
-    })
+        consultationFee: 5000,
+      },
+    });
     await expect(res).toMatchSnapshot();
   }, 1000);
 
   it("deletes a clinic", async () => {
     const res = await query({
       query: DELETE_CLINIC,
-      variables: { uid: "6eca6134-f369-4278-86d5-1b3a10fea42e" },
+      variables: { uid: "52066acc-6225-4723-9b2d-6b52e3877a24" },
     });
     await expect(res).toMatchSnapshot();
   }, 10000);
