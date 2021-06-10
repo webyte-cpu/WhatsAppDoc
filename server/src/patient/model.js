@@ -96,6 +96,7 @@ const getAll = async (knex = pg) => {
       img: data.user_img,
       createdAt: data.created_at,
       updatedAt: data.updated_at,
+      pushToken: data.user_push_token
     },
     ...fromDb(data),
   }));
@@ -112,7 +113,8 @@ const find = findModel("patients", (data) => ({
     birthdate: data.user_birthdate,
     sex: data.user_sex,
     role: data.user_role,
-    img: data.user_img
+    img: data.user_img,
+    pushToken: data.user_push_token
 }), toDb, pg, (knex) => {
   
   return knex.innerJoin("users", "user_uid", "patient_uid")

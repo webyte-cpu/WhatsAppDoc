@@ -31,7 +31,7 @@ export const GET_ALL_APPOINTMENT = gql`
           uid
           firstName
           lastName
-          pushToken
+          pushToken 
         }
       }
       patient{
