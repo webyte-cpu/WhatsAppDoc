@@ -1,7 +1,8 @@
-import { ApolloServer, PubSub } from "apollo-server-express";
+import { ApolloServer } from "apollo-server-express";
 import { validateToken } from "./helpers/index.js";
 import resolvers from "./rootResolver/resolver.js";
 import typeDefs from "./rootTypeDef/typeDefs.js";
+import { PubSub } from "graphql-subscriptions";
 import loader from "./helpers/loader.js";
 import expressJwt from "express-jwt";
 import express from "express";
@@ -67,5 +68,5 @@ export const startApolloServer = async () => {
   return { httpServer };
 };
 
-startApolloServer()
+startApolloServer();
 export { typeDefs, ApolloServer, resolvers };

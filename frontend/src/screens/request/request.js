@@ -161,7 +161,7 @@ const RequestPage = ({ navigation }) => {
     const RenderDescription = ({ item }) => {
 
         return (
-            <View style={{ flexDirection: 'column' }}>
+            <View>
 
                 <View style={{ flexDirection: 'row', color: '#000045' }}>
                     <LocationIcon />

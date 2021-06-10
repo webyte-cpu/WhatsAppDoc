@@ -9,7 +9,7 @@
     "cypress": "npx cypress open",
     "test": "jest",
     "postinstall": "patch-package",
-    "seed:test": "cd .. && cd server && npm run test:migration && npm run test:seed",
+    "seed:test": "cd .. && cd server && npm run test:migrate:up && npm run test:seed:run",
     "clear:test_db": "cd .. && cd server && npm run test:clear_db"
   },
   "dependencies": {
