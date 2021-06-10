@@ -35,10 +35,11 @@ const RenderClinicNames = ({clinics, doctorUid}) => {
   
   return (
     <FlatList
-      horizontal="true"
+      horizontal={true}
       data={names}
       renderItem={clinicNames} 
       style={{marginLeft: 10, marginBottom: 10}}
+      keyExtractor={(item,index) => `${item}${index}`}
     />
   )
 }
@@ -67,7 +68,7 @@ const RenderDoctor = ({ item: doctor, navigation, disable = false}) => {
       disabled={disable}
       onPress={() => {
         if(!disable) {
-          navigation.navigate(AppRoute.DOCTOR_INFO, {doctorData: doctor, navigation})
+          navigation.navigate(AppRoute.DOCTOR_INFO, {doctorData: doctor})
         }
       }}
       // accessoryRight={bookmarkIcon}
@@ -91,8 +92,9 @@ const DoctorsList = ({searchResults, navigation}) => {
   return (
     <FlatList
       data={searchResults}
-      renderItem={({item, index, separators}) => <RenderItem item={item} navigation={navigation} index={index} />}
-      ListEmptyComponent={() => <View style={{marginTop: 20}}><EmptyListText /></View>}
+      renderItem={({item, index, separators}) => <RenderItem testID={`doctor-clinic-${index}`} key={`doctor-clinic-${index}`} item={item} navigation={navigation} index={index} />}
+      ListEmptyComponent={() => <View style={{marginTop: 20}} testID='emptyList'><EmptyListText /></View>}
+      keyExtractor={(item) => item.uid}
     />
   );
 };
