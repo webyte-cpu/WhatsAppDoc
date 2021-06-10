@@ -8,6 +8,7 @@ export const GET_ALL_DOCTORS = gql`
       firstName
       lastName
       middleName
+      pushToken
       specialization
       clinic {
         uid
