@@ -2,10 +2,8 @@ import { Given, When, Then, Before } from "cypress-cucumber-preprocessor/steps";
 import { fillFormFields } from "../SignUp/common";
 
 Before(() => {
-    cy.exec('npm run clear:dev_db');
-    cy.exec('npm run seed');
-    cy.visit('/login');
-  });
+  cy.visit('/login');
+});
 
 Given(`{string} and {string}`, (email, password) => {
   const loginDetails = [

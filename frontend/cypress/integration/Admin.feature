@@ -1,6 +1,6 @@
 Feature: Verify
 
-  This feature allows admin to check and verify a doctors' license
+  This feature allows admin to check and verify the doctor's information and license card
 
   Scenario Outline: Check each status tab
     Given I am on "<status>" tab
@@ -12,15 +12,12 @@ Feature: Verify
       | VERIFIED   |
       | UNVERIFIED |
 
-  Scenario Outline: Verify Doctors' license
-    Given I am on pending tab
-    When I click doctor "<name>"
+  Scenario Outline: Check Verified User Details
+    Given I am already on "<status>" tab
+    When I click the user details with "<status>" status
     Then I will see the doctor's license card information
-    And I click "<changeStatus>" button
-    Then I will see "<name>" on "<changeStatus>" tabs
 
-    Examples:
-      | name    | changeStatus |
-      | Laura   | verify       |
-      | Delia   | deny         |
-      | Naomi   | verify       |
+    Examples: 
+      | status     |
+      | VERIFIED   |
+      | UNVERIFIED |

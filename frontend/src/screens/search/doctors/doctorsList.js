@@ -67,7 +67,7 @@ const RenderDoctor = ({ item: doctor, navigation, disable = false}) => {
       disabled={disable}
       onPress={() => {
         if(!disable) {
-          navigation.navigate(AppRoute.DOCTOR_INFO, {doctorData: doctor})
+          navigation.navigate(AppRoute.DOCTOR_INFO, {doctorData: doctor, navigation})
         }
       }}
       // accessoryRight={bookmarkIcon}

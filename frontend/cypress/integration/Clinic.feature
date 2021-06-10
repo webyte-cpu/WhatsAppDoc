@@ -6,17 +6,16 @@ Feature: Clinic
 
   Scenario Outline: Adding Clinics
     When I add a new clinic: "<clinicName>"
-    And add details on the about form: 
-      "<consultationFee>",
-      "<location>",
-      "<roomNumber>",
-      "<streetAddress>",
-      "<city>",
-      "<stateProvince>",
-      "<postalCode>",
-      "<country>"
+    And add details on the about form: "<location>"
+      # "<consultationFee>"
+      # "<roomNumber>"
+      # "<streetAddress>"
+      # "<city>"
+      # "<stateProvince>"
+      # "<postalCode>"
+      # "<country>"
     And add details on the availabilty form:
-      "<intervals>"
+      # "<intervals>"
     And I input the minimum schedule notice hours: <"minNoticeHrs">
     And I Save
     Then The result is: "<result>"

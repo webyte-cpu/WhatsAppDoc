@@ -9,8 +9,8 @@
     "cypress": "npx cypress open",
     "test": "jest",
     "postinstall": "patch-package",
-    "seed": "cd .. && cd server && npm run migration && npm run seed",
-    "clear:dev_db": "cd .. && cd server && npm run clear:dev_db"
+    "seed:test": "cd .. && cd server && npm run test:migration && npm run test:seed",
+    "clear:test_db": "cd .. && cd server && npm run test:clear_db"
   },
   "dependencies": {
     "@apollo/client": "^3.3.13",

@@ -36,6 +36,7 @@ export const GET_ALL_DOCTORS = gql`
           dateTime
           createdAt
           updatedAt
+          doctorClinicUid
         }
       }
       about

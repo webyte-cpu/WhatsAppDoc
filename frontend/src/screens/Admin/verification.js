@@ -118,20 +118,21 @@ const DoctorDetails = ({ doctor, isShown, onHide }) => {
       >
         <Text category="s1">License Card Information</Text>
         <Image
+          testID="licenseImg"
           style={styles.image}
           source={{
             uri: doctor.licenceImg,
           }}
         />
-        <Text category="s1">
+        <Text testID="birthdate" category="s1">
           Birthdate:
           <Text> {doctor.birthdate}</Text>
         </Text>
-        <Text category="s1">
+        <Text testID="licenseNum" category="s1">
           License Number:
           <Text> {doctor.licenceNum}</Text>
         </Text>
-        <Text category="s1">
+        <Text testID="licenseExpiry" category="s1">
           License Expiration Date:
           <Text> {doctor.licenceExp}</Text>
         </Text>

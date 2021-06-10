@@ -10,13 +10,21 @@ const CheckIcon = (props) => {
 
 const CloseIcon = (props) => { return <Icon {...props} style={[props.style, styles.closeIcon]}  name='close-outline'/> }
 
-const Header = ({ onHide }) => {
+// const Header = ({ onHide }) => {
+//     return (
+//         <View style={{alignItems:'flex-end'}}>
+//             <Button appearance='ghost' onPress={onHide}>
+//                 <CloseIcon />
+//             </Button>
+//         </View>
+//     )
+// }
+
+const Footer = ({onHide}) => {
     return (
-        <View style={{alignItems:'flex-end'}}>
-            <Button appearance='ghost' onPress={onHide}>
-                <CloseIcon />
-            </Button>
-        </View>
+        <Button status="success" onPress={onHide}>
+            Ok
+        </Button>
     )
 }
 
@@ -28,13 +36,13 @@ const SuccessModal = ({ isShown, onHide }) => {
             backdropStyle={styles.backdrop}
             onBackdropPress={onHide}>
                 <Card
-                disabled={true}
-                header= {() => <Header onHide={onHide} />}
+                    disabled={true}
+                    footer={() => <Footer onHide={onHide}/>}
                 >   
                 <View style={styles.container}>
                     <CheckIcon />
                     <Text style={styles.text} category='h5'>Booking Request Sent!</Text>
-                    <Text style={styles.text} category='label'>Please allow 1hour/s for the doctor to confirm</Text>
+                    <Text style={styles.text} category='label'>Please allow 1 hour/s for the doctor to confirm</Text>
                 </View>
                 </Card>
             </Modal>
