@@ -38,11 +38,10 @@ const linking = {
 const AppNavigator = () => {
   const { appState } = useAuth();
   const [fontsLoaded] = useFonts(customFonts);
-  const auth = useAuth()
 
   useNotifications()
   
-  if (appState.isLoading) {
+  if (appState.isLoading && !fontsLoaded) {
     return <AppLoading />;
   }
 
