@@ -52,7 +52,7 @@ const ClinicInfo = ({ consultationFee, clinicName }) => {
       <Input
         style={styles.inputContainer}
         disabled={true}
-        value={consultationFee}
+        value={consultationFee.toString()}
         textStyle={styles.inputValue}
         accessoryLeft={() => prefix("Php")}
       />
