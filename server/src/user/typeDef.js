@@ -42,7 +42,6 @@ const user = gql`
 
   extend type Mutation {
     updateUser(
-      uid: UUID!
       firstName: String
       middleName: String
       lastName: String

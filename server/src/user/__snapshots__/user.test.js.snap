@@ -1,11 +1,17 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Queries deletes the user 1`] = `
+exports[`Queries fetches the logined user 1`] = `
 Object {
-  "data": undefined,
-  "errors": Array [
-    [ValidationError: Unknown type "Password".],
-  ],
+  "data": Object {
+    "getUser": Object {
+      "email": "Lupe_Predovic7@hotmail.com",
+      "firstName": "Delia",
+      "lastName": "Bruen",
+      "role": "DOCTOR",
+      "uid": "3a238cae-f2af-4d4b-bb34-252215b5272e",
+    },
+  },
+  "errors": undefined,
   "extensions": undefined,
   "http": Object {
     "headers": Headers {
@@ -15,42 +21,17 @@ Object {
 }
 `;
 
-exports[`Queries deletes the user 2`] = `
+exports[`Queries updates the login user 1`] = `
 Object {
-  "data": null,
-  "errors": Array [
-    [GraphQLError: delete from "users" where "user_uid" = $1 returning * - invalid input syntax for type uuid: "{"uid":"8b686839-4c94-48ac-ac51-86d36b7bf17c"}"],
-  ],
-  "extensions": undefined,
-  "http": Object {
-    "headers": Headers {
-      Symbol(map): Object {},
+  "data": Object {
+    "updateUser": Object {
+      "firstName": "Kent",
+      "lastName": "Handumon",
+      "middleName": "a",
+      "uid": "3a238cae-f2af-4d4b-bb34-252215b5272e",
     },
   },
-}
-`;
-
-exports[`Queries fetches single user 1`] = `
-Object {
-  "data": undefined,
-  "errors": Array [
-    [ValidationError: Unknown argument "uid" on field "Query.getUser".],
-  ],
-  "extensions": undefined,
-  "http": Object {
-    "headers": Headers {
-      Symbol(map): Object {},
-    },
-  },
-}
-`;
-
-exports[`Queries it signs up user 1`] = `
-Object {
-  "data": undefined,
-  "errors": Array [
-    [ValidationError: Unknown type "Password".],
-  ],
+  "errors": undefined,
   "extensions": undefined,
   "http": Object {
     "headers": Headers {

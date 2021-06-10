@@ -26,11 +26,28 @@ export default {
       }
       return __.first(await user.get(context.user.uid));
     },
-    getAllUser: () => user.get(),
+    getAllUser: (obj, arg, context) => {
+      if (__.isEmpty(context.user)) {
+        throw new AuthenticationError("No authorization header found");
+      }
+      return user.get();
+    },
   },
 
   Mutation: {
-    updateUser: (obj, arg) => user.update(arg),
-    deleteUser: (obj, arg) => user.remove(arg),
+    updateUser: (obj, arg, context) => {
+      if (__.isEmpty(context.user)) {
+        throw new AuthenticationError("No authorization header found");
+      }
+      arg.uid = context.user.uid;
+      return user.update(arg);
+    },
+    deleteUser: (obj, arg, context) => {
+      if (__.isEmpty(context.user)) {
+        throw new AuthenticationError("No authorization header found");
+      }
+
+      return user.remove(arg);
+    },
   },
 };
