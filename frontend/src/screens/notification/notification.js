@@ -8,6 +8,7 @@ import { useAuth } from "../auth/utils/authProvider";
 import enums from "../../../helpers/enums";
 import Appointment from "./appointment.js"
 import AppointmentList from "./appointment.js";
+import VerificationList from "./verification"
 
 const Notification = ({ navigation }) => {
 
@@ -77,7 +78,7 @@ const Notification = ({ navigation }) => {
 
                 <AppointmentList dataFromQuery={doctorClinicUids} navigation={navigation}/>
 
-      
+                <VerificationList navigation={navigation}/>
 
             </View>
         </>
