@@ -19,7 +19,6 @@ const CloseIcon = (props) => { return <Icon {...props} style={[props.style, styl
 //         </View>
 //     )
 // }
-
 const Footer = ({onHide}) => {
     return (
         <Button status="success" onPress={onHide}>

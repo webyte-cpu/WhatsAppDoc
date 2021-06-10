@@ -90,7 +90,6 @@ describe("Sign Up", () => {
       mutation: SIGN_UP,
       variables,
     });
-
     await expect(response).toMatchSnapshot();
   });
 

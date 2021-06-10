@@ -24,7 +24,6 @@ const ClickableProfileHeader = ({ navigation }) => (
 
 const DrawerContent = (props) => {
   const auth = useAuth();
-
   return (
     <Drawer
       header={() => <ClickableProfileHeader {...props} />}

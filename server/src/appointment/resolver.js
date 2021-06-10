@@ -43,7 +43,6 @@ export default {
       if (user.role !== enums.role.PATIENT) {
         throw new ApolloError("Not authorize to create an appointment!");
       }
-
       const response = await appointment.create({
         ...arg,
         patientUid: user.uid,

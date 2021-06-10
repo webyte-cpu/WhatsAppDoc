@@ -22,6 +22,7 @@ const AppRoute = {
   DOCTOR_INFO: 'DoctorInfo',
   BOOKING: 'Booking',
   REQUEST: 'Requests',
+  
 }
 
 export { AppRoute };

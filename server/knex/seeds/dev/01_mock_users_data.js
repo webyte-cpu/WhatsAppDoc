@@ -54,7 +54,7 @@ const seed = function (knex) {
         {
           user_uid: '0a1bcc04-a748-4669-a4c2-fced1bccc0b2',
           user_first_name: 'Dr. Bernice',
-          user_middle_name: 'B',
+          user_middle_name: 'C',
           user_last_name: 'Codiban',
           user_email: 'Ewell39@gmail.com',
           user_birthdate: '1984-05-10',

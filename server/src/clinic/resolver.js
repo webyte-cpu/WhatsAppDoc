@@ -44,7 +44,6 @@ const resolverMap = {
       }
       try {
         const response = await loader.appointment.load(clinic.doctorClinicUid);
-        console.log(response)
         return response;
       } catch (error) {
         console.error(error);
