@@ -113,6 +113,7 @@ const find = findModel(
     sex: data.user_sex,
     role: data.user_role,
     img: data.user_img,
+    pushToken: data.user_push_token
   }),
   toDb,
   pg,

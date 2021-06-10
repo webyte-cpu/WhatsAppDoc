@@ -10,7 +10,9 @@ import ProfileStackScreen from "./profileStack";
 import TabStack from "./tabStack";
 import RequestStackScreen from "./requestStack"
 import { AppRoute } from "../app-routes";
-import { useMutation } from "@apollo/client";
+import { UPDATE_USER } from "../../screens/home/utils/queries"
+import {useMutation} from '@apollo/client'
+
 const UserDrawer = createDrawerNavigator();
 
 const ClickableProfileHeader = ({ navigation }) => (
