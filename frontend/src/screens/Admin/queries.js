@@ -19,15 +19,15 @@ export const GET_DOCTORS = gql`
 `;
 
 export const UPDATE_DOCTOR = gql`
-  mutation updateDoctor($uid:UUID,$description: string!, $verificationStatus: VerificationStatus ){
+  mutation updateDoctor($uid:UUID, $verificationStatus: VerificationStatus ){
       updateDoctor(uid: $uid, verificationStatus: $verificationStatus){
           uid
+          verificationStatus
       }
 
       notify(
         userUid: $uid
         title: "Verification"
-        description: $description
         sourceType: "VERIFICATION"
   ) {
     uid

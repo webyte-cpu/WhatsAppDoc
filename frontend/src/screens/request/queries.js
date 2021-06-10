@@ -22,6 +22,7 @@ export const GET_ALL_APPOINTMENT = gql`
       createdAt
       clinic{
         name
+        minimumSchedulingNoticeMins
         address{
           address
           city

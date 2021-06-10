@@ -14,22 +14,22 @@ import { UPDATE_USER } from './utils/queries'
 const HomePage = ({ navigation, route }) => {
   const { appState } = useAuth();
   const [ updateUser, { errorMutate }] = useMutation(UPDATE_USER);
-  const updateUserPushToken = (uid, pushToken) => {
+  const updateUserPushToken = (pushToken) => {
     updateUser({
       variables: {
-        uid: uid,
         pushToken: pushToken,
       },
     });
   };
 
   if (errorMutate) {
-    console.log(errorMutate);
+    console.error(errorMutate);
   }
+
 
   useEffect(() => {
     registerForPushNotificationsAsync()
-    .then(token => updateUserPushToken(appState.user.uid,token)) 
+    .then(token => updateUserPushToken(token)) 
     .catch(err => console.log('err',err));
   }, []);
 

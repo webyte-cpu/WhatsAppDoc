@@ -82,6 +82,7 @@ export default function WebMap({isViewMode = false, locationCoords, setLocationC
         <>
           <View style={{ flex: 0.6, flexDirection: "row", alignItems: "center", marginBottom: 10, width: 410}}>
           <Input
+            testID="location-map"
             placeholder="Search clinic location"
             value={query}
             onChangeText={(val) => setQuery(val)}

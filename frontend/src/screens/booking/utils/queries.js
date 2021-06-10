@@ -14,6 +14,23 @@ export const CREATE_APPOINTMENT = gql`
         dateTime
         createdAt
         updatedAt
+        clinic {
+          name
+          doctor {
+            pushToken
+            firstName
+            middleName
+            lastName
+            uid
+          }
+        }
+        patient {
+          pushToken
+          firstName
+          middleName
+          lastName
+          uid
+        }
     }
   }
 `

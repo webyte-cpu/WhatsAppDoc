@@ -4,9 +4,8 @@ import {
   TouchableOpacity,
   View,
   StyleSheet,
-  Button,
 } from "react-native";
-import { Text, Card, Icon, useTheme } from "@ui-kitten/components";
+import { Text, Card, Icon, useTheme, Button } from "@ui-kitten/components";
 import customStyle from "../../../themes/styles";
 import { Agenda } from "react-native-calendars";
 import { useQuery } from "@apollo/client";
@@ -18,6 +17,8 @@ import { useAuth } from "../auth/utils/authProvider";
 import enums from "../../../helpers/enums";
 import { useMutation } from "@apollo/client";
 import LoadingScreen from "../../components/loadingScreen";
+import StatusModal from "./statusModal";
+import { AppRoute } from "../../navigation/app-routes";
 
 const TimeIcon = (props) => {
   const theme = useTheme();
@@ -51,36 +52,37 @@ const KnobIcon = (props) => {
   );
 };
 
-const Header = ({ name, status }) => {
+const Header = ({ name, status, button }) => {
   const theme = useTheme();
   let statusBgColor;
   let statusTextColor;
+  let statusColor;
 
   switch (status) {
-    case "In Queue":
+    case "IN QUEUE":
+      statusColor = 'warning'
       statusBgColor = theme["color-warning-200"];
       statusTextColor = theme["color-warning-600"];
       break;
-    case "Ongoing":
+    case "ONGOING":
+      statusColor = 'info'
+      statusBgColor = theme["color-info-200"];
+      statusTextColor = theme["color-info-600"];
+      break;
+    case "DONE":
+      statusColor = 'success'
       statusBgColor = theme["color-success-200"];
       statusTextColor = theme["color-success-600"];
-      break;
+    break;
   }
 
   return (
     <View style={customStyle.agendaCardHeader}>
       <Text category="h6">{name}</Text>
-      <Text
-        style={{
-          color: statusTextColor,
-          backgroundColor: statusBgColor,
-          paddingVertical: 5,
-          paddingHorizontal: 20,
-          borderRadius: 10,
-        }}
-      >
+      <Button status={statusColor} onPress={button}>
         {status}
-      </Text>
+      </Button>
+
     </View>
   );
 };
@@ -124,14 +126,30 @@ const agendaDataMapper = (data) => {
 };
 
 const AgendaScreen = () => {
+  const [visible, setVisible] = useState(false);
+
   const { appState } = useAuth();
   const user = appState.user;
 
+  const handleClose = () => {
+
+    setVisible(false);
+  
+     //! temporary fix
+  };
+
+
+  const handlOpen = () => {
+    if(user.role === enums.role.DOCTOR){
+      setVisible(true)
+    }
+    
+  }
+
+
   const refAgenda = useRef(null);
 
-  const [updateAppointment, { errorMutate }] = useMutation(
-    UPDATE_APPOINTMENT_MUTATION
-  );
+
 
   const { loading, error, data } = useQuery(GET_ALL_APPOINTMENT, {
     pollInterval: 500,
@@ -139,39 +157,12 @@ const AgendaScreen = () => {
   if (loading) return <LoadingScreen />;
   if (error) return <p>Error :</p>;
 
-  const handleAppointmentReject = (uid) => {
-    updateAppointment({
-      variables: {
-        uid: uid,
-        status: enums.status.CANCELLED,
-      },
-    });
-
-    if (errorMutate) {
-      console.log(errorMutate);
-    }
-  };
-
-  const handleAppointmentAccept = (uid) => {
-    updateAppointment({
-      variables: {
-        uid: uid,
-        status: enums.status.IN_QUEUE,
-      },
-    });
-
-    if (errorMutate) {
-      console.log(errorMutate);
-    }
-  };
-
   let items = data.getAllAppointment;
-
-  console.log(user.role);
 
   if (user.role === enums.role.DOCTOR) {
     items = items.filter((appointment) => {
-      return appointment.clinic.doctor.uid === user.uid;
+      return appointment.clinic.doctor.uid === user.uid &&
+      appointment.status !== enums.status.PENDING;
     });
   } else {
     items = items.filter((appointment) => {
@@ -196,6 +187,7 @@ const AgendaScreen = () => {
             <Header
               {...props}
               name={item.patient.firstName}
+              button={handlOpen}
               status={item.status.replace("_", " ")}
             />
           )}
@@ -215,32 +207,15 @@ const AgendaScreen = () => {
             <View style={{ flexDirection: "row", alignItems: "center" }}>
               <TimeIcon />
               <Text category="s1">
-                {" "}
-                {item.dateTime.split("T")[1].split(".")[0]}
+                {new Date(item.dateTime).toLocaleTimeString()}
               </Text>
+              
             </View>
-
-            {user.role === enums.role.DOCTOR &&
-            item.status === enums.status.PENDING ? (
-              <View>
-                <Text>
-                  <Button
-                    title="Accept"
-                    onPress={() => {
-                      handleAppointmentAccept(item.uid);
-                    }}
-                  />
-                  <Button
-                    onPress={() => {
-                      handleAppointmentReject(item.uid);
-                    }}
-                    title="Reject"
-                  />
-                </Text>
-              </View>
-            ) : (
-              ""
-            )}
+            <StatusModal 
+            isShown={visible} 
+            onHide={handleClose} 
+            statusPreValue={item.status.replace("_", " ")}
+            uid={item.uid}/>
           </View>
         </Card>
       </TouchableOpacity>

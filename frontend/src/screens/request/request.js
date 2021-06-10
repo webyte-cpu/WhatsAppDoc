@@ -18,8 +18,12 @@ import {
 } from "@ui-kitten/components";
 import customStyle from "../../../themes/styles";
 import enums from "../../../helpers/enums";
-// import TimeAgo from 'javascript-time-ago'       //https://github.com/catamphetamine/javascript-time-ago
-// import en from 'javascript-time-ago/locale/en'
+import { useMutation, useQuery } from "@apollo/client";
+import { GET_ALL_APPOINTMENT, UPDATE_APPOINTMENT_MUTATION } from "./queries";
+import LoadingScreen from "../../components/loadingScreen";
+import TimeAgo from 'javascript-time-ago'       //https://github.com/catamphetamine/javascript-time-ago
+import en from 'javascript-time-ago/locale/en'
+import {pushNotification} from '../../notification/notification'
 
 
 const RequestPage = ({ navigation }) => {
@@ -28,7 +32,7 @@ const RequestPage = ({ navigation }) => {
 
   const [updateAppointment, { errorMutate }] = useMutation(UPDATE_APPOINTMENT_MUTATION)
     const { loading, error, data } = useQuery(GET_ALL_APPOINTMENT, {pollInterval: 500});
-    if (loading) return <p>Loading...</p>
+    if (loading) return <LoadingScreen />
     if (error) {
         console.log(error)
         return (null)
@@ -124,8 +128,8 @@ const RequestPage = ({ navigation }) => {
                 }}>{day}</Text>
             </View>
         )
-
     }
+
     const Status = ({ title }) => {
         const status = title
         return (
@@ -171,7 +175,7 @@ const RequestPage = ({ navigation }) => {
             <View style={{ padding: 2 }}>
                 <View style={{ flexDirection: 'row', padding: 5 }}>
                     <Status title={item.status}></Status>
-                    <GetTimeAgo dateTime={item.dateTime} />
+                    {/* <GetTimeAgo dateTime={item.dateTime} /> */}
                 </View>
                 <View style={styles.buttons}>
                     <Button
