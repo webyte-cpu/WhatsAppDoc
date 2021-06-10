@@ -1,4 +1,5 @@
 import { ApolloServer, typeDefs, resolvers } from "../app.js";
+import loader from "./loader.js";
 // import faker from "faker";
 import pg from "../../db/index.js";
 import knexCleaner from "knex-cleaner";
@@ -19,7 +20,7 @@ const constructTestServer = ({ context } = {}) => {
     resolvers,
     // mocks: { ...mocks, ...defaultMocks },
     // mockEntireSchema: false,
-    context,
+    context: () => ({ loader, ...context() }),
   });
 
   return { server };
