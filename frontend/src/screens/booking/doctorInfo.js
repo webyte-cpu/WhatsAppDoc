@@ -96,6 +96,9 @@ const DoctorInfo = ({ route, navigation }) => {
         data={clinics}
         renderItem={clinicNames}
         style={{ marginVertical: 10 }}
+        keyExtractor={(item, index) => {
+          return `${item.doctorClinicUid}`
+        }}
       />
     );
   };
