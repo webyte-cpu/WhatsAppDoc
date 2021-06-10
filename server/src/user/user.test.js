@@ -6,12 +6,13 @@ import pg from "../../db/index.js";
 describe("Queries", () => {
   beforeAll(async () => {
     try {
+      await pg.initialize();
       await cleanDb();
       await pg.seed.run();
     } catch (error) {
       console.log(error);
     }
-  });
+  }, 60000);
 
   afterAll(async () => {
     try {

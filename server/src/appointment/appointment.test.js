@@ -13,16 +13,17 @@ const pubsub = new PubSub();
 describe("Queries and Mutations Testing", () => {
   beforeAll(async () => {
     try {
-      await cleanDb();
+      await pg.initialize();
+      await cleanDb(pg);
       await pg.seed.run();
     } catch (error) {
       console.log(error);
     }
-  });
+  }, 60000);
 
   afterAll(async () => {
     try {
-      await cleanDb();
+      await cleanDb(pg);
       await pg.destroy();
     } catch (error) {
       console.log(error);

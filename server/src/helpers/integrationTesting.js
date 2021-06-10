@@ -26,12 +26,12 @@ const constructTestServer = ({ context = () => {} } = {}) => {
   return { server };
 };
 
-const cleanDb = () => {
+const cleanDb = (knex = pg) => {
   const options = {
     mode: "truncate",
     restartIdentity: true,
   };
-  return knexCleaner.clean(pg, options);
+  return knexCleaner.clean(knex, options);
 };
 
 export { constructTestServer, cleanDb };

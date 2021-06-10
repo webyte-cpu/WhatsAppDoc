@@ -52,7 +52,7 @@ export default {
         newAppointment: await appointment.get(user.uid),
       });
       console.log("published");
-      loader.appointment.clear(arg.doctorClinicUid)
+      loader.appointment.clear(arg.doctorClinicUid);
       return response;
     },
     updateAppointment: async (obj, arg) => {
