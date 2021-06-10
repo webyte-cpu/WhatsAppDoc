@@ -33,7 +33,7 @@ const Footer = ({ onHide, value, updateAppointment, uid }) => {
 
 const StatusModal = ({ isShown, onHide, statusPreValue, uid }) => {
   
-    const status = ['IN QUEUE' , 'PENDING', 'CANCELLED', 'DONE']
+    const status = ['IN QUEUE' , 'PENDING', 'CANCELLED', 'DONE', 'ON_GOING']
     const [updateAppointment] = useMutation(UPDATE_APPOINTMENT_MUTATION);
 
     const updateAppointmentStatus = (uidCode, status) => {
