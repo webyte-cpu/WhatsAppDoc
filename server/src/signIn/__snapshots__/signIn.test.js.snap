@@ -32,12 +32,12 @@ Object {
 
 exports[`Sign In Should login 1`] = `
 Object {
-  "email": "kent@webyte.org",
-  "firstName": "Kent",
-  "lastName": "Handumon",
+  "email": "Lupe_Predovic7@hotmail.com",
+  "firstName": "Delia",
+  "lastName": "Bruen",
   "role": "DOCTOR",
-  "uid": null,
-  "verificationStatus": "PENDING",
+  "uid": "3a238cae-f2af-4d4b-bb34-252215b5272e",
+  "verificationStatus": "VERIFIED",
 }
 `;
 
