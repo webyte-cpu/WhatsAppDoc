@@ -61,7 +61,7 @@ const ClinicInfo = ({ consultationFee, clinicName }) => {
 
 const BookingScreen = ({ route, navigation, clinic }) => {
   // const clinic = route.params.selectedClinic
-  console.log(clinic);
+  // console.log(clinic);
   // useEffect(() => {
   //     const unsubscribe = navigation.addListener("focus", () => {
   //         navigation.setOptions({
@@ -93,7 +93,23 @@ const BookingScreen = ({ route, navigation, clinic }) => {
   };
 
   const [createAppointment] = useMutation(CREATE_APPOINTMENT, {
-    onCompleted: () => handleShow(),
+    onCompleted: ({createAppointment}) => {
+
+      handleShow()
+      const schedule =  new Date(`${selectedDate.toLocaleDateString()} ${selectedTime}`);
+
+      if (Platform.OS !== "web") {
+      
+        pushNotification(
+          { patient: appState.user.firstName },
+          createAppointment.clinic.doctor.pushToken,
+          createAppointment.clinic.name,
+          schedule,
+          "requestAppointment"
+        ); // add doctor pushtoken and clinic name
+      }
+    
+    },
     refetchQueries:[{query: GET_ALL_DOCTORS}]
   });
 
@@ -182,15 +198,15 @@ const BookingScreen = ({ route, navigation, clinic }) => {
       }
     });
 
-    if (Platform.OS !== "web") {
-      pushNotification(
-        { patient: appState.user.firstName },
-        "ExponentPushToken[]",
-        "Clinic Name",
-        schedule,
-        "requestAppointment"
-      ); // add doctor pushtoken and clinic name
-    }
+    // if (Platform.OS !== "web") {
+    //   pushNotification(
+    //     { patient: appState.user.firstName },
+    //     "ExponentPushToken[]",
+    //     "Clinic Name",
+    //     schedule,
+    //     "requestAppointment"
+    //   ); // add doctor pushtoken and clinic name
+    // }
   };
 
   return (

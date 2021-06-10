@@ -28,10 +28,9 @@ const DrawerContent = (props) => {
   const auth = useAuth();
   const {appState} = useAuth();
   const [ updateUser, { errorMutate }] = useMutation(UPDATE_USER);
-  const updateUserPushToken = (uid, pushToken) => {
+  const updateUserPushToken = (pushToken) => {
     updateUser({
       variables: {
-        uid: uid,
         pushToken: pushToken,
       },
     });
@@ -42,7 +41,7 @@ const DrawerContent = (props) => {
   }
 
   const logout = () => {
-    updateUserPushToken(appState.user.uid,null)
+    updateUserPushToken(null)
     auth.logout();
   }
 
