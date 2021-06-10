@@ -13,7 +13,7 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "test": "cross-env NODE_OPTIONS=--experimental-vm-modules npx jest",
+    "test": "cross-env NODE_ENV=test NODE_OPTIONS=--experimental-vm-modules npx jest",
     "test:migrate:up": "knex migrate:latest --env test",
     "test:seed:run": "knex seed:run --env test",
     "test:seed:make": "knex seed:make --env test",

@@ -83,14 +83,12 @@ exports[`Queries and Mutations Testing updates an appointment 1`] = `
 Object {
   "data": Object {
     "updateAppointment": Object {
-      "createdAt": null,
       "dateTime": 2021-05-26T16:00:00.000Z,
       "doctorClinicUid": "6ecaae63-1196-4e48-818d-0266dbed39e2",
       "doctorRemarks": "test test test",
       "patientUid": "7fc392c3-cd94-40ec-bd53-81de4aa8f8cf",
       "status": "ON_GOING",
       "uid": "f621fddb-8b13-4c58-93d7-3159a99c06bc",
-      "updatedAt": 2021-06-10T05:59:10.928Z,
     },
   },
   "errors": undefined,
