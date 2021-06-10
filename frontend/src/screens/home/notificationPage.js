@@ -34,7 +34,6 @@ const NotificationPage = ({ navigation }) => {
   const { data, loading } = useSubscription(GET_NOTIFICATIONS);
   return (
     <View style={customStyle.content}>
-      <Text>NOTIFICATIONS</Text>
       {/* {loading ? (
         <Layout style={styles.layout}>
           <Spinner size="giant" />

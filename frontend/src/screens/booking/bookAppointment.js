@@ -20,7 +20,6 @@ import {
 import SuccessModal from "./successModal";
 import { getAvailableTime, timeToString } from "../../utils/getAvailableTime";
 import * as R from "ramda";
-import getStartTime from "./utils/getStartTime";
 import { useAuth } from "../auth/utils/authProvider";
 import { pushNotification } from "../../notification/notification";
 import { useMutation } from "@apollo/client";
@@ -52,7 +51,7 @@ const ClinicInfo = ({ consultationFee, clinicName }) => {
       <Input
         style={styles.inputContainer}
         disabled={true}
-        value={consultationFee}
+        value={consultationFee.toString()}
         textStyle={styles.inputValue}
         accessoryLeft={() => prefix("Php")}
       />

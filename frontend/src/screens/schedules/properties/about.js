@@ -33,7 +33,7 @@ const About = ({ route, navigation }) => {
   const initial = form.initialValues;
   const initialValues = {
     clinicName: initial.clinicName,
-    consultationFee: initial.consultationFee,
+    consultationFee: initial.consultationFee.toString(),
     roomNumber: initial.roomNumber,
     streetAddress: initial.address.streetAddress,
     city: initial.address.city,

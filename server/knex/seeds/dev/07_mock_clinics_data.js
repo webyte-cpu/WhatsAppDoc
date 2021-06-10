@@ -17,7 +17,7 @@ const seed = function (knex) {
         {
           clinic_uid: '6eca6134-f369-4278-86d5-1b3a10fea42e',
           address_uid: 'd3cf6e43-27a6-4c28-9391-3e3241de001a',
-          clinic_name: 'Dr. Beier - Iloilo Doctor\'s Hospital',
+          clinic_name: 'Dr. Bernice - Iloilo Doctor\'s Hospital',
           clinic_room_no: '301 B'
         },
         {

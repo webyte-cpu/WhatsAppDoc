@@ -35,10 +35,11 @@ const RenderClinicNames = ({clinics, doctorUid}) => {
   
   return (
     <FlatList
-      horizontal="true"
+      horizontal={true}
       data={names}
       renderItem={clinicNames} 
       style={{marginLeft: 10, marginBottom: 10}}
+      keyExtractor={(item,index) => `${item}${index}`}
     />
   )
 }
@@ -91,8 +92,9 @@ const DoctorsList = ({searchResults, navigation}) => {
   return (
     <FlatList
       data={searchResults}
-      renderItem={({item, index, separators}) => <RenderItem item={item} navigation={navigation} index={index} />}
-      ListEmptyComponent={() => <View style={{marginTop: 20}}><EmptyListText /></View>}
+      renderItem={({item, index, separators}) => <RenderItem testID={`doctor-clinic-${index}`} key={`doctor-clinic-${index}`} item={item} navigation={navigation} index={index} />}
+      ListEmptyComponent={() => <View style={{marginTop: 20}} testID='emptyList'><EmptyListText /></View>}
+      keyExtractor={(item) => item.uid}
     />
   );
 };

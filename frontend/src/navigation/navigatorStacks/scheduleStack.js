@@ -15,6 +15,7 @@ import EmptyFieldsModal from "../../screens/schedules/utils/errorModal";
 import * as R from "ramda";
 import { useAuth } from "../../screens/auth/utils/authProvider";
 import breakpoints from "../../utils/breakpoints";
+import DoctorForm from "../../screens/home/doctorForm";
 
 const ScheduleStack = createStackNavigator();
 
@@ -32,6 +33,10 @@ const ScheduleStackScreen = (props) => {
               if(dimensions.width < breakpoints.lg) return <DrawerMenuBtn props={props} />
             },
           }}
+        />
+        <ScheduleStack.Screen
+          name={AppRoute.DOCTOR_FORM}
+          component={DoctorForm}
         />
         <ScheduleStack.Screen
           name={AppRoute.APPOINTMENT_PROPERTIES}

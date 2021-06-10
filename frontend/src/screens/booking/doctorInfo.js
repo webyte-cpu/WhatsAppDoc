@@ -15,7 +15,6 @@ import { AppRoute } from "../../navigation/app-routes";
 import BookingScreen from "./bookAppointment";
 
 // const defaultSampleText = `Sample text only for content. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi consequat eros in sem sollicitudin, nec ultricies nibh ullamcorper. Pellentesque hendrerit libero lorem. In id metus lacinia, varius turpis nec, venenatis orci. Sed id nibh quis tortor iaculis congue ac ornare mauris. Sed iaculis, elit in porta consequat, ante dui dictum`;
-
 // const AboutDoctor = () => {
 //   return (
 //     <View>
@@ -96,6 +95,9 @@ const DoctorInfo = ({ route, navigation }) => {
         data={clinics}
         renderItem={clinicNames}
         style={{ marginVertical: 10 }}
+        keyExtractor={(item, index) => {
+          return `${item.doctorClinicUid}`
+        }}
       />
     );
   };

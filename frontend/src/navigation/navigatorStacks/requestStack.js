@@ -30,7 +30,6 @@ const RequestStackScreen = (props) => {
     />
   </RequestStack.Navigator>
   )
-
 }
 
 export default RequestStackScreen;

@@ -107,7 +107,7 @@ const RequestPage = ({ navigation }) => {
             <View style={{
                 width: 50,
                 height: 70,
-                background: '#4A40D5',
+                backgroundColor: '#4A40D5',
                 borderRadius: 10,
                 textAlign: "center",
             }}>
@@ -216,7 +216,7 @@ const RequestPage = ({ navigation }) => {
         console.log("clinic: "+item.clinic.name) 
 
         return (
-            <View style={{ flexDirection: 'col' }}>
+            <View>
 
                 <View style={{ flexDirection: 'row', color: '#000045' }}>
                     <LocationIcon />

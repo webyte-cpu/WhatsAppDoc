@@ -89,8 +89,8 @@ const SearchPage = ({ navigation, route }) => {
   }
 
   return (
-    <View>
-      <View style={[customStyle.contentFill, { paddingBottom: 20 }]}>
+    <View style={{flex: 1}}>
+      <View style={{backgroundColor: '#fff', padding: 10}}>
         <Searchbar
           inputFilter={route.params.filter}
           inputQuery={route.params.query}
@@ -99,7 +99,7 @@ const SearchPage = ({ navigation, route }) => {
         />
       </View>
       <Divider />
-      <View style={[customStyle.contentFill, {paddingHorizontal: 10}]}>
+      <View style={{flex: 1}}>
         <DoctorsList searchResults={searchResults} navigation={navigation} />
       </View>
     </View>

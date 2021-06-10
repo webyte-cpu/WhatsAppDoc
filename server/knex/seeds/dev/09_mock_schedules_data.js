@@ -46,7 +46,7 @@ const seed = function (knex) {
           end_time: "14:30:00Z",
           day_of_week: JSON.stringify([6])
         },
-        // Beier - IDH
+        // Bernice - IDH
         {
           schedule_uid: "8fb58703-698a-4c49-bffc-5a0206cded42",
           doctor_clinic_uid: '5cb1a5aa-f8b3-424b-a3b1-7c527002b6d1',

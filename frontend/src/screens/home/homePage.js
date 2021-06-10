@@ -45,12 +45,12 @@ const HomePage = ({ navigation, route }) => {
       <Text testID="welcome-header" category="h1" style={{ marginBottom: 10 }}>
         Welcome {appState.user.firstName}!
       </Text>
-      {/* {appState.user.role === enums.role.PATIENT ? (
+      {appState.user.role === enums.role.PATIENT ? (
         <Searchbar navigation={navigation} route={route} />
       ) : (
         <></>
-      )} */}
-       <Searchbar navigation={navigation} route={route} />
+      )}
+       {/* <Searchbar navigation={navigation} route={route} /> */}
     </View>
   );
 };

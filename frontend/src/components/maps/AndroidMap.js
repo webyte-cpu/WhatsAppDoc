@@ -34,8 +34,10 @@ export default function AndroidMap({ isViewMode = false, locationCoords, setLoca
   },[]);
 
   useEffect(() => {
-    setLocationCoords(`${location.latitude},${location.longitude}`)
-  }, [location])
+    if(setLocationCoords) {
+      setLocationCoords(`${location.latitude},${location.longitude}`)
+    }
+    }, [location])
 
   return (
     <View style={styles.container}>

@@ -81,7 +81,6 @@ const appointmentsSameDay = [ // days = 1
 const convertAppointment = (appointments) => appointments.map((appointment) => {
   const time = new Date(appointment.dateTime)
     .toLocaleTimeString(undefined, {timeStyle:'short'})
-    
     const [hours, min] = time.split(':')
     const [minutes, ampm] = min.split(' ')
 

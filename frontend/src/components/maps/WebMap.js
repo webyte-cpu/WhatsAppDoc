@@ -49,7 +49,6 @@ export default function WebMap({isViewMode = false, locationCoords, setLocationC
     }
   }, [location])
 
-  console.log(location, 'Location')
   const SearchBtn = (props) => (
     <TouchableWithoutFeedback onPress={() => {
       fetchPlaceId(query)
