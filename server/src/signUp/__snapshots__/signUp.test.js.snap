@@ -57,12 +57,15 @@ Object {
 
 exports[`Sign Up Trys to sign up with existing user 1`] = `
 Object {
-  "birthdate": undefined,
-  "email": "kent@webyte.org",
-  "firstName": "Kent",
-  "img": undefined,
-  "lastName": "Handumon",
-  "role": "PATIENT",
-  "sex": undefined,
+  "data": null,
+  "errors": Array [
+    [GraphQLError: Email not unique],
+  ],
+  "extensions": undefined,
+  "http": Object {
+    "headers": Headers {
+      Symbol(map): Object {},
+    },
+  },
 }
 `;

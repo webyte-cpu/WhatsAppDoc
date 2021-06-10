@@ -59,7 +59,7 @@ describe("Sign In", () => {
   });
 
   it("Should login", async () => {
-    const variables = { email: "kent@webyte.org", password: "$3cR3tP4ss2" };
+    const variables = { email: "Lupe_Predovic7@hotmail.com", password: "PH5tn3BTyAImgcJ!" };
 
     const response = await query({
       mutation: SIGN_IN,
