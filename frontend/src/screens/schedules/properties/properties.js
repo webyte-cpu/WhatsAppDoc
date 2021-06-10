@@ -71,9 +71,9 @@ const AppointmentProperties = ({ navigation, route }) => {
         tabBar={(props) => <TopTabBar {...props} />}
         style={{ backgroundColor: theme["color-primary-light-600"] }}
       >
-        <Screen test-id="about-tab" name="About" component={About} />
-        <Screen test-id="availability-tab" name="Availability" component={Availability} />
-        <Screen test-id="limits" name="Limits" component={Limits} />
+        <Screen testID="about-tab" name="About" component={About} />
+        <Screen testID="availability-tab" name="Availability" component={Availability} />
+        <Screen testID="limits" name="Limits" component={Limits} />
       </Navigator>
     </View>
   );

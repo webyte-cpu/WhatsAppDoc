@@ -27,7 +27,7 @@ And('I add a new Clinic called {string}', (clinicName) => {
 
 And(`add details on the ABOUT form: {string} {string} {string} {string} {string} {string} {string} {string}`,
   (consultationFee, location, roomNumber, streetAddress, city, stateProvince, postalCode, country) => {
-    const details =[
+    const details = [
       { testID: '[data-testid="consultation-fee"]', data: consultationFee },
       { testID: '[data-testid="location-map"]', data: location },
       { testID: '[data-testid="roomNumber"]', data: roomNumber },
@@ -41,19 +41,48 @@ And(`add details on the ABOUT form: {string} {string} {string} {string} {string}
   }
 )
 
-And('add details on the AVAILABILITY form: {string}', (intervals) => {
-    cy.get('.r-flexDirection-1d5kdc7 > :nth-child(1) > :nth-child(1) > [style="background-color: rgb(222, 228, 242);"] > :nth-child(1) > .r-flexDirection-18u37iz > :nth-child(2)').click();
-    cy.get('[data-testid="timeDurationBtn"]').click({multiple: true});
-    cy.get('body').find('[data-testid="timeIntervalFrom"]')
+And('add details on the AVAILABILITY form', () => {
+  cy.get('.r-flexDirection-1d5kdc7 > :nth-child(1) > :nth-child(1) > [style="background-color: rgb(222, 228, 242);"] > :nth-child(1) > .r-flexDirection-18u37iz > :nth-child(2)').click();
+  cy.get('[data-testid="timeDurationBtn"]').click({ multiple: true });
+
+  //FROM Form
+  cy.get('[style="margin-right: 10px;"] > .css-view-1dbjc4n > :nth-child(1)').select('10');
+  cy.get('[style="margin-right: 10px;"] > .css-view-1dbjc4n > :nth-child(2)').select('45');
+  cy.get('[style="margin-right: 10px;"] > .css-view-1dbjc4n > :nth-child(3)').select('PM');
+
+  //TO Form
+  cy.get('.r-flexWrap-1w6e6rj > .r-flexDirection-eqz5dr > .css-view-1dbjc4n > :nth-child(1)').select('05');
+  cy.get('.r-flexWrap-1w6e6rj > .r-flexDirection-eqz5dr > .css-view-1dbjc4n > :nth-child(2)').select('00');
+  cy.get('.r-flexWrap-1w6e6rj > .r-flexDirection-eqz5dr > .css-view-1dbjc4n > :nth-child(3)').select('AM');
+
+  //Days
+  cy.get('.r-flex-pv33jp > :nth-child(1) > .r-alignItems-1awozwy').click();
+
+  //Days options
+  cy.get('.r-borderColor-5gffqa > .r-WebkitOverflowScrolling-150rngu > :nth-child(1) > :nth-child(1) > .r-backgroundColor-14lw9ot').click();
+  cy.get('.r-borderColor-5gffqa > .r-WebkitOverflowScrolling-150rngu > :nth-child(1) > :nth-child(2) > .r-backgroundColor-14lw9ot').click();
+  cy.get('.r-borderColor-5gffqa > .r-WebkitOverflowScrolling-150rngu > :nth-child(1) > :nth-child(3) > .r-backgroundColor-14lw9ot').click();
+
+  cy.get('#root > :nth-child(1) > :nth-child(1) > :nth-child(1) > :nth-child(2) > .r-bottom-1p0dtai').click('right');
 })
 
-// When('I press save', () => {
-//   cy.get('[data-testid="scheduleSaveBtn"]').click();
-// }) 
+And('add details on the LIMITS form: {string}', (minSchedNotice) => {
+  cy.get(
+    '[style="background-color: rgb(222, 228, 242);"] > :nth-child(1) > .r-flexDirection-18u37iz > :nth-child(3)'
+  ).click();
+  cy.get('.r-flex-13awgt0.r-flexDirection-18u37iz > :nth-child(3) > .r-backgroundColor-14lw9ot').should('be.visible');
+  cy.get('[data-testid=schedulingNotice]').should('exist');
+  // cy.get('[data-testid=schedulingNotice]').type({ selectall });
+  cy.get('[data-testid=schedulingNotice]').click().clear().type(minSchedNotice);
+})
 
-// Then('I will be shown a warning modal', () => {
-//   cy.get('[data-testid="errorFields"]').should('be.visible');
-// })
+When('I press save', () => {
+  cy.get('[data-testid="scheduleSaveBtn"]').click();
+})
+
+Then('I will be on the Schedule Tab', () => {
+  cy.get('[data-testid=addNewClinicBtn]').should('be.visible');
+})
 
 // And(`add details on the availlability form: {string}`, (intervals) => {
 //   console.log(JSON.parse(intervals));

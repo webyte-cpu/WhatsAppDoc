@@ -2,22 +2,27 @@ Feature: Clinic
 
   This feature tests the creation of clinics and the given inputs
 
-  Scenario: Adding Clinics
+  Scenario Outline: Adding Clinics
 
     Given I am on the clinics tab
     And I add a new Clinic called "<clinicName>"
     And add details on the ABOUT form: "<consultationFee>" "<location>" "<roomNumber>" "<streetAddress>" "<city>" "<stateProvince>" "<postalCode>" "<country>"
-    And add details on the AVAILABILITY form: "<intervals>"
-    # When I press save
-    # Then I will be shown a warning modal
-    # And I input the minimum schedule notice hours: <"minNoticeHrs">
-    # And I Save
-    # Then The result is: "<result>"
+    And add details on the AVAILABILITY form
+    And add details on the LIMITS form: "<minSchedNotice>" 
+    When I press save
+    Then I will be on the Schedule Tab
 
     # Examples:
-    # | clinicName  | consultationFee | location | roomNumber | streetAddress         | city  | stateProvince | postalCode | country     | intervals                                                                                                         | minNoticeHrs | result |
-    # | Test Clinic | 500             | Pavia    | 5          | Parc Regency, Phase-H | Pavia | Iloilo        | 5000       | Philippines | [{time: [{from: { hours: 12, minutes: 0, ampm: 'am' },to: { hours: 5, minutes: 0, ampm: 'am' }}], days: [1,3,5]}] | 2            | added  |
+    #   | clinicName  | consultationFee | location      | roomNumber | streetAddress         | city       | stateProvince | postalCode | country     | minSchedNotice |                                                                                                       | minNoticeHrs | result |
+    #   | Test Clinic | 500             | Pavia         | 8          | Parc Regency, Phase-H | Pavia      | Iloilo        | 5000       | Philippines | 3              |
+    #   | Clinica     | 1000            | Jaro          | 1          | Plaza, Jaro           | Jaro       | Iloilo        | 5000       | Philippines | 4              |
+    #   | Dr. Clinic  | 250             | Mandurriao    | 9          | Pali, Mandurriao      | Mandurriao | Iloilo        | 5000       | Philippines | 5              |
 
+    Examples:
+      | clinicName  | consultationFee | location    | roomNumber  | streetAddress         | city       | stateProvince | postalCode | country     | minSchedNotice |
+      | Test Clinic | 500             | Pavia       | 8           | Parc Regency, Phase-H | Pavia      | Iloilo        | 5000       | Philippines | 3              |
+      | Clinica     | 1000            | Jaro        | 1           | Plaza, Jaro           | Jaro       | Iloilo        | 5000       | Philippines | 4              |
+      | Dr. Clinic  | 250             | Mandurriao  | 9           | Pali, Mandurriao      | Mandurriao | Iloilo        | 5000       | Philippines | 5              |
 
 
 
