@@ -9,8 +9,6 @@ import { AuthProvider } from "./src/screens/auth/utils/authProvider";
 import { StatusBar } from "expo-status-bar";
 import ApolloClientProvider from "./apolloClient";
 
-// LogBox.ignoreAllLogs()
-
 const App = () => {
   return (
     <>

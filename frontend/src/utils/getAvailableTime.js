@@ -121,17 +121,11 @@ export const getAvailableTime = (intervals, slotDuration, appointments, chosenDa
     results = matchingInterval.time
   
     if(appointments) {
-      console.log(chosenDate, 'CHOSE')
+
       const appointmentList = convertAppointment(appointments)
-      console.log(appointmentList,'LIS')
       const occupiedTimes = appointmentList.filter((appointment) => new Date(appointment.dateTime).toLocaleDateString() === new Date(chosenDate).toLocaleDateString() && appointment.status !== 'CANCELLED') 
       const byStartTime = (schedule, appointment) => R.equals(schedule.from, appointment.from)
-      
-      results = R.differenceWith((a,b) => byStartTime(a,b), matchingInterval.time, occupiedTimes)
-      console.log(matchingInterval.time, 'matchingInterval.time')
-
-      console.log(occupiedTimes, 'RES')
-    }
+      results = R.differenceWith((a,b) => byStartTime(a,b), matchingInterval.time, occupiedTimes)    }
   }
 
   return results;
