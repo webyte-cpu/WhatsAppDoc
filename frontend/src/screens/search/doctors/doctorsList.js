@@ -60,7 +60,7 @@ const RenderDoctor = ({ item: doctor, navigation, disable = false}) => {
   return (
     <ListItem
       testID={`doctor-${doctor.uid}`}
-      title={() => <Text category="h6" style={{marginLeft: 7}}>{`${doctor.firstName} ${doctor.middleName[0].toUpperCase()}. ${doctor.lastName}`}</Text>}
+      title={() => <Text category="h6" style={{marginLeft: 7}}>{`${doctor.firstName} ${doctor.lastName}`}</Text>}
       accessoryLeft={() => (
         <ProfileIcon firstName={doctor.firstName} lastName={doctor.lastName} dimensions={{width: 80, height: 80}} shape='rounded'/>
       )}

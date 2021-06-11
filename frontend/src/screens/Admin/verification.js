@@ -4,7 +4,7 @@ import { Button, Card, Modal, Text, useTheme } from "@ui-kitten/components";
 import { useMutation } from "@apollo/client";
 import { GET_DOCTORS, UPDATE_DOCTOR } from "./queries";
 import enums from "../../../helpers/enums";
-import {pushNotification} from '../../notification/notification'
+import { pushNotification } from "../../notification/notification";
 
 const openLink = (url) => {
   Platform.OS == "web" ? window.open(url) : Linking.openURL(url);
@@ -49,13 +49,25 @@ const Header = ({ doctor }) => {
 const Footer = ({ doctor, updateDoctorStatus, onHide }) => {
   const verifyBtn = () => {
     updateDoctorStatus(doctor.uid, "VERIFIED");
-    pushNotification({doctor:doctor.firstName},doctor.pushToken,'','','verifyLicense');
+    pushNotification(
+      { doctor: doctor.firstName },
+      doctor.pushToken,
+      "",
+      "",
+      "verifyLicense"
+    );
     onHide();
   };
 
   const denyBtn = () => {
     updateDoctorStatus(doctor.uid, "DECLINED");
-    pushNotification({doctor:doctor.firstName},doctor.pushToken,'','','denyLicense');
+    pushNotification(
+      { doctor: doctor.firstName },
+      doctor.pushToken,
+      "",
+      "",
+      "denyLicense"
+    );
     onHide();
   };
 
@@ -84,26 +96,26 @@ const DoctorDetails = ({ doctor, isShown, onHide }) => {
     onError: (err) => {
       console.error(err);
     },
-    refetchQueries: [{ query: GET_DOCTORS }]
+    refetchQueries: [{ query: GET_DOCTORS }],
   });
   const updateDoctorStatus = (uidCode, verification) => {
-    let message = ""
+    let message = "";
 
-    if(verification === enums.verificationStatus.VERIFIED){
-      message = "Your request has been accepted"
+    if (verification === enums.verificationStatus.VERIFIED) {
+      message = "Your request has been accepted";
+    } else if (verificationStatus === enums.verificationStatus.DECLINED) {
+      message = "Your request has been rejected";
     }
-    else if (verificationStatus === enums.verificationStatus.DECLINED){
-      message = "Your request has been rejected"
-    }
-    
+
     updateDoctor({
       variables: {
         uid: uidCode,
         verificationStatus: verification,
+        description: message,
       },
     });
   };
-  
+
   return (
     <Modal
       testID="doctorInformation"

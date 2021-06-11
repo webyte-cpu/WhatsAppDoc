@@ -1,8 +1,8 @@
-import { gql } from '@apollo/client';
+import { gql } from "@apollo/client";
 
 export const GET_DOCTORS = gql`
   query {
-    getAllDoctor{
+    getAllDoctor {
       uid
       firstName
       middleName
@@ -19,18 +19,23 @@ export const GET_DOCTORS = gql`
 `;
 
 export const UPDATE_DOCTOR = gql`
-  mutation updateDoctor($uid:UUID, $verificationStatus: VerificationStatus ){
-      updateDoctor(uid: $uid, verificationStatus: $verificationStatus){
-          uid
-          verificationStatus
-      }
-
-      notify(
-        userUid: $uid
-        title: "Verification"
-        sourceType: "VERIFICATION"
+  mutation updateDoctor(
+    $uid: UUID!
+    $verificationStatus: VerificationStatus
+    $description: String!
   ) {
-    uid
-  }
+    updateDoctor(uid: $uid, verificationStatus: $verificationStatus) {
+      uid
+      verificationStatus
+    }
+
+    notify(
+      userUid: $uid
+      title: "Verification"
+      sourceType: "VERIFICATION"
+      description: $description
+    ) {
+      uid
+    }
   }
 `;

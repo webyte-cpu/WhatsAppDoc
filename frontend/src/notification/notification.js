@@ -116,8 +116,8 @@ async function scheduleNotification( user, clinic, schedule, screen ) {
       body: `You have an appointment with ${user} at ${clinic} on ${schedule}`,
       data: {navigate:screen}
     },
-    trigger: {seconds:5}, 
-    // trigger: {seconds:getTrigger(schedule)}, is triggered an hour before the scheduled appointment
+    // trigger: {seconds:5}, 
+    trigger: {seconds:getTrigger(schedule)}, //is triggered an hour before the scheduled appointment
   });
 }
 

@@ -38,9 +38,7 @@ const DoctorInfo = ({ route, navigation }) => {
   useEffect(() => {
     const unsubscribe = navigation.addListener("focus", () => {
       navigation.setOptions({
-        title: `${doctor.firstName} ${doctor.middleName[0].toUpperCase()}. ${
-          doctor.lastName
-        }`,
+        title: `${doctor.firstName} ${doctor.lastName}`,
       });
     });
 
@@ -96,7 +94,7 @@ const DoctorInfo = ({ route, navigation }) => {
         renderItem={clinicNames}
         style={{ marginVertical: 10 }}
         keyExtractor={(item, index) => {
-          return `${item.doctorClinicUid}`
+          return `${item.doctorClinicUid}`;
         }}
       />
     );

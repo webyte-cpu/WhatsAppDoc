@@ -82,7 +82,7 @@ const Admin = () => {
   const theme = useTheme();
   const [doctorDetails, setDoctorDetails] = useState({});
   const [visible, setVisible] = useState(false);
-  const { loading, error, data } = useQuery(GET_DOCTORS);
+  const { loading, error, data } = useQuery(GET_DOCTORS, { pollInterval: 1000 });
 
   if (loading) {
     return <LoadingScreen />;
